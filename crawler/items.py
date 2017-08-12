@@ -2,20 +2,16 @@
 import scrapy
 
 
-def as_iso_format_date(value):
-    return value.isoformat()
-
-
 class SourceItem(scrapy.Item):
     id = scrapy.Field(serializer=int)
     name = scrapy.Field()
-    release_date = scrapy.Field(serializer=as_iso_format_date)
     image = scrapy.Field()
+    type = scrapy.Field()
+    wave = scrapy.Field(serializer=int)
 
 
 class SkirmishMapItem(scrapy.Item):
     name = scrapy.Field()
-    release_date = scrapy.Field(serializer=as_iso_format_date)
     image = scrapy.Field()
 
 

@@ -1,0 +1,196 @@
+[
+  {
+    "id": 0,
+    "name": "Core Box",
+    "image": "/cache/Core-Box/ia_core_box_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 1,
+    "type": "Expansion",
+    "wave": null,
+    "name": "Twin Shadows",
+    "image": "/cache/Expansion-Boxes/Twin-Shadows/Twin%20Shadows_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 2,
+    "type": "Expansion",
+    "wave": null,
+    "name": "Return to Hoth",
+    "image": "/cache/Expansion-Boxes/Return-to-Hoth/Return%20to%20Hoth_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 3,
+    "type": "Expansion",
+    "wave": null,
+    "name": "The Bespin Gambit",
+    "image": "/cache/Expansion-Boxes/The-Bespin-Gambit/The%20Bespin%20Gambit_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 4,
+    "type": "Expansion",
+    "wave": null,
+    "name": "Jabba's Realm",
+    "image": "/cache/Expansion-Boxes/Jabbas-Realm/Jabbas%20Realm_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 5,
+    "type": "Ally Pack",
+    "wave": 1,
+    "name": "Chewbacca",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/Chewbacca/Chewbacca%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 6,
+    "type": "Villain Pack",
+    "wave": 1,
+    "name": "General Weiss",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/General%20Weiss/General%20Weiss%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 7,
+    "type": "Ally Pack",
+    "wave": 1,
+    "name": "Han Solo",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/Han%20Solo/Han%20Solo%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 8,
+    "type": "Villain Pack",
+    "wave": 1,
+    "name": "IG88",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/IG88/IG88%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 9,
+    "type": "Ally Pack",
+    "wave": 1,
+    "name": "Rebel Saboteurs",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/Rebel%20Saboteurs/Rebel%20Saboteurs%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 10,
+    "type": "Ally Pack",
+    "wave": 1,
+    "name": "Rebel Troopers",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/Rebel%20Troopers/Rebel%20Trooper%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 11,
+    "type": "Villain Pack",
+    "wave": 1,
+    "name": "Royal Guard Champion",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/Royal%20Guard%20Champion/Royal%20Guard%20Champion%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 12,
+    "type": "Villain Pack",
+    "wave": 2,
+    "name": "Boba Fett",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Boba%20Fett%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 13,
+    "type": "Villain Pack",
+    "wave": 3,
+    "name": "Hired Guns",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Hired%20Guns%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 14,
+    "type": "Villain Pack",
+    "wave": 3,
+    "name": "Stormtrooper",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Stormtrooper%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 15,
+    "type": "Ally Pack",
+    "wave": 3,
+    "name": "Wookie Warriors",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-3/Wookie%20Warriors/Wookie%20Warriors%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 16,
+    "type": "Villain Pack",
+    "wave": 2,
+    "name": "Kayn Somos",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-2/Kayn%20Somos/Kayn%20Somos%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 17,
+    "type": "Ally Pack",
+    "wave": 2,
+    "name": "R2-D2 and C-3PO",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-2/R2-D2%20and%20C-3PO/R2D2%20C3PO%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 18,
+    "type": "Ally Pack",
+    "wave": 4,
+    "name": "Alliance Smuggler",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-4/Alliance%20Smuggler/Alliance%20Smuggler%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 19,
+    "type": "Villain Pack",
+    "wave": 5,
+    "name": "Dengar",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-5/Dengar/Dengar%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 20,
+    "type": "Ally Pack",
+    "wave": 5,
+    "name": "Echo Base Troopers",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-5/Echo%20Base%20Troopers/Echo%20Base%20Troopers%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 21,
+    "type": "Villain Pack",
+    "wave": 5,
+    "name": "General Sorin",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-5/General%20Sorin/General%20Sorin%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 22,
+    "type": "Ally Pack",
+    "wave": 5,
+    "name": "Leia Organa",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-5/Leia%20Organa/Leia%20Organa%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 23,
+    "type": "Villain Pack",
+    "wave": 4,
+    "name": "Bantha Rider",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-4/Bantha%20Rider/Bantha%20Rider%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 24,
+    "type": "Villain Pack",
+    "wave": 6,
+    "name": "Agent Blaise",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/Agent%20Blaise/Agent%20Blaise%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 25,
+    "type": "Villain Pack",
+    "wave": 6,
+    "name": "Bossk",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/Bossk/Bossk%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 26,
+    "type": "Villain Pack",
+    "wave": 6,
+    "name": "ISB Infiltrators",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/ISB%20Infiltrators%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  },
+  {
+    "id": 27,
+    "type": "Ally Pack",
+    "wave": 6,
+    "name": "Lando Calrissian",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/Lando%20Calrissian/Lando%20Calrissian%20Pack_275_thumb_ffflogog_whatermark_cc.png"
+  }
+]
