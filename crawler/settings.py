@@ -53,6 +53,8 @@ SPIDER_MIDDLEWARES = {
 }
 
 DEPTH_PRIORITY = -1
+SCHEDULER_DISK_QUEUE = 'scrapy.squeues.PickleFifoDiskQueue'
+SCHEDULER_MEMORY_QUEUE = 'scrapy.squeues.FifoMemoryQueue'
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
@@ -69,9 +71,9 @@ DEPTH_PRIORITY = -1
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'crawler.pipelines.AddSourceIdsPipeline': 100,
-    'crawler.pipelines.FixTyposAndNormalizeTextPipeline': 200,
-    'crawler.pipelines.AddSourceImagesPipeline': 300,
+    'crawler.pipelines.FixTyposAndNormalizeTextPipeline': 100,
+    'crawler.pipelines.AddSourceIdsPipeline': 200,
+    #'crawler.pipelines.AddSourceImagesPipeline': 300,
     'crawler.pipelines.FilterValidCardBacksPipeline': 300,
     'crawler.pipelines.FilterValidAgendasPipeline': 300,
     #'crawler.pipelines.ImageProcessingPipeline': 800,

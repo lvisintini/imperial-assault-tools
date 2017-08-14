@@ -21,13 +21,18 @@ class FixTyposAndNormalizeTextPipeline(object):
             item['name'] = item['name'].replace('Box', '').strip()
             item['name'] = "Jabba's Realm" if item['name'] == 'Jabbas-Realm' else item['name']
 
-        elif item.__class__ == items.CardBackItem:
+        if item.__class__ != items.SourceItem and 'source' in item.fields:
+            item['source'] = 'Imperial Assault' if item['source'] == 'Core Box' else item['source']
+            item['source'] = item['source'].replace('Box', '').strip()
+            item['source'] = "Jabba's Realm" if item['source'] == 'Jabbas-Realm' else item['source']
+
+        if item.__class__ == items.CardBackItem:
             item['deck'] = item['deck'][0:-1] if item['deck'].endswith('s') else item['deck']
             item['deck'] = item['deck'].replace('Heroe', 'Hero')
             item['deck'] = item['deck'].replace(' Deck', '')
             item['deck'] = item['deck'].replace(' Card', '')
 
-        elif item.__class__ == items.AgendaCardItem:
+        if item.__class__ == items.AgendaCardItem:
             item['name'] = "Lord Vader's Command" if item['name'] == 'Lord Vaders Command' else item['name']
 
         return item
@@ -85,6 +90,7 @@ class FilterValidAgendasPipeline(object):
 class AddSourceIdsPipeline(object):
     def __init__(self):
         self.inc_id = -1
+        self.ids = {}
 
     def open_spider(self, spider):
         pass
@@ -96,29 +102,9 @@ class AddSourceIdsPipeline(object):
         if item.__class__ == items.SourceItem:
             self.inc_id += 1
             item['id'] = self.inc_id
+            self.ids[item['name']] = self.inc_id
         elif 'source' in item.fields:
-            item['source'] = self.inc_id
-        return item
-
-
-class AddSourceImagesPipeline(object):
-    images = {
-        'Imperial Assault': '/cache/Core-Box/ia_core_box_275_thumb_ffflogog_whatermark_cc.png',
-        "Jabba's Realm": '/cache/Expansion-Boxes/Jabbas-Realm/Jabbas%20Realm_275_thumb_ffflogog_whatermark_cc.png',
-        'Twin Shadows': '/cache/Expansion-Boxes/Twin-Shadows/Twin%20Shadows_275_thumb_ffflogog_whatermark_cc.png',
-        'Return to Hoth': '/cache/Expansion-Boxes/Return-to-Hoth/Return%20to%20Hoth_275_thumb_ffflogog_whatermark_cc.png',
-        'The Bespin Gambit': '/cache/Expansion-Boxes/The-Bespin-Gambit/The%20Bespin%20Gambit_275_thumb_ffflogog_whatermark_cc.png',
-    }
-
-    def open_spider(self, spider):
-        pass
-
-    def close_spider(self, spider):
-        pass
-
-    def process_item(self, item, spider):
-        if item.__class__ == items.SourceItem and 'image' not in item:
-            item['image'] = self.images[item['name']]
+            item['source'] = self.ids[item['source']]
         return item
 
 
