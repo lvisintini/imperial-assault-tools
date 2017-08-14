@@ -92,7 +92,7 @@ class ImperialAssaultCrawler(scrapy.Spider):
 
         for image in response.css('div.image'):
             source = breadcrumbs[-1] if section.startswith('Agenda') else breadcrumbs[-2]
-            agenda = section if not section.startswith('Agenda') else None
+            agenda = section if not section.startswith('Agenda') else '!!!!!!' + breadcrumbs[-1]
 
             yield items.AgendaCardItem(
                 name=image.css('img ::attr(alt)').extract_first().strip(),

@@ -15,16 +15,20 @@ class FixTyposAndNormalizeTextPipeline(object):
     def close_spider(self, spider):
         pass
 
+    @staticmethod
+    def sources_rename(item, attr):
+        item[attr] = 'Imperial Assault' if item[attr] == 'Core Box' else item[attr]
+        item[attr] = item[attr].replace('Box', '').strip()
+        item[attr] = "Jabba's Realm" if item[attr] == 'Jabbas-Realm' else item[attr]
+        item[attr] = "Stormtroopers" if item[attr] == 'Stormtrooper' else item[attr]
+        return item
+
     def process_item(self, item, spider):
         if item.__class__ == items.SourceItem:
-            item['name'] = 'Imperial Assault' if item['name'] == 'Core Box' else item['name']
-            item['name'] = item['name'].replace('Box', '').strip()
-            item['name'] = "Jabba's Realm" if item['name'] == 'Jabbas-Realm' else item['name']
+            item = self.sources_rename(item, 'name')
 
         if item.__class__ != items.SourceItem and 'source' in item.fields:
-            item['source'] = 'Imperial Assault' if item['source'] == 'Core Box' else item['source']
-            item['source'] = item['source'].replace('Box', '').strip()
-            item['source'] = "Jabba's Realm" if item['source'] == 'Jabbas-Realm' else item['source']
+            item = self.sources_rename(item, 'source')
 
         if item.__class__ == items.CardBackItem:
             item['deck'] = item['deck'][0:-1] if item['deck'].endswith('s') else item['deck']
@@ -34,6 +38,7 @@ class FixTyposAndNormalizeTextPipeline(object):
 
         if item.__class__ == items.AgendaCardItem:
             item['name'] = "Lord Vader's Command" if item['name'] == 'Lord Vaders Command' else item['name']
+            item['agenda'] = "!!!!!!Stormtroopers" if item['agenda'] == '!!!!!!Stormtrooper' else item['agenda']
 
         return item
 
@@ -73,7 +78,29 @@ class FilterValidCardBacksPipeline(object):
         return item
 
 
-class FilterValidAgendasPipeline(object):
+class ProcessAgendasPipeline(object):
+    pack_agendas = {
+        'General Weiss': "The General's Scheme",
+        'IG88': 'Droid Uprising',
+        'Royal Guard Champion': 'Crimson Empire',
+        'Boba Fett': 'Soldiers for Hire',
+        'Kayn Somos': 'Stormtrooper support',
+        'Hired Guns': 'Nefarious Dealings',
+        'Stormtroopers': "Vader's Fist",
+        'Bantha Rider': 'Tusken Treachery',
+        'General Sorin': 'Bombardment',
+        'Dengar': 'Punishing Tactics',
+        'Agent Blaise': 'Imperial Intelligence',
+        'Bossk': 'Base Instincts',
+        'ISB Infiltrators': 'Infiltration',
+        'Greedo': 'Contract Gunmen',
+        'The Grand Inquisitor': 'Inquisition',
+        'Captain Terro': 'Wasteland Patrol',
+        'Jabba the Hutt': "Jabba's Empire",
+        'BT-1 and 0-0-0': 'Devious Droids',
+        'Jawa Scavenger': 'Desert Scavengers',
+    }
+
     def open_spider(self, spider):
         pass
 
@@ -84,6 +111,9 @@ class FilterValidAgendasPipeline(object):
         if item.__class__ == items.AgendaCardItem:
             if item['name'].lower() == 'back':
                 raise DropItem()
+
+            if item['agenda'].startswith('!!!!!!'):
+                item['agenda'] = self.pack_agendas[item['agenda'].replace('!!!!!!', '')]
         return item
 
 
