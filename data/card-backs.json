@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "deck": "Agenda",
+    "variant": null,
+    "image": "/cache/Core-Box/Agenda%20Decks/back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Command",
+    "variant": null,
+    "image": "/cache/Core-Box/Command%20Cards/back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Deployment",
+    "variant": null,
+    "image": "/cache/Core-Box/Deployment%20Cards/Rebel/Back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Imperial Class",
+    "variant": null,
+    "image": "/cache/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Reward",
+    "variant": null,
+    "image": "/cache/Core-Box/Rewards/back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Side Mission",
+    "variant": null,
+    "image": "/cache/Core-Box/Side%20Missions/Back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Story Mission",
+    "variant": null,
+    "image": "/cache/Core-Box/Story%20Missions/Back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Supply",
+    "variant": null,
+    "image": "/cache/Core-Box/Supply%20Deck/Back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Companion",
+    "variant": null,
+    "image": "/cache/Expansion-Boxes/Jabbas-Realm/Companions/back_275_thumb_ffflogog_whatermark_cc.jpg"
+  }
+]

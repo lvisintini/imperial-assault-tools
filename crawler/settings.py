@@ -9,6 +9,8 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
+import crawler.logging
+
 BOT_NAME = 'crawler'
 
 SPIDER_MODULES = ['crawler.spiders']
@@ -65,8 +67,13 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 1
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    #'crawler.pipelines.ImageProcessingPipeline': 200,
-    'crawler.pipelines.JsonWriterPipeline': 300,
+    'crawler.pipelines.AddSourceIdsPipeline': 100,
+    'crawler.pipelines.FixTyposAndNormalizeTextPipeline': 200,
+    'crawler.pipelines.AddSourceImagesPipeline': 300,
+    'crawler.pipelines.FilterValidCardBacksPipeline': 300,
+    'crawler.pipelines.FilterValidAgendasPipeline': 300,
+    #'crawler.pipelines.ImageProcessingPipeline': 800,
+    'crawler.pipelines.JsonWriterPipeline': 900,
 
 }
 

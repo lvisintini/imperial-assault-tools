@@ -16,10 +16,9 @@ class SkirmishMapItem(scrapy.Item):
 
 
 class AgendaCardItem(scrapy.Item):
+    name = scrapy.Field()
     source = scrapy.Field(serializer=int)
     agenda = scrapy.Field()
-    name = scrapy.Field()
-    agenda_deck = scrapy.Field(serializer=int)
     image = scrapy.Field()
 
 
@@ -41,6 +40,7 @@ class DeploymentCardItem(scrapy.Item):
     source = scrapy.Field(serializer=int)
     faction = scrapy.Field()
     image = scrapy.Field()
+    alternate_images = scrapy.Field()
 
 
 class HeroItem(scrapy.Item):
@@ -49,7 +49,6 @@ class HeroItem(scrapy.Item):
     source = scrapy.Field(serializer=int)
     healthy = scrapy.Field()
     wounded = scrapy.Field()
-    deck_back = scrapy.Field()
 
 
 class HeroClassCardItem(scrapy.Item):
@@ -60,8 +59,9 @@ class HeroClassCardItem(scrapy.Item):
 
 class ImperialClassCardItem(scrapy.Item):
     name = scrapy.Field()
+    imperial_class_deck = scrapy.Field()
     source = scrapy.Field(serializer=int)
-    imperial_class = scrapy.Field()
+    imperial_class_deck = scrapy.Field(serializer=int)
     image = scrapy.Field()
 
 
@@ -104,6 +104,6 @@ class UpgradeItem(scrapy.Item):
 
 
 class CardBackItem(scrapy.Item):
-    id = scrapy.Field(serializer=int)
-    name = scrapy.Field()
+    deck = scrapy.Field()
+    variant = scrapy.Field()
     image = scrapy.Field()
