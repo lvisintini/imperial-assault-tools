@@ -101,6 +101,28 @@ class ImperialAssaultCrawler(scrapy.Spider):
                 source=source
             )
 
+    def parse_default_card(self, cls, response):
+        breadcrumbs = self.get_breadcrumbs(response)
+        for image in response.css('div.image'):
+            yield cls(
+                name=image.css('img ::attr(alt)').extract_first().strip(),
+                image=image.css('img ::attr(src)').extract_first(),
+                source=breadcrumbs[-1]
+            )
+
+    def parse_command_card(self, response):
+        for item in self.parse_default_card(items.CommandCardItem, response):
+            yield item
+
+    def parse_reward(self, response):
+        for item in self.parse_default_card(items.RewardItem, response):
+            yield item
+
+    def parse_companions(self, response):
+        for item in self.parse_default_card(items.CompanionItem, response):
+            yield item
+
+
     def determine_parser(self, response):
         section = self.get_section(response)
         breadcrumbs = self.get_breadcrumbs(response)
@@ -122,3 +144,9 @@ class ImperialAssaultCrawler(scrapy.Spider):
         elif breadcrumbs[-1].startswith('Agenda') or \
                 (section.startswith('Agenda') and 'Villain and Ally Packs' in breadcrumbs):
             return self.parse_agenda
+        elif section.startswith("Command"):
+            return self.parse_command_card
+        elif section.startswith("Reward"):
+            return self.parse_reward
+        elif section.startswith('Companion'):
+            return self.parse_companions

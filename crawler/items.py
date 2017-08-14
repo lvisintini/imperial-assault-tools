@@ -2,6 +2,12 @@
 import scrapy
 
 
+class DefaultDataItem(scrapy.Item):
+    name = scrapy.Field()
+    source = scrapy.Field()
+    image = scrapy.Field()
+
+
 class SourceItem(scrapy.Item):
     id = scrapy.Field(serializer=int)
     name = scrapy.Field()
@@ -15,32 +21,20 @@ class SkirmishMapItem(scrapy.Item):
     image = scrapy.Field()
 
 
-class AgendaCardItem(scrapy.Item):
-    name = scrapy.Field()
-    source = scrapy.Field()
+class AgendaCardItem(DefaultDataItem):
     agenda = scrapy.Field()
-    image = scrapy.Field()
 
 
-class CommandCardItem(scrapy.Item):
-    name = scrapy.Field()
-    source = scrapy.Field()
-    image = scrapy.Field()
+class CommandCardItem(DefaultDataItem):
+    pass
 
 
-class ConditionItem(scrapy.Item):
-    name = scrapy.Field()
-    source = scrapy.Field()
+class ConditionItem(DefaultDataItem):
     type = scrapy.Field()
-    image = scrapy.Field()
 
 
-class DeploymentCardItem(scrapy.Item):
-    name = scrapy.Field()
-    source = scrapy.Field()
+class DeploymentCardItem(DefaultDataItem):
     faction = scrapy.Field()
-    image = scrapy.Field()
-    alternate_images = scrapy.Field()
 
 
 class HeroItem(scrapy.Item):
@@ -57,52 +51,37 @@ class HeroClassCardItem(scrapy.Item):
     image = scrapy.Field()
 
 
-class ImperialClassCardItem(scrapy.Item):
-    name = scrapy.Field()
+class ImperialClassCardItem(DefaultDataItem):
     imperial_class_deck = scrapy.Field()
-    source = scrapy.Field()
-    image = scrapy.Field()
 
 
-class SupplyCardItem(scrapy.Item):
-    name = scrapy.Field()
-    source = scrapy.Field()
-    image = scrapy.Field()
+class SupplyCardItem(DefaultDataItem):
+    pass
 
 
-class StoryMissionCardItem(scrapy.Item):
-    name = scrapy.Field()
-    source = scrapy.Field()
-    image = scrapy.Field()
+class StoryMissionCardItem(DefaultDataItem):
+    pass
 
 
-class SideMissionCardItem(scrapy.Item):
-    name = scrapy.Field()
-    source = scrapy.Field()
+class SideMissionCardItem(DefaultDataItem):
     color = scrapy.Field()
-    image = scrapy.Field()
 
 
-class RewardItem(scrapy.Item):
-    name = scrapy.Field()
-    source = scrapy.Field()
-    image = scrapy.Field()
+class RewardItem(DefaultDataItem):
+    pass
 
 
-class Companion(scrapy.Item):
-    name = scrapy.Field()
-    source = scrapy.Field()
-    image = scrapy.Field()
+class CompanionItem(DefaultDataItem):
+    pass
 
 
-class UpgradeItem(scrapy.Item):
-    name = scrapy.Field()
-    source = scrapy.Field()
+class UpgradeItem(DefaultDataItem):
     tier = scrapy.Field(serializer=int)
-    image = scrapy.Field()
 
 
 class CardBackItem(scrapy.Item):
     deck = scrapy.Field()
     variant = scrapy.Field()
     image = scrapy.Field()
+
+

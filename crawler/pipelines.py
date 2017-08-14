@@ -78,6 +78,27 @@ class FilterValidCardBacksPipeline(object):
         return item
 
 
+class RemoveBacksPipeline(object):
+    classes = [
+        items.CommandCardItem,
+        items.RewardItem,
+        items.CompanionItem,
+        items.AgendaCardItem,
+    ]
+
+    def open_spider(self, spider):
+        pass
+
+    def close_spider(self, spider):
+        pass
+
+    def process_item(self, item, spider):
+        if item.__class__ in self.classes:
+            if item['name'].lower() == 'back':
+                raise DropItem()
+        return item
+
+
 class ProcessAgendasPipeline(object):
     pack_agendas = {
         'General Weiss': "The General's Scheme",
@@ -109,9 +130,6 @@ class ProcessAgendasPipeline(object):
 
     def process_item(self, item, spider):
         if item.__class__ == items.AgendaCardItem:
-            if item['name'].lower() == 'back':
-                raise DropItem()
-
             if item['agenda'].startswith('!!!!!!'):
                 item['agenda'] = self.pack_agendas[item['agenda'].replace('!!!!!!', '')]
         return item
@@ -153,7 +171,7 @@ class JsonWriterPipeline(object):
         items.StoryMissionCardItem: 'story-missions-cards.json',
         items.SideMissionCardItem: 'side-missions-cards.json',
         items.RewardItem: 'rewards-cards.json',
-        items.Companion: 'companion-cards.json',
+        items.CompanionItem: 'companion-cards.json',
         items.UpgradeItem: 'upgrade-cards.json',
         items.CardBackItem: 'card-backs.json',
     }

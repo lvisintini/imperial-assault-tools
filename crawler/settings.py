@@ -73,11 +73,11 @@ SCHEDULER_MEMORY_QUEUE = 'scrapy.squeues.FifoMemoryQueue'
 ITEM_PIPELINES = {
     'crawler.pipelines.FixTyposAndNormalizeTextPipeline': 100,
     'crawler.pipelines.AddSourceIdsPipeline': 200,
+    'crawler.pipelines.RemoveBacksPipeline': 200,
     'crawler.pipelines.FilterValidCardBacksPipeline': 300,
     'crawler.pipelines.ProcessAgendasPipeline': 300,
     #'crawler.pipelines.ImageProcessingPipeline': 800,
     'crawler.pipelines.JsonWriterPipeline': 900,
-
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
