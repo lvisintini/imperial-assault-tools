@@ -10,16 +10,6 @@
     "image": "/cache/Core-Box/Command%20Cards/back_275_thumb_ffflogog_whatermark_cc.jpg"
   },
   {
-    "deck": "Deployment",
-    "variant": null,
-    "image": "/cache/Core-Box/Deployment%20Cards/Rebel/Back_275_thumb_ffflogog_whatermark_cc.jpg"
-  },
-  {
-    "deck": "Imperial Class",
-    "variant": null,
-    "image": "/cache/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/back_275_thumb_ffflogog_whatermark_cc.jpg"
-  },
-  {
     "deck": "Reward",
     "variant": null,
     "image": "/cache/Core-Box/Rewards/back_275_thumb_ffflogog_whatermark_cc.jpg"
@@ -31,7 +21,7 @@
   },
   {
     "deck": "Story Mission",
-    "variant": null,
+    "variant": "Imperial Assault",
     "image": "/cache/Core-Box/Story%20Missions/Back_275_thumb_ffflogog_whatermark_cc.jpg"
   },
   {
@@ -40,13 +30,33 @@
     "image": "/cache/Core-Box/Supply%20Deck/Back_275_thumb_ffflogog_whatermark_cc.jpg"
   },
   {
+    "deck": "Rebel Upgrade",
+    "variant": "Tier 1",
+    "image": "/cache/Core-Box/Rebel%20Upgrades/Tier%201/Back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Rebel Upgrade",
+    "variant": "Tier 2",
+    "image": "/cache/Core-Box/Rebel%20Upgrades/Tier%202/Back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Rebel Upgrade",
+    "variant": "Tier 3",
+    "image": "/cache/Core-Box/Rebel%20Upgrades/Tier%203/Back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Story Mission",
+    "variant": "Return to Hoth",
+    "image": "/cache/Expansion-Boxes/Return-to-Hoth/Story%20Missions/Back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
     "deck": "Companion",
     "variant": null,
     "image": "/cache/Expansion-Boxes/The-Bespin-Gambit/Companions/back_275_thumb_ffflogog_whatermark_cc.jpg"
   },
   {
-    "deck": "Agenda Set",
-    "variant": null,
-    "image": "/cache/Ally-and-Villain-Packs/Wave-7/The%20Grand%20Inquisitor/Agenda%20Set/back_275_thumb_ffflogog_whatermark_cc.jpg"
+    "deck": "Story Mission",
+    "variant": "Jabba's Realm",
+    "image": "/cache/Expansion-Boxes/Jabbas-Realm/Story%20Missions/Back_275_thumb_ffflogog_whatermark_cc.jpg"
   }
 ]

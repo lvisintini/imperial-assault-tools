@@ -35,6 +35,9 @@ class FixTyposAndNormalizeTextPipeline(object):
             item['deck'] = item['deck'].replace('Heroe', 'Hero')
             item['deck'] = item['deck'].replace(' Deck', '')
             item['deck'] = item['deck'].replace(' Card', '')
+            item['deck'] = "Agenda" if item['deck'] == "Agenda Set" else item['deck']
+            if item['variant'] is not None:
+                item = self.sources_rename(item, 'variant')
 
         if item.__class__ == items.AgendaCardItem:
             item['name'] = "Lord Vader's Command" if item['name'] == 'Lord Vaders Command' else item['name']
@@ -50,12 +53,11 @@ class FixTyposAndNormalizeTextPipeline(object):
 class FilterValidCardBacksPipeline(object):
     variant_required = [
         'Condition',
-        'Imperial Class Deck',
+        'Imperial Class',
         'Rebel Hero',
         'Rebel Upgrade',
-        'Deployment Card',
-        'Reward Card',
-
+        'Deployment',
+        'Story Mission',
     ]
 
     def __init__(self):

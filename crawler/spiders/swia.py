@@ -69,9 +69,10 @@ class ImperialAssaultCrawler(scrapy.Spider):
 
     def parse_source_contents(self, response):
         for album in response.css('div.album'):
+            name = album.css('a ::text').extract_first().strip()
             yield items.CardBackItem(
-                deck=album.css('a ::text').extract_first().strip(),
-                variant=None,
+                deck=name,
+                variant=None if not name.startswith('Story') else self.get_section(response),
                 image=album.css('img ::attr(src)').extract_first().strip(),
             )
             yield response.follow(album.css('a::attr(href)').extract_first(), self.parse)
@@ -130,6 +131,14 @@ class ImperialAssaultCrawler(scrapy.Spider):
         for item in self.parse_default_card(items.SupplyCardItem, response):
             yield item
 
+    def parse_tier_backs(self, response):
+        for album in response.css('div.album'):
+            yield items.CardBackItem(
+                deck='Rebel Upgrade',
+                variant=album.css('a ::text').extract_first().strip(),
+                image=album.css('img ::attr(src)').extract_first().strip(),
+            )
+            yield response.follow(album.css('a::attr(href)').extract_first(), self.parse)
 
     def determine_parser(self, response):
         section = self.get_section(response)
@@ -148,7 +157,6 @@ class ImperialAssaultCrawler(scrapy.Spider):
             return self.parse_skirmish_map
         elif section == 'Core Box' or breadcrumbs[-1].startswith('Expansion Boxes'):
             return self.parse_source_contents
-
         elif breadcrumbs[-1].startswith('Agenda') or \
                 (section.startswith('Agenda') and 'Villain and Ally Packs' in breadcrumbs):
             return self.parse_agenda
@@ -162,3 +170,5 @@ class ImperialAssaultCrawler(scrapy.Spider):
             return self.parse_supply_cards
         elif section.startswith('Story'):
             return self.parse_story_missions
+        elif 'upgrades'in section.lower():
+            return self.parse_tier_backs
