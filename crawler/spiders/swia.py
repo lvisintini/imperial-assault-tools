@@ -75,7 +75,7 @@ class ImperialAssaultCrawler(scrapy.Spider):
 
         yield items.SourceItem(
             type=s_type,
-            wave=int(breadcrumbs[-1].replace('Wave ', '')),
+            wave=int(breadcrumbs[-1].lower().replace('wave ', '').replace('wave-', '')),
             name=section,
             image=response.css('div.image img ::attr(src)').extract_first().strip(),
         )
@@ -113,10 +113,6 @@ class ImperialAssaultCrawler(scrapy.Spider):
                 image=image.css('img ::attr(src)').extract_first(),
             )
 
-    def follow_waves(self, response):
-        for next_page in response.css('.album .albumdesc  a::attr(href)').extract():
-            yield response.follow(next_page, self.parse, priority=int(next_page.split('-')[-1]))
-
     def determine_parser(self, response):
         section = self.get_section(response)
         breadcrumbs = self.get_breadcrumbs(response)
@@ -128,9 +124,7 @@ class ImperialAssaultCrawler(scrapy.Spider):
             return self.parse_source_contents
         elif breadcrumbs[-1] in 'Expansion Boxes':
             return self.parse_source_contents
-        elif section == 'Villain and Ally Packs':
-            return self.follow_waves
-        elif breadcrumbs[-1].startswith('Wave '):
+        elif breadcrumbs[-1].lower().startswith('wave'):
             return self.parse_packs
         elif section == 'Skirmish Maps':
             return self.parse_skirmish_map
@@ -140,3 +134,62 @@ class ImperialAssaultCrawler(scrapy.Spider):
         elif breadcrumbs[-1].startswith('Agenda') or \
                 (section.startswith('Agenda') and 'Villain and Ally Packs' in breadcrumbs):
             return self.parse_agenda
+
+'''
+
+ 'source': 4}
+DEBUG:scrapy.core.scraper:Scraped from <200 http://cards.boardwars.eu/index.php?album=Core-Box/Agenda%20Decks/Agents%20of%20the%20Empire>
+{'agenda': 'Agents of the Empire',
+ 'image': '/cache/Core-Box/Agenda%20Decks/Agents%20of%20the%20Empire/Tracking%20Beacon_275_thumb_ffflogog_whatermark_cc.jpg',
+ 'name': 'Tracking Beacon',
+ 'source': 4}
+DEBUG:scrapy.core.engine:Crawled (200) <GET http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-9> (referer: http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs)
+DEBUG:scrapy.core.engine:Crawled (200) <GET http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-8> (referer: http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs)
+DEBUG:scrapy.core.engine:Crawled (200) <GET http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-7> (referer: http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs)
+DEBUG:scrapy.core.engine:Crawled (200) <GET http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-6> (referer: http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs)
+DEBUG:scrapy.core.engine:Crawled (200) <GET http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-5> (referer: http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs)
+DEBUG:scrapy.core.engine:Crawled (200) <GET http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-4> (referer: http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs)
+DEBUG:scrapy.core.engine:Crawled (200) <GET http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-3> (referer: http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs)
+DEBUG:scrapy.core.engine:Crawled (200) <GET http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-2> (referer: http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs)
+DEBUG:scrapy.core.engine:Crawled (200) <GET http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-1> (referer: http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs)
+DEBUG:scrapy.core.engine:Crawled (200) <GET http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-2/Boba%20Fett> (referer: http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-2)
+DEBUG:scrapy.core.scraper:Scraped from <200 http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-2/Boba%20Fett>
+{'id': 5,
+ 'image': '/cache/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Boba%20Fett%20Pack_275_thumb_ffflogog_whatermark_cc.png',
+ 'name': 'Boba Fett',
+ 'type': 'Villain Pack',
+ 'wave': 2}
+WARNING:scrapy.core.scraper:Dropped: 
+{'deck': 'Agenda',
+ 'image': '/cache/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Agenda%20Deck/back_275_thumb_ffflogog_whatermark_cc.jpg',
+ 'variant': None}
+WARNING:scrapy.core.scraper:Dropped: 
+{'deck': 'Command',
+ 'image': '/cache/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Command%20Cards/back_275_thumb_ffflogog_whatermark_cc.jpg',
+ 'variant': None}
+WARNING:scrapy.core.scraper:Dropped: 
+{'deck': 'Deployment',
+ 'image': '/cache/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Deployment%20Cards/Back_275_thumb_ffflogog_whatermark_cc.jpg',
+ 'variant': None}
+DEBUG:scrapy.dupefilters:Filtered duplicate request: <GET http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Agenda%20Deck> - no more duplicates will be shown (see DUPEFILTER_DEBUG to show all duplicates)
+DEBUG:scrapy.core.engine:Crawled (200) <GET http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-1/Chewbacca> (referer: http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-1)
+DEBUG:scrapy.core.scraper:Scraped from <200 http://cards.boardwars.eu/index.php?album=Ally-and-Villain-Packs/Wave-1/Chewbacca>
+{'id': 6,
+ 'image': '/cache/Ally-and-Villain-Packs/Wave-1/Chewbacca/Chewbacca%20Pack_275_thumb_ffflogog_whatermark_cc.png',
+ 'name': 'Chewbacca',
+ 'type': 'Ally Pack',
+ 'wave': 1}
+WARNING:scrapy.core.scraper:Dropped: 
+{'deck': 'Command',
+ 'image': '/cache/Ally-and-Villain-Packs/Wave-1/Chewbacca/Command%20Cards/back_275_thumb_ffflogog_whatermark_cc.jpg',
+ 'variant': None}
+WARNING:scrapy.core.scraper:Dropped: 
+{'deck': 'Deployment',
+ 'image': '/cache/Ally-and-Villain-Packs/Wave-1/Chewbacca/Deployment%20Cards/Back_275_thumb_ffflogog_whatermark_cc.jpg',
+ 'variant': None}
+WARNING:scrapy.core.scraper:Dropped: 
+{'deck': 'Reward',
+ 'image': '/cache/Ally-and-Villain-Packs/Wave-1/Chewbacca/Reward%20Cards/back_275_thumb_ffflogog_whatermark_cc.jpg',
+
+
+'''

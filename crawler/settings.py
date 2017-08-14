@@ -48,9 +48,11 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 1
 
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'crawler.middlewares.CrawlerSpiderMiddleware': 543,
-#}
+SPIDER_MIDDLEWARES = {
+    "scrapy.spidermiddlewares.depth.DepthMiddleware": 500
+}
+
+DEPTH_PRIORITY = -1
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
