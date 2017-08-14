@@ -122,6 +122,14 @@ class ImperialAssaultCrawler(scrapy.Spider):
         for item in self.parse_default_card(items.CompanionItem, response):
             yield item
 
+    def parse_story_missions(self, response):
+        for item in self.parse_default_card(items.StoryMissionCardItem, response):
+            yield item
+
+    def parse_supply_cards(self, response):
+        for item in self.parse_default_card(items.SupplyCardItem, response):
+            yield item
+
 
     def determine_parser(self, response):
         section = self.get_section(response)
@@ -150,3 +158,7 @@ class ImperialAssaultCrawler(scrapy.Spider):
             return self.parse_reward
         elif section.startswith('Companion'):
             return self.parse_companions
+        elif section.startswith('Suppl'):
+            return self.parse_supply_cards
+        elif section.startswith('Story'):
+            return self.parse_story_missions

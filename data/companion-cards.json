@@ -1,1 +1,27 @@
-[]
+[
+  {
+    "name": "Cam Droid Companion",
+    "image": "/cache/Expansion-Boxes/The-Bespin-Gambit/Companions/Cam%20Droid%20Companion_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 3
+  },
+  {
+    "name": "Junk Droid Companion",
+    "image": "/cache/Expansion-Boxes/The-Bespin-Gambit/Companions/Junk%20Droid%20Companion_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 3
+  },
+  {
+    "name": "R5 Astromech Companion",
+    "image": "/cache/Expansion-Boxes/The-Bespin-Gambit/Companions/R5%20Astromech%20Companion_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 3
+  },
+  {
+    "name": "Pit Droid Companion",
+    "image": "/cache/Expansion-Boxes/Jabbas-Realm/Companions/Pit%20Droid%20companion_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 4
+  },
+  {
+    "name": "Salacious B. Crumb",
+    "image": "/cache/Expansion-Boxes/Jabbas-Realm/Companions/Salacious%20B%20Crumb_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 4
+  }
+]

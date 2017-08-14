@@ -40,6 +40,10 @@ class FixTyposAndNormalizeTextPipeline(object):
             item['name'] = "Lord Vader's Command" if item['name'] == 'Lord Vaders Command' else item['name']
             item['agenda'] = "!!!!!!Stormtroopers" if item['agenda'] == '!!!!!!Stormtrooper' else item['agenda']
 
+        if item.__class__ == items.CompanionItem:
+            item['name'] = "Salacious B. Crumb" if item['name'] == "Salacious B Crumb" else item['name']
+            item['name'] = "Pit Droid Companion" if item['name'] == "Pit Droid companion" else item['name']
+
         return item
 
 
@@ -84,6 +88,8 @@ class RemoveBacksPipeline(object):
         items.RewardItem,
         items.CompanionItem,
         items.AgendaCardItem,
+        items.SupplyCardItem,
+        items.StoryMissionCardItem,
     ]
 
     def open_spider(self, spider):

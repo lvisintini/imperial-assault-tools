@@ -124,5 +124,491 @@
     "agenda": "Retaliation",
     "image": "/cache/Core-Box/Agenda%20Decks/Retaliation/Weakness%20Revealed_275_thumb_ffflogog_whatermark_cc.jpg",
     "source": 0
+  },
+  {
+    "name": "Death Mark",
+    "agenda": "Pursuit of the Enemy",
+    "image": "/cache/Expansion-Boxes/Twin-Shadows/Agenda%20Decks/Pursuit%20of%20the%20Enemy/Death%20Mark_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 1
+  },
+  {
+    "name": "Fire in the Sky",
+    "agenda": "Pursuit of the Enemy",
+    "image": "/cache/Expansion-Boxes/Twin-Shadows/Agenda%20Decks/Pursuit%20of%20the%20Enemy/Fire%20in%20the%20Sky_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 1
+  },
+  {
+    "name": "Strike and Subdue",
+    "agenda": "Pursuit of the Enemy",
+    "image": "/cache/Expansion-Boxes/Twin-Shadows/Agenda%20Decks/Pursuit%20of%20the%20Enemy/Strike%20and%20Subdue_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 1
+  },
+  {
+    "name": "Advanced Prototypes",
+    "agenda": "The Empires Reach",
+    "image": "/cache/Expansion-Boxes/Twin-Shadows/Agenda%20Decks/The%20Empires%20Reach/Advanced%20Prototypes_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 1
+  },
+  {
+    "name": "Data Security",
+    "agenda": "The Empires Reach",
+    "image": "/cache/Expansion-Boxes/Twin-Shadows/Agenda%20Decks/The%20Empires%20Reach/Data%20Security_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 1
+  },
+  {
+    "name": "Infiltrated",
+    "agenda": "The Empires Reach",
+    "image": "/cache/Expansion-Boxes/Twin-Shadows/Agenda%20Decks/The%20Empires%20Reach/Infiltrated_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 1
+  },
+  {
+    "name": "Counter Strike",
+    "agenda": "Defensive Tactics",
+    "image": "/cache/Expansion-Boxes/Return-to-Hoth/Agenda%20Decks/Defensive%20Tactics/Counter%20Strike_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 2
+  },
+  {
+    "name": "Enhanced Armor",
+    "agenda": "Defensive Tactics",
+    "image": "/cache/Expansion-Boxes/Return-to-Hoth/Agenda%20Decks/Defensive%20Tactics/Enhanced%20Armor_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 2
+  },
+  {
+    "name": "Personal Shield Generators",
+    "agenda": "Defensive Tactics",
+    "image": "/cache/Expansion-Boxes/Return-to-Hoth/Agenda%20Decks/Defensive%20Tactics/Personal%20Shield%20Generators_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 2
+  },
+  {
+    "name": "Bestial Fury",
+    "agenda": "Natural Warfare",
+    "image": "/cache/Expansion-Boxes/Return-to-Hoth/Agenda%20Decks/Natural%20Warfare/Bestial%20Fury_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 2
+  },
+  {
+    "name": "Exposed to the Elements",
+    "agenda": "Natural Warfare",
+    "image": "/cache/Expansion-Boxes/Return-to-Hoth/Agenda%20Decks/Natural%20Warfare/Exposed%20to%20the%20Elements_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 2
+  },
+  {
+    "name": "Unchained",
+    "agenda": "Natural Warfare",
+    "image": "/cache/Expansion-Boxes/Return-to-Hoth/Agenda%20Decks/Natural%20Warfare/Unchained_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 2
+  },
+  {
+    "name": "Blackmail",
+    "agenda": "Enhanced Interrogation",
+    "image": "/cache/Expansion-Boxes/The-Bespin-Gambit/Agenda%20Decks/Enhanced%20Interrogation/Blackmail_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 3
+  },
+  {
+    "name": "Learn Their Weaknesses",
+    "agenda": "Enhanced Interrogation",
+    "image": "/cache/Expansion-Boxes/The-Bespin-Gambit/Agenda%20Decks/Enhanced%20Interrogation/Learn%20Their%20Weaknesses_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 3
+  },
+  {
+    "name": "Weak Links",
+    "agenda": "Enhanced Interrogation",
+    "image": "/cache/Expansion-Boxes/The-Bespin-Gambit/Agenda%20Decks/Enhanced%20Interrogation/Weak%20Links_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 3
+  },
+  {
+    "name": "Contingency Plan",
+    "agenda": "Evasive Maneuvers",
+    "image": "/cache/Expansion-Boxes/The-Bespin-Gambit/Agenda%20Decks/Evasive%20Maneuvers/Contingency%20Plan_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 3
+  },
+  {
+    "name": "Feigned Retreat",
+    "agenda": "Evasive Maneuvers",
+    "image": "/cache/Expansion-Boxes/The-Bespin-Gambit/Agenda%20Decks/Evasive%20Maneuvers/Feigned%20Retreat_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 3
+  },
+  {
+    "name": "Hasty Ambush",
+    "agenda": "Evasive Maneuvers",
+    "image": "/cache/Expansion-Boxes/The-Bespin-Gambit/Agenda%20Decks/Evasive%20Maneuvers/Hasty%20Ambush_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 3
+  },
+  {
+    "name": "Abandoned Contract",
+    "agenda": "Guild Hunters",
+    "image": "/cache/Expansion-Boxes/Jabbas-Realm/Agenda%20Decks/Guild%20Hunters/Abandoned%20Contract_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 4
+  },
+  {
+    "name": "Call Your Shot",
+    "agenda": "Guild Hunters",
+    "image": "/cache/Expansion-Boxes/Jabbas-Realm/Agenda%20Decks/Guild%20Hunters/Call%20Your%20Shot_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 4
+  },
+  {
+    "name": "Shoot First",
+    "agenda": "Guild Hunters",
+    "image": "/cache/Expansion-Boxes/Jabbas-Realm/Agenda%20Decks/Guild%20Hunters/Shoot%20First_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 4
+  },
+  {
+    "name": "Jetpacks",
+    "agenda": "Persistence",
+    "image": "/cache/Expansion-Boxes/Jabbas-Realm/Agenda%20Decks/Persistence/Jetpacks_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 4
+  },
+  {
+    "name": "No Rest for the Weary",
+    "agenda": "Persistence",
+    "image": "/cache/Expansion-Boxes/Jabbas-Realm/Agenda%20Decks/Persistence/No%20Rest%20for%20the%20Weary_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 4
+  },
+  {
+    "name": "Snap Fire",
+    "agenda": "Persistence",
+    "image": "/cache/Expansion-Boxes/Jabbas-Realm/Agenda%20Decks/Persistence/Snap%20Fire_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 4
+  },
+  {
+    "name": "Forest Ambush",
+    "agenda": "The General's Scheme",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/General%20Weiss/Agenda%20Deck/Forest%20Ambush_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 6
+  },
+  {
+    "name": "Inspiring Command",
+    "agenda": "The General's Scheme",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/General%20Weiss/Agenda%20Deck/Inspiring%20Command_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 6
+  },
+  {
+    "name": "Special Modifications",
+    "agenda": "The General's Scheme",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/General%20Weiss/Agenda%20Deck/Special%20Modifications_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 6
+  },
+  {
+    "name": "Binary Revolution",
+    "agenda": "Droid Uprising",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/IG88/Agenda%20Deck/Binary%20Revolution_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 8
+  },
+  {
+    "name": "Firepower Upgrade",
+    "agenda": "Droid Uprising",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/IG88/Agenda%20Deck/Firepower%20Upgrade_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 8
+  },
+  {
+    "name": "Sabotaged Plans",
+    "agenda": "Droid Uprising",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/IG88/Agenda%20Deck/Sabotaged%20Plans_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 8
+  },
+  {
+    "name": "Best of the Best",
+    "agenda": "Crimson Empire",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/Royal%20Guard%20Champion/Agenda%20Deck/Best%20of%20the%20Best_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 11
+  },
+  {
+    "name": "Infection",
+    "agenda": "Crimson Empire",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/Royal%20Guard%20Champion/Agenda%20Deck/Infection_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 11
+  },
+  {
+    "name": "Pulling the Strings",
+    "agenda": "Crimson Empire",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-1/Royal%20Guard%20Champion/Agenda%20Deck/Pulling%20the%20Strings_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 11
+  },
+  {
+    "name": "By Any Means Necessary",
+    "agenda": "Soldiers for Hire",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Agenda%20Deck/By%20Any%20Means%20Necessary_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 12
+  },
+  {
+    "name": "No Disintegrations",
+    "agenda": "Soldiers for Hire",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Agenda%20Deck/No%20Disintegrations_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 12
+  },
+  {
+    "name": "Predator and Prey",
+    "agenda": "Soldiers for Hire",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Agenda%20Deck/Predator%20and%20Prey_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 12
+  },
+  {
+    "name": "Military Presence",
+    "agenda": "Stormtrooper support",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-2/Kayn%20Somos/Agenda%20Deck/Military%20Presence_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 13
+  },
+  {
+    "name": "Perpetual Reinforcements",
+    "agenda": "Stormtrooper support",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-2/Kayn%20Somos/Agenda%20Deck/Perpetual%20Reinforcements_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 13
+  },
+  {
+    "name": "Strength Of Command",
+    "agenda": "Stormtrooper support",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-2/Kayn%20Somos/Agenda%20Deck/Strenght%20Of%20Command_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 13
+  },
+  {
+    "name": "Back-Room Bargains",
+    "agenda": "Nefarious Dealings",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Agenda%20Deck/Back-Room%20Bargains_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 15
+  },
+  {
+    "name": "Final Blast",
+    "agenda": "Nefarious Dealings",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Agenda%20Deck/Final%20Blast_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 15
+  },
+  {
+    "name": "Trade Routes Disrupted",
+    "agenda": "Nefarious Dealings",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Agenda%20Deck/Trade%20Routes%20Disrupted_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 15
+  },
+  {
+    "name": "Bunker Buster",
+    "agenda": "Vader's Fist",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Agenda%20Deck/Bunker%20Buster_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 16
+  },
+  {
+    "name": "Set For Stun",
+    "agenda": "Vader's Fist",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Agenda%20Deck/Set%20For%20Stun_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 16
+  },
+  {
+    "name": "To The Last Man",
+    "agenda": "Vader's Fist",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Agenda%20Deck/To%20The%20Last%20Man_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 16
+  },
+  {
+    "name": "Grievous Wound",
+    "agenda": "Tusken Treachery",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-4/Bantha%20Rider/Agenda%20Deck/Grievous%20Wound_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 19
+  },
+  {
+    "name": "Into the Wastes",
+    "agenda": "Tusken Treachery",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-4/Bantha%20Rider/Agenda%20Deck/Into%20the%20Wastes_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 19
+  },
+  {
+    "name": "Relocated",
+    "agenda": "Tusken Treachery",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-4/Bantha%20Rider/Agenda%20Deck/Relocated_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 19
+  },
+  {
+    "name": "A Bounty Protected",
+    "agenda": "Punishing Tactics",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-5/Dengar/Agenda%20Deck/A%20Bounty%20Protected_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 20
+  },
+  {
+    "name": "Beaten Down",
+    "agenda": "Punishing Tactics",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-5/Dengar/Agenda%20Deck/Beaten%20Down_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 20
+  },
+  {
+    "name": "Targeted Cruelty",
+    "agenda": "Punishing Tactics",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-5/Dengar/Agenda%20Deck/Targeted%20Cruelty_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 20
+  },
+  {
+    "name": "Armored Division",
+    "agenda": "Bombardment",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-5/General%20Sorin/Agenda%20Deck/Armored%20Division_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 22
+  },
+  {
+    "name": "Explosive Shrapnel",
+    "agenda": "Bombardment",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-5/General%20Sorin/Agenda%20Deck/Explosive%20Shrapnel_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 22
+  },
+  {
+    "name": "Fully Charged",
+    "agenda": "Bombardment",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-5/General%20Sorin/Agenda%20Deck/Fully%20Charged_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 22
+  },
+  {
+    "name": "Classified Techniques",
+    "agenda": "Imperial Intelligence",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/Agent%20Blaise/Agenda%20Deck/Classified%20Techniques_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 24
+  },
+  {
+    "name": "Security Breach",
+    "agenda": "Imperial Intelligence",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/Agent%20Blaise/Agenda%20Deck/Security%20Breach_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 24
+  },
+  {
+    "name": "Under Surveillance",
+    "agenda": "Imperial Intelligence",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/Agent%20Blaise/Agenda%20Deck/Under%20Surveillance_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 24
+  },
+  {
+    "name": "Furious Retaliation",
+    "agenda": "Base Instincts",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/Bossk/Agenda%20Deck/Furious%20Retaliation_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 25
+  },
+  {
+    "name": "Gunrunner",
+    "agenda": "Base Instincts",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/Bossk/Agenda%20Deck/Gunrunner_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 25
+  },
+  {
+    "name": "On the Hunt",
+    "agenda": "Base Instincts",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/Bossk/Agenda%20Deck/On%20the%20Hunt_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 25
+  },
+  {
+    "name": "Misdirection",
+    "agenda": "Infiltration",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Agenda%20Deck/Misdirection_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 26
+  },
+  {
+    "name": "Quiet Entry",
+    "agenda": "Infiltration",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Agenda%20Deck/Quiet%20Entry_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 26
+  },
+  {
+    "name": "Trip Mine",
+    "agenda": "Infiltration",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Agenda%20Deck/Trip%20Mine_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 26
+  },
+  {
+    "name": "Hunter for a Fee",
+    "agenda": "Contract Gunmen",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-7/Greedo/Agenda%20Deck/Hunter%20for%20a%20Fee_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 28
+  },
+  {
+    "name": "Stealth Squad",
+    "agenda": "Contract Gunmen",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-7/Greedo/Agenda%20Deck/Stealth%20Squad_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 28
+  },
+  {
+    "name": "Top Target",
+    "agenda": "Contract Gunmen",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-7/Greedo/Agenda%20Deck/Top%20Target_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 28
+  },
+  {
+    "name": "Cornered",
+    "agenda": "Inquisition",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-7/The%20Grand%20Inquisitor/Agenda%20Set/Cornered_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 30
+  },
+  {
+    "name": "Targeted by the Empire",
+    "agenda": "Inquisition",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-7/The%20Grand%20Inquisitor/Agenda%20Set/Targeted%20by%20the%20Empire_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 30
+  },
+  {
+    "name": "When They Least Expect It",
+    "agenda": "Inquisition",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-7/The%20Grand%20Inquisitor/Agenda%20Set/When%20They%20Least%20Expect%20It_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 30
+  },
+  {
+    "name": "Anchorhead Affair",
+    "agenda": "Wasteland Patrol",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-8/Captain%20Terro/Agenda%20Deck/Anchorhead%20Affair_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 32
+  },
+  {
+    "name": "Dewback Patrol",
+    "agenda": "Wasteland Patrol",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-8/Captain%20Terro/Agenda%20Deck/Dewback%20Patrol_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 32
+  },
+  {
+    "name": "Flamethrower",
+    "agenda": "Wasteland Patrol",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-8/Captain%20Terro/Agenda%20Deck/Flamethrower_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 32
+  },
+  {
+    "name": "Head-Hunting",
+    "agenda": "Jabba's Empire",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-8/Jabba%20the%20Hutt/Agenda%20Deck/Head-Hunting_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 33
+  },
+  {
+    "name": "One Fat Slug",
+    "agenda": "Jabba's Empire",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-8/Jabba%20the%20Hutt/Agenda%20Deck/One%20Fat%20Slug_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 33
+  },
+  {
+    "name": "On Jabbas Orders",
+    "agenda": "Jabba's Empire",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-8/Jabba%20the%20Hutt/Agenda%20Deck/On%20Jabbas%20Orders_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 33
+  },
+  {
+    "name": "Etiquette and Torture",
+    "agenda": "Devious Droids",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-9/BT-1%20and%200-0-0/Agenda%20Set/Etiquette%20and%20Torture_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 35
+  },
+  {
+    "name": "Invasive Procedure",
+    "agenda": "Devious Droids",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-9/BT-1%20and%200-0-0/Agenda%20Set/Invasive%20Procedure_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 35
+  },
+  {
+    "name": "Missile Salvo",
+    "agenda": "Devious Droids",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-9/BT-1%20and%200-0-0/Agenda%20Set/Missile%20Salvo_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 35
+  },
+  {
+    "name": "Ion Blasters",
+    "agenda": "Desert Scavengers",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Agenda%20Set/Ion%20Blasters_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 37
+  },
+  {
+    "name": "Jawa Raid",
+    "agenda": "Desert Scavengers",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Agenda%20Set/Jawa%20Raid_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 37
+  },
+  {
+    "name": "Salvage Operatives",
+    "agenda": "Desert Scavengers",
+    "image": "/cache/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Agenda%20Set/Salvage%20Operatives_275_thumb_ffflogog_whatermark_cc.jpg",
+    "source": 37
   }
 ]
