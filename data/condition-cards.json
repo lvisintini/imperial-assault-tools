@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "name": "Bleeding",
+    "image": "http://cards.boardwars.eu/cache/Core-Box/Conditions/Bleeding/Bleeding_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "name": "Focused",
+    "image": "http://cards.boardwars.eu/cache/Core-Box/Conditions/Focused/Focused_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "name": "Stunned",
+    "image": "http://cards.boardwars.eu/cache/Core-Box/Conditions/Stunned/Stunned_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "name": "Weakened",
+    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Conditions/Weakened_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "name": "Hidden",
+    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Conditions/Hidden_275_thumb_ffflogog_whatermark_cc.jpg"
+  }
+]

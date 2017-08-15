@@ -47,6 +47,8 @@ class FixTyposAndNormalizeTextPipeline(object):
             item['name'] = "Salacious B. Crumb" if item['name'] == "Salacious B Crumb" else item['name']
             item['name'] = "Pit Droid Companion" if item['name'] == "Pit Droid companion" else item['name']
 
+        if item.__class__ == items.ConditionItem:
+            item['name'] = item['name'].replace(' Condition', '')
         return item
 
 
@@ -89,9 +91,13 @@ class RemoveBacksPipeline(object):
         items.CommandCardItem,
         items.RewardItem,
         items.CompanionItem,
+        items.ConditionItem,
         items.AgendaCardItem,
         items.SupplyCardItem,
         items.StoryMissionCardItem,
+        items.UpgradeItem,
+        items.ThreatMissionCardItem,
+        items.SideMissionCardItem,
     ]
 
     def open_spider(self, spider):
@@ -143,6 +149,26 @@ class ProcessAgendasPipeline(object):
         return item
 
 
+class ProcessSideMissionsPipeline(object):
+    grey_agendas = {
+        'Paying Debts',
+        'Imperial Entanglements',
+        'Celebration',
+    }
+
+    def open_spider(self, spider):
+        pass
+
+    def close_spider(self, spider):
+        pass
+
+    def process_item(self, item, spider):
+        if item.__class__ == items.SideMissionCardItem:
+            if item['color'] is None:
+                item['color'] = 'Grey' if item['name'] in self.grey_agendas else 'Green'
+        return item
+
+
 class AddSourceIdsPipeline(object):
     def __init__(self):
         self.inc_id = -1
@@ -164,6 +190,26 @@ class AddSourceIdsPipeline(object):
         return item
 
 
+class ImageProcessingPipeline(object):
+    image_attrs = [
+        'image',
+        'healthy',
+        'wounded',
+    ]
+
+    def open_spider(self, spider):
+        pass
+
+    def close_spider(self, spider):
+        pass
+
+    def process_item(self, item, spider):
+        for attr in self.image_attrs:
+            if attr in item:
+                item[attr] = 'http://cards.boardwars.eu' + item[attr]
+        return item
+
+
 class JsonWriterPipeline(object):
     file_names = {
         items.SourceItem: 'sources.json',
@@ -176,12 +222,13 @@ class JsonWriterPipeline(object):
         items.HeroClassCardItem: 'hero-class-cards.json',
         items.ImperialClassCardItem: 'imperial-class-cards.json',
         items.SupplyCardItem: 'supply-cards.json',
-        items.StoryMissionCardItem: 'story-missions-cards.json',
-        items.SideMissionCardItem: 'side-missions-cards.json',
+        items.StoryMissionCardItem: 'story-mission-cards.json',
+        items.SideMissionCardItem: 'side-mission-cards.json',
         items.RewardItem: 'rewards-cards.json',
         items.CompanionItem: 'companion-cards.json',
         items.UpgradeItem: 'upgrade-cards.json',
         items.CardBackItem: 'card-backs.json',
+        items.ThreatMissionCardItem: 'threat-mission-cards.json'
     }
 
     def __init__(self):
@@ -191,6 +238,9 @@ class JsonWriterPipeline(object):
         pass
 
     def close_spider(self, spider):
+        self.data[items.CardBackItem] = sorted(self.data[items.CardBackItem], key=lambda i: (i['deck'], i['variant']))
+        self.data[items.AgendaCardItem] = sorted(self.data[items.AgendaCardItem], key=lambda i: (i['source'], i['agenda'], i['name']))
+
         for cls, f in self.file_names.items():
             with open(f'./data/{f}', 'w') as file_object:
                 json.dump(self.data[cls], file_object, indent=2)

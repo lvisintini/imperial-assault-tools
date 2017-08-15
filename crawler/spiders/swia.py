@@ -1,3 +1,4 @@
+import re
 import scrapy
 from crawler import items
 
@@ -131,14 +132,67 @@ class ImperialAssaultCrawler(scrapy.Spider):
         for item in self.parse_default_card(items.SupplyCardItem, response):
             yield item
 
-    def parse_tier_backs(self, response):
+    def parse_cards_backs(self, deck_name, response):
         for album in response.css('div.album'):
             yield items.CardBackItem(
-                deck='Rebel Upgrade',
+                deck=deck_name,
                 variant=album.css('a ::text').extract_first().strip(),
                 image=album.css('img ::attr(src)').extract_first().strip(),
             )
             yield response.follow(album.css('a::attr(href)').extract_first(), self.parse)
+
+    def parse_tier_backs(self, response):
+        for item in self.parse_cards_backs('Rebel Upgrade', response):
+            yield item
+
+    def parse_imperial_class_deck_backs(self, response):
+        for item in self.parse_cards_backs('Imperial Class Deck', response):
+            yield item
+
+    def parse_upgrade(self, response):
+        breadcrumbs = self.get_breadcrumbs(response)
+        section = self.get_section(response)
+        for item in self.parse_default_card(items.UpgradeItem, response):
+            item['tier'] = int(re.findall('\d+', section)[-1])
+            item['source'] = breadcrumbs[-2]
+            yield item
+
+    def parse_side_missions(self, response):
+        breadcrumbs = self.get_breadcrumbs(response)
+        section = self.get_section(response)
+
+        if 'threat' in section.strip().lower():
+            for item in self.parse_default_card(items.ThreatMissionCardItem, response):
+                item['source'] = breadcrumbs[-2]
+                yield item
+
+            for image in response.css('div.image'):
+                name = image.css('img ::attr(alt)').extract_first().strip().lower()
+                if name == 'back':
+                    yield items.CardBackItem(
+                        deck='Threat Mission',
+                        variant=breadcrumbs[-2],
+                        image=image.css('img ::attr(src)').extract_first(),
+                    )
+        else:
+            for item in self.parse_default_card(items.SideMissionCardItem, response):
+                item['color'] = section
+                item['source'] = breadcrumbs[-2]
+                yield item
+
+    def parse_imperial_class_decks(self, response):
+        breadcrumbs = self.get_breadcrumbs(response)
+        for item in self.parse_default_card(items.ImperialClassCardItem, response):
+            item['source'] = breadcrumbs[-2]
+            yield item
+
+    def parse_conditions(self, response):
+        breadcrumbs = self.get_breadcrumbs(response)
+        for image in response.css('div.image'):
+            yield items.ConditionItem(
+                name=image.css('img ::attr(alt)').extract_first().strip(),
+                image=image.css('img ::attr(src)').extract_first(),
+            )
 
     def determine_parser(self, response):
         section = self.get_section(response)
@@ -172,3 +226,14 @@ class ImperialAssaultCrawler(scrapy.Spider):
             return self.parse_story_missions
         elif 'upgrades'in section.lower():
             return self.parse_tier_backs
+        elif 'upgrades' in breadcrumbs[-1].lower():
+            return self.parse_upgrade
+        elif 'side' in breadcrumbs[-1].lower():
+            return self.parse_side_missions
+        elif section.lower().startswith('imperial class deck'):
+            return self.parse_imperial_class_deck_backs
+        elif breadcrumbs[-1].lower().startswith('imperial class deck'):
+            return self.parse_imperial_class_decks
+        elif breadcrumbs[-1].lower().startswith('condition') or \
+                (section.lower().startswith('condition') and breadcrumbs[-2].startswith('Expansion Boxes')):
+            return self.parse_conditions

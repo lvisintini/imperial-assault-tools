@@ -29,8 +29,9 @@ class CommandCardItem(DefaultDataItem):
     pass
 
 
-class ConditionItem(DefaultDataItem):
-    type = scrapy.Field()
+class ConditionItem(scrapy.Item):
+    name = scrapy.Field()
+    image = scrapy.Field()
 
 
 class DeploymentCardItem(DefaultDataItem):
@@ -60,6 +61,10 @@ class SupplyCardItem(DefaultDataItem):
 
 
 class StoryMissionCardItem(DefaultDataItem):
+    pass
+
+
+class ThreatMissionCardItem(DefaultDataItem):
     pass
 
 
