@@ -1,6 +1,6 @@
-from crawler.logging import monkey_patch
+from crawler.utils import monkey_patch_logging
 
-monkey_patch()
+monkey_patch_logging()
 
 BOT_NAME = 'crawler'
 

@@ -23,5 +23,5 @@ def _get_handler_custom(*args, **kwargs):
     return handler
 
 
-def monkey_patch():
+def monkey_patch_logging():
     scrapy.utils.log._get_handler = _get_handler_custom

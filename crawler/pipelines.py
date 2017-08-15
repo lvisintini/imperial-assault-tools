@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import json
+import logging
 from collections import defaultdict
 
 from scrapy.exceptions import DropItem
 
 from crawler import items
+
+logger = logging.getLogger()
+
 
 
 class ProcessItemPipeline(object):
@@ -202,6 +206,8 @@ class JsonWriterPipeline(ProcessItemPipeline):
         for cls, f in self.file_names.items():
             with open(f'./data/{f}', 'w') as file_object:
                 json.dump(self.data[cls], file_object, indent=2)
+            if not self.data[cls]:
+                logger.info('"{}" does not have any items'.format(cls.__name__))
 
     def process_item(self, item, spider):
         self.data[item.__class__].append(dict(item))
