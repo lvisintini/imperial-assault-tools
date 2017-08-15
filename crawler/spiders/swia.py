@@ -145,6 +145,10 @@ class ImperialAssaultCrawler(scrapy.Spider):
         for item in self.parse_cards_backs('Rebel Upgrade', response):
             yield item
 
+    def parse_condition_backs(self, response):
+        for item in self.parse_cards_backs('Condition', response):
+            yield item
+
     def parse_imperial_class_deck_backs(self, response):
         for item in self.parse_cards_backs('Imperial Class Deck', response):
             yield item
@@ -193,6 +197,21 @@ class ImperialAssaultCrawler(scrapy.Spider):
                 name=image.css('img ::attr(alt)').extract_first().strip(),
                 image=image.css('img ::attr(src)').extract_first(),
             )
+        if breadcrumbs[-2].startswith('Expansion Boxes'):
+            for image in response.css('div.image'):
+                actual_name = image.css('img ::attr(alt)').extract_first().strip()
+                if actual_name != 'back':
+                    break
+            else:
+                raise Exception('Condition card back without a variant!!')
+            for image in response.css('div.image'):
+                name = image.css('img ::attr(alt)').extract_first().strip().lower()
+                if name == 'back':
+                    yield items.CardBackItem(
+                        deck='Condition',
+                        variant=actual_name,
+                        image=image.css('img ::attr(src)').extract_first(),
+                    )
 
     def determine_parser(self, response):
         section = self.get_section(response)
@@ -234,6 +253,10 @@ class ImperialAssaultCrawler(scrapy.Spider):
             return self.parse_imperial_class_deck_backs
         elif breadcrumbs[-1].lower().startswith('imperial class deck'):
             return self.parse_imperial_class_decks
-        elif breadcrumbs[-1].lower().startswith('condition') or \
+
+        elif (breadcrumbs[-1].lower().startswith('condition') and breadcrumbs[-2].startswith('Core Box')) or \
                 (section.lower().startswith('condition') and breadcrumbs[-2].startswith('Expansion Boxes')):
             return self.parse_conditions
+
+        elif section.lower().startswith('condition') and breadcrumbs[-1].startswith('Core Box'):
+            return self.parse_condition_backs

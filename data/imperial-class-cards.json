@@ -180,11 +180,6 @@
     "source": 1
   },
   {
-    "name": "back",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/back_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1
-  },
-  {
     "name": "Explosive Munitions",
     "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Explosive%20Munitions_275_thumb_ffflogog_whatermark_cc.jpg",
     "source": 2
@@ -227,11 +222,6 @@
   {
     "name": "Rapid Dominance",
     "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Rapid%20Dominance_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
-  },
-  {
-    "name": "back",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/back_275_thumb_ffflogog_whatermark_cc.jpg",
     "source": 2
   },
   {
@@ -280,11 +270,6 @@
     "source": 2
   },
   {
-    "name": "back",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/back_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
-  },
-  {
     "name": "In the Shadows",
     "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/In%20the%20Shadows_275_thumb_ffflogog_whatermark_cc.jpg",
     "source": 3
@@ -330,11 +315,6 @@
     "source": 3
   },
   {
-    "name": "back",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/back_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 3
-  },
-  {
     "name": "Wanted Dead",
     "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Wanted%20Dead_275_thumb_ffflogog_whatermark_cc.jpg",
     "source": 4
@@ -377,11 +357,6 @@
   {
     "name": "Most Wanted",
     "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Most%20Wanted_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
-  },
-  {
-    "name": "back",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/back_275_thumb_ffflogog_whatermark_cc.jpg",
     "source": 4
   },
   {
@@ -432,11 +407,6 @@
   {
     "name": "Indomitable",
     "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Indomitable_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
-  },
-  {
-    "name": "back",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/back_275_thumb_ffflogog_whatermark_cc.jpg",
     "source": 4
   }
 ]

@@ -8,13 +8,18 @@ from scrapy.exceptions import DropItem
 from crawler import items
 
 
-class FixTyposAndNormalizeTextPipeline(object):
+class ProcessItemPipeline(object):
     def open_spider(self, spider):
         pass
 
     def close_spider(self, spider):
         pass
 
+    def process_item(self, item, spider):
+        raise NotImplementedError()
+
+
+class FixTyposAndNormalizeTextPipeline(ProcessItemPipeline):
     @staticmethod
     def sources_rename(item, attr):
         item[attr] = 'Imperial Assault' if item[attr] == 'Core Box' else item[attr]
@@ -37,6 +42,7 @@ class FixTyposAndNormalizeTextPipeline(object):
             item['deck'] = item['deck'].replace(' Card', '')
             item['deck'] = "Agenda" if item['deck'] == "Agenda Set" else item['deck']
             if item['variant'] is not None:
+                item['variant'] = item['variant'].replace(' Condition', '')
                 item = self.sources_rename(item, 'variant')
 
         if item.__class__ == items.AgendaCardItem:
@@ -52,7 +58,7 @@ class FixTyposAndNormalizeTextPipeline(object):
         return item
 
 
-class FilterValidCardBacksPipeline(object):
+class FilterValidCardBacksPipeline(ProcessItemPipeline):
     variant_required = [
         'Condition',
         'Imperial Class',
@@ -65,55 +71,33 @@ class FilterValidCardBacksPipeline(object):
     def __init__(self):
         self.dedup_list = []
 
-    def open_spider(self, spider):
-        pass
-
-    def close_spider(self, spider):
-        pass
-
     def process_item(self, item, spider):
         if item.__class__ == items.CardBackItem:
             if item['deck'] in self.variant_required and item.get('variant', None) is None:
-                raise DropItem()
+                raise DropItem('{}: "{}" requires a variant'.format(item.__class__.__name__, item['deck']))
 
             dedup_tuple = (item['deck'],  item.get('variant', None))
 
             if dedup_tuple not in self.dedup_list:
                 self.dedup_list.append(dedup_tuple)
             else:
-                raise DropItem()
+                raise DropItem('{}: "{}.{}" is duplicate'.format(
+                    item.__class__.__name__,
+                    item['deck'],
+                    item['variant']
+                ))
 
         return item
 
 
-class RemoveBacksPipeline(object):
-    classes = [
-        items.CommandCardItem,
-        items.RewardItem,
-        items.CompanionItem,
-        items.ConditionItem,
-        items.AgendaCardItem,
-        items.SupplyCardItem,
-        items.StoryMissionCardItem,
-        items.UpgradeItem,
-        items.ThreatMissionCardItem,
-        items.SideMissionCardItem,
-    ]
-
-    def open_spider(self, spider):
-        pass
-
-    def close_spider(self, spider):
-        pass
-
+class RemoveBacksPipeline(ProcessItemPipeline):
     def process_item(self, item, spider):
-        if item.__class__ in self.classes:
-            if item['name'].lower() == 'back':
-                raise DropItem()
+        if 'name' in item.fields and item['name'].lower() == 'back':
+            raise DropItem('{}: Back of card detected'.format(item.__class__.__name__))
         return item
 
 
-class ProcessAgendasPipeline(object):
+class ProcessAgendasPipeline(ProcessItemPipeline):
     pack_agendas = {
         'General Weiss': "The General's Scheme",
         'IG88': 'Droid Uprising',
@@ -136,12 +120,6 @@ class ProcessAgendasPipeline(object):
         'Jawa Scavenger': 'Desert Scavengers',
     }
 
-    def open_spider(self, spider):
-        pass
-
-    def close_spider(self, spider):
-        pass
-
     def process_item(self, item, spider):
         if item.__class__ == items.AgendaCardItem:
             if item['agenda'].startswith('!!!!!!'):
@@ -149,18 +127,12 @@ class ProcessAgendasPipeline(object):
         return item
 
 
-class ProcessSideMissionsPipeline(object):
+class ProcessSideMissionsPipeline(ProcessItemPipeline):
     grey_agendas = {
         'Paying Debts',
         'Imperial Entanglements',
         'Celebration',
     }
-
-    def open_spider(self, spider):
-        pass
-
-    def close_spider(self, spider):
-        pass
 
     def process_item(self, item, spider):
         if item.__class__ == items.SideMissionCardItem:
@@ -169,16 +141,10 @@ class ProcessSideMissionsPipeline(object):
         return item
 
 
-class AddSourceIdsPipeline(object):
+class AddSourceIdsPipeline(ProcessItemPipeline):
     def __init__(self):
         self.inc_id = -1
         self.ids = {}
-
-    def open_spider(self, spider):
-        pass
-
-    def close_spider(self, spider):
-        pass
 
     def process_item(self, item, spider):
         if item.__class__ == items.SourceItem:
@@ -190,27 +156,22 @@ class AddSourceIdsPipeline(object):
         return item
 
 
-class ImageProcessingPipeline(object):
+class ImageProcessingPipeline(ProcessItemPipeline):
     image_attrs = [
         'image',
         'healthy',
         'wounded',
     ]
 
-    def open_spider(self, spider):
-        pass
-
-    def close_spider(self, spider):
-        pass
-
     def process_item(self, item, spider):
+        # make and exception here - > card back story mission core box
         for attr in self.image_attrs:
             if attr in item:
                 item[attr] = 'http://cards.boardwars.eu' + item[attr]
         return item
 
 
-class JsonWriterPipeline(object):
+class JsonWriterPipeline(ProcessItemPipeline):
     file_names = {
         items.SourceItem: 'sources.json',
         items.SkirmishMapItem: 'skirmish-maps.json',
@@ -233,9 +194,6 @@ class JsonWriterPipeline(object):
 
     def __init__(self):
         self.data = defaultdict(list)
-
-    def open_spider(self, spider):
-        pass
 
     def close_spider(self, spider):
         self.data[items.CardBackItem] = sorted(self.data[items.CardBackItem], key=lambda i: (i['deck'], i['variant']))

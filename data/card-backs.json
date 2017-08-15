@@ -15,6 +15,31 @@
     "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Companions/back_275_thumb_ffflogog_whatermark_cc.jpg"
   },
   {
+    "deck": "Condition",
+    "variant": "Bleeding",
+    "image": "http://cards.boardwars.eu/cache/Core-Box/Conditions/Bleeding/back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Condition",
+    "variant": "Focused",
+    "image": "http://cards.boardwars.eu/cache/Core-Box/Conditions/Focused/back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Condition",
+    "variant": "Hidden",
+    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Conditions/back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Condition",
+    "variant": "Stunned",
+    "image": "http://cards.boardwars.eu/cache/Core-Box/Conditions/Stunned/back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Condition",
+    "variant": "Weakened",
+    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Conditions/back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
     "deck": "Imperial Class",
     "variant": "Armored Onslaught",
     "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/back_275_thumb_ffflogog_whatermark_cc.jpg"
