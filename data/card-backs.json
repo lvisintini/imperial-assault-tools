@@ -40,6 +40,26 @@
     "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Conditions/back_275_thumb_ffflogog_whatermark_cc.jpg"
   },
   {
+    "deck": "Deployment",
+    "variant": "Imperial",
+    "image": "http://cards.boardwars.eu/cache/Core-Box/Deployment%20Cards/Imperial/Back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Deployment",
+    "variant": "Mercenary",
+    "image": "http://cards.boardwars.eu/cache/Core-Box/Deployment%20Cards/Mercenary/Back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Deployment",
+    "variant": "Neutral",
+    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Neutral/Back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
+    "deck": "Deployment",
+    "variant": "Rebel",
+    "image": "http://cards.boardwars.eu/cache/Core-Box/Deployment%20Cards/Rebel/Back_275_thumb_ffflogog_whatermark_cc.jpg"
+  },
+  {
     "deck": "Imperial Class",
     "variant": "Armored Onslaught",
     "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/back_275_thumb_ffflogog_whatermark_cc.jpg"

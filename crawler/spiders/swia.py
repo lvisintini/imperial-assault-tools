@@ -145,6 +145,10 @@ class ImperialAssaultCrawler(scrapy.Spider):
         for item in self.parse_cards_backs('Rebel Upgrade', response):
             yield item
 
+    def parse_deployment_card_backs(self, response):
+        for item in self.parse_cards_backs('Deployment Cards', response):
+            yield item
+
     def parse_condition_backs(self, response):
         for item in self.parse_cards_backs('Condition', response):
             yield item
@@ -246,6 +250,25 @@ class ImperialAssaultCrawler(scrapy.Spider):
                         image=image.css('img ::attr(src)').extract_first(),
                     )
 
+    def parse_deployment_cards(self, response):
+        section = self.get_section(response)
+        breadcrumbs = self.get_breadcrumbs(response)
+        if not breadcrumbs[-3].startswith('Villain and Ally Packs'):
+            for image in response.css('div.image'):
+                yield items.DeploymentCardItem(
+                    name=image.css('img ::attr(alt)').extract_first().strip(),
+                    image=image.css('img ::attr(src)').extract_first(),
+                    faction=section,
+                    source=breadcrumbs[-2]
+            )
+        else:
+            for image in response.css('div.image'):
+                yield items.DeploymentCardItem(
+                    name=image.css('img ::attr(alt)').extract_first().strip(),
+                    image=image.css('img ::attr(src)').extract_first(),
+                    source=breadcrumbs[-1]
+                )
+
     def determine_parser(self, response):
         section = self.get_section(response)
         breadcrumbs = self.get_breadcrumbs(response)
@@ -297,3 +320,15 @@ class ImperialAssaultCrawler(scrapy.Spider):
             return self.parse_hero_deck_backs
         elif breadcrumbs[-1] == 'Rebel Heroes':
             return self.parse_hero_cards
+
+        elif breadcrumbs[-1].lower().startswith('deployment') and breadcrumbs[-2].startswith('Core Box'):
+            return self.parse_deployment_cards
+        elif breadcrumbs[-1].lower().startswith('deployment') and breadcrumbs[-3].startswith('Expansion Boxes'):
+            return self.parse_deployment_cards
+        elif section.lower().startswith('deployment') and 'Villain and Ally Packs' in breadcrumbs:
+            return self.parse_deployment_cards
+
+        elif section.lower().startswith('deployment') and breadcrumbs[-1].startswith('Core Box'):
+            return self.parse_deployment_card_backs
+        elif section.lower().startswith('deployment') and breadcrumbs[-2].startswith('Expansion Boxes'):
+            return self.parse_deployment_card_backs

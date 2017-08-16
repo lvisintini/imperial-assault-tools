@@ -27,6 +27,7 @@ ITEM_PIPELINES = {
     'crawler.pipelines.RemoveBacksPipeline': 200,
     'crawler.pipelines.FilterValidCardBacksPipeline': 300,
     'crawler.pipelines.ProcessAgendasPipeline': 300,
+    'crawler.pipelines.ProcessDeploymentCardsPipeline': 300,
     'crawler.pipelines.ProcessSideMissionsPipeline': 300,
     'crawler.pipelines.ImageProcessingPipeline': 800,
     'crawler.pipelines.JsonWriterPipeline': 900,

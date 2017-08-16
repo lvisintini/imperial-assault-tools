@@ -36,6 +36,7 @@ class ConditionItem(scrapy.Item):
 
 class DeploymentCardItem(DefaultDataItem):
     faction = scrapy.Field()
+    scope = scrapy.Field()
 
 
 class HeroItem(scrapy.Item):

@@ -58,6 +58,11 @@ class FixTyposAndNormalizeTextPipeline(ProcessItemPipeline):
 
         if item.__class__ == items.ConditionItem:
             item['name'] = item['name'].replace(' Condition', '')
+
+        if item.__class__ == items.DeploymentCardItem:
+            item['name'] = item['name'].replace('  Deployment Card', '')
+            item['name'] = item['name'].replace('  deployment card', '')
+            item['name'] = "Vader's Finest" if item['name'] == 'Vaders Finest' else item['name']
         return item
 
 
@@ -144,6 +149,25 @@ class ProcessSideMissionsPipeline(ProcessItemPipeline):
         return item
 
 
+class ProcessDeploymentCardsPipeline(ProcessItemPipeline):
+    def process_item(self, item, spider):
+        if item.__class__ == items.DeploymentCardItem:
+            if item['name'].lower().endswith('alternate art'):
+                raise DropItem('Alternate art detected')
+
+            if item['name'].endswith('Campaign') or item['name'].endswith('campaign'):
+                item['scope'] = 'Campaign'
+                item['name'] = item['name'].replace(' Campaign', '')
+                item['name'] = item['name'].replace(' campaign', '')
+            elif item['name'].endswith('Skirmish') or item['name'].endswith('skirmish'):
+                item['scope'] = 'Skirmish'
+                item['name'] = item['name'].replace(' Skirmish', '')
+                item['name'] = item['name'].replace(' skirmish', '')
+            else:
+                item['scope'] = None
+        return item
+
+
 class AddSourceIdsPipeline(ProcessItemPipeline):
     def __init__(self):
         self.inc_id = -1
@@ -216,6 +240,7 @@ class JsonWriterPipeline(ProcessItemPipeline):
     def close_spider(self, spider):
         self.data[items.CardBackItem] = sorted(self.data[items.CardBackItem], key=lambda i: (i['deck'], i['variant']))
         self.data[items.AgendaCardItem] = sorted(self.data[items.AgendaCardItem], key=lambda i: (i['source'], i['agenda'], i['name']))
+        self.data[items.DeploymentCardItem] = sorted(self.data[items.DeploymentCardItem], key=lambda i: i['name'])
 
         for cls, f in self.file_names.items():
             with open(f'./data/{f}', 'w') as file_object:
