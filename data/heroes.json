@@ -1,1 +1,114 @@
-[]
+[
+  {
+    "name": "Diala Passil",
+    "source": 0,
+    "healthy": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Heroes/Diala%20Passil/Diala%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Heroes/Diala%20Passil/Diala%20Hero%20Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 0
+  },
+  {
+    "name": "Fenn Signis",
+    "source": 0,
+    "healthy": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Heroes/Fenn%20Signis/Fenn%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Heroes/Fenn%20Signis/Fenn%20Hero%20Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 1
+  },
+  {
+    "name": "Gaarkhan",
+    "source": 0,
+    "healthy": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Heroes/Gaarkhan/Gaarkahn%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Heroes/Gaarkhan/Gaarkhan%20Hero%20Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 2
+  },
+  {
+    "name": "Gideon Argus",
+    "source": 0,
+    "healthy": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Heroes/Gideon%20Argus/Gideon%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Heroes/Gideon%20Argus/Gideon%20Hero%20Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 3
+  },
+  {
+    "name": "Jyn Odan",
+    "source": 0,
+    "healthy": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Heroes/Jyn%20Odan/Jyn%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Heroes/Jyn%20Odan/Jyn%20Hero%20Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 4
+  },
+  {
+    "name": "Mak Eshka'rey",
+    "source": 0,
+    "healthy": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Mak%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Mak%20Hero%20Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 5
+  },
+  {
+    "name": "Biv Bodhrik",
+    "source": 1,
+    "healthy": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Biv%20Bodhrik%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Biv%20Bodhrik%20Hero%20Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 6
+  },
+  {
+    "name": "Saska Teft",
+    "source": 1,
+    "healthy": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Saska%20Teft%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Saska%20Teft%20Hero%20Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 7
+  },
+  {
+    "name": "Loku Kanoloa",
+    "source": 2,
+    "healthy": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Loku%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Loku-Hero-Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 8
+  },
+  {
+    "name": "MHD-19",
+    "source": 2,
+    "healthy": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/MHD-19%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/MHD-19%20Hero%20Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 9
+  },
+  {
+    "name": "Verena Talos",
+    "source": 2,
+    "healthy": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Verena%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Verena%20Hero%20Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 10
+  },
+  {
+    "name": "Davith Elso",
+    "source": 3,
+    "healthy": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Davith%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Davith%20Hero%20Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 11
+  },
+  {
+    "name": "Murne Rin",
+    "source": 3,
+    "healthy": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Murne%20Hero%20Healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Murne%20Hero%20Wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 12
+  },
+  {
+    "name": "Onar Koma",
+    "source": 4,
+    "healthy": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Onar%20Hero%20healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Onar%20Hero%20wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 13
+  },
+  {
+    "name": "Shyla Varad",
+    "source": 4,
+    "healthy": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Shyla%20Hero%20healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Shyla%20Hero%20wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 14
+  },
+  {
+    "name": "Vinto Hreeda",
+    "source": 4,
+    "healthy": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Vinto%20Hero%20healthy_275_thumb_ffflogog_whatermark_cc.jpg",
+    "wounded": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Vinto%20Hero%20wounded_275_thumb_ffflogog_whatermark_cc.jpg",
+    "id": 15
+  }
+]

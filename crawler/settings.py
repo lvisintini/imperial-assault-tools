@@ -23,6 +23,7 @@ SCHEDULER_MEMORY_QUEUE = 'scrapy.squeues.FifoMemoryQueue'
 ITEM_PIPELINES = {
     'crawler.pipelines.FixTyposAndNormalizeTextPipeline': 100,
     'crawler.pipelines.AddSourceIdsPipeline': 200,
+    'crawler.pipelines.AddHeroIdsPipeline': 200,
     'crawler.pipelines.RemoveBacksPipeline': 200,
     'crawler.pipelines.FilterValidCardBacksPipeline': 300,
     'crawler.pipelines.ProcessAgendasPipeline': 300,

@@ -153,6 +153,39 @@ class ImperialAssaultCrawler(scrapy.Spider):
         for item in self.parse_cards_backs('Imperial Class Deck', response):
             yield item
 
+    def parse_hero_deck_backs(self, response):
+        for item in self.parse_cards_backs('Rebel Heroes', response):
+            yield item
+
+    def parse_hero_cards(self, response):
+        breadcrumbs = self.get_breadcrumbs(response)
+        section = self.get_section(response)
+
+        hero = items.HeroItem(
+            name=section,
+            source=breadcrumbs[-2]
+        )
+
+        for image in response.css('div.image'):
+            alt = image.css('img ::attr(alt)').extract_first().strip()
+            if alt.lower().endswith('wounded'):
+                hero['wounded'] = image.css('img ::attr(src)').extract_first()
+            if alt.lower().endswith('healthy'):
+                hero['healthy'] = image.css('img ::attr(src)').extract_first()
+
+        yield hero
+
+        for image in response.css('div.image'):
+            alt = image.css('img ::attr(alt)').extract_first().strip()
+            if alt.lower().endswith('wounded') or alt.lower().endswith('healthy'):
+                continue
+
+            yield items.HeroClassCardItem(
+                name=image.css('img ::attr(alt)').extract_first().strip(),
+                image=image.css('img ::attr(src)').extract_first(),
+                hero=section
+            )
+
     def parse_upgrade(self, response):
         breadcrumbs = self.get_breadcrumbs(response)
         section = self.get_section(response)
@@ -260,3 +293,7 @@ class ImperialAssaultCrawler(scrapy.Spider):
 
         elif section.lower().startswith('condition') and breadcrumbs[-1].startswith('Core Box'):
             return self.parse_condition_backs
+        elif section == 'Rebel Heroes':
+            return self.parse_hero_deck_backs
+        elif breadcrumbs[-1] == 'Rebel Heroes':
+            return self.parse_hero_cards

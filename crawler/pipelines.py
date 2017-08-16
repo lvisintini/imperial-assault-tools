@@ -11,7 +11,6 @@ from crawler import items
 logger = logging.getLogger()
 
 
-
 class ProcessItemPipeline(object):
     def open_spider(self, spider):
         pass
@@ -157,6 +156,21 @@ class AddSourceIdsPipeline(ProcessItemPipeline):
             self.ids[item['name']] = self.inc_id
         elif 'source' in item.fields:
             item['source'] = self.ids[item['source']]
+        return item
+
+
+class AddHeroIdsPipeline(ProcessItemPipeline):
+    def __init__(self):
+        self.inc_id = -1
+        self.ids = {}
+
+    def process_item(self, item, spider):
+        if item.__class__ == items.HeroItem:
+            self.inc_id += 1
+            item['id'] = self.inc_id
+            self.ids[item['name']] = self.inc_id
+        elif item.__class__ == items.HeroClassCardItem:
+            item['hero'] = self.ids[item['hero']]
         return item
 
 
