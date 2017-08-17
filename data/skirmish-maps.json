@@ -1,150 +1,236 @@
 [
   {
     "name": "Geonosis Foundry",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Geonosis%20Foundry_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Geonosis%20Foundry.jpg",
+    "image_file": "./images/skirmish-maps/cfc3a909-a844-4220-befd-34f9d53e334a.jpg",
+    "image_fingerprint": "6963254d766d6b7c"
   },
   {
     "name": "Coruscant Landfill",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Coruscant%20Landfill_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Coruscant%20Landfill.jpg",
+    "image_file": "./images/skirmish-maps/fff88328-9ce8-4c64-a4f4-af6d077be259.jpg",
+    "image_fingerprint": "4959135bdbdb1b57"
   },
   {
     "name": "Bespin Tibanna Facility",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Bespin%20Tibanna%20Facility_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Bespin%20Tibanna%20Facility.jpg",
+    "image_file": "./images/skirmish-maps/7a370c05-a499-4f12-9cb0-1560f3b10aa4.jpg",
+    "image_fingerprint": "33331633694d4f8c"
   },
   {
     "name": "Endor Wilderness",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Endor%20Wilderness_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Endor%20Wilderness.jpg",
+    "image_file": "./images/skirmish-maps/2720e3b8-4ae6-4652-af00-96cd380b6c14.jpg",
+    "image_fingerprint": "095959571d475759"
   },
   {
     "name": "Corellian Underground",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Corellian%20Underground_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Corellian%20Underground.jpg",
+    "image_file": "./images/skirmish-maps/affbc102-a8e9-4279-a79f-83a5e2fe1c5e.jpg",
+    "image_fingerprint": "49490b23652d2fe6"
   },
   {
     "name": "Anchorhead Bar",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Anchorhead%20Bar_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Anchorhead%20Bar.jpg",
+    "image_file": "./images/skirmish-maps/a5e401da-8901-495d-8ac6-3b9cf68a294e.jpg",
+    "image_fingerprint": "4c633139292b0b4f"
   },
   {
     "name": "Climate Research Camp",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Climate%20Research%20Camp_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Climate%20Research%20Camp.jpg",
+    "image_file": "./images/skirmish-maps/154365b6-f757-4e8d-bc4c-6884c9178979.jpg",
+    "image_fingerprint": "1b13522f4b6b1b18"
   },
   {
     "name": "Chopper Base Atollon",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Chopper%20Base%20Atollon_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Chopper%20Base%20Atollon.jpg",
+    "image_file": "./images/skirmish-maps/14760250-4ef4-482e-b4b6-b54b11eb3644.jpg",
+    "image_fingerprint": "0c0f651575450d0d"
   },
   {
     "name": "Echo Base",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Echo%20Base_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Echo%20Base.jpg",
+    "image_file": "./images/skirmish-maps/f34ccc7e-6201-4429-accf-b765c35a9b74.jpg",
+    "image_fingerprint": "0d2d6d490b4f5d09"
   },
   {
     "name": "Development Facility",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Development%20Facility_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Development%20Facility.jpg",
+    "image_file": "./images/skirmish-maps/cfd815f9-967b-44aa-a2fe-c784311a7574.jpg",
+    "image_fingerprint": "6367476d2d645b72"
   },
   {
     "name": "Imperial Command Hub",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Imperial%20Command%20Hub_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Imperial%20Command%20Hub.jpg",
+    "image_file": "./images/skirmish-maps/19bcf32c-c4a5-407b-a172-30d893cba4bd.jpg",
+    "image_fingerprint": "191d3d51353c1919"
   },
   {
     "name": "Jabba's Palace",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Jabba%27s%20Palace_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Jabba%27s%20Palace.jpg",
+    "image_file": "./images/skirmish-maps/f7fca50e-2f35-4ba5-b437-e534f471a45b.jpg",
+    "image_fingerprint": "4d4d5f1665554949"
   },
   {
     "name": "ISB Training Grounds",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/ISB%20Training%20Grounds_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/ISB%20Training%20Grounds.jpg",
+    "image_file": "./images/skirmish-maps/f090a8d2-9c19-4c3e-ad46-4d32b2471906.jpg",
+    "image_fingerprint": "190d05343675151d"
   },
   {
     "name": "Imperial Labour Camp",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Imperial%20Labour%20Camp_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Imperial%20Labour%20Camp.jpg",
+    "image_file": "./images/skirmish-maps/405e8650-ca6a-47cc-930f-f805a695d970.jpg",
+    "image_fingerprint": "564f4b7979931d5d"
   },
   {
     "name": "Kuat Space Station",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Kuat%20Space%20Station_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Kuat%20Space%20Station.jpg",
+    "image_file": "./images/skirmish-maps/008275a7-8a40-4ccb-aeaa-5c06152694e6.jpg",
+    "image_fingerprint": "2b2b4e6b2725333b"
   },
   {
     "name": "Lothal Safehouse",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Lothal%20Safehouse_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Lothal%20Safehouse.jpg",
+    "image_file": "./images/skirmish-maps/318ba82a-88f1-497d-87e5-6f465b63bd66.jpg",
+    "image_fingerprint": "2929356565492901"
   },
   {
     "name": "ISB Headquarters",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/ISB%20Headquarters_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/ISB%20Headquarters.jpg",
+    "image_file": "./images/skirmish-maps/1f6d64ac-4f95-422c-924b-9d02af327964.jpg",
+    "image_fingerprint": "3125955157171d09"
   },
   {
     "name": "Hoth Battle Station",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Hoth%20Battle%20Station_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Hoth%20Battle%20Station.jpg",
+    "image_file": "./images/skirmish-maps/72b76048-fa68-4a56-bdad-85db822bd72d.jpg",
+    "image_fingerprint": "39253616596d3d31"
   },
   {
     "name": "Hangar Bay",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Hangar%20Bay_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Hangar%20Bay.jpg",
+    "image_file": "./images/skirmish-maps/b5dfae9e-0ca5-411a-8f17-831d3d9bbb7e.jpg",
+    "image_fingerprint": "c83351b171530049"
   },
   {
     "name": "Hoth Weather Shelter",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Hoth%20Weather%20Shelter_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Hoth%20Weather%20Shelter.jpg",
+    "image_file": "./images/skirmish-maps/2e46d756-bc82-4ea7-8fc5-1a293f24e8ea.jpg",
+    "image_fingerprint": "65253b6b6b373527"
   },
   {
     "name": "Kashyyyk Station",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Kashyyyk%20Station_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Kashyyyk%20Station.jpg",
+    "image_file": "./images/skirmish-maps/1a914eda-e63e-4c00-8bf2-3fb3e3975c0d.jpg",
+    "image_fingerprint": "6c0515351f36751d"
   },
   {
     "name": "Imperial Research Lab",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Imperial%20Research%20Lab_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Imperial%20Research%20Lab.jpg",
+    "image_file": "./images/skirmish-maps/3ab41347-556c-4a4e-a340-acc057239fe4.jpg",
+    "image_fingerprint": "690f632b2b6b6d6d"
   },
   {
     "name": "Imperial Space Station",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Imperial%20Space%20Station_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Imperial%20Space%20Station.jpg",
+    "image_file": "./images/skirmish-maps/052f1cab-2e0a-4cdc-b7c8-e71fb282f8ec.jpg",
+    "image_fingerprint": "d3242b8b19193b33"
   },
   {
     "name": "Sewers Of Nar Shaddaa",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Sewers%20Of%20Nar%20Shaddaa_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Sewers%20Of%20Nar%20Shaddaa.jpg",
+    "image_file": "./images/skirmish-maps/f1701ca8-962c-487e-936d-3aa5e0efcfad.jpg",
+    "image_fingerprint": "496903277b111342"
   },
   {
     "name": "Moisture Farm",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Moisture%20Farm_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Moisture%20Farm.jpg",
+    "image_file": "./images/skirmish-maps/809a2bd6-eb6c-48f4-90fe-aae306939bbd.jpg",
+    "image_fingerprint": "2525314d494b5b1f"
   },
   {
     "name": "Ord Mantell Junkyard",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Ord%20Mantell%20Junkyard_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Ord%20Mantell%20Junkyard.jpg",
+    "image_file": "./images/skirmish-maps/bc237288-e1ac-499b-96c6-7c6c180e40f6.jpg",
+    "image_fingerprint": "5d5d4d5d15160646"
   },
   {
     "name": "Mos Eisley Outskirts",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Mos%20Eisley%20Outskirts_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Mos%20Eisley%20Outskirts.jpg",
+    "image_file": "./images/skirmish-maps/cb57b43c-aa74-4876-9c5b-a89c0fa7dea2.jpg",
+    "image_fingerprint": "691933534b4d4d2b"
   },
   {
     "name": "Massassi Ruins",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Massassi%20Ruins_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Massassi%20Ruins.jpg",
+    "image_file": "./images/skirmish-maps/af49eb3a-3f9d-46fa-9fb3-78fc7b0de3e1.jpg",
+    "image_fingerprint": "6d11315959593b1d"
   },
   {
     "name": "Nelvaanian Warzone",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Nelvaanian%20Warzone_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Nelvaanian%20Warzone.jpg",
+    "image_file": "./images/skirmish-maps/9684199c-29d5-4bf9-816e-8ca8ca50b4a6.jpg",
+    "image_fingerprint": "4969774d6c5d4567"
   },
   {
     "name": "Mos Eisley Cantina",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Mos%20Eisley%20Cantina_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Mos%20Eisley%20Cantina.jpg",
+    "image_file": "./images/skirmish-maps/326ea043-b86c-4b47-93a9-39247de843aa.jpg",
+    "image_fingerprint": "4957013963633133"
   },
   {
     "name": "Tarkin Initiative Labs",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Tarkin%20Initiative%20Labs_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Tarkin%20Initiative%20Labs.jpg",
+    "image_file": "./images/skirmish-maps/f810b4d4-27f7-4457-a63d-3b5d2c37c0c1.jpg",
+    "image_fingerprint": "494d71510b0b361e"
   },
   {
     "name": "Training Ground",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Training%20Ground_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Training%20Ground.jpg",
+    "image_file": "./images/skirmish-maps/25de2a83-3672-44d3-a039-3c3710f4fd8c.jpg",
+    "image_fingerprint": "494d8f0d45414d47"
   },
   {
     "name": "Wasteland Outpost",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Wasteland%20Outpost_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Wasteland%20Outpost.jpg",
+    "image_file": "./images/skirmish-maps/07a42dd3-9188-4378-9ea6-5b61276b1cfa.jpg",
+    "image_fingerprint": "211137494b4b5378"
   },
   {
     "name": "Tython Meditation Field",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Tython%20Meditation%20Field_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Tython%20Meditation%20Field.jpg",
+    "image_file": "./images/skirmish-maps/57ac3577-2e49-4697-869e-0ed3f10eb373.jpg",
+    "image_fingerprint": "59651f5d4d4d650d"
   },
   {
     "name": "Wasskah Hunting Ground",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Wasskah%20Hunting%20Ground_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Wasskah%20Hunting%20Ground.jpg",
+    "image_file": "./images/skirmish-maps/7a941b27-d7b1-46db-b7d0-4016f1cfa07b.jpg",
+    "image_fingerprint": "692923692b365d2d"
   },
   {
     "name": "Mos Eisley Back Alleys",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/Mos%20Eisley%20Back%20Alleys_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Mos%20Eisley%20Back%20Alleys.jpg",
+    "image_file": "./images/skirmish-maps/b7a6c21f-e55c-4084-a3e5-46aee5703420.jpg",
+    "image_fingerprint": "092d4f2b6b692909"
   },
   {
     "name": "The Pit of Carkoon",
-    "image": "http://cards.boardwars.eu/cache/Skirmish-Maps/The%20Pit%20of%20Carkoon_275_thumb_ffflogog_whatermark_cc.jpg"
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/The%20Pit%20of%20Carkoon.jpg",
+    "image_file": "./images/skirmish-maps/53795b38-f71b-4ec7-81e2-78541bf6024b.jpg",
+    "image_fingerprint": "353b6f4b5b426b5d"
+  },
+  {
+    "name": "Nal Hutta Swamps",
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Nal%20Hutta%20Swamps.jpg",
+    "image_file": "./images/skirmish-maps/024dd0fb-c542-4e26-b8ef-ccbe6c7df8b9.jpg",
+    "image_fingerprint": "55c51b5753531716"
+  },
+  {
+    "name": "Endor Defense Station",
+    "image": "http://cards.boardwars.eu/albums/Skirmish-Maps/Endor%20Defense%20Station.jpg",
+    "image_file": "./images/skirmish-maps/424c487b-7532-4d56-8613-83b481894a63.jpg",
+    "image_fingerprint": "3535a719199b391c"
   }
 ]

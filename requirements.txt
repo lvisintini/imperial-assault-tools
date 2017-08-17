@@ -1,3 +1,6 @@
 colorlog==3.0.1
 ipdb==0.10.3
 Scrapy==1.4.0
+ImageHash==3.4
+Pillow==4.2.1
+requests==2.18.4

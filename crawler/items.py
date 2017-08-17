@@ -6,12 +6,16 @@ class DefaultDataItem(scrapy.Item):
     name = scrapy.Field()
     source = scrapy.Field()
     image = scrapy.Field()
+    image_fingerprint = scrapy.Field()
+    image_file = scrapy.Field()
 
 
 class SourceItem(scrapy.Item):
     id = scrapy.Field(serializer=int)
     name = scrapy.Field()
     image = scrapy.Field()
+    image_fingerprint = scrapy.Field()
+    image_file = scrapy.Field()
     type = scrapy.Field()
     wave = scrapy.Field(serializer=int)
 
@@ -19,6 +23,8 @@ class SourceItem(scrapy.Item):
 class SkirmishMapItem(scrapy.Item):
     name = scrapy.Field()
     image = scrapy.Field()
+    image_fingerprint = scrapy.Field()
+    image_file = scrapy.Field()
 
 
 class AgendaCardItem(DefaultDataItem):
@@ -32,6 +38,8 @@ class CommandCardItem(DefaultDataItem):
 class ConditionItem(scrapy.Item):
     name = scrapy.Field()
     image = scrapy.Field()
+    image_fingerprint = scrapy.Field()
+    image_file = scrapy.Field()
 
 
 class DeploymentCardItem(DefaultDataItem):
@@ -44,13 +52,19 @@ class HeroItem(scrapy.Item):
     name = scrapy.Field()
     source = scrapy.Field()
     healthy = scrapy.Field()
+    healthy_fingerprint = scrapy.Field()
+    healthy_file = scrapy.Field()
     wounded = scrapy.Field()
+    wounded_fingerprint = scrapy.Field()
+    wounded_file = scrapy.Field()
 
 
 class HeroClassCardItem(scrapy.Item):
     name = scrapy.Field()
     hero = scrapy.Field()
     image = scrapy.Field()
+    image_fingerprint = scrapy.Field()
+    image_file = scrapy.Field()
 
 
 class ImperialClassCardItem(DefaultDataItem):
@@ -89,5 +103,7 @@ class CardBackItem(scrapy.Item):
     deck = scrapy.Field()
     variant = scrapy.Field()
     image = scrapy.Field()
+    image_fingerprint = scrapy.Field()
+    image_file = scrapy.Field()
 
 

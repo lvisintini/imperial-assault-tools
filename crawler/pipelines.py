@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
-
+import uuid
+import re
 import json
 import logging
 from collections import defaultdict
+import os
+import requests
+from io import BytesIO
+from PIL import Image
+import imagehash
+
 
 from scrapy.exceptions import DropItem
 
@@ -205,11 +212,48 @@ class ImageProcessingPipeline(ProcessItemPipeline):
         'wounded',
     ]
 
+    roots = {
+        items.SourceItem: './images/sources/',
+        items.SkirmishMapItem: './images/skirmish-maps/',
+        items.AgendaCardItem: './images/agenda-cards/',
+        items.CommandCardItem: './images/command-cards/',
+        items.ConditionItem: './images/condition-cards/',
+        items.DeploymentCardItem: './images/deployment-cards/',
+        items.HeroItem: './images/heroes/',
+        items.HeroClassCardItem: './images/hero-class-cards/',
+        items.ImperialClassCardItem: './images/imperial-class-cards/',
+        items.SupplyCardItem: './images/supply-cards/',
+        items.StoryMissionCardItem: './images/story-mission-cards/',
+        items.SideMissionCardItem: './images/side-mission-cards/',
+        items.RewardItem: './images/rewards-cards/',
+        items.CompanionItem: './images/companion-cards/',
+        items.UpgradeItem: './images/upgrade-cards/',
+        items.CardBackItem: './images/card-backs/',
+        items.ThreatMissionCardItem: './images/threat-mission-cards/'
+    }
+
     def process_item(self, item, spider):
         # make and exception here - > card back story mission core box
         for attr in self.image_attrs:
             if attr in item:
+                item[attr] = item[attr].replace('/cache', '/albums')
+                item[attr] = re.sub(r'_[0-9]{3}_thumb_[a-zA-Z]{8}_whatermark_cc', '', item[attr])
                 item[attr] = 'http://cards.boardwars.eu' + item[attr]
+                item[attr + '_file'] = '{}{}.{}'.format(
+                    self.roots[item.__class__],
+                    str(uuid.uuid4()),
+                    item[attr].split('.')[-1]
+                )
+                url = requests.get(item[attr])
+                file_obj = BytesIO(url.content)
+                item[attr + '_fingerprint'] = str(imagehash.dhash(Image.open(file_obj)))
+                file_obj.seek(0)
+
+                if not os.path.exists(self.roots[item.__class__]):
+                    os.makedirs(self.roots[item.__class__])
+
+                with open(item[attr + '_file'], 'bw') as destination:
+                    destination.write(file_obj.read())
         return item
 
 

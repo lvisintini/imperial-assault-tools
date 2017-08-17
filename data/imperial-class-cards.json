@@ -1,412 +1,576 @@
 [
   {
     "name": "Show of Force",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Military%20Might/Show%20of%20Force_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Military%20Might/Show%20of%20Force.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/d5a7a654-aea3-437b-9c28-5b5e8f0e2f68.jpg",
+    "image_fingerprint": "6969252713334f07"
   },
   {
     "name": "Combat Medic",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Military%20Might/Combat%20Medic_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Military%20Might/Combat%20Medic.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/1fad2845-6bae-49da-903e-3bc8bcbca119.jpg",
+    "image_fingerprint": "61692d2b13234f03"
   },
   {
     "name": "Riot Grenades",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Military%20Might/Riot%20Grenades_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Military%20Might/Riot%20Grenades.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/d01f089d-8474-4bc1-b8c6-d35970454e1d.jpg",
+    "image_fingerprint": "61693d6535334f03"
   },
   {
     "name": "Assault Armor",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Military%20Might/Assault%20Armor_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
-  },
-  {
-    "name": "Endless Ranks",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Military%20Might/Endless%20Ranks_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
-  },
-  {
-    "name": "Shock Troopers",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Military%20Might/Shock%20Troopers_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
-  },
-  {
-    "name": "Sustained Fire",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Military%20Might/Sustained%20Fire_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
-  },
-  {
-    "name": "Combat Veterans",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Military%20Might/Combat%20Veterans_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
-  },
-  {
-    "name": "Shock and Awe",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Military%20Might/Shock%20and%20Awe_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Military%20Might/Assault%20Armor.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/ec0a4f26-65bc-430d-a96f-15b07f46a9f3.jpg",
+    "image_fingerprint": "69692d2d3b234d03"
   },
   {
     "name": "Prey Upon Doubt",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Prey%20Upon%20Doubt_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Prey%20Upon%20Doubt.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/02f86a0c-7044-45bc-8805-d5deaa1e3588.jpg",
+    "image_fingerprint": "456d6d292b235707"
+  },
+  {
+    "name": "Endless Ranks",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Military%20Might/Endless%20Ranks.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/9af6cfc9-90e3-42fb-b176-7be0f45425bc.jpg",
+    "image_fingerprint": "6969252b2b2b4703"
   },
   {
     "name": "Surgical Strike",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Surgical%20Strike_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Surgical%20Strike.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/aed602b0-3149-4252-a73d-dd9c729dc940.jpg",
+    "image_fingerprint": "6969292b032b4703"
   },
   {
-    "name": "Savage Weaponry",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Savage%20Weaponry_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
-  },
-  {
-    "name": "Exploit Weakness",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Exploit%20Weakness_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
-  },
-  {
-    "name": "Heavy Pressure",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Heavy%20Pressure_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
-  },
-  {
-    "name": "Executioner",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Executioner_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
-  },
-  {
-    "name": "Weary Target",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Weary%20Target_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
-  },
-  {
-    "name": "Oppression",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Oppression_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
-  },
-  {
-    "name": "No Quarter",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/No%20Quarter_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "name": "Shock Troopers",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Military%20Might/Shock%20Troopers.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/e963ed1d-fa24-4f30-bbb3-83199be37f93.jpg",
+    "image_fingerprint": "6d6d373b23330d13"
   },
   {
     "name": "Experimental Arms",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Experimental%20Arms_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Experimental%20Arms.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/eb350fb8-2af1-4e9e-8d17-e0a60bd2a0ce.jpg",
+    "image_fingerprint": "556d65293b231307"
+  },
+  {
+    "name": "Savage Weaponry",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Savage%20Weaponry.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/5e7bbe3c-1b2f-4032-ace7-3a168843d083.jpg",
+    "image_fingerprint": "75692d1f03234703"
+  },
+  {
+    "name": "Sustained Fire",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Military%20Might/Sustained%20Fire.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/d65c8f85-6b17-4176-833a-298cb11cd81d.jpg",
+    "image_fingerprint": "61792565372b4d03"
   },
   {
     "name": "Jetpacks",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Jetpacks_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Jetpacks.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/e81dd295-a665-436e-acc5-042cc7338a75.jpg",
+    "image_fingerprint": "33793d3703231703"
+  },
+  {
+    "name": "Exploit Weakness",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Exploit%20Weakness.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/ab4fddf1-94e6-4626-b594-93a786dc6392.jpg",
+    "image_fingerprint": "754d2f2d37030703"
+  },
+  {
+    "name": "Combat Veterans",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Military%20Might/Combat%20Veterans.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/06bff8b6-de3f-4332-8ed3-9ca1ab4b8833.jpg",
+    "image_fingerprint": "4949793755694d03"
   },
   {
     "name": "Technical Support",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Technical%20Support_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Technical%20Support.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/fddecfb5-9340-4df5-8e2d-b095cacf2f19.jpg",
+    "image_fingerprint": "69650d2f25032303"
+  },
+  {
+    "name": "Heavy Pressure",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Heavy%20Pressure.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/40bfcced-8c5d-440e-9cf2-77ac5ca8c6ab.jpg",
+    "image_fingerprint": "656d513527230703"
+  },
+  {
+    "name": "Shock and Awe",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Military%20Might/Shock%20and%20Awe.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/1c7aa219-0ce3-4f29-b55c-7fd32b44fd10.jpg",
+    "image_fingerprint": "69690d0d55654503"
   },
   {
     "name": "Failsafe",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Failsafe_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Failsafe.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/9a321268-71c8-4606-af7a-0d6d1421f0e1.jpg",
+    "image_fingerprint": "3371497533031703"
+  },
+  {
+    "name": "Executioner",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Executioner.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/9c18c48d-10c3-43b8-8453-0dbb9c05a938.jpg",
+    "image_fingerprint": "617135652b135713"
   },
   {
     "name": "Hidden Detonators",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Hidden%20Detonators_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Hidden%20Detonators.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/0f077fb8-8851-404e-b025-c8a9c875ee8c.jpg",
+    "image_fingerprint": "556525652d0b1303"
+  },
+  {
+    "name": "Weary Target",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Weary%20Target.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/103717dd-b061-4be1-adc5-22e05b6d3215.jpg",
+    "image_fingerprint": "6969351b23231703"
   },
   {
     "name": "Arc Blasters",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Arc%20Blasters_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Arc%20Blasters.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/91315a90-5a93-472c-bde6-dad2c8e76418.jpg",
+    "image_fingerprint": "31696565337b0b13"
+  },
+  {
+    "name": "Oppression",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/Oppression.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/c66c4f96-6b84-442b-bbda-cff76fd29e86.jpg",
+    "image_fingerprint": "296945250b234703"
   },
   {
     "name": "Cloaking Device",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Cloaking%20Device_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Cloaking%20Device.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/c04d28b8-55f9-495e-b26e-b543f6bcf0c5.jpg",
+    "image_fingerprint": "61692d1f232b1303"
+  },
+  {
+    "name": "No Quarter",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/No%20Quarter.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/6e0294ee-90ff-488d-adb8-753da7699287.jpg",
+    "image_fingerprint": "3931453d3b235713"
   },
   {
     "name": "Superior Augments",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Superior%20Augments_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Superior%20Augments.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/cceff95a-36f0-4f7f-9db8-0679569742e2.jpg",
+    "image_fingerprint": "456d373775370303"
   },
   {
     "name": "Adaptive Weapons",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Adaptive%20Weapons_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0
-  },
-  {
-    "name": "Field Officer",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Field%20Officer_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1
-  },
-  {
-    "name": "Supervisory Agent",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Supervisory%20Agent_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1
-  },
-  {
-    "name": "Press On",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Press%20On_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1
-  },
-  {
-    "name": "Strategic Planning",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Strategic%20Planning_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1
-  },
-  {
-    "name": "Noble Sacrifice",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Noble%20Sacrifice_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1
-  },
-  {
-    "name": "Field General",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Field%20General_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1
-  },
-  {
-    "name": "Imperial Dedication",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Imperial%20Dedication_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1
-  },
-  {
-    "name": "Lead By Example",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Lead%20By%20Example_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1
-  },
-  {
-    "name": "Optimal Tactics",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Optimal%20Tactics_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/Adaptive%20Weapons.jpg",
+    "source": 0,
+    "image_file": "./images/imperial-class-cards/969688bd-2d9e-420e-a475-70cd4e96a359.jpg",
+    "image_fingerprint": "656d15372b231313"
   },
   {
     "name": "Explosive Munitions",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Explosive%20Munitions_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Explosive%20Munitions.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/0f31a9f3-1dce-4098-9bc8-13b312e0f4a4.jpg",
+    "image_fingerprint": "456d35590b235707"
   },
   {
     "name": "Armor Corps",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Armor%20Corps_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
-  },
-  {
-    "name": "Automated Repairs",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Automated%20Repairs_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
-  },
-  {
-    "name": "Explosive Entry",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Explosive%20Entry_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
-  },
-  {
-    "name": "Heavy Firepower",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Heavy%20Firepower_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
-  },
-  {
-    "name": "Mortar",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Mortar_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
-  },
-  {
-    "name": "Reactive Armor",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Reactive%20Armor_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
-  },
-  {
-    "name": "Power to Shields",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Power%20to%20Shields_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
-  },
-  {
-    "name": "Rapid Dominance",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Rapid%20Dominance_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Armor%20Corps.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/3b7e0d0d-e219-4c49-a57f-06f628bb4e81.jpg",
+    "image_fingerprint": "6939255d1b235703"
   },
   {
     "name": "Strike Force",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Strike%20Force_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Strike%20Force.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/b9d56304-282f-426a-9c88-ff2c27e1cea6.jpg",
+    "image_fingerprint": "69693533032b5717"
+  },
+  {
+    "name": "Automated Repairs",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Automated%20Repairs.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/3cae47c2-21b1-4b62-b760-5f07bc0d111a.jpg",
+    "image_fingerprint": "4549693b5b1b4703"
   },
   {
     "name": "Sharpshooters",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Sharpshooters_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Sharpshooters.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/e037ebdc-c357-423b-971c-cf3496123935.jpg",
+    "image_fingerprint": "6161393b23235703"
+  },
+  {
+    "name": "Explosive Entry",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Explosive%20Entry.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/e97d93eb-4ce2-4fae-af0c-f0a7dd85389b.jpg",
+    "image_fingerprint": "69696d696b035703"
   },
   {
     "name": "Pinpoint Accuracy",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Pinpoint%20Accuracy_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Pinpoint%20Accuracy.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/2382d298-009b-41b1-91b5-2b683de3f90b.jpg",
+    "image_fingerprint": "4d4d352b03235703"
+  },
+  {
+    "name": "Heavy Firepower",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Heavy%20Firepower.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/42e53718-45b9-43b1-9272-05b2766f8781.jpg",
+    "image_fingerprint": "656d352d2b035703"
   },
   {
     "name": "Versatile Attack",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Versatile%20Attack_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Versatile%20Attack.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/582c2f25-32db-403c-b119-51a5a4eb6f4d.jpg",
+    "image_fingerprint": "716d157d1b1b5707"
+  },
+  {
+    "name": "Mortar",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Mortar.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/89603b78-5579-4c99-9797-deac341a6a03.jpg",
+    "image_fingerprint": "333125274d575703"
   },
   {
     "name": "Knowledge of Attack",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Knowledge%20of%20Attack_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Knowledge%20of%20Attack.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/f69bc477-1b45-4376-81ca-96f2b29f0988.jpg",
+    "image_fingerprint": "595d2d2b13235703"
+  },
+  {
+    "name": "Reactive Armor",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Reactive%20Armor.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/e0ba65c3-5a33-4c1a-ad67-da40d98a3503.jpg",
+    "image_fingerprint": "6d692d39752b5713"
   },
   {
     "name": "Assassins",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Assassins_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Assassins.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/12b37be0-96da-4a67-9491-e20c610c8d76.jpg",
+    "image_fingerprint": "33694d6d650b5713"
+  },
+  {
+    "name": "Power to Shields",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Power%20to%20Shields.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/12e31891-06cf-4b4d-be2b-610a8c2ad7c1.jpg",
+    "image_fingerprint": "656d35796d575713"
   },
   {
     "name": "Exacting Strike",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Exacting%20Strike_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Exacting%20Strike.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/0fad95b6-2c49-42e7-aa13-16bc694486da.jpg",
+    "image_fingerprint": "6965652523035703"
+  },
+  {
+    "name": "Rapid Dominance",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/Rapid%20Dominance.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/6eb2f6c6-1813-469d-8bad-86a9458001ff.jpg",
+    "image_fingerprint": "5d752575776d5707"
   },
   {
     "name": "Find the Weakness",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Find%20the%20Weakness_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Find%20the%20Weakness.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/0ce2c99b-29ad-460e-aa6f-8503ca045301.jpg",
+    "image_fingerprint": "7565252703235703"
   },
   {
     "name": "Single Minded",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Single%20Minded_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/Single%20Minded.jpg",
+    "source": 2,
+    "image_file": "./images/imperial-class-cards/4344f106-4ea2-49a4-b412-a8bb184da20d.jpg",
+    "image_fingerprint": "6969151d2f231703"
   },
   {
     "name": "In the Shadows",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/In%20the%20Shadows_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 3
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/In%20the%20Shadows.jpg",
+    "source": 3,
+    "image_file": "./images/imperial-class-cards/743d1049-a21b-4b06-a9ce-3895a3ae0f07.jpg",
+    "image_fingerprint": "6161252d030b4707"
   },
   {
     "name": "Stealth",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Stealth_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 3
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Stealth.jpg",
+    "source": 3,
+    "image_file": "./images/imperial-class-cards/d429bc26-53e2-4a88-aaea-c397c68fb1e3.jpg",
+    "image_fingerprint": "33712d2d37334703"
   },
   {
     "name": "Shadow Corps",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Shadow%20Corps_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 3
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Shadow%20Corps.jpg",
+    "source": 3,
+    "image_file": "./images/imperial-class-cards/257f227d-b830-4bad-9e74-8cd078ce3d2f.jpg",
+    "image_fingerprint": "69690d3523031703"
   },
   {
     "name": "Shadow Armor",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Shadow%20Armor_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 3
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Shadow%20Armor.jpg",
+    "source": 3,
+    "image_file": "./images/imperial-class-cards/2a6aef24-8168-4540-8ba0-8be22bd8ef83.jpg",
+    "image_fingerprint": "696975751b235703"
   },
   {
     "name": "Surprise Attack",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Surprise%20Attack_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 3
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Surprise%20Attack.jpg",
+    "source": 3,
+    "image_file": "./images/imperial-class-cards/13c60457-e83c-4006-8e47-e882af2c12d5.jpg",
+    "image_fingerprint": "6969154b33235713"
   },
   {
     "name": "Execution Squad",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Execution%20Squad_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 3
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Execution%20Squad.jpg",
+    "source": 3,
+    "image_file": "./images/imperial-class-cards/da7347eb-63a4-4a19-97c3-499afc13e48f.jpg",
+    "image_fingerprint": "6d692d35332b1703"
   },
   {
     "name": "Strategic Redeployment",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Strategic%20Redeployment_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 3
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Strategic%20Redeployment.jpg",
+    "source": 3,
+    "image_file": "./images/imperial-class-cards/98e9a38a-581b-46d4-84ae-bfa130f73dd1.jpg",
+    "image_fingerprint": "3745253913234703"
   },
   {
     "name": "True Shadow",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/True%20Shadow_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 3
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/True%20Shadow.jpg",
+    "source": 3,
+    "image_file": "./images/imperial-class-cards/16f480df-9e21-40a3-8d37-2516a36b5ef3.jpg",
+    "image_fingerprint": "61696d276d2b5703"
   },
   {
     "name": "Versatility",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Versatility_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 3
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/Versatility.jpg",
+    "source": 3,
+    "image_file": "./images/imperial-class-cards/e73e3a61-6a6c-4f28-ad1c-bd452df419ab.jpg",
+    "image_fingerprint": "3361353d732d0f13"
   },
   {
     "name": "Wanted Dead",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Wanted%20Dead_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Wanted%20Dead.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/4fcb2006-5e45-4f0f-bad6-13dc5f064268.jpg",
+    "image_fingerprint": "6969550f2b637f07"
   },
   {
     "name": "Vendetta",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Vendetta_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
-  },
-  {
-    "name": "Scouted",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Scouted_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
-  },
-  {
-    "name": "Savage Motivation",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Savage%20Motivation_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
-  },
-  {
-    "name": "Cheap Shot",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Cheap%20Shot_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
-  },
-  {
-    "name": "Nowhere to Hide",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Nowhere%20to%20Hide_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
-  },
-  {
-    "name": "Nowhere to Run",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Nowhere%20to%20Run_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
-  },
-  {
-    "name": "Guild Hunters",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Guild%20Hunters_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
-  },
-  {
-    "name": "Most Wanted",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Most%20Wanted_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Vendetta.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/45bd76d7-967b-4d92-8eae-f1abe707296d.jpg",
+    "image_fingerprint": "33715d3957034f03"
   },
   {
     "name": "Powerful Foes",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Powerful%20Foes_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Powerful%20Foes.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/79bde4de-1a55-4316-ae13-e8dd383b5a75.jpg",
+    "image_fingerprint": "6951756d5f774d0f"
+  },
+  {
+    "name": "Scouted",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Scouted.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/c2c016d8-639b-47bb-a36d-20ca973bf0d1.jpg",
+    "image_fingerprint": "33716d5d6f6f5f03"
   },
   {
     "name": "Inspirational",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Inspirational_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Inspirational.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/b97d2aef-9a79-4f45-84ca-ad793ea64037.jpg",
+    "image_fingerprint": "6969754559716d0f"
+  },
+  {
+    "name": "Savage Motivation",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Savage%20Motivation.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/5cae4475-dfe8-47bb-bef4-2ce701c522b0.jpg",
+    "image_fingerprint": "555d250d3f6f4f03"
   },
   {
     "name": "Prepare the Ambush",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Prepare%20the%20Ambush_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Prepare%20the%20Ambush.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/49195fae-4ba7-4a64-96f7-99c7e98c6c83.jpg",
+    "image_fingerprint": "4545253165634f03"
+  },
+  {
+    "name": "Cheap Shot",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Cheap%20Shot.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/65e38280-5784-405a-8917-954505b7b28c.jpg",
+    "image_fingerprint": "2969254567575703"
   },
   {
     "name": "Fearsome Presence",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Fearsome%20Presence_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Fearsome%20Presence.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/98db31ac-035d-487d-a997-9e58492c179c.jpg",
+    "image_fingerprint": "454d7565051f4b03"
+  },
+  {
+    "name": "Nowhere to Hide",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Nowhere%20to%20Hide.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/04f52c9c-657f-4153-bd40-e5b43cac2964.jpg",
+    "image_fingerprint": "4d4d756563235f03"
   },
   {
     "name": "Ringleader",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Ringleader_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Ringleader.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/8597760d-54da-4f5c-b571-5c2a850cb6d8.jpg",
+    "image_fingerprint": "31793d2d35714903"
+  },
+  {
+    "name": "Nowhere to Run",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Nowhere%20to%20Run.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/b8e56486-a4ed-480b-a18b-189c4bc3d2b0.jpg",
+    "image_fingerprint": "694d71794f455703"
   },
   {
     "name": "Im on the Leader",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Im%20on%20the%20Leader_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Im%20on%20the%20Leader.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/527f6ed0-70ec-4c0e-bfed-8834660dc8aa.jpg",
+    "image_fingerprint": "554d25771b234f03"
+  },
+  {
+    "name": "Guild Hunters",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Guild%20Hunters.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/4456b246-57ec-4ac7-b9be-1efbf85d174c.jpg",
+    "image_fingerprint": "69613531193b4703"
   },
   {
     "name": "Leave Them to Me",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Leave%20Them%20to%20Me_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Leave%20Them%20to%20Me.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/0c9e8422-dda1-4b39-b692-ff0b25b0ac2f.jpg",
+    "image_fingerprint": "55752d3d6d6d4f03"
+  },
+  {
+    "name": "Most Wanted",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/Most%20Wanted.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/440ed830-4f27-4e2e-be89-0ba13f3ff7aa.jpg",
+    "image_fingerprint": "6169150d27034f03"
   },
   {
     "name": "Punishing Force",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Punishing%20Force_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Punishing%20Force.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/42a869fb-b5bb-4755-8015-11a22ffc1464.jpg",
+    "image_fingerprint": "71716d651b234f03"
   },
   {
     "name": "Devastating Legion",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Devastating%20Legion_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Devastating%20Legion.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/069cfb1c-18ba-4936-a195-dc6a1d85f949.jpg",
+    "image_fingerprint": "5565256923034b03"
   },
   {
     "name": "Indomitable",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Indomitable_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/Indomitable.jpg",
+    "source": 4,
+    "image_file": "./images/imperial-class-cards/df144bd2-9d4a-4205-8fc3-cb6cb5885701.jpg",
+    "image_fingerprint": "696165651d774d03"
+  },
+  {
+    "name": "Field Officer",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Field%20Officer.jpg",
+    "source": 1,
+    "image_file": "./images/imperial-class-cards/67115f0d-8094-4674-af93-684b861f74a9.jpg",
+    "image_fingerprint": "31693d3f6d671707"
+  },
+  {
+    "name": "Supervisory Agent",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Supervisory%20Agent.jpg",
+    "source": 1,
+    "image_file": "./images/imperial-class-cards/32078179-86e5-477a-9f51-8776a624d87c.jpg",
+    "image_fingerprint": "456d353523231703"
+  },
+  {
+    "name": "Press On",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Press%20On.jpg",
+    "source": 1,
+    "image_file": "./images/imperial-class-cards/72b41193-7333-4718-ba7a-db5a655c2096.jpg",
+    "image_fingerprint": "3331252f132b1703"
+  },
+  {
+    "name": "Strategic Planning",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Strategic%20Planning.jpg",
+    "source": 1,
+    "image_file": "./images/imperial-class-cards/bb7e73e2-a62e-4464-8555-9670e4b00cd8.jpg",
+    "image_fingerprint": "4549657557531713"
+  },
+  {
+    "name": "Noble Sacrifice",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Noble%20Sacrifice.jpg",
+    "source": 1,
+    "image_file": "./images/imperial-class-cards/47d45444-e7d9-4fce-b72b-098c55f76ded.jpg",
+    "image_fingerprint": "69696d751f2b5707"
+  },
+  {
+    "name": "Field General",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Field%20General.jpg",
+    "source": 1,
+    "image_file": "./images/imperial-class-cards/40a2fd16-3ba8-4cad-84a2-b5178af8f1de.jpg",
+    "image_fingerprint": "79693d3777771703"
+  },
+  {
+    "name": "Imperial Dedication",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Imperial%20Dedication.jpg",
+    "source": 1,
+    "image_file": "./images/imperial-class-cards/e10ddca8-74e0-4726-a622-81ee73d02558.jpg",
+    "image_fingerprint": "454527776b2b1703"
+  },
+  {
+    "name": "Lead By Example",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Lead%20By%20Example.jpg",
+    "source": 1,
+    "image_file": "./images/imperial-class-cards/2b082cf0-4641-461b-a815-8c46256aed3b.jpg",
+    "image_fingerprint": "494d0f2f17031707"
+  },
+  {
+    "name": "Optimal Tactics",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/Optimal%20Tactics.jpg",
+    "source": 1,
+    "image_file": "./images/imperial-class-cards/afa65117-6cea-4972-b2b6-46d0f6bd0b90.jpg",
+    "image_fingerprint": "6969656b23231703"
   }
 ]

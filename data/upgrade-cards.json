@@ -1,416 +1,554 @@
 [
   {
     "name": "Armored Gauntlets",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%201/Armored%20Gauntlets_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/Armored%20Gauntlets.jpg",
     "source": 0,
-    "tier": 1
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/60a305f6-b6df-47b0-bed5-78ea8243b074.jpg",
+    "image_fingerprint": "708939680b3b3f17"
   },
   {
     "name": "Balanced Hilt",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%201/Balanced%20Hilt_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/Balanced%20Hilt.jpg",
     "source": 0,
-    "tier": 1
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/637fb2f6-1c4e-431f-ab43-a93792a38c8e.jpg",
+    "image_fingerprint": "28381094752b3b33"
   },
   {
     "name": "Combat Coat",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%201/Combat%20Coat_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/Combat%20Coat.jpg",
     "source": 0,
-    "tier": 1
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/c1126fb6-e375-422d-9821-a67e15782769.jpg",
+    "image_fingerprint": "71f3f8811d232717"
   },
   {
     "name": "DH-17",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%201/DH-17_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/DH-17.jpg",
     "source": 0,
-    "tier": 1
-  },
-  {
-    "name": "DL-44",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%201/DL-44_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0,
-    "tier": 1
-  },
-  {
-    "name": "E-11",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%201/E-11_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0,
-    "tier": 1
-  },
-  {
-    "name": "Extended Haft",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%201/Extended%20Haft_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0,
-    "tier": 1
-  },
-  {
-    "name": "Marksman Barrel",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%201/Marksman%20Barrel_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0,
-    "tier": 1
-  },
-  {
-    "name": "Portable Medkit",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%201/Portable%20Medkit_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0,
-    "tier": 1
-  },
-  {
-    "name": "Survival Gear",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%201/Survival%20Gear_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0,
-    "tier": 1
-  },
-  {
-    "name": "Tactical Display",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%201/Tactical%20Display_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0,
-    "tier": 1
-  },
-  {
-    "name": "Vibroblade",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%201/Vibroblade_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0,
-    "tier": 1
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/316dc31d-f827-40ac-88ad-5a0a6dee67fb.jpg",
+    "image_fingerprint": "739939490b3b2b17"
   },
   {
     "name": "434 Deathhammer",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%202/434%20Deathhammer_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/434%20Deathhammer.jpg",
     "source": 0,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/72323de2-3318-43f1-93a1-713a26f9ad7e.jpg",
+    "image_fingerprint": "51587c0c073b3b37"
+  },
+  {
+    "name": "DL-44",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/DL-44.jpg",
+    "source": 0,
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/cc970146-c55d-4c08-8109-4fb8cbf949f4.jpg",
+    "image_fingerprint": "73f0794d0b2b2717"
   },
   {
     "name": "A280",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%202/A280_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/A280.jpg",
     "source": 0,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/9b9fb34c-c780-471f-8802-57306ff428a9.jpg",
+    "image_fingerprint": "7108340c0b3b3717"
+  },
+  {
+    "name": "E-11",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/E-11.jpg",
+    "source": 0,
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/e9cf170f-fa1f-42a6-873c-0dec97bb6408.jpg",
+    "image_fingerprint": "73caf0280b332f17"
   },
   {
     "name": "BD-1 Vibro-Ax",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%202/BD-1%20Vibro-Ax_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/BD-1%20Vibro-Ax.jpg",
     "source": 0,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/c403d1cf-38ae-4f6c-ab81-628c720efc73.jpg",
+    "image_fingerprint": "71bc980c0f333317"
+  },
+  {
+    "name": "Extended Haft",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/Extended%20Haft.jpg",
+    "source": 0,
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/10d5a50d-479b-4236-a078-bac8ac0776c3.jpg",
+    "image_fingerprint": "bc9ad9944f2b3737"
   },
   {
     "name": "Combat Coat",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%202/Combat%20Coat_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/Combat%20Coat.jpg",
     "source": 0,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/9777aa3e-31a4-4631-afb8-4c30d94ea738.jpg",
+    "image_fingerprint": "69f3f8c11d232737"
+  },
+  {
+    "name": "Marksman Barrel",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/Marksman%20Barrel.jpg",
+    "source": 0,
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/de2d6cfa-6679-44d3-97d6-a06511af964b.jpg",
+    "image_fingerprint": "643c0c9639233d33"
   },
   {
     "name": "Extra Ammunition",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%202/Extra%20Ammunition_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/Extra%20Ammunition.jpg",
     "source": 0,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/6639575b-3d5d-49ad-821e-1e7f47b8b863.jpg",
+    "image_fingerprint": "654676990d2b3337"
+  },
+  {
+    "name": "Portable Medkit",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/Portable%20Medkit.jpg",
+    "source": 0,
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/a7a58366-5b90-419c-bcfb-ce35571f72bd.jpg",
+    "image_fingerprint": "69ec7e8d17532f17"
   },
   {
     "name": "High-Impact Guard",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%202/High-Impact%20Guard_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/High-Impact%20Guard.jpg",
     "source": 0,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/aed94fa8-5443-4dc4-8427-d3f6bc7c8fe3.jpg",
+    "image_fingerprint": "f39fdc94552b3b37"
+  },
+  {
+    "name": "Survival Gear",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/Survival%20Gear.jpg",
+    "source": 0,
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/273dd1f5-b963-435d-be3f-6195f5897a9a.jpg",
+    "image_fingerprint": "695870951b236717"
   },
   {
     "name": "Laminate Armor",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%202/Laminate%20Armor_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/Laminate%20Armor.jpg",
     "source": 0,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/0c2be36a-d186-4c0f-b943-9db4521f6939.jpg",
+    "image_fingerprint": "591232590d711357"
+  },
+  {
+    "name": "Tactical Display",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/Tactical%20Display.jpg",
+    "source": 0,
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/876de156-f6d0-44a1-a42d-5d098e57dc19.jpg",
+    "image_fingerprint": "cd6c709475233f37"
   },
   {
     "name": "Overcharger",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%202/Overcharger_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/Overcharger.jpg",
     "source": 0,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/41c73b86-33da-48a2-ae17-a8b06db5f988.jpg",
+    "image_fingerprint": "8e5015956f677137"
+  },
+  {
+    "name": "Vibroblade",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/Vibroblade.jpg",
+    "source": 0,
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/16e8b701-98bf-4ac7-a0ce-3e233e06c8a6.jpg",
+    "image_fingerprint": "79183f2d0b333377"
   },
   {
     "name": "Slicing Tools",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%202/Slicing%20Tools_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/Slicing%20Tools.jpg",
     "source": 0,
-    "tier": 2
-  },
-  {
-    "name": "Spread Barrel",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%202/Spread%20Barrel_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0,
-    "tier": 2
-  },
-  {
-    "name": "T-21",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%202/T-21_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0,
-    "tier": 2
-  },
-  {
-    "name": "Vibro Knucklers",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%202/Vibro%20Knucklers_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 0,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/a9f25aa0-5fda-4444-9f0d-dc1b8d63c96e.jpg",
+    "image_fingerprint": "296de9891d2f2317"
   },
   {
     "name": "Combat Knife",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%203/Combat%20Knife_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/Combat%20Knife.jpg",
     "source": 0,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/5daed4fb-dbfe-4f9f-b979-b0eeec19927d.jpg",
+    "image_fingerprint": "693735d61f673517"
+  },
+  {
+    "name": "Spread Barrel",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/Spread%20Barrel.jpg",
+    "source": 0,
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/ee9c1883-f136-484a-9909-4bde44ab4b50.jpg",
+    "image_fingerprint": "c7d5989455777337"
   },
   {
     "name": "Combat Visor",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%203/Combat%20Visor_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/Combat%20Visor.jpg",
     "source": 0,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/7ef0c0a5-a52c-451a-9eb6-acf0c71a5bf2.jpg",
+    "image_fingerprint": "693c3e8c11273b17"
+  },
+  {
+    "name": "T-21",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/T-21.jpg",
+    "source": 0,
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/a40b3f88-b67d-43e3-b74a-50877b03c5d0.jpg",
+    "image_fingerprint": "7347790a0f332717"
   },
   {
     "name": "Disruption Cell",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%203/Disruption%20Cell_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/Disruption%20Cell.jpg",
     "source": 0,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/a2b82347-a7e2-457a-b78a-ea93e2e629ca.jpg",
+    "image_fingerprint": "f864a4983f6f3f73"
+  },
+  {
+    "name": "Vibro Knucklers",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/Vibro%20Knucklers.jpg",
+    "source": 0,
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/36d7bb7b-635e-456b-b1a5-777d594afb4b.jpg",
+    "image_fingerprint": "614d6c220b2b2317"
   },
   {
     "name": "DXR-6",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%203/DXR-6_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/DXR-6.jpg",
     "source": 0,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/9e6c4125-1448-4053-b5fc-585cdd1e11a4.jpg",
+    "image_fingerprint": "31ee74090b3b3317"
   },
   {
     "name": "Force Pike",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%203/Force%20Pike_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/Force%20Pike.jpg",
     "source": 0,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/377b229d-61e6-4ffa-af14-ffed2014cf08.jpg",
+    "image_fingerprint": "71107a490f3b2f67"
   },
   {
     "name": "Laminate Armor",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%203/Laminate%20Armor_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/Laminate%20Armor.jpg",
     "source": 0,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/a28e00ac-76e4-43f4-bf65-c9c62174ed31.jpg",
+    "image_fingerprint": "593632590f6b4357"
   },
   {
     "name": "Personal Shields",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%203/Personal%20Shields_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/Personal%20Shields.jpg",
     "source": 0,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/0be6336d-41be-421e-9f85-d2d3c523d266.jpg",
+    "image_fingerprint": "61a52cdd19376517"
   },
   {
     "name": "Pulse Cannon",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%203/Pulse%20Cannon_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/Pulse%20Cannon.jpg",
     "source": 0,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/8502e268-74d4-40dd-ba81-7a89289dcd87.jpg",
+    "image_fingerprint": "790c30680b336b67"
   },
   {
     "name": "Reinforced Helmet",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%203/Reinforced%20Helmet_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/Reinforced%20Helmet.jpg",
     "source": 0,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/a870b5c8-84d2-46c5-983e-e2c10c49358c.jpg",
+    "image_fingerprint": "49e9278c19230317"
   },
   {
     "name": "Shock Emitter",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%203/Shock%20Emitter_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/Shock%20Emitter.jpg",
     "source": 0,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/e4cfac1b-c346-4e44-9967-6c6daa9f6c7f.jpg",
+    "image_fingerprint": "fe77b694572f2f37"
   },
   {
     "name": "Sporting Blaster",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%203/Sporting%20Blaster_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/Sporting%20Blaster.jpg",
     "source": 0,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/a1a2183c-0553-4a15-b5cd-379f281f6b82.jpg",
+    "image_fingerprint": "7d37384c0b3b3367"
   },
   {
     "name": "Telescoping Sights",
-    "image": "http://cards.boardwars.eu/cache/Core-Box/Rebel%20Upgrades/Tier%203/Telescoping%20Sights_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/Telescoping%20Sights.jpg",
     "source": 0,
-    "tier": 3
-  },
-  {
-    "name": "Gaffi Stick",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Rebel%20Upgrades/Tier%201/Gaffi%20Stick_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1,
-    "tier": 1
-  },
-  {
-    "name": "Tatooine Huntung Rifle",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Rebel%20Upgrades/Tier%201/Tatooine%20Huntung%20Rifle_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1,
-    "tier": 1
-  },
-  {
-    "name": "EE-3 Carbine",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Rebel%20Upgrades/Tier%202/EE-3%20Carbine_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1,
-    "tier": 2
-  },
-  {
-    "name": "Plasma Cell",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Rebel%20Upgrades/Tier%202/Plasma%20Cell_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1,
-    "tier": 2
-  },
-  {
-    "name": "DLT-19",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Rebel%20Upgrades/Tier%203/DLT-19_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1,
-    "tier": 3
-  },
-  {
-    "name": "Hidden Blade",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Twin-Shadows/Rebel%20Upgrades/Tier%203/Hidden%20Blade_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 1,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/deeb9983-9730-45e8-b6d3-8b8044a5e5c5.jpg",
+    "image_fingerprint": "f6ec7f946d2f6777"
   },
   {
     "name": "DDC Defender",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%201/DDC%20Defender_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%201/DDC%20Defender.jpg",
     "source": 2,
-    "tier": 1
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/73a4da7a-2745-432d-8393-0e93d4c2670a.jpg",
+    "image_fingerprint": "6d9e7e4e4b777767"
   },
   {
     "name": "Under-Barrel HH-4",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%201/Under-Barrel%20HH-4_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%201/Under-Barrel%20HH-4.jpg",
     "source": 2,
-    "tier": 1
-  },
-  {
-    "name": "Vibroknife",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%201/Vibroknife_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 2,
-    "tier": 1
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/7606080d-459f-4589-8232-a3f4e1f5726c.jpg",
+    "image_fingerprint": "89c9d89613777777"
   },
   {
     "name": "Cybernetic Arm",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%202/Cybernetic%20Arm_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%202/Cybernetic%20Arm.jpg",
     "source": 2,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/06a144e1-c4f8-4b75-b9c8-06e447578581.jpg",
+    "image_fingerprint": "4d3c1b8e19737b17"
+  },
+  {
+    "name": "Vibroknife",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%201/Vibroknife.jpg",
+    "source": 2,
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/fd1f63d7-97e6-4595-b88f-0f6be87214a5.jpg",
+    "image_fingerprint": "795d3e4c0b3b3717"
   },
   {
     "name": "Environmental Hazard Suit",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%202/Environmental%20Hazard%20Suit_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%202/Environmental%20Hazard%20Suit.jpg",
     "source": 2,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/14c751b8-b476-479c-b008-c09fdc77dfa6.jpg",
+    "image_fingerprint": "6d13515937336317"
   },
   {
     "name": "Stun Baton",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%202/Stun%20Baton_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%202/Stun%20Baton.jpg",
     "source": 2,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/cafbbec4-5951-4de8-b629-3758760bb5f4.jpg",
+    "image_fingerprint": "3999f00b0b6b6767"
   },
   {
     "name": "Concussion Grenades",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%203/Concussion%20Grenades_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%203/Concussion%20Grenades.jpg",
     "source": 2,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/e2844021-bc26-416e-9f8f-bec6ba54c1e8.jpg",
+    "image_fingerprint": "41f0e7c61f6d6f57"
   },
   {
     "name": "Valken-38 Carbine",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%203/Valken-38%20Carbine_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%203/Valken-38%20Carbine.jpg",
     "source": 2,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/19d5f587-69a7-401c-8b32-c7d2d6862358.jpg",
+    "image_fingerprint": "5dcc6e0e0b776f67"
   },
   {
     "name": "Vibrogenerator",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%203/Vibrogenerator_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Upgrades/Tier%203/Vibrogenerator.jpg",
     "source": 2,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/b3dfd936-54a8-4147-a0f0-d222d1d89e1b.jpg",
+    "image_fingerprint": "4261149445672b77"
   },
   {
     "name": "Shadowsilk Cloak",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Upgrades/Tier%201/Shadowsilk%20Cloak_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Upgrades/Tier%201/Shadowsilk%20Cloak.jpg",
     "source": 3,
-    "tier": 1
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/2d89e6d6-d7ae-4dac-a988-95b80d78f674.jpg",
+    "image_fingerprint": "65e5e208174b1f17"
   },
   {
     "name": "Vibrosword",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Upgrades/Tier%201/Vibrosword_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Upgrades/Tier%201/Vibrosword.jpg",
     "source": 3,
-    "tier": 1
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/62147463-bb29-45f5-a14f-6773f0b1a4a3.jpg",
+    "image_fingerprint": "69c3ef0c0b7f5f07"
   },
   {
     "name": "R5 Astromech",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Upgrades/Tier%202/R5%20Astromech_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Upgrades/Tier%202/R5%20Astromech.jpg",
     "source": 3,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/57f767aa-b283-4946-a24e-e2f9e9d898fb.jpg",
+    "image_fingerprint": "7936264c1b2f6757"
   },
   {
     "name": "Weighted Head",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Upgrades/Tier%202/Weighted%20Head_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Upgrades/Tier%202/Weighted%20Head.jpg",
     "source": 3,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/d1ecb420-8b05-4d4d-a229-10cc86f5941b.jpg",
+    "image_fingerprint": "60d9089467373777"
   },
   {
     "name": "Disruptor Pistol",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Upgrades/Tier%203/Disruptor%20Pistol_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Upgrades/Tier%203/Disruptor%20Pistol.jpg",
     "source": 3,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/f0957d83-2592-4bb8-bc1d-f5a5b6ad2c0a.jpg",
+    "image_fingerprint": "79c27c0e0b7b7367"
   },
   {
     "name": "Sniper Scope",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Upgrades/Tier%203/Sniper%20Scope_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Upgrades/Tier%203/Sniper%20Scope.jpg",
     "source": 3,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/2e3c97f5-b84b-496a-9893-e5c18051d018.jpg",
+    "image_fingerprint": "52c0909467232337"
   },
   {
     "name": "Bacta Pump",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%201/Bacta%20Pump_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%201/Bacta%20Pump.jpg",
     "source": 4,
-    "tier": 1
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/6a4d0299-aa6e-414c-9d09-d75ae1ae02d0.jpg",
+    "image_fingerprint": "61c26e485d6f3317"
   },
   {
     "name": "Emergency Injector",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%201/Emergency%20Injector_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%201/Emergency%20Injector.jpg",
     "source": 4,
-    "tier": 1
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/f8f83462-c6da-40bb-9693-ab3002a333b1.jpg",
+    "image_fingerprint": "4dfbf98f11772717"
   },
   {
     "name": "Hand Cannon",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%201/Hand%20Cannon_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%201/Hand%20Cannon.jpg",
     "source": 4,
-    "tier": 1
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/081036d6-490c-47b0-9c58-49c0b83b7628.jpg",
+    "image_fingerprint": "696c700b4f634f67"
   },
   {
     "name": "Bolt Upgrade",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%202/Bolt%20Upgrade_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%202/Bolt%20Upgrade.jpg",
     "source": 4,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/ce127a94-a963-4456-a1c8-460545fe05fa.jpg",
+    "image_fingerprint": "f4fcb09567776b77"
   },
   {
     "name": "Double Vibrosword",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%202/Double%20Vibrosword_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%202/Double%20Vibrosword.jpg",
     "source": 4,
-    "tier": 2
-  },
-  {
-    "name": "Energized Hilt",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%202/Energized%20Hilt_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 4,
-    "tier": 2
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/d3bfdd27-c6d6-4323-8d06-6544d998cffa.jpg",
+    "image_fingerprint": "5549280c137f6b67"
   },
   {
     "name": "Admirals Uniform",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%203/Admirals%20Uniform_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%203/Admirals%20Uniform.jpg",
     "source": 4,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/dbe6946d-e9bf-4800-82f9-dc0fb2e81830.jpg",
+    "image_fingerprint": "7541664619657517"
+  },
+  {
+    "name": "Energized Hilt",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%202/Energized%20Hilt.jpg",
+    "source": 4,
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/1140e6c9-e780-49d3-abc7-aefcbf81aaf2.jpg",
+    "image_fingerprint": "9b3e37956f776f77"
   },
   {
     "name": "Modified Energy Cannon",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%203/Modified%20Energy%20Cannon_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%203/Modified%20Energy%20Cannon.jpg",
     "source": 4,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/109a8985-2052-401c-be0c-f575a03b5bec.jpg",
+    "image_fingerprint": "799434280b675d07"
   },
   {
     "name": "Ryyk Blades",
-    "image": "http://cards.boardwars.eu/cache/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%203/Ryyk%20Blades_275_thumb_ffflogog_whatermark_cc.jpg",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Upgrades/Tier%203/Ryyk%20Blades.jpg",
     "source": 4,
-    "tier": 3
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/ebd7b17d-7686-4ac5-bda0-0bacdc691121.jpg",
+    "image_fingerprint": "61c30e0d03677d67"
   },
   {
     "name": "DT-12 Heavy Blaster Pistol",
-    "image": "http://cards.boardwars.eu/cache/Ally-and-Villain-Packs/Wave-7/Greedo/Rebel%20Upgrades/Tier%202/DT-12%20Heavy%20Blaster%20Pistol_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 28,
-    "tier": 2
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Greedo/Rebel%20Upgrades/Tier%202/DT-12%20Heavy%20Blaster%20Pistol.jpg",
+    "source": 27,
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/d319a63d-ac95-4f2b-a557-0b233cc16945.jpg",
+    "image_fingerprint": "37d951434b776b67"
   },
   {
     "name": "Ancient Lightsaber",
-    "image": "http://cards.boardwars.eu/cache/Ally-and-Villain-Packs/Wave-7/Obi-Wan%20Kenobi/Rebel%20Upgrades/Tier%203/Ancient%20Lightsaber_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 29,
-    "tier": 3
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Obi-Wan%20Kenobi/Rebel%20Upgrades/Tier%203/Ancient%20Lightsaber.jpg",
+    "source": 28,
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/2e739db6-1f3f-420e-812c-96dd549f6b53.jpg",
+    "image_fingerprint": "5d0970220b772b67"
   },
   {
     "name": "Electrostaff",
-    "image": "http://cards.boardwars.eu/cache/Ally-and-Villain-Packs/Wave-7/The%20Grand%20Inquisitor/Rebel%20Upgrades/Tier%203/Electrostaff_275_thumb_ffflogog_whatermark_cc.jpg",
-    "source": 30,
-    "tier": 3
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/The%20Grand%20Inquisitor/Rebel%20Upgrades/Tier%203/Electrostaff.jpg",
+    "source": 29,
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/b97b62f5-9b65-4655-91cb-1dcd91a7a680.jpg",
+    "image_fingerprint": "694d21090b676b67"
+  },
+  {
+    "name": "Gaffi Stick",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Upgrades/Tier%201/Gaffi%20Stick.jpg",
+    "source": 1,
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/ed81af34-7ec9-4863-982b-de636e92f941.jpg",
+    "image_fingerprint": "7937264d1f7b6367"
+  },
+  {
+    "name": "Tatooine Huntung Rifle",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Upgrades/Tier%201/Tatooine%20Huntung%20Rifle.jpg",
+    "source": 1,
+    "tier": 1,
+    "image_file": "./images/upgrade-cards/2770ad46-1fb3-4e93-b501-e881b7a6df14.jpg",
+    "image_fingerprint": "5d8b430b1b7f6b67"
+  },
+  {
+    "name": "EE-3 Carbine",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Upgrades/Tier%202/EE-3%20Carbine.jpg",
+    "source": 1,
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/de46ada8-a6e1-4f73-a4b1-4664a2db5431.jpg",
+    "image_fingerprint": "61f87c0c0b3b0707"
+  },
+  {
+    "name": "Plasma Cell",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Upgrades/Tier%202/Plasma%20Cell.jpg",
+    "source": 1,
+    "tier": 2,
+    "image_file": "./images/upgrade-cards/87a2634f-5f24-416f-810e-3a7f71d45317.jpg",
+    "image_fingerprint": "b21c1d952b2b6f37"
+  },
+  {
+    "name": "DLT-19",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Upgrades/Tier%203/DLT-19.jpg",
+    "source": 1,
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/8583dcc0-e973-4568-816f-37eb6d254a56.jpg",
+    "image_fingerprint": "33811c4f0b3f2367"
+  },
+  {
+    "name": "Hidden Blade",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Upgrades/Tier%203/Hidden%20Blade.jpg",
+    "source": 1,
+    "tier": 3,
+    "image_file": "./images/upgrade-cards/5ec5b01b-997d-42aa-bd0f-2a3e8e394ec4.jpg",
+    "image_fingerprint": "698963190f474b17"
   }
 ]
