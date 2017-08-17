@@ -3,6 +3,8 @@ import scrapy
 from crawler import items
 
 
+#THis one as well https://www.fantasyflightgames.com/en/news/tag/star-wars-imperial-assault/
+
 class ImperialAssaultCrawler(scrapy.Spider):
     name = 'imperial-assault-crawler'
     start_urls = ['http://cards.boardwars.eu/']
