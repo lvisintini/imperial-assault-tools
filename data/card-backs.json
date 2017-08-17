@@ -3,329 +3,282 @@
     "deck": "Agenda",
     "variant": null,
     "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/back.jpg",
-    "image_file": "./images/card-backs/2744f82b-af5b-4d31-85b7-12a9fd5c8757.jpg",
-    "image_fingerprint": "8e0f4d869e8e0f8e"
+    "image_file": "./images/card-backs/8e0f4d869e8e0f8e.jpg"
   },
   {
     "deck": "Command",
     "variant": null,
     "image": "http://cards.boardwars.eu/albums/Core-Box/Command%20Cards/back.jpg",
-    "image_file": "./images/card-backs/0a33b7b2-b71e-420c-8fa7-c4d6962baffa.jpg",
-    "image_fingerprint": "8e8e0e0f07868e9e"
+    "image_file": "./images/card-backs/8e8e0e0f07868e9e.jpg"
   },
   {
     "deck": "Companion",
     "variant": null,
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Companions/back.jpg",
-    "image_file": "./images/card-backs/cce8c183-f90b-4124-b838-e9efd8d8e0f9.jpg",
-    "image_fingerprint": "0e0f966a2a160f8e"
+    "image_file": "./images/card-backs/0e0f966a2a160f8e.jpg"
   },
   {
     "deck": "Condition",
     "variant": "Bleeding",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Conditions/Bleeding/back.jpg",
-    "image_file": "./images/card-backs/14464f9a-1642-495a-988e-b25f5de5511e.jpg",
-    "image_fingerprint": "0f0f968aae1f0f0f"
+    "image_file": "./images/card-backs/0f0f968aae1f0f0f.jpg"
   },
   {
     "deck": "Condition",
     "variant": "Focused",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Conditions/Focused/back.jpg",
-    "image_file": "./images/card-backs/1ab4ebb2-c802-4b84-96b2-3261593dc706.jpg",
-    "image_fingerprint": "0f0f0fb2aa0f0f0f"
+    "image_file": "./images/card-backs/0f0f0fb2aa0f0f0f.jpg"
   },
   {
     "deck": "Condition",
     "variant": "Hidden",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Conditions/back.jpg",
-    "image_file": "./images/card-backs/450069f0-eb2a-4bc8-a5a1-1d182beca8e5.jpg",
-    "image_fingerprint": "0f0f0e9e8e0f0f0f"
+    "image_file": "./images/card-backs/0f0f0e9e8e0f0f0f.jpg"
   },
   {
     "deck": "Condition",
     "variant": "Stunned",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Conditions/Stunned/back.jpg",
-    "image_file": "./images/card-backs/112fe137-8e0c-47cb-86e5-55cd15a990bf.jpg",
-    "image_fingerprint": "0f0f0eb2b20f0f0f"
+    "image_file": "./images/card-backs/0f0f0eb2b20f0f0f.jpg"
   },
   {
     "deck": "Condition",
     "variant": "Weakened",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Conditions/back.jpg",
-    "image_file": "./images/card-backs/e69a0405-d02e-44fb-bf30-96e9b20194a5.jpg",
-    "image_fingerprint": "0f0f0e9e960f0f0f"
+    "image_file": "./images/card-backs/0f0f0e9e960f0f0f.jpg"
   },
   {
     "deck": "Deployment",
     "variant": "Imperial",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Back.jpg",
-    "image_file": "./images/card-backs/07ddb33c-7502-4117-bd81-e0abdb6795ce.jpg",
-    "image_fingerprint": "0e0e334d4d330f8e"
+    "image_file": "./images/card-backs/0e0e334d4d330f8e.jpg"
   },
   {
     "deck": "Deployment",
     "variant": "Mercenary",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Mercenary/Back.jpg",
-    "image_file": "./images/card-backs/04cc2395-36e6-46aa-8851-5feed1a1de2a.jpg",
-    "image_fingerprint": "0e8e325717960f0e"
+    "image_file": "./images/card-backs/0e8e325717960f0e.jpg"
   },
   {
     "deck": "Deployment",
     "variant": "Neutral",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Neutral/Back.jpg",
-    "image_file": "./images/card-backs/8461fcd4-526c-46fc-b444-8b0b9e0e87b0.jpg",
-    "image_fingerprint": "8e0e172b6b170e8e"
+    "image_file": "./images/card-backs/8e0e172b6b170e8e.jpg"
   },
   {
     "deck": "Deployment",
     "variant": "Rebel",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Back.jpg",
-    "image_file": "./images/card-backs/578ef3bc-d311-4acb-8d2e-6435e229037f.jpg",
-    "image_fingerprint": "0e8e969654330f8e"
+    "image_file": "./images/card-backs/0e8e969654330f8e.jpg"
   },
   {
     "deck": "Imperial Class",
     "variant": "Armored Onslaught",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Armored%20Onslaught/back.jpg",
-    "image_file": "./images/card-backs/f01f77b5-f85b-4d0d-9798-2a18611a2d90.jpg",
-    "image_fingerprint": "1f9178b4a6b63b1f"
+    "image_file": "./images/card-backs/1f9178b4a6b63b1f.jpg"
   },
   {
     "deck": "Imperial Class",
     "variant": "Hutt Mercenaries",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Hutt%20Mercenaries/back.jpg",
-    "image_file": "./images/card-backs/eb7a14e3-9175-4836-91b8-8c4f099d05ae.jpg",
-    "image_fingerprint": "1b96e6057633734f"
+    "image_file": "./images/card-backs/1b96e6057633734f.jpg"
   },
   {
     "deck": "Imperial Class",
     "variant": "Imperial Black Ops",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Imperial%20Class%20Decks/Imperial%20Black%20Ops/back.jpg",
-    "image_file": "./images/card-backs/3c3876c7-a325-41fe-aea0-952d3e3884ec.jpg",
-    "image_fingerprint": "9fb33979fc98394f"
+    "image_file": "./images/card-backs/9fb33979fc98394f.jpg"
   },
   {
     "deck": "Imperial Class",
     "variant": "Inspiring Leadership",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Imperial%20Class%20Decks/Inspiring%20Leadership/back.jpg",
-    "image_file": "./images/card-backs/7161cc49-de5b-48e4-8031-6f226929d764.jpg",
-    "image_fingerprint": "179376d3abe2631f"
+    "image_file": "./images/card-backs/179376d3abe2631f.jpg"
   },
   {
     "deck": "Imperial Class",
     "variant": "Military Might",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Military%20Might/back.jpg",
-    "image_file": "./images/card-backs/8112329a-fad8-4ac7-8064-9b15fe4f4595.jpg",
-    "image_fingerprint": "979b4c165e19317f"
+    "image_file": "./images/card-backs/979b4c165e19317f.jpg"
   },
   {
     "deck": "Imperial Class",
     "variant": "Nemeses",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Imperial%20Class%20Decks/Nemeses/back.jpg",
-    "image_file": "./images/card-backs/058f874d-f73c-4727-ba0f-59716296bb8b.jpg",
-    "image_fingerprint": "0fe3f261f485197f"
+    "image_file": "./images/card-backs/0fe3f261f485197f.jpg"
   },
   {
     "deck": "Imperial Class",
     "variant": "Precision Training",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Imperial%20Class%20Decks/Precision%20Training/back.jpg",
-    "image_file": "./images/card-backs/593673c2-7aff-45dc-9609-40e7b5a03bc8.jpg",
-    "image_fingerprint": "1f91183961c1532f"
+    "image_file": "./images/card-backs/1f91183961c1532f.jpg"
   },
   {
     "deck": "Imperial Class",
     "variant": "Subversive Tactics",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Subversive%20Tactics/back.jpg",
-    "image_file": "./images/card-backs/da4d0802-d62a-4999-847d-f4ca80f88a50.jpg",
-    "image_fingerprint": "9793e8498cb1331f"
+    "image_file": "./images/card-backs/9793e8498cb1331f.jpg"
   },
   {
     "deck": "Imperial Class",
     "variant": "Technological Superiority",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Imperial%20Class%20Decks/Technological%20Superiority/back.jpg",
-    "image_file": "./images/card-backs/c66aba2f-47a2-4416-b2a4-b61845837616.jpg",
-    "image_fingerprint": "9d9c3cd3f6e0e11f"
+    "image_file": "./images/card-backs/9d9c3cd3f6e0e11f.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Biv Bodhrik",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/back.jpg",
-    "image_file": "./images/card-backs/5b380cc9-4054-4fc5-a518-bbf6ffd91e16.jpg",
-    "image_fingerprint": "1999baa992f43436"
+    "image_file": "./images/card-backs/1999baa992f43436.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Davith Elso",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/back.jpg",
-    "image_file": "./images/card-backs/3e23e31f-0176-4895-9928-84e7cdb998a5.jpg",
-    "image_fingerprint": "1dac2c62f0c6833d"
+    "image_file": "./images/card-backs/1dac2c62f0c6833d.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Diala Passil",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Diala%20Passil/back.jpg",
-    "image_file": "./images/card-backs/1b77f844-2122-409b-a5c3-6947bca107db.jpg",
-    "image_fingerprint": "199d3332cdc681c1"
+    "image_file": "./images/card-backs/199d3332cdc681c1.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Fenn Signis",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Fenn%20Signis/back.jpg",
-    "image_file": "./images/card-backs/5cdbb5c2-a62d-401b-8e8a-0da1a9ea641f.jpg",
-    "image_fingerprint": "23b1706869c83133"
+    "image_file": "./images/card-backs/23b1706869c83133.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Gaarkhan",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gaarkhan/back.jpg",
-    "image_file": "./images/card-backs/67adfb04-69b4-4144-a8c1-522b04862a5b.jpg",
-    "image_fingerprint": "13fbe96dece1d999"
+    "image_file": "./images/card-backs/13fbe96dece1d999.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Gideon Argus",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gideon%20Argus/back.jpg",
-    "image_file": "./images/card-backs/c6502469-a91b-4b1a-9842-3e85f35f9f23.jpg",
-    "image_fingerprint": "1393f8ece8c96169"
+    "image_file": "./images/card-backs/1393f8ece8c96169.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Jyn Odan",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/back.jpg",
-    "image_file": "./images/card-backs/138b0c50-9ccc-445e-940d-ed3727485474.jpg",
-    "image_fingerprint": "1b99b1747aea494d"
+    "image_file": "./images/card-backs/1b99b1747aea494d.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Loku Kanoloa",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/back.jpg",
-    "image_file": "./images/card-backs/6d6572d0-7a38-4976-8a9c-7293601f36ee.jpg",
-    "image_fingerprint": "1391b0b0d9f0e444"
+    "image_file": "./images/card-backs/1391b0b0d9f0e444.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "MHD-19",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/back.jpg",
-    "image_file": "./images/card-backs/a5d8646e-6d24-443b-90b2-42b0a8ee02ae.jpg",
-    "image_fingerprint": "11b3f098b0e86969"
+    "image_file": "./images/card-backs/11b3f098b0e86969.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Mak Eshka'rey",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/back.jpg",
-    "image_file": "./images/card-backs/5e0f3345-782d-4572-8d40-ff98b82b4e8e.jpg",
-    "image_fingerprint": "19ad2165786466cf"
+    "image_file": "./images/card-backs/19ad2165786466cf.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Murne Rin",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/back.jpg",
-    "image_file": "./images/card-backs/b98710b5-b7ee-4dc6-898d-ed2ea3c8e8be.jpg",
-    "image_fingerprint": "13a8c8c4b090f1f3"
+    "image_file": "./images/card-backs/13a8c8c4b090f1f3.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Onar Koma",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/back.jpg",
-    "image_file": "./images/card-backs/d8cc557e-86f7-4812-a79c-029657fc054e.jpg",
-    "image_fingerprint": "1595e4e06bd0cccc"
+    "image_file": "./images/card-backs/1595e4e06bd0cccc.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Saska Teft",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/back.jpg",
-    "image_file": "./images/card-backs/3a917a17-16ce-46ca-afc3-5c13f0814d57.jpg",
-    "image_fingerprint": "0d9cfaf49a981a5a"
+    "image_file": "./images/card-backs/0d9cfaf49a981a5a.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Shyla Varad",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/back.jpg",
-    "image_file": "./images/card-backs/968868c6-2cc0-4261-a8bf-8cac161a4641.jpg",
-    "image_fingerprint": "1998b071e9696464"
+    "image_file": "./images/card-backs/1998b071e9696464.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Verena Talos",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/back.jpg",
-    "image_file": "./images/card-backs/721f5bd3-bea4-4b39-a525-75fdc88e93b1.jpg",
-    "image_fingerprint": "0d9cfa2c7cfc7165"
+    "image_file": "./images/card-backs/0d9cfa2c7cfc7165.jpg"
   },
   {
     "deck": "Rebel Hero",
     "variant": "Vinto Hreeda",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/back.jpg",
-    "image_file": "./images/card-backs/2fed7c8b-fff8-463d-b49f-823304ed2921.jpg",
-    "image_fingerprint": "5193b8e8d8d8f173"
+    "image_file": "./images/card-backs/5193b8e8d8d8f173.jpg"
   },
   {
     "deck": "Rebel Upgrade",
     "variant": "Tier 1",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%201/Back.jpg",
-    "image_file": "./images/card-backs/6ef3db19-7c1c-45fa-8231-3abd997aa03f.jpg",
-    "image_fingerprint": "0f3749ccc868b60e"
+    "image_file": "./images/card-backs/0f3749ccc868b60e.jpg"
   },
   {
     "deck": "Rebel Upgrade",
     "variant": "Tier 2",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%202/Back.jpg",
-    "image_file": "./images/card-backs/b02c26a6-a513-4977-a7b5-045909f73db4.jpg",
-    "image_fingerprint": "0f3349cccc68b20e"
+    "image_file": "./images/card-backs/0f3349cccc68b20e.jpg"
   },
   {
     "deck": "Rebel Upgrade",
     "variant": "Tier 3",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Upgrades/Tier%203/Back.jpg",
-    "image_file": "./images/card-backs/96f4ebc1-7a6f-4344-83ba-6512d019e02f.jpg",
-    "image_fingerprint": "0e324ddccc70b20e"
+    "image_file": "./images/card-backs/0e324ddccc70b20e.jpg"
   },
   {
     "deck": "Reward",
     "variant": null,
     "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/back.jpg",
-    "image_file": "./images/card-backs/0f9d5688-9b8b-42e3-a63c-478dbfb184ad.jpg",
-    "image_fingerprint": "0f234dcccce8b21e"
+    "image_file": "./images/card-backs/0f234dcccce8b21e.jpg"
   },
   {
     "deck": "Side Mission",
     "variant": null,
     "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Back.jpg",
-    "image_file": "./images/card-backs/5f073cb3-8067-4e85-8568-e4ca14aaafac.jpg",
-    "image_fingerprint": "0f33713c1c0d330f"
+    "image_file": "./images/card-backs/0f33713c1c0d330f.jpg"
   },
   {
     "deck": "Story Mission",
     "variant": "Imperial Assault",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Story%20Missions/Back.jpg",
-    "image_file": "./images/card-backs/d1978268-5448-4238-95b7-2aa738cd153b.jpg",
-    "image_fingerprint": "0f333b2f6b61330f"
+    "image_file": "./images/card-backs/0f333b2f6b61330f.jpg"
   },
   {
     "deck": "Story Mission",
     "variant": "Jabba's Realm",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Story%20Missions/Back.jpg",
-    "image_file": "./images/card-backs/78e53bb7-41c8-4a53-a745-1890bb2b37c4.jpg",
-    "image_fingerprint": "0f33734b4971330f"
+    "image_file": "./images/card-backs/0f33734b4971330f.jpg"
   },
   {
     "deck": "Story Mission",
     "variant": "Return to Hoth",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Story%20Missions/Back.jpg",
-    "image_file": "./images/card-backs/fcc6c8c6-82bd-4087-85e7-9787e0f16090.jpg",
-    "image_fingerprint": "0f333b2f6b61330f"
+    "image_file": "./images/card-backs/0f333b2f6b61330f.jpg"
   },
   {
     "deck": "Supply",
     "variant": null,
     "image": "http://cards.boardwars.eu/albums/Core-Box/Supply%20Deck/Back.jpg",
-    "image_file": "./images/card-backs/1ce97e3d-7152-4163-868e-37eeb199d822.jpg",
-    "image_fingerprint": "0f0b96b69696dc1f"
+    "image_file": "./images/card-backs/0f0b96b69696dc1f.jpg"
   },
   {
     "deck": "Threat Mission",
     "variant": "Return to Hoth",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Side%20Missions/Threat/back.jpg",
-    "image_file": "./images/card-backs/c45d2b88-a02f-492d-ba4f-c0777d235347.jpg",
-    "image_fingerprint": "0e333b2f6b61330f"
+    "image_file": "./images/card-backs/0e333b2f6b61330f.jpg"
   }
 ]

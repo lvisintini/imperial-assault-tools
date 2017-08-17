@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import uuid
 import re
 import json
 import logging
@@ -239,14 +238,16 @@ class ImageProcessingPipeline(ProcessItemPipeline):
                 item[attr] = item[attr].replace('/cache', '/albums')
                 item[attr] = re.sub(r'_[0-9]{3}_thumb_[a-zA-Z]{8}_whatermark_cc', '', item[attr])
                 item[attr] = 'http://cards.boardwars.eu' + item[attr]
-                item[attr + '_file'] = '{}{}.{}'.format(
-                    self.roots[item.__class__],
-                    str(uuid.uuid4()),
-                    item[attr].split('.')[-1]
-                )
+
                 url = requests.get(item[attr])
                 file_obj = BytesIO(url.content)
-                item[attr + '_fingerprint'] = str(imagehash.dhash(Image.open(file_obj)))
+
+                item[attr + '_file'] = '{}{}.{}'.format(
+                    self.roots[item.__class__],
+                    str(imagehash.dhash(Image.open(file_obj))),
+                    item[attr].split('.')[-1]
+                )
+
                 file_obj.seek(0)
 
                 if not os.path.exists(self.roots[item.__class__]):

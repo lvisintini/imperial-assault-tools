@@ -1,282 +1,242 @@
 [
   {
-    "name": "Adrenalin Implant",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Adrenalin%20Implant.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/077880d2-d3e5-46a7-a707-8a9b8c158080.jpg",
-    "image_fingerprint": "696cbcdd0b2f3717"
-  },
-  {
-    "name": "Allied Operations",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Allied%20Operations.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/0cfda8b6-f734-4c63-9b98-a039d0d6b065.jpg",
-    "image_fingerprint": "7d75372b23233353"
-  },
-  {
-    "name": "Fearless Leader",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Fearless%20Leader.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/516c40f0-e49f-485b-b8e8-ef3f618454b2.jpg",
-    "image_fingerprint": "6961273d17333757"
-  },
-  {
-    "name": "Imperial Industry",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Imperial%20Industry.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/40d1ccd4-68e9-447c-ab5f-15524044b2a4.jpg",
-    "image_fingerprint": "65692d2f2b372317"
-  },
-  {
-    "name": "Life Debt",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Life%20Debt.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/0197dbe8-58c3-4c19-a6c7-0aa28c6a97cc.jpg",
-    "image_fingerprint": "71215517073b2d53"
-  },
-  {
-    "name": "Old Wounds",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Old%20Wounds.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/e0b03b90-9ba0-4e49-af67-2f8114655604.jpg",
-    "image_fingerprint": "3961152b03232317"
-  },
-  {
-    "name": "Peacemaker",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Peacemaker.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/e6b34d29-76be-40c5-9a29-27135ff08575.jpg",
-    "image_fingerprint": "6967272d2b033b17"
-  },
-  {
-    "name": "Rebel Recon",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Rebel%20Recon.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/8edf3b70-82c0-47b5-b284-63900e6c8424.jpg",
-    "image_fingerprint": "79292527230b2343"
-  },
-  {
-    "name": "Shadow Suit",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Shadow%20Suit.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/cb3f92af-0b50-4dea-8b86-947c9671f681.jpg",
-    "image_fingerprint": "696c6c0d07672753"
-  },
-  {
-    "name": "Shu Yen's Lightsaber",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Shu%20Yen%27s%20Lightsaber.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/4e831fed-f44f-4319-bf8c-3faf85cb50a6.jpg",
-    "image_fingerprint": "60ccf20a4b6b6323"
-  },
-  {
-    "name": "Special Operations",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Special%20Operations.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/c0794d51-1de0-4c92-b25b-8080033ea15d.jpg",
-    "image_fingerprint": "555d3d272b232317"
-  },
-  {
-    "name": "Supply Deficit",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Supply%20Deficit.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/a0cdcec8-38c5-4260-a7a3-9347719514eb.jpg",
-    "image_fingerprint": "692925390b030307"
-  },
-  {
-    "name": "The Ways of the Force",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/The%20Ways%20of%20the%20Force.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/e66fe260-9eda-477f-a083-4650f086fdcf.jpg",
-    "image_fingerprint": "4d4d472b232b1353"
-  },
-  {
-    "name": "Veteran Prowess",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Veteran%20Prowess.jpg",
-    "source": 0,
-    "image_file": "./images/rewards-cards/16826245-a5f2-4bee-af45-4898f0139738.jpg",
-    "image_fingerprint": "5d6d2b1f03231113"
-  },
-  {
-    "name": "Battle Vision",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rewards/Battle%20Vision.jpg",
-    "source": 2,
-    "image_file": "./images/rewards-cards/6c50dcd1-c0f6-4024-8a4a-47015a955a3e.jpg",
-    "image_fingerprint": "6961653b13037357"
-  },
-  {
-    "name": "Iron Hand",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rewards/Iron%20Hand.jpg",
-    "source": 2,
-    "image_file": "./images/rewards-cards/86683550-56ec-4839-bf39-55269c861930.jpg",
-    "image_fingerprint": "7121253b0b235b17"
-  },
-  {
-    "name": "Systems Upgrade",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rewards/Systems%20Upgrade.jpg",
-    "source": 2,
-    "image_file": "./images/rewards-cards/5a0223fb-3bf4-43a3-8096-c17240c60994.jpg",
-    "image_fingerprint": "6dea781c0b735737"
-  },
-  {
-    "name": "Cam Droid",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rewards/Cam%20Droid.jpg",
-    "source": 3,
-    "image_file": "./images/rewards-cards/9963c4fe-da71-4c1d-9386-ca3652fcab97.jpg",
-    "image_fingerprint": "29a9b1912f3b0f17"
-  },
-  {
-    "name": "Lobots Favor",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rewards/Lobots%20Favor.jpg",
-    "source": 3,
-    "image_file": "./images/rewards-cards/f5d3b808-b01f-4d9e-98a9-cb209a0098d8.jpg",
-    "image_fingerprint": "6969650767470707"
-  },
-  {
-    "name": "Radiant Holocron",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rewards/Radiant%20Holocron.jpg",
-    "source": 3,
-    "image_file": "./images/rewards-cards/5029abe4-4bd4-4abd-b4e8-871042837519.jpg",
-    "image_fingerprint": "6d8e0f914d7f3b17"
-  },
-  {
-    "name": "Relief Effort",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rewards/Relief%20Effort.jpg",
-    "source": 3,
-    "image_file": "./images/rewards-cards/ab168536-de33-4e79-81f6-56f02cd074d9.jpg",
-    "image_fingerprint": "6929472323230f17"
-  },
-  {
-    "name": "Under the Radar",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rewards/Under%20the%20Radar.jpg",
-    "source": 3,
-    "image_file": "./images/rewards-cards/26bbe175-6631-450a-8567-2e42e0108a49.jpg",
-    "image_fingerprint": "6d6d373323230357"
-  },
-  {
-    "name": "Bred for War",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rewards/Bred%20for%20War.jpg",
-    "source": 4,
-    "image_file": "./images/rewards-cards/66f83f55-5794-4432-b1c5-e02b83062f65.jpg",
-    "image_fingerprint": "6969751923232307"
-  },
-  {
-    "name": "Desperado",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rewards/Desperado.jpg",
-    "source": 4,
-    "image_file": "./images/rewards-cards/eb3383b8-a203-4731-beaf-44d0bac8f679.jpg",
-    "image_fingerprint": "69614d1b696d2f57"
-  },
-  {
-    "name": "Haymaker",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rewards/Haymaker.jpg",
-    "source": 4,
-    "image_file": "./images/rewards-cards/c7b2470e-4cca-4576-bd7e-e4b3385b8b79.jpg",
-    "image_fingerprint": "71776d274f230b57"
-  },
-  {
-    "name": "Mandalorian Heritage",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rewards/Mandalorian%20Heritage.jpg",
-    "source": 4,
-    "image_file": "./images/rewards-cards/36a366b6-f06b-4461-a5a4-958912d1f9d0.jpg",
-    "image_fingerprint": "4d352f472b2f1757"
-  },
-  {
-    "name": "Intimidation",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Chewbacca/Reward%20Cards/Intimidation.jpg",
-    "source": 5,
-    "image_file": "./images/rewards-cards/e63df107-4e2c-42e4-aa80-847814a5142b.jpg",
-    "image_fingerprint": "71616d6f330b6f57"
-  },
-  {
-    "name": "Quickdraw Holster",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Han%20Solo/Reward%20Cards/Quickdraw%20Holster.jpg",
-    "source": 6,
-    "image_file": "./images/rewards-cards/de07746e-2919-43b8-8685-c404b4babd49.jpg",
-    "image_fingerprint": "6d46721817636357"
-  },
-  {
-    "name": "Mercenary Ties",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Reward%20Cards/Mercenary%20Ties.jpg",
-    "source": 14,
-    "image_file": "./images/rewards-cards/974dee0d-cd29-4a12-915a-3e7685120578.jpg",
-    "image_fingerprint": "51515565330b0317"
-  },
-  {
-    "name": "501st Training",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Reward%20Cards/501st%20Training.jpg",
-    "source": 15,
-    "image_file": "./images/rewards-cards/5a252b6a-dd8b-467a-a238-5c39aa7309e9.jpg",
-    "image_fingerprint": "696935674d6d3307"
-  },
-  {
-    "name": "Tusken Weaponry",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-4/Bantha%20Rider/Reward%20Cards/Tusken%20Weaponry.jpg",
-    "source": 18,
-    "image_file": "./images/rewards-cards/0ba1fc51-1974-4f16-8d76-d1f04e63991c.jpg",
-    "image_fingerprint": "61696d5577677517"
-  },
-  {
-    "name": "Cautious Approach",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Reward%20Cards/Cautious%20Approach.jpg",
-    "source": 25,
-    "image_file": "./images/rewards-cards/dff3b219-7849-4525-8cc0-63cf15ca26fd.jpg",
-    "image_fingerprint": "4d6d331b23233353"
-  },
-  {
-    "name": "Tactical Advance",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Reward%20Cards/Tactical%20Advance.jpg",
-    "source": 25,
-    "image_file": "./images/rewards-cards/539d7481-dbd2-4c34-9daf-70435bdc4125.jpg",
-    "image_fingerprint": "61692d2d0b0b0b07"
-  },
-  {
-    "name": "Lady Luck",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Lando%20Calrissian/Reward%20Cards/Lady%20Luck.jpg",
-    "source": 26,
-    "image_file": "./images/rewards-cards/90b27a57-ef7a-402a-99ec-1ea1b1a2e9f0.jpg",
-    "image_fingerprint": "79691d3303032347"
-  },
-  {
-    "name": "Mechanical Salvage",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Reward%20Cards/Mechanical%20Salvage.jpg",
-    "source": 36,
-    "image_file": "./images/rewards-cards/139320f5-c44b-4533-a576-535d8fbf3fcf.jpg",
-    "image_fingerprint": "4549697757130317"
-  },
-  {
     "name": "Bounty",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rewards/Bounty.jpg",
     "source": 1,
-    "image_file": "./images/rewards-cards/83ef0bbb-e189-49cf-ad5d-8a54936d525d.jpg",
-    "image_fingerprint": "3333270b232b0317"
+    "image_file": "./images/rewards-cards/3333270b232b0317.jpg"
   },
   {
     "name": "Counterparts",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rewards/Counterparts.jpg",
     "source": 1,
-    "image_file": "./images/rewards-cards/ba01b8aa-6281-4d49-8531-6bae3fc3f590.jpg",
-    "image_fingerprint": "69612d71053b2303"
+    "image_file": "./images/rewards-cards/69612d71053b2303.jpg"
   },
   {
     "name": "Hunt Them Down",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rewards/Hunt%20Them%20Down.jpg",
     "source": 1,
-    "image_file": "./images/rewards-cards/bd8bdb29-a5b9-4c69-b276-bb0de96a4c3e.jpg",
-    "image_fingerprint": "7145772b23233b17"
+    "image_file": "./images/rewards-cards/7145772b23233b17.jpg"
   },
   {
     "name": "Surveillance Operatives",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rewards/Surveillance%20Operatives.jpg",
     "source": 1,
-    "image_file": "./images/rewards-cards/91778637-29af-4ea9-887e-b7491ee1e3f7.jpg",
-    "image_fingerprint": "2b49337527030317"
+    "image_file": "./images/rewards-cards/2b49337527030317.jpg"
   },
   {
     "name": "Tech Goggles",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rewards/Tech%20Goggles.jpg",
     "source": 1,
-    "image_file": "./images/rewards-cards/c0b36252-286d-4639-8635-e6d7aae6fcfd.jpg",
-    "image_fingerprint": "61ccde9e03333f17"
+    "image_file": "./images/rewards-cards/61ccde9e03333f17.jpg"
+  },
+  {
+    "name": "Adrenalin Implant",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Adrenalin%20Implant.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/696cbcdd0b2f3717.jpg"
+  },
+  {
+    "name": "Allied Operations",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Allied%20Operations.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/7d75372b23233353.jpg"
+  },
+  {
+    "name": "Fearless Leader",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Fearless%20Leader.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/6961273d17333757.jpg"
+  },
+  {
+    "name": "Imperial Industry",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Imperial%20Industry.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/65692d2f2b372317.jpg"
+  },
+  {
+    "name": "Life Debt",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Life%20Debt.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/71215517073b2d53.jpg"
+  },
+  {
+    "name": "Old Wounds",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Old%20Wounds.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/3961152b03232317.jpg"
+  },
+  {
+    "name": "Peacemaker",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Peacemaker.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/6967272d2b033b17.jpg"
+  },
+  {
+    "name": "Rebel Recon",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Rebel%20Recon.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/79292527230b2343.jpg"
+  },
+  {
+    "name": "Shadow Suit",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Shadow%20Suit.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/696c6c0d07672753.jpg"
+  },
+  {
+    "name": "Shu Yen's Lightsaber",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Shu%20Yen%27s%20Lightsaber.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/60ccf20a4b6b6323.jpg"
+  },
+  {
+    "name": "Special Operations",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Special%20Operations.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/555d3d272b232317.jpg"
+  },
+  {
+    "name": "Supply Deficit",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Supply%20Deficit.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/692925390b030307.jpg"
+  },
+  {
+    "name": "The Ways of the Force",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/The%20Ways%20of%20the%20Force.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/4d4d472b232b1353.jpg"
+  },
+  {
+    "name": "Veteran Prowess",
+    "image": "http://cards.boardwars.eu/albums/Core-Box/Rewards/Veteran%20Prowess.jpg",
+    "source": 0,
+    "image_file": "./images/rewards-cards/5d6d2b1f03231113.jpg"
+  },
+  {
+    "name": "Battle Vision",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rewards/Battle%20Vision.jpg",
+    "source": 2,
+    "image_file": "./images/rewards-cards/6961653b13037357.jpg"
+  },
+  {
+    "name": "Iron Hand",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rewards/Iron%20Hand.jpg",
+    "source": 2,
+    "image_file": "./images/rewards-cards/7121253b0b235b17.jpg"
+  },
+  {
+    "name": "Systems Upgrade",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rewards/Systems%20Upgrade.jpg",
+    "source": 2,
+    "image_file": "./images/rewards-cards/6dea781c0b735737.jpg"
+  },
+  {
+    "name": "Cam Droid",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rewards/Cam%20Droid.jpg",
+    "source": 3,
+    "image_file": "./images/rewards-cards/29a9b1912f3b0f17.jpg"
+  },
+  {
+    "name": "Lobots Favor",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rewards/Lobots%20Favor.jpg",
+    "source": 3,
+    "image_file": "./images/rewards-cards/6969650767470707.jpg"
+  },
+  {
+    "name": "Radiant Holocron",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rewards/Radiant%20Holocron.jpg",
+    "source": 3,
+    "image_file": "./images/rewards-cards/6d8e0f914d7f3b17.jpg"
+  },
+  {
+    "name": "Relief Effort",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rewards/Relief%20Effort.jpg",
+    "source": 3,
+    "image_file": "./images/rewards-cards/6929472323230f17.jpg"
+  },
+  {
+    "name": "Under the Radar",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rewards/Under%20the%20Radar.jpg",
+    "source": 3,
+    "image_file": "./images/rewards-cards/6d6d373323230357.jpg"
+  },
+  {
+    "name": "Bred for War",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rewards/Bred%20for%20War.jpg",
+    "source": 4,
+    "image_file": "./images/rewards-cards/6969751923232307.jpg"
+  },
+  {
+    "name": "Desperado",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rewards/Desperado.jpg",
+    "source": 4,
+    "image_file": "./images/rewards-cards/69614d1b696d2f57.jpg"
+  },
+  {
+    "name": "Haymaker",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rewards/Haymaker.jpg",
+    "source": 4,
+    "image_file": "./images/rewards-cards/71776d274f230b57.jpg"
+  },
+  {
+    "name": "Mandalorian Heritage",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rewards/Mandalorian%20Heritage.jpg",
+    "source": 4,
+    "image_file": "./images/rewards-cards/4d352f472b2f1757.jpg"
+  },
+  {
+    "name": "Mercenary Ties",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Reward%20Cards/Mercenary%20Ties.jpg",
+    "source": 12,
+    "image_file": "./images/rewards-cards/51515565330b0317.jpg"
+  },
+  {
+    "name": "501st Training",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Reward%20Cards/501st%20Training.jpg",
+    "source": 13,
+    "image_file": "./images/rewards-cards/696935674d6d3307.jpg"
+  },
+  {
+    "name": "Tusken Weaponry",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-4/Bantha%20Rider/Reward%20Cards/Tusken%20Weaponry.jpg",
+    "source": 16,
+    "image_file": "./images/rewards-cards/61696d5577677517.jpg"
+  },
+  {
+    "name": "Cautious Approach",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Reward%20Cards/Cautious%20Approach.jpg",
+    "source": 23,
+    "image_file": "./images/rewards-cards/4d6d331b23233353.jpg"
+  },
+  {
+    "name": "Tactical Advance",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Reward%20Cards/Tactical%20Advance.jpg",
+    "source": 23,
+    "image_file": "./images/rewards-cards/61692d2d0b0b0b07.jpg"
+  },
+  {
+    "name": "Lady Luck",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Lando%20Calrissian/Reward%20Cards/Lady%20Luck.jpg",
+    "source": 24,
+    "image_file": "./images/rewards-cards/79691d3303032347.jpg"
+  },
+  {
+    "name": "Mechanical Salvage",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Reward%20Cards/Mechanical%20Salvage.jpg",
+    "source": 34,
+    "image_file": "./images/rewards-cards/4549697757130317.jpg"
+  },
+  {
+    "name": "Intimidation",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Chewbacca/Reward%20Cards/Intimidation.jpg",
+    "source": 35,
+    "image_file": "./images/rewards-cards/71616d6f330b6f57.jpg"
+  },
+  {
+    "name": "Quickdraw Holster",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Han%20Solo/Reward%20Cards/Quickdraw%20Holster.jpg",
+    "source": 37,
+    "image_file": "./images/rewards-cards/6d46721817636357.jpg"
   }
 ]

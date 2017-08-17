@@ -3,28 +3,24 @@
     "name": "Escape from Cloud City",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Side%20Missions/Threat/Escape%20from%20Cloud%20City.jpg",
     "source": 2,
-    "image_file": "./images/threat-mission-cards/46a88ccf-2bb4-44fc-a03a-e9a5994582dc.jpg",
-    "image_fingerprint": "786f0f4f4d656d4d"
+    "image_file": "./images/threat-mission-cards/786f0f4f4d656d4d.jpg"
   },
   {
     "name": "Scouring of the Houmestead",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Side%20Missions/Threat/Scouring%20of%20the%20Houmestead.jpg",
     "source": 2,
-    "image_file": "./images/threat-mission-cards/dfe999ef-807c-46dc-9c1f-c09d1c45f7b2.jpg",
-    "image_fingerprint": "6fc81b07456d6d4d"
+    "image_file": "./images/threat-mission-cards/6fc81b07456d6d4d.jpg"
   },
   {
     "name": "Survival of the Fittest",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Side%20Missions/Threat/Survival%20of%20the%20Fittest.jpg",
     "source": 2,
-    "image_file": "./images/threat-mission-cards/9a96e810-40b6-4734-bc42-c24a804ab856.jpg",
-    "image_fingerprint": "113d8d4f5d2d2549"
+    "image_file": "./images/threat-mission-cards/113d8d4f5d2d2549.jpg"
   },
   {
     "name": "The Hard Way",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Side%20Missions/Threat/The%20Hard%20Way.jpg",
     "source": 2,
-    "image_file": "./images/threat-mission-cards/54cfd4f1-8624-447b-b3d4-01be92c281b3.jpg",
-    "image_fingerprint": "8be58f0f656d254d"
+    "image_file": "./images/threat-mission-cards/8be58f0f656d254d.jpg"
   }
 ]

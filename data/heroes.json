@@ -5,10 +5,8 @@
     "healthy": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Diala%20Passil/Diala%20Hero%20Healthy.jpg",
     "wounded": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Diala%20Passil/Diala%20Hero%20Wounded.jpg",
     "id": 0,
-    "healthy_file": "./images/heroes/7df68da1-049a-47e2-86c3-62fa7988a3c0.jpg",
-    "healthy_fingerprint": "6d746a7a71e65652",
-    "wounded_file": "./images/heroes/27301c19-8325-424c-8b97-c7aa710991d4.jpg",
-    "wounded_fingerprint": "6e727a7a71c65652"
+    "healthy_file": "./images/heroes/6d746a7a71e65652.jpg",
+    "wounded_file": "./images/heroes/6e727a7a71c65652.jpg"
   },
   {
     "name": "Fenn Signis",
@@ -16,10 +14,8 @@
     "healthy": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Fenn%20Signis/Fenn%20Hero%20Healthy.jpg",
     "wounded": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Fenn%20Signis/Fenn%20Hero%20Wounded.jpg",
     "id": 1,
-    "healthy_file": "./images/heroes/3bb83f18-7815-42d4-a3b6-13ea69b3c1ee.jpg",
-    "healthy_fingerprint": "6978796d7f365052",
-    "wounded_file": "./images/heroes/22f53dd8-04af-4de9-8eef-4fa374165309.jpg",
-    "wounded_fingerprint": "6670796d7b565452"
+    "healthy_file": "./images/heroes/6978796d7f365052.jpg",
+    "wounded_file": "./images/heroes/6670796d7b565452.jpg"
   },
   {
     "name": "Gaarkhan",
@@ -27,152 +23,124 @@
     "healthy": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gaarkhan/Gaarkahn%20Hero%20Healthy.jpg",
     "wounded": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gaarkhan/Gaarkhan%20Hero%20Wounded.jpg",
     "id": 2,
-    "healthy_file": "./images/heroes/534b731f-4360-4977-942f-d920821403e7.jpg",
-    "healthy_fingerprint": "697c797f7e1c5052",
-    "wounded_file": "./images/heroes/3e5aad16-1867-4a05-9e44-ffa64a8bbd9b.jpg",
-    "wounded_fingerprint": "6670797f7b594452"
-  },
-  {
-    "name": "Jyn Odan",
-    "source": 0,
-    "healthy": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Jyn%20Hero%20Healthy.jpg",
-    "wounded": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Jyn%20Hero%20Wounded.jpg",
-    "id": 3,
-    "healthy_file": "./images/heroes/78439521-e9b1-4e36-a596-ffb7810754e4.jpg",
-    "healthy_fingerprint": "6d6d7d5c79595052",
-    "wounded_file": "./images/heroes/ee37ac17-9fa3-4a31-a224-dc9679a83a6f.jpg",
-    "wounded_fingerprint": "62737a7c79595452"
-  },
-  {
-    "name": "Mak Eshka'rey",
-    "source": 0,
-    "healthy": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Mak%20Hero%20Healthy.jpg",
-    "wounded": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Mak%20Hero%20Wounded.jpg",
-    "id": 4,
-    "healthy_file": "./images/heroes/b398913a-b45e-48b8-a1f3-776e5e02ef33.jpg",
-    "healthy_fingerprint": "65786d7a747e5252",
-    "wounded_file": "./images/heroes/28d92c2b-50ad-41e7-8b1c-eac6800c940c.jpg",
-    "wounded_fingerprint": "6b716c7a71d85452"
-  },
-  {
-    "name": "Loku Kanoloa",
-    "source": 2,
-    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Loku%20Hero%20Healthy.jpg",
-    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Loku-Hero-Wounded.jpg",
-    "id": 5,
-    "healthy_file": "./images/heroes/cdd53d70-d8e7-4cc9-b721-9c73c417c47d.jpg",
-    "healthy_fingerprint": "696c6c79752d5052",
-    "wounded_file": "./images/heroes/337a7f92-4f21-4623-9c6e-a8d2e1404e7d.jpg",
-    "wounded_fingerprint": "6a7a787971695c52"
-  },
-  {
-    "name": "MHD-19",
-    "source": 2,
-    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/MHD-19%20Hero%20Healthy.jpg",
-    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/MHD-19%20Hero%20Wounded.jpg",
-    "id": 6,
-    "healthy_file": "./images/heroes/b8bc25b0-454c-4254-a3c0-ba07e1c6f9c6.jpg",
-    "healthy_fingerprint": "697c7c747c6d5052",
-    "wounded_file": "./images/heroes/b7f4fa27-5a29-4b87-8523-9a94c23907ed.jpg",
-    "wounded_fingerprint": "66703e7c6c695452"
-  },
-  {
-    "name": "Verena Talos",
-    "source": 2,
-    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Verena%20Hero%20Healthy.jpg",
-    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Verena%20Hero%20Wounded.jpg",
-    "id": 7,
-    "healthy_file": "./images/heroes/73058072-8f65-4146-ba2b-839b7e384680.jpg",
-    "healthy_fingerprint": "45e45ecc5c4c5452",
-    "wounded_file": "./images/heroes/4aad0857-d9f4-48b9-97f3-478d39f641e6.jpg",
-    "wounded_fingerprint": "6b79786c7c5d5452"
-  },
-  {
-    "name": "Davith Elso",
-    "source": 3,
-    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Davith%20Hero%20Healthy.jpg",
-    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Davith%20Hero%20Wounded.jpg",
-    "id": 8,
-    "healthy_file": "./images/heroes/d9b51670-519a-4d30-bc09-f89602731a77.jpg",
-    "healthy_fingerprint": "4c7c6c5878525252",
-    "wounded_file": "./images/heroes/410bb522-b3ad-4e31-b034-b3450189bd11.jpg",
-    "wounded_fingerprint": "6a727a7a794a5652"
-  },
-  {
-    "name": "Murne Rin",
-    "source": 3,
-    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Murne%20Hero%20Healthy.jpg",
-    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Murne%20Hero%20Wounded.jpg",
-    "id": 9,
-    "healthy_file": "./images/heroes/3090c9cf-d1a5-4d6f-a1d4-8ce5479ddf83.jpg",
-    "healthy_fingerprint": "4f5c787870785852",
-    "wounded_file": "./images/heroes/a6bf9578-554e-40f9-a8a3-5c7da3e478fe.jpg",
-    "wounded_fingerprint": "63727a7a71585c52"
-  },
-  {
-    "name": "Onar Koma",
-    "source": 4,
-    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Onar%20Hero%20healthy.jpg",
-    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Onar%20Hero%20wounded.jpg",
-    "id": 10,
-    "healthy_file": "./images/heroes/421d4e4f-8a05-4bc8-8884-5b473d07c790.jpg",
-    "healthy_fingerprint": "6d5c7878795c5412",
-    "wounded_file": "./images/heroes/74f77f5f-3348-4b8d-9323-0d8d5ec3984e.jpg",
-    "wounded_fingerprint": "627a7a7879d95452"
-  },
-  {
-    "name": "Shyla Varad",
-    "source": 4,
-    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Shyla%20Hero%20healthy.jpg",
-    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Shyla%20Hero%20wounded.jpg",
-    "id": 11,
-    "healthy_file": "./images/heroes/65821e69-8ba8-4560-be37-6ca37434bd93.jpg",
-    "healthy_fingerprint": "4d6c785879795452",
-    "wounded_file": "./images/heroes/44283f20-e38c-4c94-9c45-9d4d898c34e0.jpg",
-    "wounded_fingerprint": "627a3a7a79594c52"
-  },
-  {
-    "name": "Vinto Hreeda",
-    "source": 4,
-    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Vinto%20Hero%20healthy.jpg",
-    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Vinto%20Hero%20wounded.jpg",
-    "id": 12,
-    "healthy_file": "./images/heroes/66c4e4a0-da8e-4bb8-b25e-f9929b891521.jpg",
-    "healthy_fingerprint": "6177747870795852",
-    "wounded_file": "./images/heroes/a7e1c308-94b6-46c5-b267-e83cf2873ebc.jpg",
-    "wounded_fingerprint": "7272767871595c52"
+    "healthy_file": "./images/heroes/697c797f7e1c5052.jpg",
+    "wounded_file": "./images/heroes/6670797f7b594452.jpg"
   },
   {
     "name": "Gideon Argus",
     "source": 0,
     "healthy": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gideon%20Argus/Gideon%20Hero%20Healthy.jpg",
     "wounded": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gideon%20Argus/Gideon%20Hero%20Wounded.jpg",
-    "id": 13,
-    "healthy_file": "./images/heroes/ee8246fa-0453-4dfb-a898-058c4016f99a.jpg",
-    "healthy_fingerprint": "494c585a5a1a5252",
-    "wounded_file": "./images/heroes/a2bf42de-0fbc-4f10-81e0-16eafe33ea91.jpg",
-    "wounded_fingerprint": "6272727a7a124652"
+    "id": 3,
+    "healthy_file": "./images/heroes/494c585a5a1a5252.jpg",
+    "wounded_file": "./images/heroes/6272727a7a124652.jpg"
   },
   {
     "name": "Biv Bodhrik",
     "source": 1,
     "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Biv%20Bodhrik%20Hero%20Healthy.jpg",
     "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Biv%20Bodhrik%20Hero%20Wounded.jpg",
-    "id": 14,
-    "healthy_file": "./images/heroes/9bf3c121-3d1a-4e08-bd42-ecd2b6f01829.jpg",
-    "healthy_fingerprint": "65646461755c5452",
-    "wounded_file": "./images/heroes/40cd0d21-643d-4a19-8cf7-33872a345541.jpg",
-    "wounded_fingerprint": "6279716071584452"
+    "id": 4,
+    "healthy_file": "./images/heroes/65646461755c5452.jpg",
+    "wounded_file": "./images/heroes/6279716071584452.jpg"
   },
   {
     "name": "Saska Teft",
     "source": 1,
     "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Saska%20Teft%20Hero%20Healthy.jpg",
     "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Saska%20Teft%20Hero%20Wounded.jpg",
+    "id": 5,
+    "healthy_file": "./images/heroes/6d6c7c786c6c5052.jpg",
+    "wounded_file": "./images/heroes/627a32786d495452.jpg"
+  },
+  {
+    "name": "Jyn Odan",
+    "source": 0,
+    "healthy": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Jyn%20Hero%20Healthy.jpg",
+    "wounded": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Jyn%20Hero%20Wounded.jpg",
+    "id": 6,
+    "healthy_file": "./images/heroes/6d6d7d5c79595052.jpg",
+    "wounded_file": "./images/heroes/62737a7c79595452.jpg"
+  },
+  {
+    "name": "Mak Eshka'rey",
+    "source": 0,
+    "healthy": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Mak%20Hero%20Healthy.jpg",
+    "wounded": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Mak%20Hero%20Wounded.jpg",
+    "id": 7,
+    "healthy_file": "./images/heroes/65786d7a747e5252.jpg",
+    "wounded_file": "./images/heroes/6b716c7a71d85452.jpg"
+  },
+  {
+    "name": "Loku Kanoloa",
+    "source": 2,
+    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Loku%20Hero%20Healthy.jpg",
+    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Loku-Hero-Wounded.jpg",
+    "id": 8,
+    "healthy_file": "./images/heroes/696c6c79752d5052.jpg",
+    "wounded_file": "./images/heroes/6a7a787971695c52.jpg"
+  },
+  {
+    "name": "MHD-19",
+    "source": 2,
+    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/MHD-19%20Hero%20Healthy.jpg",
+    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/MHD-19%20Hero%20Wounded.jpg",
+    "id": 9,
+    "healthy_file": "./images/heroes/697c7c747c6d5052.jpg",
+    "wounded_file": "./images/heroes/66703e7c6c695452.jpg"
+  },
+  {
+    "name": "Verena Talos",
+    "source": 2,
+    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Verena%20Hero%20Healthy.jpg",
+    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Verena%20Hero%20Wounded.jpg",
+    "id": 10,
+    "healthy_file": "./images/heroes/45e45ecc5c4c5452.jpg",
+    "wounded_file": "./images/heroes/6b79786c7c5d5452.jpg"
+  },
+  {
+    "name": "Davith Elso",
+    "source": 3,
+    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Davith%20Hero%20Healthy.jpg",
+    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Davith%20Hero%20Wounded.jpg",
+    "id": 11,
+    "healthy_file": "./images/heroes/4c7c6c5878525252.jpg",
+    "wounded_file": "./images/heroes/6a727a7a794a5652.jpg"
+  },
+  {
+    "name": "Murne Rin",
+    "source": 3,
+    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Murne%20Hero%20Healthy.jpg",
+    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Murne%20Hero%20Wounded.jpg",
+    "id": 12,
+    "healthy_file": "./images/heroes/4f5c787870785852.jpg",
+    "wounded_file": "./images/heroes/63727a7a71585c52.jpg"
+  },
+  {
+    "name": "Onar Koma",
+    "source": 4,
+    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Onar%20Hero%20healthy.jpg",
+    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Onar%20Hero%20wounded.jpg",
+    "id": 13,
+    "healthy_file": "./images/heroes/6d5c7878795c5412.jpg",
+    "wounded_file": "./images/heroes/627a7a7879d95452.jpg"
+  },
+  {
+    "name": "Shyla Varad",
+    "source": 4,
+    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Shyla%20Hero%20healthy.jpg",
+    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Shyla%20Hero%20wounded.jpg",
+    "id": 14,
+    "healthy_file": "./images/heroes/4d6c785879795452.jpg",
+    "wounded_file": "./images/heroes/627a3a7a79594c52.jpg"
+  },
+  {
+    "name": "Vinto Hreeda",
+    "source": 4,
+    "healthy": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Vinto%20Hero%20healthy.jpg",
+    "wounded": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Vinto%20Hero%20wounded.jpg",
     "id": 15,
-    "healthy_file": "./images/heroes/5ec766e6-7b04-44f0-aea4-ff1a166838bf.jpg",
-    "healthy_fingerprint": "6d6c7c786c6c5052",
-    "wounded_file": "./images/heroes/1894db7f-3fda-432c-8064-fe48a2e0046f.jpg",
-    "wounded_fingerprint": "627a32786d495452"
+    "healthy_file": "./images/heroes/6177747870795852.jpg",
+    "wounded_file": "./images/heroes/7272767871595c52.jpg"
   }
 ]

@@ -63,7 +63,6 @@ class HeroClassCardItem(scrapy.Item):
     name = scrapy.Field()
     hero = scrapy.Field()
     image = scrapy.Field()
-    image_fingerprint = scrapy.Field()
     image_file = scrapy.Field()
 
 

@@ -2,31 +2,26 @@
   {
     "name": "Bleeding",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Conditions/Bleeding/Bleeding.jpg",
-    "image_file": "./images/condition-cards/06dbd531-2e1a-4bb4-ad2c-6c13721d1f79.jpg",
-    "image_fingerprint": "254f75691f07490f"
+    "image_file": "./images/condition-cards/254f75691f07490f.jpg"
   },
   {
     "name": "Focused",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Conditions/Focused/Focused.jpg",
-    "image_file": "./images/condition-cards/b4d39a5d-ad4e-4789-bcd0-0d4f63e0e1fe.jpg",
-    "image_fingerprint": "2545754d1d3d410f"
+    "image_file": "./images/condition-cards/2545754d1d3d410f.jpg"
   },
   {
     "name": "Stunned",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Conditions/Stunned/Stunned.jpg",
-    "image_file": "./images/condition-cards/8e84675c-ab94-4b36-9d9c-bbf9eecd41d0.jpg",
-    "image_fingerprint": "25477d153333390d"
-  },
-  {
-    "name": "Hidden",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Conditions/Hidden.jpg",
-    "image_file": "./images/condition-cards/12be84fe-c25a-4f97-bcf3-0d721a873213.jpg",
-    "image_fingerprint": "256d5565656d0d07"
+    "image_file": "./images/condition-cards/25477d153333390d.jpg"
   },
   {
     "name": "Weakened",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Conditions/Weakened.jpg",
-    "image_file": "./images/condition-cards/04c453ff-29b1-458e-8a97-903c1b4228ce.jpg",
-    "image_fingerprint": "254755654d17610b"
+    "image_file": "./images/condition-cards/254755654d17610b.jpg"
+  },
+  {
+    "name": "Hidden",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Conditions/Hidden.jpg",
+    "image_file": "./images/condition-cards/256d5565656d0d07.jpg"
   }
 ]

@@ -3,35 +3,30 @@
     "name": "Cam Droid Companion",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Companions/Cam%20Droid%20Companion.jpg",
     "source": 3,
-    "image_file": "./images/companion-cards/44c5536f-68a6-448d-b9d2-75217fcb2eea.jpg",
-    "image_fingerprint": "a9b4d84925172b2b"
+    "image_file": "./images/companion-cards/a9b4d84925172b2b.jpg"
   },
   {
     "name": "Junk Droid Companion",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Companions/Junk%20Droid%20Companion.jpg",
     "source": 3,
-    "image_file": "./images/companion-cards/9cfcd7a5-230c-4103-b7d2-9411f2dc7891.jpg",
-    "image_fingerprint": "e91a323721712b63"
+    "image_file": "./images/companion-cards/e91a323721712b63.jpg"
   },
   {
     "name": "R5 Astromech Companion",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Companions/R5%20Astromech%20Companion.jpg",
     "source": 3,
-    "image_file": "./images/companion-cards/a553aae4-58ee-43ed-91e3-11bace6097cf.jpg",
-    "image_fingerprint": "7c3626465d0e2b25"
+    "image_file": "./images/companion-cards/7c3626465d0e2b25.jpg"
   },
   {
     "name": "Pit Droid Companion",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Companions/Pit%20Droid%20companion.jpg",
     "source": 4,
-    "image_file": "./images/companion-cards/af78ace6-3447-40cf-975f-94931bf75a40.jpg",
-    "image_fingerprint": "71ab8fce521b2b0b"
+    "image_file": "./images/companion-cards/71ab8fce521b2b0b.jpg"
   },
   {
     "name": "Salacious B. Crumb",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Companions/Salacious%20B%20Crumb.jpg",
     "source": 4,
-    "image_file": "./images/companion-cards/f4fb1bec-f8ea-48f3-b4ba-2c0d0023c1c0.jpg",
-    "image_fingerprint": "f8b030724e6c292b"
+    "image_file": "./images/companion-cards/f8b030724e6c292b.jpg"
   }
 ]
