@@ -288,7 +288,7 @@ class JsonWriterPipeline(ProcessItemPipeline):
         self.data[items.DeploymentCardItem] = sorted(self.data[items.DeploymentCardItem], key=lambda i: i['name'])
 
         for cls, f in self.file_names.items():
-            with open(f'./data/{f}', 'w') as file_object:
+            with open(f'./raw-data/{f}', 'w') as file_object:
                 json.dump(self.data[cls], file_object, indent=2)
             if not self.data[cls]:
                 logger.info('"{}" does not have any items'.format(cls.__name__))
