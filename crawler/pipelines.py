@@ -68,7 +68,9 @@ class FixTyposAndNormalizeTextPipeline(ProcessItemPipeline):
         if item.__class__ == items.DeploymentCardItem:
             item['name'] = item['name'].replace('  Deployment Card', '')
             item['name'] = item['name'].replace('  deployment card', '')
+
             item['name'] = "Vader's Finest" if item['name'] == 'Vaders Finest' else item['name']
+            item['name'] = "back" if item['name'] == 'Neutral Card Back' else item['name']
         return item
 
 

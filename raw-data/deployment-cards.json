@@ -788,14 +788,6 @@
     "image_file": "./images/deployment-cards/73b1e15957675154.jpg"
   },
   {
-    "name": "Neutral Card Back",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Neutral/Neutral%20Card%20Back.jpg",
-    "faction": "Neutral",
-    "source": 3,
-    "scope": null,
-    "image_file": "./images/deployment-cards/8e0e172b6b170e8e.jpg"
-  },
-  {
     "name": "Obi-Wan Kenobi",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Obi-Wan%20Kenobi/Deployment%20Cards/Obi-Wan%20Kenobi%20Campaign.jpg",
     "source": 26,

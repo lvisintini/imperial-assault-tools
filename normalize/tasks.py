@@ -1,19 +1,27 @@
-import json
-from io import BytesIO
-from collections import OrderedDict
-from normalize.manager import Task
+import subprocess
 from normalize.base import ChoiceDataCollector
 from normalize.contants import SOURCES, FACTIONS
-from PIL import Image
 
 
-class ShowImageMixin:
-    def print_model(self, model):
-        Image.open(model['image_file']).show()
+class ShowImageMixin(object):
+
+    def __init__(self, *args, **kwargs):
+        super(ShowImageMixin, self).__init__(*args, **kwargs)
+        self.viewer = None
+
+    def before_each(self, model):
         print('Model -> {name!r}'.format(**model))
+        self.viewer = subprocess.Popen(['eog', '--single-window', model['image_file']])
+
+    def process(self, *args, **kwargs):
+        res = super(ShowImageMixin, self).process(*args, **kwargs)
+        if self.viewer:
+            self.viewer.terminate()
+            self.viewer.kill()
+        return res
 
 
-class DeploymentCardFaction(ShowImageMixin, ChoiceDataCollector):
+class DeploymentCardFactionDataCollector(ShowImageMixin, ChoiceDataCollector):
     choices = FACTIONS.as_choices
     source = SOURCES.DEPLOYMENT
     pk = 'id'

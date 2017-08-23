@@ -2,7 +2,7 @@
 sudo add-apt-repository ppa:jonathonf/python-3.6
 sudo apt update
 sudo apt install python3.6
-sudo apt install python3.6-dev virtualwrapper imagemagick
+sudo apt install python3.6-dev virtualwrapper imagemagick wmctrl
 sudo apt install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 mkvirtualenv --python=/usr/bin/python3.6 imperial-assault-tools
 pip install -r requirements.txt

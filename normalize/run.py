@@ -9,7 +9,7 @@ class NormalizeImperialData(PipelineHelper):
         base.LoadMemory('./memory.json'),
         base.LoadData('./raw-data/', SOURCES.as_list),
         base.AddIds(source=SOURCES.DEPLOYMENT),
-        tasks.DeploymentCardFaction(),
+        tasks.DeploymentCardFactionDataCollector(),
         base.SaveData('./data/', SOURCES.as_list),
         base.SaveMemory('./memory.json'),
     ]

@@ -63,8 +63,11 @@ class DataCollector(Task):
         self.pk = pk or self.pk
         self.field_name = field_name or self.field_name
 
-    def print_model(self, model):
-        raise NotImplementedError
+    def before_each(self, model):
+        pass
+
+    def after_each(self, model):
+        pass
 
     def input_text(self):
         return 'Which {!r} should it have?\nResponse (leave empty to skip): '.format(self.field_name)
@@ -76,30 +79,37 @@ class DataCollector(Task):
         raise NotImplementedError
 
     def process(self, data_helper):
-        for model in data_helper.data[self.source]:
-            if (self.field_name not in model) or not self.validate_input(model[self.field_name]):
-                if hasattr(data_helper, 'memory') and self.pk in model and \
-                                model[self.pk] in data_helper.memory[self.source][self.field_name]:
-                    model[self.field_name] = data_helper.memory[self.source][self.field_name][model[self.pk]]
-                    continue
+        try:
+            for model in data_helper.data[self.source]:
+                if (self.field_name not in model) or not self.validate_input(model[self.field_name]):
+                    if hasattr(data_helper, 'memory') and self.pk in model and \
+                                    model[self.pk] in data_helper.memory[self.source][self.field_name]:
+                        model[self.field_name] = data_helper.memory[self.source][self.field_name][model[self.pk]]
+                        continue
 
-                self.print_model(model)
-                new_data = None
+                    self.before_each(model)
+                    new_data = None
 
-                while not self.validate_input(new_data):
-                    if new_data is not None:
-                        print('No. That value is not right!. Try again...')
-                    new_data = input(self.input_text())
-                    if not new_data:
-                        break
+                    while not self.validate_input(new_data):
+                        if new_data is not None:
+                            print('No. That value is not right!. Try again...')
 
-                    new_data = self.clean_input(new_data)
+                        new_data = input(self.input_text())
 
-                else:
-                    model[self.field_name] = new_data
-                    if hasattr(data_helper, 'memory'):
-                        data_helper.memory[self.source][self.field_name][model[self.pk]] = new_data
-        print('Done!!')
+                        if not new_data:
+                            break
+
+                        new_data = self.clean_input(new_data)
+
+                    else:
+                        model[self.field_name] = new_data
+                        if hasattr(data_helper, 'memory'):
+                            data_helper.memory[self.source][self.field_name][model[self.pk]] = new_data
+                    self.after_each(model)
+        except (KeyboardInterrupt, SystemExit):
+            data_helper.log.warning('Exiting data gathering ...')
+        finally:
+            data_helper.log.info('Done collecting data for {}.{}!!'.format(self.source, self.field_name))
         return data_helper
 
 
@@ -145,17 +155,17 @@ class LoadMemory(Task):
         return data_helper
 
     def setup(self, data_helper):
-        memory_data = OrderedDict()
+        memory_data = {}
 
         if os.path.exists(self.file_path):
             with open(self.file_path, 'r') as file_object:
-                memory_data = json.load(file_object, object_pairs_hook=OrderedDict)
+                memory_data = json.load(file_object)
 
         memory = rec_dd()
         for source in memory_data.keys():
             for field_name in memory_data[source].keys():
                 for pk in memory_data[source][field_name].keys():
-                    memory[source][field_name][pk] = memory_data[source][field_name][pk]
+                    memory[source][field_name][int(pk) if pk.isdigit() else pk] = memory_data[source][field_name][pk]
 
         data_helper.memory = memory
         return data_helper
@@ -194,6 +204,6 @@ class AddIds(Task):
         if all(['id' not in model for model in data_helper.data[self.source]]):
             for model in data_helper.data[self.source]:
                 i += 1
-                model['id'] = 1
+                model['id'] = i
 
         return data_helper
