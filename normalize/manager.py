@@ -3,6 +3,10 @@ from types import MethodType
 from colorlog import ColoredFormatter
 
 
+class DataHelperInstanceNotReturnedError(Exception):
+    pass
+
+
 class DataHelper(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
@@ -79,18 +83,34 @@ class PipelineHelper(object):
 def _do_process(this, data_helper):
     if not hasattr(this, 'process'):
         raise NotImplementedError('process method should be implemented for every Task class/instance')
-    return this.process(data_helper)
+
+    res = this.process(data_helper)
+
+    if not isinstance(res, DataHelper):
+        raise DataHelperInstanceNotReturnedError('{!r}.process did not return a DataHelperInstance'.format(this))
+
+    return res
 
 
 def _do_setup(this, data_helper):
     if hasattr(this, 'setup'):
-        return this.process(data_helper)
+        res = this.setup(data_helper)
+
+        if not isinstance(res, DataHelper):
+            raise DataHelperInstanceNotReturnedError('{!r}.setup did not return a DataHelperInstance'.format(this))
+
+        return res
     return data_helper
 
 
 def _do_teardown(this, data_helper):
     if hasattr(this, 'teardown'):
-        return this.process(data_helper)
+        res = this.teardown(data_helper)
+
+        if not isinstance(res, DataHelper):
+            raise DataHelperInstanceNotReturnedError('{!r}.teardown did not return a DataHelperInstance'.format(this))
+
+        return res
     return data_helper
 
 
