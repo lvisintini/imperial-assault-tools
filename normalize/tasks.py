@@ -9,22 +9,22 @@ class ShowImageMixin(object):
 
     def __init__(self, *args, **kwargs):
         super(ShowImageMixin, self).__init__(*args, **kwargs)
-        self.viewer = None
+        self.viewers = []
         self.active_window = WmCtrl().get_active_window()
         # This is because this lib is not python3 ready ...
         self.active_window.id = self.active_window.id.decode('utf-8')
 
     def before_each(self, model):
         print('Model -> {name!r}'.format(**model))
-        self.viewer = subprocess.Popen(['eog', '--single-window', model['image_file']])
+        self.viewers.append(subprocess.Popen(['eog', '--single-window', model['image_file']]))
         time.sleep(0.25)
         self.active_window.activate()
 
     def process(self, *args, **kwargs):
         res = super(ShowImageMixin, self).process(*args, **kwargs)
-        if self.viewer:
-            self.viewer.terminate()
-            self.viewer.kill()
+        for p in self.viewers:
+            p.terminate()
+            p.kill()
         return res
 
 

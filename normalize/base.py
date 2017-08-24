@@ -90,9 +90,13 @@ class DataCollector(Task):
                     self.before_each(model)
                     new_data = None
 
-                    while not self.validate_input(new_data):
-                        if new_data is not None:
+                    first = True
+
+                    while first or not self.validate_input(new_data):
+                        if not first:
                             print('No. That value is not right!. Try again...')
+                        else:
+                            first = False
 
                         new_data = input(self.input_text())
 
@@ -117,13 +121,15 @@ class DataCollector(Task):
 class IntegerDataCollector(DataCollector):
 
     def clean_input(self, new_data):
+        if new_data == '.':
+            return None
         try:
             return int(new_data)
         except ValueError:
             return new_data
 
     def validate_input(self, new_data):
-        return isinstance(new_data, int)
+        return isinstance(new_data, int) or new_data is None
 
 
 class ChoiceDataCollector(DataCollector):
