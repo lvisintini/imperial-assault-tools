@@ -55,7 +55,7 @@ class SaveData(Task):
 
 
 class DataCollector(Task):
-    field_name = 'id'
+    pk = 'id'
 
     def __init__(self, source=None, field_name=None, pk=None):
         super(DataCollector, self).__init__()
@@ -107,10 +107,23 @@ class DataCollector(Task):
                             data_helper.memory[self.source][self.field_name][model[self.pk]] = new_data
                     self.after_each(model)
         except (KeyboardInterrupt, SystemExit):
+            print('')
             data_helper.log.warning('Exiting data gathering ...')
         finally:
             data_helper.log.info('Done collecting data for {}.{}!!'.format(self.source, self.field_name))
         return data_helper
+
+
+class IntegerDataCollector(DataCollector):
+
+    def clean_input(self, new_data):
+        try:
+            return int(new_data)
+        except ValueError:
+            return new_data
+
+    def validate_input(self, new_data):
+        return isinstance(new_data, int)
 
 
 class ChoiceDataCollector(DataCollector):
