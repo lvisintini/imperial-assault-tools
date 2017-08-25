@@ -1,5 +1,6 @@
 import os
 import json
+import readline
 from collections import OrderedDict, defaultdict
 from normalize.manager import Task
 
@@ -56,12 +57,16 @@ class SaveData(Task):
 
 class DataCollector(Task):
     pk = 'id'
+    amend_data = False
+    use_memory = True
 
-    def __init__(self, source=None, field_name=None, pk=None):
+    def __init__(self, source=None, field_name=None, pk=None, amend_data=None, use_memory=None):
         super(DataCollector, self).__init__()
         self.source = source or self.source
         self.pk = pk or self.pk
         self.field_name = field_name or self.field_name
+        self.amend_data = amend_data if amend_data is not None else self.amend_data
+        self.use_memory = use_memory if use_memory is not None else self.use_memory
 
     def before_each(self, model):
         pass
@@ -70,7 +75,7 @@ class DataCollector(Task):
         pass
 
     def input_text(self):
-        return 'Which {!r} should it have?\nResponse (leave empty to skip): '.format(self.field_name)
+        return '\nWhich {!r} should it have?\nResponse (leave empty to skip): '.format(self.field_name)
 
     def clean_input(self, new_data):
         raise NotImplementedError
@@ -78,38 +83,61 @@ class DataCollector(Task):
     def validate_input(self, new_data):
         raise NotImplementedError
 
+    def load_from_memory(self, data_helper, model):
+        if hasattr(data_helper, 'memory'):
+            if self.pk in model and model[self.pk] in data_helper.memory[self.source][self.field_name]:
+                model[self.field_name] = data_helper.memory[self.source][self.field_name][model[self.pk]]
+                return model
+        return model
+
+    def prompt_user(self, value):
+        def hook():
+            readline.insert_text(str(value))
+            readline.redisplay()
+        readline.set_pre_input_hook(hook)
+        result = input(self.input_text())
+        readline.set_pre_input_hook()
+        return result
+
     def process(self, data_helper):
         try:
             for model in data_helper.data[self.source]:
-                if (self.field_name not in model) or not self.validate_input(model[self.field_name]):
-                    if hasattr(data_helper, 'memory') and self.pk in model and \
-                                    model[self.pk] in data_helper.memory[self.source][self.field_name]:
-                        model[self.field_name] = data_helper.memory[self.source][self.field_name][model[self.pk]]
+                if not self.amend_data:
+                    if self.use_memory:
+                        if (self.field_name not in model) or (not self.validate_input(model[self.field_name])):
+                            self.load_from_memory(data_helper, model)
+
+                    if (self.field_name in model) and (self.validate_input(model[self.field_name])):
                         continue
+                else:
+                    if self.use_memory:
+                        if (self.field_name not in model) or (not self.validate_input(model[self.field_name])):
+                            self.load_from_memory(data_helper, model)
 
-                    self.before_each(model)
-                    new_data = None
+                self.before_each(model)
+                new_data = model.get(self.field_name, None)
 
-                    first = True
+                first = True
 
-                    while first or not self.validate_input(new_data):
-                        if not first:
-                            print('No. That value is not right!. Try again...')
-                        else:
-                            first = False
-
-                        new_data = input(self.input_text())
-
-                        if not new_data:
-                            break
-
-                        new_data = self.clean_input(new_data)
-
+                while first or not self.validate_input(new_data):
+                    if not first:
+                        print('No. That value is not right!. Try again...')
                     else:
-                        model[self.field_name] = new_data
-                        if hasattr(data_helper, 'memory'):
-                            data_helper.memory[self.source][self.field_name][model[self.pk]] = new_data
-                    self.after_each(model)
+                        first = False
+
+                    new_data = input(self.input_text())
+
+                    if not new_data:
+                        break
+
+                    new_data = self.clean_input(new_data)
+
+                else:
+                    model[self.field_name] = new_data
+                    if self.use_memory and hasattr(data_helper, 'memory'):
+                        data_helper.memory[self.source][self.field_name][model[self.pk]] = new_data
+                self.after_each(model)
+
         except (KeyboardInterrupt, SystemExit):
             print('')
             data_helper.log.warning('Exiting data gathering ...')
