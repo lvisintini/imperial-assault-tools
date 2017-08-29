@@ -189,6 +189,7 @@ class ChoiceDataCollector(DataCollector):
             return new_data
 
     def validate_input(self, new_data):
+        new_data = tuple(new_data) if isinstance(new_data, list) else new_data
         return new_data in dict(self.choices).keys()
 
     def input_text(self):

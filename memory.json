@@ -768,6 +768,616 @@
       "167": false,
       "168": false,
       "169": true
+    },
+    "modes": {
+      "0": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "1": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "2": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "3": [
+        "Skirmish"
+      ],
+      "4": [
+        "Campaign"
+      ],
+      "5": [
+        "Skirmish"
+      ],
+      "6": [
+        "Campaign"
+      ],
+      "7": [
+        "Skirmish"
+      ],
+      "8": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "9": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "10": [
+        "Skirmish"
+      ],
+      "11": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "12": [
+        "Skirmish"
+      ],
+      "13": [
+        "Skirmish"
+      ],
+      "14": [
+        "Skirmish"
+      ],
+      "15": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "16": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "17": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "18": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "19": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "20": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "21": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "22": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "23": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "24": [
+        "Skirmish"
+      ],
+      "25": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "26": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "27": [
+        "Skirmish"
+      ],
+      "28": [
+        "Skirmish"
+      ],
+      "29": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "30": [
+        "Skirmish"
+      ],
+      "31": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "32": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "33": [
+        "Skirmish"
+      ],
+      "34": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "35": [
+        "Skirmish"
+      ],
+      "36": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "37": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "38": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "39": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "40": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "41": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "42": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "43": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "44": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "45": [
+        "Campaign"
+      ],
+      "46": [
+        "Skirmish"
+      ],
+      "47": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "48": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "49": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "50": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "51": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "52": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "53": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "54": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "55": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "56": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "57": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "58": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "59": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "60": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "61": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "62": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "63": [
+        "Skirmish"
+      ],
+      "64": [
+        "Skirmish"
+      ],
+      "65": [
+        "Skirmish"
+      ],
+      "66": [
+        "Skirmish"
+      ],
+      "67": [
+        "Skirmish"
+      ],
+      "68": [
+        "Skirmish"
+      ],
+      "69": [
+        "Skirmish"
+      ],
+      "70": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "71": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "72": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "73": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "74": [
+        "Skirmish"
+      ],
+      "75": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "76": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "77": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "78": [
+        "Skirmish"
+      ],
+      "79": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "80": [
+        "Skirmish"
+      ],
+      "81": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "82": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "83": [
+        "Skirmish"
+      ],
+      "84": [
+        "Campaign"
+      ],
+      "85": [
+        "Skirmish"
+      ],
+      "86": [
+        "Campaign"
+      ],
+      "87": [
+        "Skirmish"
+      ],
+      "88": [
+        "Skirmish"
+      ],
+      "89": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "90": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "91": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "92": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "93": [
+        "Skirmish"
+      ],
+      "94": [
+        "Campaign"
+      ],
+      "95": [
+        "Campaign"
+      ],
+      "96": [
+        "Skirmish"
+      ],
+      "97": [
+        "Skirmish"
+      ],
+      "98": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "99": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "100": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "101": [
+        "Skirmish"
+      ],
+      "102": [
+        "Skirmish"
+      ],
+      "103": [
+        "Skirmish"
+      ],
+      "104": [
+        "Skirmish"
+      ],
+      "105": [
+        "Campaign"
+      ],
+      "106": [
+        "Skirmish"
+      ],
+      "107": [
+        "Skirmish"
+      ],
+      "108": [
+        "Skirmish"
+      ],
+      "109": [
+        "Skirmish"
+      ],
+      "110": [
+        "Skirmish"
+      ],
+      "111": [
+        "Campaign"
+      ],
+      "112": [
+        "Skirmish"
+      ],
+      "113": [
+        "Campaign"
+      ],
+      "114": [
+        "Skirmish"
+      ],
+      "115": [
+        "Campaign"
+      ],
+      "116": [
+        "Skirmish"
+      ],
+      "117": [
+        "Skirmish"
+      ],
+      "118": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "119": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "120": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "121": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "122": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "123": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "124": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "125": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "126": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "127": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "128": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "129": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "130": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "131": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "132": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "133": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "134": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "135": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "136": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "137": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "138": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "139": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "140": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "141": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "142": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "143": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "144": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "145": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "146": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "147": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "148": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "149": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "150": [
+        "Skirmish"
+      ],
+      "151": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "152": [
+        "Skirmish"
+      ],
+      "153": [
+        "Skirmish"
+      ],
+      "154": [
+        "Skirmish"
+      ],
+      "155": [
+        "Skirmish"
+      ],
+      "156": [
+        "Skirmish"
+      ],
+      "157": [
+        "Skirmish"
+      ],
+      "158": [
+        "Skirmish"
+      ],
+      "159": [
+        "Skirmish"
+      ],
+      "160": [
+        "Skirmish"
+      ],
+      "161": [
+        "Campaign",
+        "Skirmish"
+      ],
+      "162": [
+        "Skirmish"
+      ],
+      "163": [
+        "Skirmish"
+      ],
+      "164": [
+        "Skirmish"
+      ],
+      "165": [
+        "Skirmish"
+      ],
+      "166": [
+        "Skirmish"
+      ],
+      "167": [
+        "Skirmish"
+      ],
+      "168": [
+        "Skirmish"
+      ],
+      "169": [
+        "Campaign",
+        "Skirmish"
+      ]
     }
   },
   "upgrade-cards": {

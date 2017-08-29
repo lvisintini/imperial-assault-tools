@@ -4,6 +4,17 @@ TRUE_FALSE_CHOICES = [
 ]
 
 
+class GAME_MODES:
+    CAMPAIGN = 'Campaign'
+    SKIRMISH = 'Skirmish'
+
+    as_choices = [
+        ((CAMPAIGN, SKIRMISH), f'{CAMPAIGN} & {SKIRMISH}'),
+        ((CAMPAIGN, ), CAMPAIGN),
+        ((SKIRMISH, ), SKIRMISH),
+    ]
+
+
 class SOURCES:
     SOURCE = 'sources'
     SKIRMISH_MAP = 'skirmish-maps'
