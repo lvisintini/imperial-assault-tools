@@ -1,3 +1,9 @@
+TRUE_FALSE_CHOICES = [
+    (False, 'False'),
+    (True, 'True'),
+]
+
+
 class SOURCES:
     SOURCE = 'sources'
     SKIRMISH_MAP = 'skirmish-maps'

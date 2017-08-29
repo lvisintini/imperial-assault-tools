@@ -90,11 +90,15 @@ class DataCollector(Task):
                 return model
         return model
 
-    def prompt_user(self, value):
+    def pre_process_existing_value(self, value):
+        return str(value)
+
+    def prompt_user(self, value, existing):
         def hook():
-            readline.insert_text(str(value))
+            readline.insert_text(self.pre_process_existing_value(value))
             readline.redisplay()
-        readline.set_pre_input_hook(hook)
+        if existing:
+            readline.set_pre_input_hook(hook)
         result = input(self.input_text())
         readline.set_pre_input_hook()
         return result
@@ -115,6 +119,7 @@ class DataCollector(Task):
                             self.load_from_memory(data_helper, model)
 
                 self.before_each(model)
+                existing_data = self.field_name in model
                 new_data = model.get(self.field_name, None)
 
                 first = True
@@ -125,7 +130,7 @@ class DataCollector(Task):
                     else:
                         first = False
 
-                    new_data = input(self.input_text())
+                    new_data = self.prompt_user(new_data, existing_data)
 
                     if not new_data:
                         break
@@ -147,6 +152,9 @@ class DataCollector(Task):
 
 
 class IntegerDataCollector(DataCollector):
+
+    def pre_process_existing_value(self, value):
+        return '.' if value is None else str(value)
 
     def clean_input(self, new_data):
         if new_data == '.':
@@ -170,6 +178,9 @@ class ChoiceDataCollector(DataCollector):
             self.choices = self.get_choices()
 
         super(ChoiceDataCollector, self).__init__(source, field_name, pk)
+
+    def pre_process_existing_value(self, value):
+        return next(i for i in range(len(self.choices)) if self.choices[i][0] == value)
 
     def clean_input(self, new_data):
         if new_data.isdigit() and int(new_data) in range(len(self.choices)):

@@ -27,6 +27,9 @@ class ShowImageMixin(object):
             p.kill()
         return res
 
+class ImageChoiceDataCollector(ShowImageMixin, ChoiceDataCollector):
+    pass
+
 
 class ImageIntegerDataCollector(ShowImageMixin, IntegerDataCollector):
     pass
