@@ -19,6 +19,7 @@ class NormalizeImperialData(PipelineHelper):
         tasks.ImageTextDataCollector(field_name='name', source=SOURCES.DEPLOYMENT),
         tasks.ImageChoiceDataCollector(field_name='unique', source=SOURCES.DEPLOYMENT, choices=TRUE_FALSE_CHOICES),
         tasks.ImageChoiceDataCollector(field_name='modes', source=SOURCES.DEPLOYMENT, choices=GAME_MODES.as_choices),
+        base.RemoveField(field_name='scope', source=SOURCES.DEPLOYMENT),
         tasks.ImageIntegerDataCollector(field_name='credits', source=SOURCES.UPGRADE),
         base.SaveData('./data/', SOURCES.as_list),
         base.SaveMemory('./memory.json'),

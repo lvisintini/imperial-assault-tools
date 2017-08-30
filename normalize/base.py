@@ -4,6 +4,7 @@ import readline
 from collections import OrderedDict, defaultdict
 from normalize.manager import Task
 
+
 def rec_dd():
     return defaultdict(rec_dd)
 
@@ -275,3 +276,43 @@ class AddIds(Task):
                 model['id'] = i
 
         return data_helper
+
+
+class RemoveField(Task):
+    source = None
+
+    def __init__(self, source=None, field_name=None):
+        super(RemoveField, self).__init__()
+        self.source = source or self.source
+        self.field_name = field_name or self.field_name
+
+    def process(self, data_helper):
+        for model in data_helper.data[self.source]:
+            model.pop(self.field_name, None)
+        return data_helper
+
+
+class RenameField(Task):
+    source = None
+    field_name = None
+    new_name = None
+
+    def __init__(self, source=None, field_name=None, new_name=None):
+        super(RenameField, self).__init__()
+        self.source = source or self.source
+        self.field_name = field_name or self.field_name
+        self.new_name = new_name or self.new_name
+
+    def process(self, data_helper):
+        for model in data_helper.data[self.source]:
+            model[self.new_name] = model.pop(self.field_name, None)
+        return data_helper
+
+
+#  Preferred Key Order
+#  Dedup By Hash
+#  Sort data
+#  Foreign key to sources
+#  Value that can be interpreted as None as a instance attribute
+#  Show image as Mixin
+#  Choices list append (Deployment types)
