@@ -2,7 +2,6 @@ import time
 from look_at.wmctrl import WmCtrl
 import subprocess
 from normalize.base import IntegerDataCollector, ChoiceDataCollector, TextDataCollector
-from normalize.contants import SOURCES, FACTIONS
 
 
 class ShowImageMixin(object):
