@@ -108,15 +108,13 @@ class DataCollector(Task):
             for model in data_helper.data[self.source]:
                 if not self.amend_data:
                     if self.use_memory:
-                        if (self.field_name not in model) or (not self.validate_input(model[self.field_name])):
-                            self.load_from_memory(data_helper, model)
+                        self.load_from_memory(data_helper, model)
 
                     if (self.field_name in model) and (self.validate_input(model[self.field_name])):
                         continue
                 else:
                     if self.use_memory:
-                        if (self.field_name not in model) or (not self.validate_input(model[self.field_name])):
-                            self.load_from_memory(data_helper, model)
+                        self.load_from_memory(data_helper, model)
 
                 self.before_each(model)
                 existing_data = self.field_name in model
@@ -168,16 +166,27 @@ class IntegerDataCollector(DataCollector):
         return isinstance(new_data, int) or new_data is None
 
 
+class TextDataCollector(DataCollector):
+    def pre_process_existing_value(self, value):
+        return '' if value is None else value
+
+    def clean_input(self, new_data):
+        return '' if new_data is None else new_data
+
+    def validate_input(self, new_data):
+        return isinstance(new_data, str)
+
+
 class ChoiceDataCollector(DataCollector):
     choices = []
 
-    def __init__(self, source=None, field_name=None, choices=None, pk=None):
+    def __init__(self, choices=None, **kwargs):
         self.choices = choices or self.choices
 
         if self.choices and hasattr(self, 'get_choices'):
             self.choices = self.get_choices()
 
-        super(ChoiceDataCollector, self).__init__(source, field_name, pk)
+        super(ChoiceDataCollector, self).__init__(**kwargs)
 
     def pre_process_existing_value(self, value):
         return next(i for i in range(len(self.choices)) if self.choices[i][0] == value)

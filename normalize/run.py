@@ -15,6 +15,7 @@ class NormalizeImperialData(PipelineHelper):
         tasks.ImageIntegerDataCollector(field_name='deployment_group', source=SOURCES.DEPLOYMENT),
         tasks.ImageIntegerDataCollector(field_name='reinforce_cost', source=SOURCES.DEPLOYMENT),
         tasks.ImageChoiceDataCollector(field_name='elite', source=SOURCES.DEPLOYMENT, choices=TRUE_FALSE_CHOICES),
+        tasks.ImageTextDataCollector(field_name='name', source=SOURCES.DEPLOYMENT),
         tasks.ImageChoiceDataCollector(field_name='unique', source=SOURCES.DEPLOYMENT, choices=TRUE_FALSE_CHOICES),
         tasks.ImageChoiceDataCollector(field_name='modes', source=SOURCES.DEPLOYMENT, choices=GAME_MODES.as_choices),
         tasks.ImageIntegerDataCollector(field_name='credits', source=SOURCES.UPGRADE),

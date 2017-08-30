@@ -1,7 +1,7 @@
 import time
 from look_at.wmctrl import WmCtrl
 import subprocess
-from normalize.base import IntegerDataCollector, ChoiceDataCollector
+from normalize.base import IntegerDataCollector, ChoiceDataCollector, TextDataCollector
 from normalize.contants import SOURCES, FACTIONS
 
 
@@ -27,11 +27,16 @@ class ShowImageMixin(object):
             p.kill()
         return res
 
+
 class ImageChoiceDataCollector(ShowImageMixin, ChoiceDataCollector):
     pass
 
 
 class ImageIntegerDataCollector(ShowImageMixin, IntegerDataCollector):
+    pass
+
+
+class ImageTextDataCollector(ShowImageMixin, TextDataCollector):
     pass
 
 
