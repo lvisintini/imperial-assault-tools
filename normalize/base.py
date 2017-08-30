@@ -74,8 +74,8 @@ class DataCollector(Task):
     def after_each(self, model):
         pass
 
-    def input_text(self):
-        return '\nWhich {!r} should it have?\nResponse (leave empty to skip): '.format(self.field_name)
+    def input_text(self, model):
+        return 'Which {!r} should it have?\nResponse (leave empty to skip): '.format(self.field_name)
 
     def clean_input(self, new_data):
         raise NotImplementedError
@@ -93,13 +93,13 @@ class DataCollector(Task):
     def pre_process_existing_value(self, value):
         return str(value)
 
-    def prompt_user(self, value, existing):
+    def prompt_user(self, model, value, existing):
         def hook():
             readline.insert_text(self.pre_process_existing_value(value))
             readline.redisplay()
         if existing:
             readline.set_pre_input_hook(hook)
-        result = input(self.input_text())
+        result = input(self.input_text(model))
         readline.set_pre_input_hook()
         return result
 
@@ -128,7 +128,7 @@ class DataCollector(Task):
                     else:
                         first = False
 
-                    new_data = self.prompt_user(new_data, existing_data)
+                    new_data = self.prompt_user(model, new_data, existing_data)
 
                     if not new_data:
                         break
@@ -201,7 +201,7 @@ class ChoiceDataCollector(DataCollector):
         new_data = tuple(new_data) if isinstance(new_data, list) else new_data
         return new_data in dict(self.choices).keys()
 
-    def input_text(self):
+    def input_text(self, model):
         options = []
         for i in range(len(self.choices)):
             v = f'{i} - {self.choices[i][1]} [{self.choices[i][0]}]'

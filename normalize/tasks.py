@@ -15,10 +15,12 @@ class ShowImageMixin(object):
         self.active_window.id = self.active_window.id.decode('utf-8')
 
     def before_each(self, model):
-        print('Model -> {name!r}'.format(**model))
         self.viewers.append(subprocess.Popen(['eog', '--single-window', model['image_file']]))
         time.sleep(0.25)
         self.active_window.activate()
+
+    def input_text(self, model):
+        return '\n({id!r}) {name!r}\n'.format(**model) + super(ShowImageMixin, self).input_text(model)
 
     def process(self, *args, **kwargs):
         res = super(ShowImageMixin, self).process(*args, **kwargs)
@@ -39,17 +41,4 @@ class ImageIntegerDataCollector(ShowImageMixin, IntegerDataCollector):
 class ImageTextDataCollector(ShowImageMixin, TextDataCollector):
     pass
 
-
-class DeploymentCardFactionDataCollector(ShowImageMixin, ChoiceDataCollector):
-    choices = FACTIONS.as_choices
-    source = SOURCES.DEPLOYMENT
-    pk = 'id'
-    field_name = 'faction'
-
-
-class DeploymentCardDataCollector(ShowImageMixin, ChoiceDataCollector):
-    choices = FACTIONS.as_choices
-    source = SOURCES.DEPLOYMENT
-    pk = 'id'
-    field_name = 'deployment_cost'
 
