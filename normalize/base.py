@@ -91,18 +91,40 @@ class DataCollector(Task):
                 return model
         return model
 
-    def pre_process_existing_value(self, value):
-        return str(value)
+    def pre_process_existing_value_to_prefill_input(self, value):
+        raise NotImplementedError
 
     def prompt_user(self, model, value, existing):
         def hook():
-            readline.insert_text(self.pre_process_existing_value(value))
+            readline.insert_text(self.pre_process_existing_value_to_prefill_input(value))
             readline.redisplay()
         if existing:
             readline.set_pre_input_hook(hook)
         result = input(self.input_text(model))
         readline.set_pre_input_hook()
         return result
+
+    def handle_input_loop(self, model):
+        existing_data = self.field_name in model
+        new_data = model.get(self.field_name, None)
+
+        first = True
+
+        while first or not self.validate_input(new_data):
+            if not first:
+                print('No. That value is not right!. Try again...')
+            else:
+                first = False
+
+            new_data = self.prompt_user(model, new_data, existing_data)
+
+            if not new_data:
+                return False, None
+
+            new_data = self.clean_input(new_data)
+
+        else:
+            return True, new_data
 
     def process(self, data_helper):
         try:
@@ -118,25 +140,10 @@ class DataCollector(Task):
                         self.load_from_memory(data_helper, model)
 
                 self.before_each(model)
-                existing_data = self.field_name in model
-                new_data = model.get(self.field_name, None)
 
-                first = True
+                success, new_data = self.handle_input_loop(model)
 
-                while first or not self.validate_input(new_data):
-                    if not first:
-                        print('No. That value is not right!. Try again...')
-                    else:
-                        first = False
-
-                    new_data = self.prompt_user(model, new_data, existing_data)
-
-                    if not new_data:
-                        break
-
-                    new_data = self.clean_input(new_data)
-
-                else:
+                if success:
                     model[self.field_name] = new_data
                     if self.use_memory and hasattr(data_helper, 'memory'):
                         data_helper.memory[self.source][self.field_name][model[self.pk]] = new_data
@@ -152,7 +159,7 @@ class DataCollector(Task):
 
 class IntegerDataCollector(DataCollector):
 
-    def pre_process_existing_value(self, value):
+    def pre_process_existing_value_to_prefill_input(self, value):
         return '.' if value is None else str(value)
 
     def clean_input(self, new_data):
@@ -168,7 +175,7 @@ class IntegerDataCollector(DataCollector):
 
 
 class TextDataCollector(DataCollector):
-    def pre_process_existing_value(self, value):
+    def pre_process_existing_value_to_prefill_input(self, value):
         return '' if value is None else value
 
     def clean_input(self, new_data):
@@ -189,7 +196,7 @@ class ChoiceDataCollector(DataCollector):
 
         super(ChoiceDataCollector, self).__init__(**kwargs)
 
-    def pre_process_existing_value(self, value):
+    def pre_process_existing_value_to_prefill_input(self, value):
         return next(i for i in range(len(self.choices)) if self.choices[i][0] == value)
 
     def clean_input(self, new_data):
@@ -212,7 +219,67 @@ class ChoiceDataCollector(DataCollector):
 
         options_text = '\n\t'.join(options)
 
-        return f'Which {self.field_name!r} should it have?\n\t{options_text}\nResponse:'
+        return f'Which {self.field_name!r} should it have?\n\t{options_text}\nResponse: '
+
+
+class AppendChoiceDataCollector(ChoiceDataCollector):
+    def pre_process_existing_value_to_prefill_input(self, value):
+        return ''
+
+    def clean_input(self, new_data):
+        if new_data.isdigit() and int(new_data) in range(len(self.choices)):
+            return self.choices[int(new_data)][0]
+        else:
+            return new_data
+
+    def validate_input(self, new_data):
+        return all([
+            x in dict(self.choices).keys()
+            for x in new_data
+        ])
+
+    def input_text(self, model):
+        options = []
+        for i in range(len(self.choices)):
+            v = f'{i} - {self.choices[i][1]} [{self.choices[i][0]}]'
+            if self.choices[i][0] == self.choices[i][1]:
+                v = f'{i} - {self.choices[i][1]}'
+            options.append(v)
+
+        options_text = '\n\t'.join(options)
+
+        return '\n'.join([
+            f'Field {self.field_name!r} has {model[self.field_name]!r}. What else should it have?',
+            f'\t{options_text}',
+            f'Response: '
+        ])
+
+    def handle_input_loop(self, model):
+        collected_data = model.get(self.field_name, [])
+
+        if not self.validate_input(collected_data):
+            collected_data = []
+
+        done_with_this_model = False
+
+        while not done_with_this_model:
+
+            if not self.validate_input(collected_data):
+                collected_data.pop()
+                print('No. That value is not right!. Try again...')
+
+            new_data = self.prompt_user(model, None, False)
+
+            if '.' != new_data:
+                collected_data.append(self.clean_input(new_data))
+            else:
+                done_with_this_model = False
+
+            if not new_data:
+                return False, None
+
+        else:
+            return True, collected_data
 
 
 class LoadMemory(Task):
@@ -305,7 +372,8 @@ class RenameField(Task):
 
     def process(self, data_helper):
         for model in data_helper.data[self.source]:
-            model[self.new_name] = model.pop(self.field_name, None)
+            if self.field_name in model:
+                model[self.new_name] = model.pop(self.field_name)
         return data_helper
 
 

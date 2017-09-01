@@ -20,33 +20,9 @@ class PipelineHelper(object):
         if data_helper is not None:
             self.data_helper.__dict__.update(kwargs)
 
-        logger = self.logger_setup()
+        logger = logging.getLogger(__name__)
         self.log = logger
         self.data_helper.log = logger
-
-    @staticmethod
-    def logger_setup():
-        logger = logging.getLogger(__name__)
-        logger.setLevel(logging.DEBUG)
-
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
-
-        color_formatter = ColoredFormatter(
-            datefmt='%y-%m-%d %H;%M:%S',
-            log_colors={
-                'DEBUG': 'blue',
-                'INFO': 'cyan',
-                'WARNING': 'yellow',
-                'ERROR': 'red',
-                'CRITICAL': 'bold_red',
-            }
-        )
-        ch.setFormatter(color_formatter)
-
-        logger.addHandler(ch)
-
-        return logger
 
     def run(self):
         for task in self.tasks:
@@ -115,6 +91,7 @@ def _do_teardown(this, data_helper):
 
 
 class Task(object):
+    log = logging.getLogger(__name__)
 
     def __init__(self):
         self.do_process = MethodType(_do_process, self)

@@ -10,6 +10,8 @@ class NormalizeImperialData(PipelineHelper):
         base.LoadData('./raw-data/', SOURCES.as_list),
         base.AddIds(source=SOURCES.DEPLOYMENT),
         base.AddIds(source=SOURCES.UPGRADE),
+        base.AddIds(source=SOURCES.HERO_CLASS),
+        base.RenameField(field_name='faction', source=SOURCES.DEPLOYMENT, new_name='affiliation'),
         tasks.ImageChoiceDataCollector(field_name='affiliation', source=SOURCES.DEPLOYMENT, choices=AFFILIATION.as_choices),
         tasks.ImageIntegerDataCollector(field_name='deployment_cost', source=SOURCES.DEPLOYMENT),
         tasks.ImageIntegerDataCollector(field_name='deployment_group', source=SOURCES.DEPLOYMENT),
@@ -25,6 +27,7 @@ class NormalizeImperialData(PipelineHelper):
         base.SaveData('./data/', SOURCES.as_list),
         base.SaveMemory('./memory.json'),
     ]
+
 
 def main():
     NormalizeImperialData().run()

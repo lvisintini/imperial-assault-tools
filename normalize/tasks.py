@@ -19,7 +19,9 @@ class ShowImageMixin(object):
         self.active_window.activate()
 
     def input_text(self, model):
-        return '\n({id!r}) {name!r}\n'.format(**model) + super(ShowImageMixin, self).input_text(model)
+        if 'id' in model:
+            return '\n({id!r}) {name!r}\n'.format(**model) + super(ShowImageMixin, self).input_text(model)
+        return '\n{name!r}\n'.format(**model) + super(ShowImageMixin, self).input_text(model)
 
     def process(self, *args, **kwargs):
         res = super(ShowImageMixin, self).process(*args, **kwargs)
@@ -39,5 +41,3 @@ class ImageIntegerDataCollector(ShowImageMixin, IntegerDataCollector):
 
 class ImageTextDataCollector(ShowImageMixin, TextDataCollector):
     pass
-
-
