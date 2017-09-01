@@ -1,7 +1,7 @@
 from normalize.manager import PipelineHelper
 from normalize import tasks
 from normalize import base
-from normalize.contants import SOURCES, TRUE_FALSE_CHOICES, GAME_MODES, FACTIONS
+from normalize.contants import SOURCES, TRUE_FALSE_CHOICES, GAME_MODES, AFFILIATION
 
 
 class NormalizeImperialData(PipelineHelper):
@@ -10,7 +10,7 @@ class NormalizeImperialData(PipelineHelper):
         base.LoadData('./raw-data/', SOURCES.as_list),
         base.AddIds(source=SOURCES.DEPLOYMENT),
         base.AddIds(source=SOURCES.UPGRADE),
-        tasks.ImageChoiceDataCollector(field_name='faction', source=SOURCES.DEPLOYMENT, choices=FACTIONS.as_choices),
+        tasks.ImageChoiceDataCollector(field_name='affiliation', source=SOURCES.DEPLOYMENT, choices=AFFILIATION.as_choices),
         tasks.ImageIntegerDataCollector(field_name='deployment_cost', source=SOURCES.DEPLOYMENT),
         tasks.ImageIntegerDataCollector(field_name='deployment_group', source=SOURCES.DEPLOYMENT),
         tasks.ImageIntegerDataCollector(field_name='reinforce_cost', source=SOURCES.DEPLOYMENT),
@@ -21,6 +21,7 @@ class NormalizeImperialData(PipelineHelper):
         tasks.ImageChoiceDataCollector(field_name='modes', source=SOURCES.DEPLOYMENT, choices=GAME_MODES.as_choices),
         base.RemoveField(field_name='scope', source=SOURCES.DEPLOYMENT),
         tasks.ImageIntegerDataCollector(field_name='credits', source=SOURCES.UPGRADE),
+        tasks.ImageIntegerDataCollector(field_name='xp', source=SOURCES.HERO_CLASS),
         base.SaveData('./data/', SOURCES.as_list),
         base.SaveMemory('./memory.json'),
     ]

@@ -55,7 +55,7 @@ class SOURCES:
     ]
 
 
-class FACTIONS:
+class AFFILIATION:
     REBEL = 'Rebel'
     IMPERIAL = 'Imperial'
     MERCENARY = 'Mercenary'
@@ -67,3 +67,36 @@ class FACTIONS:
         (MERCENARY, MERCENARY),
         (NEUTRAL, NEUTRAL),
     ]
+
+class DEPLOYMENT_CARD_TRAITS:
+    SPY = 'Spy'
+    BRAWLER = 'Brawler'
+    FORCE_USER = 'Force User'
+    SKIRMISH_UPGRADE = 'Skirmish Upgrade'
+    WOOKIEE = 'Wookiee'
+    GUARDIAN = 'Guardian'
+    TROOPER = 'Trooper'
+    CREATURE = 'Creature'
+    HEAVY_WEAPON = 'Heavy Weapon'
+    LEADER = 'Leader'
+    SMUGGLER = 'Smuggler'
+    VEHICLE = 'Vehicle'
+    HUNTER = 'Hunter'
+    DROID = 'Droid'
+
+    as_choices = (
+        (SPY, SPY),
+        (BRAWLER, BRAWLER),
+        (FORCE_USER, FORCE_USER),
+        (SKIRMISH_UPGRADE, SKIRMISH_UPGRADE),
+        (WOOKIEE, WOOKIEE),
+        (GUARDIAN, GUARDIAN),
+        (TROOPER, ),
+        (CREATURE, ),
+        (HEAVY_WEAPON, ),
+        (LEADER, ),
+        (SMUGGLER, ),
+        (VEHICLE, ),
+        (HUNTER, ),
+        (DROID, ),
+    )
