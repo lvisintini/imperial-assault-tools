@@ -1722,6 +1722,19 @@
       "167": "Vinto Hreeda",
       "168": "Zillo Technique",
       "169": "Alliance Smuggler"
+    },
+    "traits": {
+      "0": [
+        "Droid"
+      ],
+      "1": [
+        "Vehicle",
+        "Heavy Weapon"
+      ],
+      "2": [
+        "Vehicle",
+        "Heavy Weapon"
+      ]
     }
   },
   "upgrade-cards": {

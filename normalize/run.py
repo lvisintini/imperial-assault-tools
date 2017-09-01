@@ -1,7 +1,7 @@
 from normalize.manager import PipelineHelper
 from normalize import tasks
 from normalize import base
-from normalize.contants import SOURCES, TRUE_FALSE_CHOICES, GAME_MODES, AFFILIATION
+from normalize.contants import SOURCES, TRUE_FALSE_CHOICES, GAME_MODES, AFFILIATION, DEPLOYMENT_CARD_TRAITS
 
 
 class NormalizeImperialData(PipelineHelper):
@@ -13,6 +13,7 @@ class NormalizeImperialData(PipelineHelper):
         base.AddIds(source=SOURCES.HERO_CLASS),
         base.RenameField(field_name='faction', source=SOURCES.DEPLOYMENT, new_name='affiliation'),
         tasks.ImageChoiceDataCollector(field_name='affiliation', source=SOURCES.DEPLOYMENT, choices=AFFILIATION.as_choices),
+        tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.DEPLOYMENT, choices=DEPLOYMENT_CARD_TRAITS.as_choices),
         tasks.ImageIntegerDataCollector(field_name='deployment_cost', source=SOURCES.DEPLOYMENT),
         tasks.ImageIntegerDataCollector(field_name='deployment_group', source=SOURCES.DEPLOYMENT),
         tasks.ImageIntegerDataCollector(field_name='reinforce_cost', source=SOURCES.DEPLOYMENT),
@@ -20,7 +21,7 @@ class NormalizeImperialData(PipelineHelper):
         tasks.ImageTextDataCollector(field_name='name', source=SOURCES.DEPLOYMENT),
         tasks.ImageTextDataCollector(field_name='name', source=SOURCES.DEPLOYMENT),
         tasks.ImageChoiceDataCollector(field_name='unique', source=SOURCES.DEPLOYMENT, choices=TRUE_FALSE_CHOICES),
-        tasks.ImageChoiceDataCollector(field_name='modes', source=SOURCES.DEPLOYMENT, choices=GAME_MODES.as_choices),
+        tasks.ImageAppendChoiceDataCollector(field_name='modes', source=SOURCES.DEPLOYMENT, choices=GAME_MODES.as_choices),
         base.RemoveField(field_name='scope', source=SOURCES.DEPLOYMENT),
         tasks.ImageIntegerDataCollector(field_name='credits', source=SOURCES.UPGRADE),
         tasks.ImageIntegerDataCollector(field_name='xp', source=SOURCES.HERO_CLASS),

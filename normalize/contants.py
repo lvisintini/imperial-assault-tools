@@ -9,9 +9,8 @@ class GAME_MODES:
     SKIRMISH = 'Skirmish'
 
     as_choices = [
-        ((CAMPAIGN, SKIRMISH), f'{CAMPAIGN} & {SKIRMISH}'),
-        ((CAMPAIGN, ), CAMPAIGN),
-        ((SKIRMISH, ), SKIRMISH),
+        (CAMPAIGN, CAMPAIGN),
+        (SKIRMISH, SKIRMISH),
     ]
 
 
@@ -68,6 +67,7 @@ class AFFILIATION:
         (NEUTRAL, NEUTRAL),
     ]
 
+
 class DEPLOYMENT_CARD_TRAITS:
     SPY = 'Spy'
     BRAWLER = 'Brawler'
@@ -91,12 +91,12 @@ class DEPLOYMENT_CARD_TRAITS:
         (SKIRMISH_UPGRADE, SKIRMISH_UPGRADE),
         (WOOKIEE, WOOKIEE),
         (GUARDIAN, GUARDIAN),
-        (TROOPER, ),
-        (CREATURE, ),
-        (HEAVY_WEAPON, ),
-        (LEADER, ),
-        (SMUGGLER, ),
-        (VEHICLE, ),
-        (HUNTER, ),
-        (DROID, ),
+        (TROOPER, TROOPER),
+        (CREATURE, CREATURE),
+        (HEAVY_WEAPON, HEAVY_WEAPON),
+        (LEADER, LEADER),
+        (SMUGGLER, SMUGGLER),
+        (VEHICLE, VEHICLE),
+        (HUNTER, HUNTER),
+        (DROID, DROID),
     )

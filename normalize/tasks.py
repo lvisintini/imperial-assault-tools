@@ -1,7 +1,7 @@
 import time
 from look_at.wmctrl import WmCtrl
 import subprocess
-from normalize.base import IntegerDataCollector, ChoiceDataCollector, TextDataCollector
+from normalize.base import IntegerDataCollector, ChoiceDataCollector, TextDataCollector, AppendChoiceDataCollector
 
 
 class ShowImageMixin(object):
@@ -18,17 +18,16 @@ class ShowImageMixin(object):
         time.sleep(0.25)
         self.active_window.activate()
 
-    def input_text(self, model):
-        if 'id' in model:
-            return '\n({id!r}) {name!r}\n'.format(**model) + super(ShowImageMixin, self).input_text(model)
-        return '\n{name!r}\n'.format(**model) + super(ShowImageMixin, self).input_text(model)
-
     def process(self, *args, **kwargs):
         res = super(ShowImageMixin, self).process(*args, **kwargs)
         for p in self.viewers:
             p.terminate()
             p.kill()
         return res
+
+
+class ImageAppendChoiceDataCollector(ShowImageMixin, AppendChoiceDataCollector):
+    pass
 
 
 class ImageChoiceDataCollector(ShowImageMixin, ChoiceDataCollector):

@@ -76,7 +76,8 @@ class DataCollector(Task):
         pass
 
     def input_text(self, model):
-        return 'Which {!r} should it have?\nResponse (leave empty to skip): '.format(self.field_name)
+        desc = '\n{name!r}\n'.format(**model) if 'id' not in model else '\n({id!r}) {name!r}\n'.format(**model)
+        return '{}Which {!r} should it have?\nResponse (leave empty to skip): '.format(desc, self.field_name)
 
     def clean_input(self, new_data):
         raise NotImplementedError
@@ -210,6 +211,7 @@ class ChoiceDataCollector(DataCollector):
         return new_data in dict(self.choices).keys()
 
     def input_text(self, model):
+        desc = '\n{name!r}\n'.format(**model) if 'id' not in model else '\n({id!r}) {name!r}\n'.format(**model)
         options = []
         for i in range(len(self.choices)):
             v = f'{i} - {self.choices[i][1]} [{self.choices[i][0]}]'
@@ -219,7 +221,7 @@ class ChoiceDataCollector(DataCollector):
 
         options_text = '\n\t'.join(options)
 
-        return f'Which {self.field_name!r} should it have?\n\t{options_text}\nResponse: '
+        return f'{desc}Which {self.field_name!r} should it have?\n\t{options_text}\nResponse: '
 
 
 class AppendChoiceDataCollector(ChoiceDataCollector):
@@ -233,12 +235,18 @@ class AppendChoiceDataCollector(ChoiceDataCollector):
             return new_data
 
     def validate_input(self, new_data):
-        return all([
-            x in dict(self.choices).keys()
-            for x in new_data
-        ])
+        if isinstance(new_data, list) or isinstance(new_data, tuple):
+            return all([
+                x in dict(self.choices).keys()
+                for x in new_data
+            ])
 
-    def input_text(self, model):
+        new_data = tuple(new_data) if isinstance(new_data, list) else new_data
+        return new_data in dict(self.choices).keys()
+
+
+    def input_text(self, model, collected):
+        desc = '\n{name!r}'.format(**model) if 'id' not in model else '\n({id!r}) {name!r}'.format(**model)
         options = []
         for i in range(len(self.choices)):
             v = f'{i} - {self.choices[i][1]} [{self.choices[i][0]}]'
@@ -249,37 +257,44 @@ class AppendChoiceDataCollector(ChoiceDataCollector):
         options_text = '\n\t'.join(options)
 
         return '\n'.join([
-            f'Field {self.field_name!r} has {model[self.field_name]!r}. What else should it have?',
+            desc,
+            f'Field {self.field_name!r} has {collected!r}. What else should it have?',
             f'\t{options_text}',
             f'Response: '
         ])
 
+    def prompt_user(self, model, collected):
+        result = input(self.input_text(model, collected))
+        return result
+
     def handle_input_loop(self, model):
-        collected_data = model.get(self.field_name, [])
-
-        if not self.validate_input(collected_data):
-            collected_data = []
-
+        collected = model.get(self.field_name, [])
         done_with_this_model = False
 
+        new_data = None
+
         while not done_with_this_model:
+            first = True
+            while first or not self.validate_input(new_data):
+                if not first:
+                    print('No. That value is not right!. Try again...')
+                else:
+                    first = False
 
-            if not self.validate_input(collected_data):
-                collected_data.pop()
-                print('No. That value is not right!. Try again...')
+                new_data = self.prompt_user(model, collected)
 
-            new_data = self.prompt_user(model, None, False)
+                if not new_data:
+                    return False, None
+                if new_data == '.':
+                    done_with_this_model = True
+                    break
 
-            if '.' != new_data:
-                collected_data.append(self.clean_input(new_data))
+                new_data = self.clean_input(new_data)
+
             else:
-                done_with_this_model = False
+                collected.append(new_data)
 
-            if not new_data:
-                return False, None
-
-        else:
-            return True, collected_data
+        return True, collected
 
 
 class LoadMemory(Task):
