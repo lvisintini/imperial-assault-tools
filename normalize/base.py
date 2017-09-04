@@ -180,10 +180,12 @@ class TextDataCollector(DataCollector):
         return '' if value is None else value
 
     def clean_input(self, new_data):
-        return '' if new_data is None else new_data
+        new_data = new_data.strip()
+        new_data = None if new_data == '' else new_data
+        return new_data
 
     def validate_input(self, new_data):
-        return isinstance(new_data, str)
+        return isinstance(new_data, str) or new_data is None
 
 
 class ChoiceDataCollector(DataCollector):
@@ -393,7 +395,81 @@ class RenameField(Task):
 
 #  Preferred Key Order
 #  Dedup By Hash
-#  Sort data
+#  Foreign key to sources
+#  Value that can be interpreted as None as a instance attribute
+#  Show image as Mixin
+#  Subtitle for deployment card
+
+
+class SortDataByAttrs(Task):
+    source = None
+    fields = ()
+
+    def __init__(self, *fields, source=None):
+        super(SortDataByAttrs, self).__init__()
+        self.source = source or self.source
+        self.fields = fields if len(fields) else self.fields
+
+    def process(self, data_helper):
+        data_helper.data[self.source] = sorted(
+            data_helper.data[self.source],
+            key=lambda x: tuple(x.get(y) for y in self.fields)
+        )
+        return data_helper
+
+
+class SortData(Task):
+    source = None
+
+    @staticmethod
+    def sort_function(x):
+        return x
+
+    def __init__(self, source=None, sort_function=None):
+        super(SortData, self).__init__()
+        self.source = source or self.source
+        self.sort_function = sort_function if sort_function else self.sort_function
+
+    def process(self, data_helper):
+        data_helper.data[self.source] = sorted(
+            data_helper.data[self.source],
+            key=self.sort_function
+        )
+        return data_helper
+
+
+class SortDataKeys(Task):
+    source = None
+    preferred_order = []
+
+    def __init__(self, source=None, preferred_order=None):
+        super(SortDataKeys, self).__init__()
+        self.source = source or self.source
+        self.preferred_order = preferred_order if preferred_order else self.preferred_order
+
+    def process(self, data_helper):
+        if not self.preferred_order:
+            self.preferred_order = set()
+            for model in data_helper.data[self.source]:
+                self.preferred_order.update(model.keys())
+            self.preferred_order = list(self.preferred_order)
+            self.preferred_order.sort()
+        else:
+            for model in data_helper.data[self.source]:
+                for k in model.keys():
+                    if k not in self.preferred_order:
+                        self.preferred_order.append(k)
+
+        for i in range(len(data_helper.data[self.source])):
+            data_helper.data[self.source][i] = OrderedDict(
+                sorted(
+                    data_helper.data[self.source][i].items(),
+                    key=lambda x: self.preferred_order.index(x[0])
+                )
+            )
+        return data_helper
+
+#  Dedup By Hash
 #  Foreign key to sources
 #  Value that can be interpreted as None as a instance attribute
 #  Show image as Mixin

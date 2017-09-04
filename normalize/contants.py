@@ -100,3 +100,20 @@ class DEPLOYMENT_CARD_TRAITS:
         (HUNTER, HUNTER),
         (DROID, DROID),
     )
+
+DEPLOYMENT_CARD_PREFERRED_ATTR_ORDER = [
+    "id",
+    "name",
+    "description",
+    "elite",
+    "unique",
+    "affiliation",
+    "traits",
+    "modes",
+    "deployment_cost",
+    "reinforce_cost",
+    "deployment_group",
+    "image",
+    "image_file",
+    "source",
+]
