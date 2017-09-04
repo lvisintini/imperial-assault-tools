@@ -244,7 +244,6 @@ class AppendChoiceDataCollector(ChoiceDataCollector):
         new_data = tuple(new_data) if isinstance(new_data, list) else new_data
         return new_data in dict(self.choices).keys()
 
-
     def input_text(self, model, collected):
         desc = '\n{name!r}'.format(**model) if 'id' not in model else '\n({id!r}) {name!r}'.format(**model)
         options = []
