@@ -1734,6 +1734,605 @@
       "2": [
         "Vehicle",
         "Heavy Weapon"
+      ],
+      "3": [
+        "Skirmish Upgrade"
+      ],
+      "4": [
+        "Spy",
+        "Leader"
+      ],
+      "5": [
+        "Spy",
+        "Leader"
+      ],
+      "6": [
+        "Spy",
+        "Leader"
+      ],
+      "7": [
+        "Spy",
+        "Leader"
+      ],
+      "8": [
+        "Smuggler"
+      ],
+      "9": [
+        "Droid",
+        "Heavy Weapon",
+        "Hunter"
+      ],
+      "10": [
+        "Skirmish Upgrade"
+      ],
+      "11": [
+        "Creature",
+        "Brawler"
+      ],
+      "12": [
+        "Skirmish Upgrade"
+      ],
+      "13": [
+        "Hunter",
+        "Brawler"
+      ],
+      "14": [
+        "Skirmish Upgrade"
+      ],
+      "15": [
+        "Hunter"
+      ],
+      "16": [
+        "Hunter"
+      ],
+      "17": [
+        "Hunter",
+        "Brawler"
+      ],
+      "18": [
+        "Hunter",
+        "Brawler"
+      ],
+      "19": [
+        "Droid"
+      ],
+      "20": [
+        "Droid"
+      ],
+      "21": [
+        "Droid"
+      ],
+      "22": [
+        "Trooper",
+        "Leader",
+        "Creature"
+      ],
+      "23": [
+        "Trooper",
+        "Leader",
+        "Creature"
+      ],
+      "24": [
+        "Skirmish Upgrade"
+      ],
+      "25": [
+        "Smuggler",
+        "Wookiee",
+        "Guardian"
+      ],
+      "26": [
+        "Smuggler",
+        "Wookiee",
+        "Guardian"
+      ],
+      "27": [
+        "Skirmish Upgrade"
+      ],
+      "28": [
+        "Skirmish Upgrade"
+      ],
+      "29": [
+        "Force User",
+        "Leader",
+        "Brawler"
+      ],
+      "30": [
+        "Spy",
+        "Force User"
+      ],
+      "31": [
+        "Hunter"
+      ],
+      "32": [
+        "Hunter"
+      ],
+      "33": [
+        "Skirmish Upgrade"
+      ],
+      "34": [
+        "Trooper",
+        "Creature"
+      ],
+      "35": [
+        "Force User",
+        "Brawler"
+      ],
+      "36": [
+        "Trooper",
+        "Hunter"
+      ],
+      "37": [
+        "Trooper",
+        "Heavy Weapon"
+      ],
+      "38": [
+        "Trooper"
+      ],
+      "39": [
+        "Brawler",
+        "Guardian"
+      ],
+      "40": [
+        "Droid",
+        "Hunter"
+      ],
+      "41": [
+        "Trooper",
+        "Heavy Weapon"
+      ],
+      "42": [
+        "Smuggler"
+      ],
+      "43": [
+        "Spy"
+      ],
+      "44": [
+        "Leader"
+      ],
+      "45": [
+        "Smuggler",
+        "Leader"
+      ],
+      "46": [
+        "Smuggler",
+        "Leader"
+      ],
+      "47": [
+        "Trooper",
+        "Vehicle"
+      ],
+      "48": [
+        "Creature",
+        "Brawler"
+      ],
+      "49": [
+        "Droid"
+      ],
+      "50": [
+        "Spy",
+        "Heavy Weapon"
+      ],
+      "51": [
+        "Trooper"
+      ],
+      "52": [
+        "Guardian",
+        "Brawler"
+      ],
+      "53": [
+        "Trooper"
+      ],
+      "54": [
+        "Trooper"
+      ],
+      "55": [
+        "Trooper"
+      ],
+      "56": [
+        "Hunter",
+        "Brawler"
+      ],
+      "57": [
+        "Brawler"
+      ],
+      "58": [
+        "Smuggler"
+      ],
+      "59": [
+        "Creature",
+        "Brawler"
+      ],
+      "60": [
+        "Hunter",
+        "Smuggler"
+      ],
+      "61": [
+        "Guardian",
+        "Trooper"
+      ],
+      "62": [
+        "Brawler",
+        "Wookiee"
+      ],
+      "63": [
+        "Skirmish Upgrade"
+      ],
+      "64": [
+        "Skirmish Upgrade"
+      ],
+      "65": [
+        "Trooper",
+        "Leader"
+      ],
+      "66": [
+        "Skirmish Upgrade"
+      ],
+      "67": [
+        "Skirmish Upgrade"
+      ],
+      "68": [
+        "Skirmish Upgrade"
+      ],
+      "69": [
+        "Wookiee",
+        "Guardian",
+        "Brawler"
+      ],
+      "70": [
+        "Leader"
+      ],
+      "71": [
+        "Leader"
+      ],
+      "72": [
+        "Vehicle",
+        "Leader",
+        "Heavy Weapon"
+      ],
+      "73": [
+        "Vehicle",
+        "Leader",
+        "Heavy Weapon"
+      ],
+      "74": [
+        "Leader"
+      ],
+      "75": [
+        "Hunter",
+        "Smuggler"
+      ],
+      "76": [
+        "Smuggler",
+        "Leader"
+      ],
+      "77": [
+        "Smuggler",
+        "Leader"
+      ],
+      "78": [
+        "Skirmish Upgrade"
+      ],
+      "79": [
+        "Leader",
+        "Smuggler"
+      ],
+      "80": [
+        "Skirmish Upgrade"
+      ],
+      "81": [
+        "Droid",
+        "Hunter"
+      ],
+      "82": [
+        "Droid",
+        "Hunter"
+      ],
+      "83": [
+        "Skirmish Upgrade"
+      ],
+      "84": [
+        "Leader",
+        "Smuggler",
+        "Hunter"
+      ],
+      "85": [
+        "Leader",
+        "Smuggler",
+        "Hunter"
+      ],
+      "86": [
+        "Leader",
+        "Smuggler",
+        "Hunter"
+      ],
+      "87": [
+        "Leader",
+        "Smuggler",
+        "Hunter"
+      ],
+      "88": [
+        "Smuggler"
+      ],
+      "89": [
+        "Trooper",
+        "Leader"
+      ],
+      "90": [
+        "Trooper",
+        "Leader"
+      ],
+      "91": [
+        "Leader",
+        "Smuggler"
+      ],
+      "92": [
+        "Leader",
+        "Smuggler"
+      ],
+      "93": [
+        "Skirmish Upgrade"
+      ],
+      "94": [
+        "Leader",
+        "Spy"
+      ],
+      "95": [
+        "Leader",
+        "Spy"
+      ],
+      "96": [
+        "Leader",
+        "Spy"
+      ],
+      "97": [
+        "Spy"
+      ],
+      "98": [
+        "Force User"
+      ],
+      "99": [
+        "Force User",
+        "Leader",
+        "Brawler"
+      ],
+      "100": [
+        "Force User",
+        "Leader",
+        "Brawler"
+      ],
+      "101": [
+        "Droid"
+      ],
+      "102": [
+        "Spy"
+      ],
+      "103": [
+        "Skirmish Upgrade"
+      ],
+      "104": [
+        "Leader",
+        "Spy"
+      ],
+      "105": [
+        "Force User"
+      ],
+      "106": [
+        "Force User"
+      ],
+      "107": [
+        "Skirmish Upgrade"
+      ],
+      "108": [
+        "Guardian",
+        "Hunter"
+      ],
+      "109": [
+        "Skirmish Upgrade"
+      ],
+      "110": [
+        "Skirmish Upgrade"
+      ],
+      "111": [
+        "Droid"
+      ],
+      "112": [
+        "Droid"
+      ],
+      "113": [
+        "Droid"
+      ],
+      "114": [
+        "Droid"
+      ],
+      "115": [
+        "Creature",
+        "Brawler"
+      ],
+      "116": [
+        "Creature",
+        "Brawler"
+      ],
+      "117": [
+        "Skirmish Upgrade"
+      ],
+      "118": [
+        "Trooper",
+        "Hunter"
+      ],
+      "119": [
+        "Trooper",
+        "Hunter"
+      ],
+      "120": [
+        "Trooper",
+        "Heavy Weapon"
+      ],
+      "121": [
+        "Trooper"
+      ],
+      "122": [
+        "Trooper"
+      ],
+      "123": [
+        "Brawler",
+        "Guardian"
+      ],
+      "124": [
+        "Droid",
+        "Hunter"
+      ],
+      "125": [
+        "Trooper",
+        "Heavy Weapon"
+      ],
+      "126": [
+        "Smuggler"
+      ],
+      "127": [
+        "Spy"
+      ],
+      "128": [
+        "Leader"
+      ],
+      "129": [
+        "Smuggler"
+      ],
+      "130": [
+        "Trooper",
+        "Vehicle"
+      ],
+      "131": [
+        "Creature",
+        "Brawler"
+      ],
+      "132": [
+        "Droid"
+      ],
+      "133": [
+        "Spy",
+        "Heavy Weapon"
+      ],
+      "134": [
+        "Spy",
+        "Heavy Weapon"
+      ],
+      "135": [
+        "Trooper"
+      ],
+      "136": [
+        "Trooper"
+      ],
+      "137": [
+        "Guardian",
+        "Brawler"
+      ],
+      "138": [
+        "Trooper"
+      ],
+      "139": [
+        "Trooper"
+      ],
+      "140": [
+        "Trooper"
+      ],
+      "141": [
+        "Hunter",
+        "Brawler"
+      ],
+      "142": [
+        "Brawler"
+      ],
+      "143": [
+        "Smuggler"
+      ],
+      "144": [
+        "Creature",
+        "Brawler"
+      ],
+      "145": [
+        "Hunter",
+        "Smuggler"
+      ],
+      "146": [
+        "Guardian",
+        "Trooper"
+      ],
+      "147": [
+        "Brawler",
+        "Wookiee"
+      ],
+      "148": [
+        "Guardian",
+        "Brawler"
+      ],
+      "149": [
+        "Guardian",
+        "Brawler"
+      ],
+      "150": [
+        "Skirmish Upgrade"
+      ],
+      "151": [
+        "Vehicle"
+      ],
+      "152": [
+        "Smuggler",
+        "Spy"
+      ],
+      "153": [
+        "Skirmish Upgrade"
+      ],
+      "154": [
+        "Brawler",
+        "Hunter"
+      ],
+      "155": [
+        "Skirmish Upgrade"
+      ],
+      "156": [
+        "Skirmish Upgrade"
+      ],
+      "157": [
+        "Skirmish Upgrade"
+      ],
+      "158": [
+        "Skirmish Upgrade"
+      ],
+      "159": [
+        "Skirmish Upgrade"
+      ],
+      "160": [
+        "Skirmish Upgrade"
+      ],
+      "161": [
+        "Force User",
+        "Hunter"
+      ],
+      "162": [
+        "Skirmish Upgrade"
+      ],
+      "163": [
+        "Skirmish Upgrade"
+      ],
+      "164": [
+        "Skirmish Upgrade"
+      ],
+      "165": [
+        "Skirmish Upgrade"
+      ],
+      "166": [
+        "Spy",
+        "Brawler"
+      ],
+      "167": [
+        "Hunter",
+        "Smuggler"
+      ],
+      "168": [
+        "Skirmish Upgrade"
+      ],
+      "169": [
+        "Smuggler"
       ]
     }
   },
