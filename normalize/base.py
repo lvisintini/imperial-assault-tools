@@ -1,7 +1,12 @@
 import os
 import json
 import readline
+import subprocess
+import time
 from collections import OrderedDict, defaultdict
+
+from look_at.wmctrl import WmCtrl
+
 from normalize.manager import Task
 
 
@@ -447,14 +452,6 @@ class RenameField(Task):
         return data_helper
 
 
-#  Preferred Key Order
-#  Dedup By Hash
-#  Foreign key to sources
-#  Value that can be interpreted as None as a instance attribute
-#  Show image as Mixin
-#  Subtitle for deployment card
-
-
 class SortDataByAttrs(Task):
     source = None
     fields = ()
@@ -523,8 +520,36 @@ class SortDataKeys(Task):
             )
         return data_helper
 
+
+class ShowImageMixin(object):
+    image_attr = 'image_file'
+
+    def __init__(self, *args, image_attr=None, **kwargs):
+        self.image_attr = image_attr if image_attr is not None else self.image_attr
+        super(ShowImageMixin, self).__init__(*args, **kwargs)
+        self.viewers = []
+        self.active_window = WmCtrl().get_active_window()
+        # This is because this lib is not python3 ready ...
+        self.active_window.id = self.active_window.id.decode('utf-8')
+
+    def before_each(self, model):
+        if self.image_attr in model:
+            self.viewers.append(subprocess.Popen(['eog', '--single-window', model[self.image_attr]]))
+            time.sleep(0.25)
+            self.active_window.activate()
+        else:
+            for p in self.viewers:
+                p.terminate()
+                p.kill()
+            self.viewers = []
+
+    def process(self, *args, **kwargs):
+        res = super(ShowImageMixin, self).process(*args, **kwargs)
+        for p in self.viewers:
+            p.terminate()
+            p.kill()
+        return res
+
+
 #  Dedup By Hash
 #  Foreign key to sources
-#  Value that can be interpreted as None as a instance attribute
-#  Show image as Mixin
-#  Choices list append (Deployment types)
