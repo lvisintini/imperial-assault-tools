@@ -1,5 +1,6 @@
-import os
+import hashlib
 import json
+import os
 import readline
 import subprocess
 import time
@@ -521,6 +522,26 @@ class SortDataKeys(Task):
         return data_helper
 
 
+class SortAttrData(Task):
+    source = None
+    attr = None
+
+    @staticmethod
+    def sort_function(x):
+        return x
+
+    def __init__(self, source=None, attr=None, sort_function=None):
+        super(SortAttrData, self).__init__()
+        self.source = source or self.source
+        self.attr = attr or self.attr
+        self.sort_function = sort_function if sort_function else self.sort_function
+
+    def process(self, data_helper):
+        for model in data_helper.data[self.source]:
+            model[self.attr] = sorted(model[self.attr], key=self.sort_function)
+        return data_helper
+
+
 class ShowImageMixin(object):
     image_attr = 'image_file'
 
@@ -553,3 +574,33 @@ class ShowImageMixin(object):
 
 #  Dedup By Hash
 #  Foreign key to sources
+
+
+class AddHashes(Task):
+    source = None
+    attr = 'hash'
+    exclude = []
+    include = []
+
+    def __init__(self, source=None, attr=None, exclude=None, include=None):
+        super(AddHashes, self).__init__()
+        self.source = source or self.source
+        self.attr = attr or self.attr
+        self.exclude = exclude or self.exclude
+        self.include = include or self.include
+
+    def process(self, data_helper):
+        fields = []
+        for model in data_helper.data[self.source]:
+            for k in model.keys():
+                if k not in self.exclude and (self.include == [] or k in self.include) and k not in fields:
+                    fields.append(k)
+
+        for model in data_helper.data[self.source]:
+            model[self.attr] = self.get_hash(model, fields)
+        return data_helper
+
+    def get_hash(self, model, fields):
+        return str(hashlib.sha512(
+            "|".join([repr(model.get(a))for a in fields]).encode('utf-8')
+        ).hexdigest())

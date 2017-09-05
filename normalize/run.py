@@ -30,8 +30,14 @@ class NormalizeImperialData(PipelineHelper):
         base.SaveMemory('./memory.json'),
         base.SortDataByAttrs('name', 'deployment_cost', source=SOURCES.DEPLOYMENT),
         base.SortDataKeys(source=SOURCES.DEPLOYMENT, preferred_order=DEPLOYMENT_CARD_PREFERRED_ATTR_ORDER),
+        base.SortAttrData(source=SOURCES.DEPLOYMENT, attr='traits'),
+        base.SortAttrData(source=SOURCES.DEPLOYMENT, attr='modes'),
+        base.AddHashes(source=SOURCES.DEPLOYMENT, exclude=['image', 'image_file', 'id', 'source']),
+        tasks.DeDupMerge(source=SOURCES.DEPLOYMENT),
         base.AddIds(source=SOURCES.DEPLOYMENT),
-        base.RemoveField(field_name='id', source=SOURCES.DEPLOYMENT),
+        base.RemoveField(field_name='hash', source=SOURCES.DEPLOYMENT),
+        base.RemoveField(field_name='image', source=SOURCES.DEPLOYMENT),
+        base.RemoveField(field_name='source', source=SOURCES.DEPLOYMENT),
         base.SaveData('./data/', SOURCES.as_list),
     ]
 
