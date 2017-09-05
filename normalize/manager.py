@@ -1,6 +1,5 @@
 import logging
 from types import MethodType
-from colorlog import ColoredFormatter
 
 
 class DataHelperInstanceNotReturnedError(Exception):

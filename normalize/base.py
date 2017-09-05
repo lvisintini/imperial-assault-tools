@@ -24,7 +24,7 @@ class LoadData(Task):
     def process(self, data_helper):
         data = OrderedDict()
         for source_key in self.sources:
-            with open('{}{}.{}'.format(self.root, source_key, self.extension), 'r') as file_object:
+            with open(f'{self.root}{source_key}.{self.extension}', 'r') as file_object:
                 data[source_key] = json.load(file_object, object_pairs_hook=OrderedDict)
         setattr(data_helper, self.attr, data)
         return data_helper
@@ -46,7 +46,7 @@ class SaveData(Task):
 
     def process(self, data_helper):
         for source_key in self.sources:
-            with open('{}/{}.js'.format(self.root, source_key), 'w') as file_object:
+            with open(f'{self.root}{source_key}.{self.extension}', 'w') as file_object:
                 json.dump(
                     getattr(data_helper, self.attr)[source_key],
                     file_object,
@@ -60,14 +60,27 @@ class DataCollector(Task):
     pk = 'id'
     amend_data = False
     use_memory = True
+    null_input = '.'
+    skip_input = ''
 
-    def __init__(self, source=None, field_name=None, pk=None, amend_data=None, use_memory=None):
+    def __init__(self, source=None, field_name=None, pk=None, amend_data=None, use_memory=None, null_input=None,
+                 skip_input=None):
         super(DataCollector, self).__init__()
         self.source = source or self.source
         self.pk = pk or self.pk
         self.field_name = field_name or self.field_name
         self.amend_data = amend_data if amend_data is not None else self.amend_data
         self.use_memory = use_memory if use_memory is not None else self.use_memory
+
+        if null_input not in [None, False]:
+            self.null_input = null_input
+        elif null_input is False:
+            self.null_input = None
+
+        if skip_input not in [None, False]:
+            self.skip_input = skip_input
+        elif skip_input is False:
+            self.skip_input = None
 
     def before_each(self, model):
         pass
@@ -76,8 +89,20 @@ class DataCollector(Task):
         pass
 
     def input_text(self, model):
-        desc = '\n{name!r}\n'.format(**model) if 'id' not in model else '\n({id!r}) {name!r}\n'.format(**model)
-        return '{}Which {!r} should it have?\nResponse (leave empty to skip): '.format(desc, self.field_name)
+        template = '\n{desc}\nWhich {field!r} should it have?\nResponse{extra}: '
+
+        desc = '{name!r}'.format(**model) if 'id' not in model else '({id!r}) {name!r}'.format(**model)
+        extra = []
+        if self.skip_input is not None:
+            extra.append(f'{self.skip_input!r} to skip')
+        if self.null_input is not None:
+            extra.append(f'{self.null_input!r} for null')
+
+        return template.format(
+            desc=desc,
+            field=self.field_name,
+            extra=f' ({"; ".join(extra)})' if extra else ''
+        )
 
     def clean_input(self, new_data):
         raise NotImplementedError
@@ -93,7 +118,9 @@ class DataCollector(Task):
         return model
 
     def pre_process_existing_value_to_prefill_input(self, value):
-        raise NotImplementedError
+        if self.null_input is not None and value is None:
+            return self.null_input
+        return '' if value is None else str(value)
 
     def prompt_user(self, model, value, existing):
         def hook():
@@ -119,7 +146,7 @@ class DataCollector(Task):
 
             new_data = self.prompt_user(model, new_data, existing_data)
 
-            if not new_data:
+            if self.skip_input is not None and new_data == self.skip_input:
                 return False, None
 
             new_data = self.clean_input(new_data)
@@ -160,11 +187,8 @@ class DataCollector(Task):
 
 class IntegerDataCollector(DataCollector):
 
-    def pre_process_existing_value_to_prefill_input(self, value):
-        return '.' if value is None else str(value)
-
     def clean_input(self, new_data):
-        if new_data == '.':
+        if self.null_input is not None and new_data == self.null_input:
             return None
         try:
             return int(new_data)
@@ -172,20 +196,19 @@ class IntegerDataCollector(DataCollector):
             return new_data
 
     def validate_input(self, new_data):
-        return isinstance(new_data, int) or new_data is None
+        return isinstance(new_data, int) or (self.null_input is not None and new_data is None)
 
 
 class TextDataCollector(DataCollector):
-    def pre_process_existing_value_to_prefill_input(self, value):
-        return '' if value is None else value
 
     def clean_input(self, new_data):
+        if self.null_input is not None and new_data == self.null_input:
+            return None
         new_data = new_data.strip()
-        new_data = None if new_data == '' else new_data
         return new_data
 
     def validate_input(self, new_data):
-        return isinstance(new_data, str) or new_data is None
+        return isinstance(new_data, str) or (self.null_input is not None and new_data is None)
 
 
 class ChoiceDataCollector(DataCollector):
@@ -200,20 +223,32 @@ class ChoiceDataCollector(DataCollector):
         super(ChoiceDataCollector, self).__init__(**kwargs)
 
     def pre_process_existing_value_to_prefill_input(self, value):
+        if self.null_input is not None and value is None:
+            return self.null_input
         return next(i for i in range(len(self.choices)) if self.choices[i][0] == value)
 
     def clean_input(self, new_data):
+        if self.null_input is not None and new_data == self.null_input:
+            return None
         if new_data.isdigit() and int(new_data) in range(len(self.choices)):
             return self.choices[int(new_data)][0]
         else:
             return new_data
 
     def validate_input(self, new_data):
-        new_data = tuple(new_data) if isinstance(new_data, list) else new_data
-        return new_data in dict(self.choices).keys()
+        return new_data in dict(self.choices).keys() or (self.null_input is not None and new_data is None)
 
     def input_text(self, model):
-        desc = '\n{name!r}\n'.format(**model) if 'id' not in model else '\n({id!r}) {name!r}\n'.format(**model)
+        template = '\n{desc}\nWhich {field!r} should it have?\n\t{options_text}\nResponse{extra}: '
+
+        desc = '{name!r}'.format(**model) if 'id' not in model else '({id!r}) {name!r}'.format(**model)
+
+        extra = []
+        if self.skip_input is None:
+            extra.append(f'{self.skip_inputs!r} to skip')
+        if self.null_input is not None:
+            extra.append(f'{self.null_input!r} for null')
+
         options = []
         for i in range(len(self.choices)):
             v = f'{i} - {self.choices[i][1]} [{self.choices[i][0]}]'
@@ -223,31 +258,47 @@ class ChoiceDataCollector(DataCollector):
 
         options_text = '\n\t'.join(options)
 
-        return f'{desc}Which {self.field_name!r} should it have?\n\t{options_text}\nResponse: '
+        return template.format(
+            desc=desc,
+            field=self.field_name,
+            options_text=options_text,
+            extra=f' ({"; ".join(extra)})' if extra else ''
+        )
 
 
 class AppendChoiceDataCollector(ChoiceDataCollector):
+    done_input = '*'
+    accept_duplicates = False
+
+    def __init__(self, done_input=None, accept_duplicates=None, **kwargs):
+        self.done_input = done_input if done_input is not None else self.done_input
+        self.accept_duplicates = bool(accept_duplicates) if accept_duplicates is not None else self.accept_duplicates
+        super(AppendChoiceDataCollector, self).__init__(**kwargs)
+
     def pre_process_existing_value_to_prefill_input(self, value):
         return ''
-
-    def clean_input(self, new_data):
-        if new_data.isdigit() and int(new_data) in range(len(self.choices)):
-            return self.choices[int(new_data)][0]
-        else:
-            return new_data
 
     def validate_input(self, new_data):
         if isinstance(new_data, list) or isinstance(new_data, tuple):
             return all([
-                x in dict(self.choices).keys()
+                super(AppendChoiceDataCollector, self).validate_input(x)
                 for x in new_data
             ])
 
-        new_data = tuple(new_data) if isinstance(new_data, list) else new_data
-        return new_data in dict(self.choices).keys()
+        return super().validate_input(new_data)
 
     def input_text(self, model, collected):
-        desc = '\n{name!r}'.format(**model) if 'id' not in model else '\n({id!r}) {name!r}'.format(**model)
+        template = '\n{desc}\nField {field!r} has {collected!r}. What else should it have?\n\t' \
+                   '{options_text}\nResponse{extra}: '
+
+        desc = '{name!r}'.format(**model) if 'id' not in model else '({id!r}) {name!r}'.format(**model)
+
+        extra = []
+        if self.skip_input is None:
+            extra.append(f'{self.skip_inputs!r} to skip')
+        if self.null_input is not None:
+            extra.append(f'{self.null_input!r} for null')
+
         options = []
         for i in range(len(self.choices)):
             v = f'{i} - {self.choices[i][1]} [{self.choices[i][0]}]'
@@ -257,12 +308,13 @@ class AppendChoiceDataCollector(ChoiceDataCollector):
 
         options_text = '\n\t'.join(options)
 
-        return '\n'.join([
-            desc,
-            f'Field {self.field_name!r} has {collected!r}. What else should it have?',
-            f'\t{options_text}',
-            f'Response: '
-        ])
+        return template.format(
+            desc=desc,
+            field=self.field_name,
+            collected=collected,
+            options_text=options_text,
+            extra=f' ({"; ".join(extra)})' if extra else ''
+        )
 
     def prompt_user(self, model, collected):
         result = input(self.input_text(model, collected))
@@ -284,16 +336,18 @@ class AppendChoiceDataCollector(ChoiceDataCollector):
 
                 new_data = self.prompt_user(model, collected)
 
-                if not new_data:
+                if self.skip_input is not None and new_data == self.skip_input:
                     return False, None
-                if new_data == '.':
+
+                if new_data == self.done_input:
                     done_with_this_model = True
                     break
 
                 new_data = self.clean_input(new_data)
 
             else:
-                collected.append(new_data)
+                if self.accept_duplicates or new_data not in collected:
+                    collected.append(new_data)
 
         return True, collected
 
