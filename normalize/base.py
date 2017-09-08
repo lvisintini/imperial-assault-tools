@@ -571,11 +571,6 @@ class ShowImageMixin(object):
             p.kill()
         return res
 
-
-#  Dedup By Hash
-#  Foreign key to sources
-
-
 class AddHashes(Task):
     source = None
     attr = 'hash'
