@@ -571,6 +571,7 @@ class ShowImageMixin(object):
             p.kill()
         return res
 
+
 class AddHashes(Task):
     source = None
     attr = 'hash'

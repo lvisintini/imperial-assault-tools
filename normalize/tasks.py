@@ -1,5 +1,8 @@
+import os
+import re
 import subprocess
 import time
+from io import BytesIO
 from collections import Counter, OrderedDict
 
 from look_at.wmctrl import WmCtrl
@@ -190,3 +193,54 @@ class ChooseOne(base.ChoiceDataCollector):
 
         else:
             return True, new_data
+
+
+class RenameImages(Task):
+    root = None
+    source = None
+    file_attr = None
+    attrs_for_path = []
+    attrs_for_filename = []
+
+    def __init__(self, root=None, source=None, file_attr=None, attrs_for_path=None, attrs_for_filename=None):
+        super(RenameImages, self).__init__()
+        self.root = root or self.root
+        self.source = source or self.source
+        self.file_attr = file_attr or self.file_attr
+        self.attrs_for_path = attrs_for_path or self.attrs_for_path
+        self.attrs_for_filename = attrs_for_filename or self.attrs_for_filename
+
+    def process(self, data_helper):
+        for model in data_helper.data[self.source]:
+            path_to_file = model[self.file_attr]
+
+            extension = path_to_file.split('.')[-1]
+
+            new_path = os.path.join(
+                self.root,
+                self.slugify(self.source),
+                *[self.slugify(str(model[a])) for a in self.attrs_for_path if model[a] is not None]
+            )
+
+            new_file_path = os.path.join(
+                new_path,
+                '-'.join([
+                    self.slugify(str(model[a])) for a in self.attrs_for_filename if model[a] is not None
+                ]) + f'.{extension}'
+            )
+
+            if not os.path.exists(new_path):
+                os.makedirs(new_path)
+            with open(path_to_file, 'rb') as origin:
+                file_obj = BytesIO(origin.read())
+
+            with open(os.path.join(new_file_path), 'bw') as destination:
+                destination.write(file_obj.read())
+
+            model[self.file_attr] = new_file_path
+
+        return data_helper
+
+    def slugify(self, string):
+        value = re.sub('[^\w\s-]', '', string).strip().lower()
+        return re.sub('[-\s]+', '-', value)

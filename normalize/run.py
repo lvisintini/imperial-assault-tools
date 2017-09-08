@@ -13,6 +13,8 @@ class NormalizeImperialData(PipelineHelper):
         base.AddIds(source=SOURCES.DEPLOYMENT),
         base.AddIds(source=SOURCES.UPGRADE),
         base.AddIds(source=SOURCES.HERO_CLASS),
+        base.SortDataByAttrs('deck', 'variant', source=SOURCES.CARD),
+        tasks.RenameImages(root='./images', source=SOURCES.CARD, file_attr='image_file', attrs_for_filename=['deck', 'variant']),
         base.RenameField(field_name='faction', source=SOURCES.DEPLOYMENT, new_name='affiliation'),
         tasks.ImageChoiceDataCollector(field_name='affiliation', source=SOURCES.DEPLOYMENT, choices=AFFILIATION.as_choices),
         tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.DEPLOYMENT, choices=DEPLOYMENT_CARD_TRAITS.as_choices),
@@ -43,6 +45,8 @@ class NormalizeImperialData(PipelineHelper):
         tasks.ChooseOne(field_name='image_file', source=SOURCES.DEPLOYMENT),
         base.RemoveField(field_name='hash', source=SOURCES.DEPLOYMENT),
         base.RemoveField(field_name='image', source=SOURCES.DEPLOYMENT),
+        base.RemoveField(field_name='image', source=SOURCES.CARD),
+        base.RenameField(field_name='image_file', source=SOURCES.CARD, new_name='image'),
         base.RemoveField(field_name='source', source=SOURCES.DEPLOYMENT),
         base.SaveData('./data/', SOURCES.as_list),
     ]
