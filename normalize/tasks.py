@@ -231,11 +231,15 @@ class RenameImages(Task):
 
             if not os.path.exists(new_path):
                 os.makedirs(new_path)
-            with open(path_to_file, 'rb') as origin:
-                file_obj = BytesIO(origin.read())
 
-            with open(os.path.join(new_file_path), 'bw') as destination:
-                destination.write(file_obj.read())
+            if os.path.exists(path_to_file):  # perhaps we have done this already.
+                with open(path_to_file, 'rb') as origin:
+                    file_obj = BytesIO(origin.read())
+
+                with open(os.path.join(new_file_path), 'bw') as destination:
+                    destination.write(file_obj.read())
+
+                os.remove(path_to_file)
 
             model[self.file_attr] = new_file_path
 
@@ -244,3 +248,17 @@ class RenameImages(Task):
     def slugify(self, string):
         value = re.sub('[^\w\s-]', '', string).strip().lower()
         return re.sub('[-\s]+', '-', value)
+
+
+# RoundCorners -> https://raw.githubusercontent.com/firestrand/phatch/master/phatch/actions/round.py
+# Images to PNG format
+# Tinify
+
+class ImagesToPNG(Task):
+    @classmethod
+    def process(self, data_helper):
+        for source in data_helper.data:
+            for model in data_helper.data[source]:
+                if 'image_file' in model:
+                    model['image_file'] = model['image_file'].replace('.jpg', '.png')
+        return data_helper

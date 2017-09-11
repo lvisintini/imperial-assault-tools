@@ -10,12 +10,21 @@ class NormalizeImperialData(PipelineHelper):
     tasks = [
         base.LoadMemory('./memory.json'),
         base.LoadData('./raw-data/', SOURCES.as_list),
+
+        # Setup
+        tasks.ImagesToPNG,
+        base.RenameField(field_name='faction', source=SOURCES.DEPLOYMENT, new_name='affiliation'),
+
+
         base.AddIds(source=SOURCES.DEPLOYMENT),
         base.AddIds(source=SOURCES.UPGRADE),
         base.AddIds(source=SOURCES.HERO_CLASS),
+        base.AddIds(source=SOURCES.AGENDA),
+        base.AddIds(source=SOURCES.COMPANION),
         base.SortDataByAttrs('deck', 'variant', source=SOURCES.CARD),
         tasks.RenameImages(root='./images', source=SOURCES.CARD, file_attr='image_file', attrs_for_filename=['deck', 'variant']),
-        base.RenameField(field_name='faction', source=SOURCES.DEPLOYMENT, new_name='affiliation'),
+
+        # Data Collection
         tasks.ImageChoiceDataCollector(field_name='affiliation', source=SOURCES.DEPLOYMENT, choices=AFFILIATION.as_choices),
         tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.DEPLOYMENT, choices=DEPLOYMENT_CARD_TRAITS.as_choices),
         tasks.ImageIntegerDataCollector(field_name='deployment_cost', source=SOURCES.DEPLOYMENT),
@@ -27,10 +36,21 @@ class NormalizeImperialData(PipelineHelper):
         tasks.ImageChoiceDataCollector(field_name='unique', source=SOURCES.DEPLOYMENT, choices=TRUE_FALSE_CHOICES),
         tasks.ImageAppendChoiceDataCollector(field_name='modes', source=SOURCES.DEPLOYMENT, choices=GAME_MODES.as_choices),
         base.RemoveField(field_name='scope', source=SOURCES.DEPLOYMENT),
+
+
+
         tasks.ImageIntegerDataCollector(field_name='credits', source=SOURCES.UPGRADE),
+        tasks.ImageIntegerDataCollector(field_name='influence', source=SOURCES.AGENDA),
+        tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.COMPANION, choices=DEPLOYMENT_CARD_TRAITS.as_choices),
         tasks.ImageIntegerDataCollector(field_name='xp', source=SOURCES.HERO_CLASS),
+
+
         base.SaveMemory('./memory.json'),
+
+
+
         base.AddHashes(source=SOURCES.DEPLOYMENT, exclude=['image', 'image_file', 'id', 'source']),
+        base.AddHashes(source=SOURCES.AGENDA, exclude=['image', 'image_file', 'id', 'source']),
         tasks.DeDupMerge(source=SOURCES.DEPLOYMENT),
         base.SortDataByAttrs('name', 'deployment_cost', source=SOURCES.DEPLOYMENT),
         base.SortDataKeys(source=SOURCES.DEPLOYMENT, preferred_order=DEPLOYMENT_CARD_PREFERRED_ATTR_ORDER),

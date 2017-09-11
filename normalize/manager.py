@@ -58,7 +58,6 @@ class PipelineHelper(object):
 def _do_process(this, data_helper):
     if not hasattr(this, 'process'):
         raise NotImplementedError('process method should be implemented for every Task class/instance')
-
     res = this.process(data_helper)
 
     if not isinstance(res, DataHelper):
