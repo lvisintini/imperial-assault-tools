@@ -201,14 +201,18 @@ class RenameImages(Task):
     file_attr = None
     attrs_for_path = []
     attrs_for_filename = []
+    prefixes = []
+    suffixes = []
 
-    def __init__(self, root=None, source=None, file_attr=None, attrs_for_path=None, attrs_for_filename=None):
+    def __init__(self, root=None, source=None, file_attr=None, attrs_for_path=None, attrs_for_filename=None, prefixes=None, suffixes=None):
         super(RenameImages, self).__init__()
         self.root = root or self.root
         self.source = source or self.source
         self.file_attr = file_attr or self.file_attr
         self.attrs_for_path = attrs_for_path or self.attrs_for_path
         self.attrs_for_filename = attrs_for_filename or self.attrs_for_filename
+        self.prefixes = prefixes or self.prefixes
+        self.suffixes = suffixes or self.suffixes
 
     def process(self, data_helper):
         for model in data_helper.data[self.source]:
@@ -224,9 +228,9 @@ class RenameImages(Task):
 
             new_file_path = os.path.join(
                 new_path,
-                '-'.join([
+                '-'.join(self.prefixes + [
                     self.slugify(str(model[a])) for a in self.attrs_for_filename if model[a] is not None
-                ]) + f'.{extension}'
+                ] + self.suffixes) + f'.{extension}'
             )
 
             if not os.path.exists(new_path):
@@ -238,8 +242,6 @@ class RenameImages(Task):
 
                 with open(os.path.join(new_file_path), 'bw') as destination:
                     destination.write(file_obj.read())
-
-                os.remove(path_to_file)
 
             model[self.file_attr] = new_file_path
 
@@ -261,4 +263,8 @@ class ImagesToPNG(Task):
             for model in data_helper.data[source]:
                 if 'image_file' in model:
                     model['image_file'] = model['image_file'].replace('.jpg', '.png')
+                if 'wounded_file' in model:
+                    model['wounded_file'] = model['wounded_file'].replace('.jpg', '.png')
+                if 'healthy_file' in model:
+                    model['healthy_file'] = model['healthy_file'].replace('.jpg', '.png')
         return data_helper

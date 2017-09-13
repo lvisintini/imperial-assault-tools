@@ -3,114 +3,114 @@
     "name": "Chance Cubes",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Supply%20Deck/Chance%20Cubes.jpg",
     "source": 1,
-    "image_file": "./images/supply-cards/698ca6491f2b2b17.jpg"
+    "image_file": "./raw-images/supply-cards/698ca6491f2b2b17.jpg"
   },
   {
     "name": "Macrobinoculars",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Supply%20Deck/Macrobinoculars.jpg",
     "source": 1,
-    "image_file": "./images/supply-cards/75074f49173b1b17.jpg"
+    "image_file": "./raw-images/supply-cards/75074f49173b1b17.jpg"
   },
   {
     "name": "Artificial Stimulants",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Supply%20Deck/Artificial%20Stimulants.jpg",
     "source": 2,
-    "image_file": "./images/supply-cards/6d8ced44376b7f15.jpg"
+    "image_file": "./raw-images/supply-cards/6d8ced44376b7f15.jpg"
   },
   {
     "name": "Grappling Hook",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Supply%20Deck/Grappling%20Hook.jpg",
     "source": 2,
-    "image_file": "./images/supply-cards/61b926434d6f0b13.jpg"
+    "image_file": "./raw-images/supply-cards/61b926434d6f0b13.jpg"
   },
   {
     "name": "Power Generator",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Supply%20Deck/Power%20Generator.jpg",
     "source": 2,
-    "image_file": "./images/supply-cards/4d9cb01117572f13.jpg"
+    "image_file": "./raw-images/supply-cards/4d9cb01117572f13.jpg"
   },
   {
     "name": "Weapons Cache",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Supply%20Deck/Weapons%20Cache.jpg",
     "source": 2,
-    "image_file": "./images/supply-cards/69c72f48156b5515.jpg"
+    "image_file": "./raw-images/supply-cards/69c72f48156b5515.jpg"
   },
   {
     "name": "Flash Emitter",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Supply%20Deck/Flash%20Emitter.jpg",
     "source": 3,
-    "image_file": "./images/supply-cards/790a6c160b172b1f.jpg"
+    "image_file": "./raw-images/supply-cards/790a6c160b172b1f.jpg"
   },
   {
     "name": "Turbocharger",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Supply%20Deck/Turbocharger.jpg",
     "source": 3,
-    "image_file": "./images/supply-cards/69be32491f632f17.jpg"
+    "image_file": "./raw-images/supply-cards/69be32491f632f17.jpg"
   },
   {
     "name": "Adrenal Stim",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Supply%20Deck/Adrenal%20Stim.jpg",
     "source": 0,
-    "image_file": "./images/supply-cards/6999e32517211b1f.jpg"
+    "image_file": "./raw-images/supply-cards/6999e32517211b1f.jpg"
   },
   {
     "name": "Bacta Infusion",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Supply%20Deck/Bacta%20Infusion.jpg",
     "source": 0,
-    "image_file": "./images/supply-cards/79e7c64c11673d1d.jpg"
+    "image_file": "./raw-images/supply-cards/79e7c64c11673d1d.jpg"
   },
   {
     "name": "C1 Comlink",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Supply%20Deck/C1%20Comlink.jpg",
     "source": 0,
-    "image_file": "./images/supply-cards/39b8330d05373555.jpg"
+    "image_file": "./raw-images/supply-cards/39b8330d05373555.jpg"
   },
   {
     "name": "C22 Frag Grenade",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Supply%20Deck/C22%20Frag%20Grenade.jpg",
     "source": 0,
-    "image_file": "./images/supply-cards/71f0f28217653913.jpg"
+    "image_file": "./raw-images/supply-cards/71f0f28217653913.jpg"
   },
   {
     "name": "Emergency Medpack",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Supply%20Deck/Emergency%20Medpack.jpg",
     "source": 0,
-    "image_file": "./images/supply-cards/4dd3662c13332731.jpg"
+    "image_file": "./raw-images/supply-cards/4dd3662c13332731.jpg"
   },
   {
     "name": "Shock Grenade",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Supply%20Deck/Shock%20Grenade.jpg",
     "source": 0,
-    "image_file": "./images/supply-cards/659994040f696f1d.jpg"
+    "image_file": "./raw-images/supply-cards/659994040f696f1d.jpg"
   },
   {
     "name": "Troop Data",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Supply%20Deck/Troop%20Data.jpg",
     "source": 0,
-    "image_file": "./images/supply-cards/690e6c491d650f1f.jpg"
+    "image_file": "./raw-images/supply-cards/690e6c491d650f1f.jpg"
   },
   {
     "name": "Valuable Goods",
     "image": "http://cards.boardwars.eu/albums/Core-Box/Supply%20Deck/Valuable%20Goods.jpg",
     "source": 0,
-    "image_file": "./images/supply-cards/69cce4481b233b13.jpg"
+    "image_file": "./raw-images/supply-cards/69cce4481b233b13.jpg"
   },
   {
     "name": "Flash Bomb",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Supply%20Deck/Flash%20Bomb.jpg",
     "source": 4,
-    "image_file": "./images/supply-cards/7169e5131f7b1b17.jpg"
+    "image_file": "./raw-images/supply-cards/7169e5131f7b1b17.jpg"
   },
   {
     "name": "Painkillers",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Supply%20Deck/Painkillers.jpg",
     "source": 4,
-    "image_file": "./images/supply-cards/71797859157b7f1f.jpg"
+    "image_file": "./raw-images/supply-cards/71797859157b7f1f.jpg"
   },
   {
     "name": "Pit Droid supply",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Supply%20Deck/Pit%20Droid%20supply.jpg",
     "source": 4,
-    "image_file": "./images/supply-cards/618bcf4917674b13.jpg"
+    "image_file": "./raw-images/supply-cards/618bcf4917674b13.jpg"
   }
 ]

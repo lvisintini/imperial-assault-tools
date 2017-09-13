@@ -5,7 +5,7 @@
     "name": "Imperial Assault",
     "image": "http://cards.boardwars.eu/albums/Core-Box/ia_core_box.png",
     "id": 0,
-    "image_file": "./images/sources/333c19985939ab5b.png"
+    "image_file": "./raw-images/sources/333c19985939ab5b.png"
   },
   {
     "type": "Expansion",
@@ -13,7 +13,7 @@
     "name": "Twin Shadows",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Twin%20Shadows.png",
     "id": 1,
-    "image_file": "./images/sources/b2bcdea2a488ba80.png"
+    "image_file": "./raw-images/sources/b2bcdea2a488ba80.png"
   },
   {
     "type": "Expansion",
@@ -21,7 +21,7 @@
     "name": "Return to Hoth",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Return%20to%20Hoth.png",
     "id": 2,
-    "image_file": "./images/sources/be3eba6daee8c0fd.png"
+    "image_file": "./raw-images/sources/be3eba6daee8c0fd.png"
   },
   {
     "type": "Expansion",
@@ -29,7 +29,7 @@
     "name": "The Bespin Gambit",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/The%20Bespin%20Gambit.png",
     "id": 3,
-    "image_file": "./images/sources/beaebcbc9c84f2be.png"
+    "image_file": "./raw-images/sources/beaebcbc9c84f2be.png"
   },
   {
     "type": "Expansion",
@@ -37,7 +37,7 @@
     "name": "Jabba's Realm",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Jabbas%20Realm.png",
     "id": 4,
-    "image_file": "./images/sources/bebc9aa69494fcbe.png"
+    "image_file": "./raw-images/sources/bebc9aa69494fcbe.png"
   },
   {
     "type": "Villain Pack",
@@ -45,7 +45,7 @@
     "name": "IG88",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/IG88/IG88%20Pack.png",
     "id": 5,
-    "image_file": "./images/sources/d4d4cec4d4d0d0cc.png"
+    "image_file": "./raw-images/sources/d4d4cec4d4d0d0cc.png"
   },
   {
     "type": "Ally Pack",
@@ -53,7 +53,7 @@
     "name": "Rebel Saboteurs",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Rebel%20Saboteurs/Rebel%20Saboteurs%20Pack.png",
     "id": 6,
-    "image_file": "./images/sources/b2b68b86ac9892ae.png"
+    "image_file": "./raw-images/sources/b2b68b86ac9892ae.png"
   },
   {
     "type": "Ally Pack",
@@ -61,7 +61,7 @@
     "name": "Rebel Troopers",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Rebel%20Troopers/Rebel%20Trooper%20Pack.png",
     "id": 7,
-    "image_file": "./images/sources/b2b68f8cacb4a2aa.png"
+    "image_file": "./raw-images/sources/b2b68f8cacb4a2aa.png"
   },
   {
     "type": "Villain Pack",
@@ -69,7 +69,7 @@
     "name": "Royal Guard Champion",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Royal%20Guard%20Champion/Royal%20Guard%20Champion%20Pack.png",
     "id": 8,
-    "image_file": "./images/sources/d4d4ced4f4d0d4cc.png"
+    "image_file": "./raw-images/sources/d4d4ced4f4d0d4cc.png"
   },
   {
     "type": "Villain Pack",
@@ -77,7 +77,7 @@
     "name": "Boba Fett",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Boba%20Fett%20Pack.png",
     "id": 9,
-    "image_file": "./images/sources/d4d4c6c4d4d0c4cc.png"
+    "image_file": "./raw-images/sources/d4d4c6c4d4d0c4cc.png"
   },
   {
     "type": "Villain Pack",
@@ -85,7 +85,7 @@
     "name": "Kayn Somos",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/Kayn%20Somos/Kayn%20Somos%20Pack.png",
     "id": 10,
-    "image_file": "./images/sources/d4d4ced4f4f0f0d4.png"
+    "image_file": "./raw-images/sources/d4d4ced4f4f0f0d4.png"
   },
   {
     "type": "Ally Pack",
@@ -93,7 +93,7 @@
     "name": "R2-D2 and C-3PO",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/R2-D2%20and%20C-3PO/R2D2%20C3PO%20Pack.png",
     "id": 11,
-    "image_file": "./images/sources/bab68b86a4a4caae.png"
+    "image_file": "./raw-images/sources/bab68b86a4a4caae.png"
   },
   {
     "type": "Villain Pack",
@@ -101,7 +101,7 @@
     "name": "Hired Guns",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Hired%20Guns%20Pack.png",
     "id": 12,
-    "image_file": "./images/sources/b2b68f84a8ccb6ae.png"
+    "image_file": "./raw-images/sources/b2b68f84a8ccb6ae.png"
   },
   {
     "type": "Villain Pack",
@@ -109,7 +109,7 @@
     "name": "Stormtroopers",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Stormtrooper%20Pack.png",
     "id": 13,
-    "image_file": "./images/sources/b2a68d8ca8acaaae.png"
+    "image_file": "./raw-images/sources/b2a68d8ca8acaaae.png"
   },
   {
     "type": "Ally Pack",
@@ -117,7 +117,7 @@
     "name": "Wookie Warriors",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Wookie%20Warriors/Wookie%20Warriors%20Pack.png",
     "id": 14,
-    "image_file": "./images/sources/bab68b84acb0b2a6.png"
+    "image_file": "./raw-images/sources/bab68b84acb0b2a6.png"
   },
   {
     "type": "Ally Pack",
@@ -125,7 +125,7 @@
     "name": "Alliance Smuggler",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-4/Alliance%20Smuggler/Alliance%20Smuggler%20Pack.png",
     "id": 15,
-    "image_file": "./images/sources/d4d4ced4d4d0d0d4.png"
+    "image_file": "./raw-images/sources/d4d4ced4d4d0d0d4.png"
   },
   {
     "type": "Villain Pack",
@@ -133,7 +133,7 @@
     "name": "Bantha Rider",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-4/Bantha%20Rider/Bantha%20Rider%20Pack.png",
     "id": 16,
-    "image_file": "./images/sources/b2a28ba4988ca2aa.png"
+    "image_file": "./raw-images/sources/b2a28ba4988ca2aa.png"
   },
   {
     "type": "Villain Pack",
@@ -141,7 +141,7 @@
     "name": "Dengar",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Dengar/Dengar%20Pack.png",
     "id": 17,
-    "image_file": "./images/sources/d4d4c6ccccd8c4c4.png"
+    "image_file": "./raw-images/sources/d4d4c6ccccd8c4c4.png"
   },
   {
     "type": "Ally Pack",
@@ -149,7 +149,7 @@
     "name": "Echo Base Troopers",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Echo%20Base%20Troopers/Echo%20Base%20Troopers%20Pack.png",
     "id": 18,
-    "image_file": "./images/sources/bab68f8cace4b2ae.png"
+    "image_file": "./raw-images/sources/bab68f8cace4b2ae.png"
   },
   {
     "type": "Villain Pack",
@@ -157,7 +157,7 @@
     "name": "General Sorin",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/General%20Sorin/General%20Sorin%20Pack.png",
     "id": 19,
-    "image_file": "./images/sources/d4d4cec4e4d8d0dc.png"
+    "image_file": "./raw-images/sources/d4d4cec4e4d8d0dc.png"
   },
   {
     "type": "Ally Pack",
@@ -165,7 +165,7 @@
     "name": "Leia Organa",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Leia%20Organa/Leia%20Organa%20Pack.png",
     "id": 20,
-    "image_file": "./images/sources/d4d4c6ccd4d8d0d4.png"
+    "image_file": "./raw-images/sources/d4d4c6ccd4d8d0d4.png"
   },
   {
     "type": "Villain Pack",
@@ -173,7 +173,7 @@
     "name": "Agent Blaise",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Agent%20Blaise/Agent%20Blaise%20Pack.png",
     "id": 21,
-    "image_file": "./images/sources/d4d4c6c4c4c0d4d4.png"
+    "image_file": "./raw-images/sources/d4d4c6c4c4c0d4d4.png"
   },
   {
     "type": "Villain Pack",
@@ -181,7 +181,7 @@
     "name": "Bossk",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Bossk/Bossk%20Pack.png",
     "id": 22,
-    "image_file": "./images/sources/d4d4c6c4d4d0d8dc.png"
+    "image_file": "./raw-images/sources/d4d4c6c4d4d0d8dc.png"
   },
   {
     "type": "Villain Pack",
@@ -189,7 +189,7 @@
     "name": "ISB Infiltrators",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/ISB%20Infiltrators%20Pack.png",
     "id": 23,
-    "image_file": "./images/sources/b2a28f8ea8e8b28e.png"
+    "image_file": "./raw-images/sources/b2a28f8ea8e8b28e.png"
   },
   {
     "type": "Ally Pack",
@@ -197,7 +197,7 @@
     "name": "Lando Calrissian",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Lando%20Calrissian/Lando%20Calrissian%20Pack.png",
     "id": 24,
-    "image_file": "./images/sources/dcd4c6d4d0d0c4c4.png"
+    "image_file": "./raw-images/sources/dcd4c6d4d0d0c4c4.png"
   },
   {
     "type": "Villain Pack",
@@ -205,7 +205,7 @@
     "name": "Greedo",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Greedo/Greedo%20Pack.png",
     "id": 25,
-    "image_file": "./images/sources/d4d4cec4d4c8d0d4.png"
+    "image_file": "./raw-images/sources/d4d4cec4d4c8d0d4.png"
   },
   {
     "type": "Ally Pack",
@@ -213,7 +213,7 @@
     "name": "Obi-Wan Kenobi",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Obi-Wan%20Kenobi/Obi-Wan%20Kenobi%20Pack.png",
     "id": 26,
-    "image_file": "./images/sources/d4d4c6cce4d8d4cc.png"
+    "image_file": "./raw-images/sources/d4d4c6cce4d8d4cc.png"
   },
   {
     "type": "Ally Pack",
@@ -221,7 +221,7 @@
     "name": "The Grand Inquisitor",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/The%20Grand%20Inquisitor/The%20Grand%20Inquisitor%20Pack.png",
     "id": 27,
-    "image_file": "./images/sources/d4d4c6ccece4f4c4.png"
+    "image_file": "./raw-images/sources/d4d4c6ccece4f4c4.png"
   },
   {
     "type": "Ally Pack",
@@ -229,7 +229,7 @@
     "name": "Alliance Rangers",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Alliance%20Rangers/Alliance%20Rangers%20Pack.png",
     "id": 28,
-    "image_file": "./images/sources/b2b28b86acada2ae.png"
+    "image_file": "./raw-images/sources/b2b28b86acada2ae.png"
   },
   {
     "type": "Villain Pack",
@@ -237,7 +237,7 @@
     "name": "Captain Terro",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Captain%20Terro/Captain%20Terro%20Pack.png",
     "id": 29,
-    "image_file": "./images/sources/b2b28f8eaca9aea6.png"
+    "image_file": "./raw-images/sources/b2b28f8eaca9aea6.png"
   },
   {
     "type": "Villain Pack",
@@ -245,7 +245,7 @@
     "name": "Jabba the Hutt",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Jabba%20the%20Hutt/Jabba%20the%20Hutt%20Pack.png",
     "id": 30,
-    "image_file": "./images/sources/b2b28f84a8a8e2a6.png"
+    "image_file": "./raw-images/sources/b2b28f84a8a8e2a6.png"
   },
   {
     "type": "Ally Pack",
@@ -253,7 +253,7 @@
     "name": "Luke Skywalker Jedi Knight",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Luke%20Skywalker%20Jedi%20Knight/Luke%20Skywalker%20Jedi%20Knight%20Pack.png",
     "id": 31,
-    "image_file": "./images/sources/d4d4c6ccd4d4c4cc.png"
+    "image_file": "./raw-images/sources/d4d4c6ccd4d4c4cc.png"
   },
   {
     "type": "Ally Pack",
@@ -261,7 +261,7 @@
     "name": "BT-1 and 0-0-0",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/BT-1%20and%200-0-0/BT1%20000%20Pack.png",
     "id": 32,
-    "image_file": "./images/sources/b2b28f8eb8c4d2ae.png"
+    "image_file": "./raw-images/sources/b2b28f8eb8c4d2ae.png"
   },
   {
     "type": "Ally Pack",
@@ -269,7 +269,7 @@
     "name": "Hera Syndulla and C1-10P",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Hera%20Syndulla%20and%20C1-10P/Hera%20Syndulla%20C1-10P%20Pack.png",
     "id": 33,
-    "image_file": "./images/sources/b2b28b86ac94a2ae.png"
+    "image_file": "./raw-images/sources/b2b28b86ac94a2ae.png"
   },
   {
     "type": "Ally Pack",
@@ -277,7 +277,7 @@
     "name": "Jawa Scavenger",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Jawa%20Scavenger%20Pack.png",
     "id": 34,
-    "image_file": "./images/sources/d4d4c6c4f4d0c4dc.png"
+    "image_file": "./raw-images/sources/d4d4c6c4f4d0c4dc.png"
   },
   {
     "type": "Ally Pack",
@@ -285,7 +285,7 @@
     "name": "Chewbacca",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Chewbacca/Chewbacca%20Pack.png",
     "id": 35,
-    "image_file": "./images/sources/d4d4c6ccd4d0c4cc.png"
+    "image_file": "./raw-images/sources/d4d4c6ccd4d0c4cc.png"
   },
   {
     "type": "Villain Pack",
@@ -293,7 +293,7 @@
     "name": "General Weiss",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/General%20Weiss/General%20Weiss%20Pack.png",
     "id": 36,
-    "image_file": "./images/sources/bab68f9ea8c9b6ae.png"
+    "image_file": "./raw-images/sources/bab68f9ea8c9b6ae.png"
   },
   {
     "type": "Ally Pack",
@@ -301,6 +301,6 @@
     "name": "Han Solo",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Han%20Solo/Han%20Solo%20Pack.png",
     "id": 37,
-    "image_file": "./images/sources/d4d4c6c4d4d0d0dc.png"
+    "image_file": "./raw-images/sources/d4d4c6c4d4d0d0dc.png"
   }
 ]
