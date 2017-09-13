@@ -304,6 +304,8 @@ class AppendChoiceDataCollector(ChoiceDataCollector):
             extra.append(f'{self.skip_inputs!r} to skip')
         if self.null_input is not None:
             extra.append(f'{self.null_input!r} for null')
+        if self.done_input is not None:
+            extra.append(f'{self.done_input!r} if done')
 
         options = []
         for i in range(len(self.choices)):

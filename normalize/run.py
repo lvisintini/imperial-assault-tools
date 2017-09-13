@@ -21,6 +21,7 @@ class NormalizeImperialData(PipelineHelper):
         base.AddIds(source=SOURCES.HERO_CLASS),
         base.AddIds(source=SOURCES.AGENDA),
         base.AddIds(source=SOURCES.COMPANION),
+        base.AddIds(source=SOURCES.COMMAND),
         base.SortDataByAttrs('deck', 'variant', source=SOURCES.CARD),
         tasks.RenameImages(root='./images', source=SOURCES.CARD, file_attr='image_file', attrs_for_filename=['deck', 'variant']),
 
@@ -38,12 +39,13 @@ class NormalizeImperialData(PipelineHelper):
         base.RemoveField(field_name='scope', source=SOURCES.DEPLOYMENT),
 
 
-
         tasks.ImageIntegerDataCollector(field_name='credits', source=SOURCES.UPGRADE),
         tasks.ImageIntegerDataCollector(field_name='influence', source=SOURCES.AGENDA),
         tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.COMPANION, choices=DEPLOYMENT_CARD_TRAITS.as_choices),
         tasks.ImageIntegerDataCollector(field_name='xp', source=SOURCES.HERO_CLASS),
 
+        tasks.ImageIntegerDataCollector(field_name='cost', source=SOURCES.COMMAND),
+        tasks.ImageIntegerDataCollector(field_name='limit', source=SOURCES.COMMAND),
 
         base.SaveMemory('./memory.json'),
 
