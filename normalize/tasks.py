@@ -246,9 +246,7 @@ class RenameImages(Task):
 
             new_file_path = os.path.join(
                 new_path,
-                '-'.join(self.prefixes + [
-                    self.slugify(str(model[a])) for a in self.attrs_for_filename if model[a] is not None
-                ] + self.suffixes) + f'.{extension}'
+                '-'.join(self.prefixes + self.get_additional_attrs(model) + self.suffixes) + f'.{extension}'
             )
 
             if not os.path.exists(new_path):
@@ -268,6 +266,27 @@ class RenameImages(Task):
     def slugify(self, string):
         value = re.sub('[^\w\s-]', '', string).strip().lower()
         return re.sub('[-\s]+', '-', value)
+
+    def get_additional_attrs(self, model):
+        words = []
+        for a in self.attrs_for_filename:
+            if a not in model:
+                continue
+            elif model[a] is None:
+                continue
+            elif model[a] is False:
+                continue
+            elif model[a] is True:
+                if a == 'elite' and not model['unique']:
+                    words.append(a)
+            elif isinstance(model[a], str):
+                words.append(model[a])
+            elif a == 'modes':
+                if set(model[a]) == set(contants.GAME_MODES.as_list):
+                    continue
+                words.extend(model[a])
+
+        return [self.slugify(w) for w in words]
 
 
 # RoundCorners -> https://raw.githubusercontent.com/firestrand/phatch/master/phatch/actions/round.py
@@ -329,14 +348,14 @@ class ImperialClassCardToClass(Task):
     @classmethod
     def process(self, data_helper):
         done = []
-        id = -1
+        id_inc = -1
 
         for card in data_helper.data[contants.SOURCES.IMPERIAL_CLASS_CARD]:
             if card['class'] not in done:
-                id += 1
+                id_inc += 1
                 data_helper.data[contants.SOURCES.IMPERIAL_CLASSES].append(
                     OrderedDict([
-                        ('id', id),
+                        ('id', id_inc),
                         ('name', card['class']),
                         ('source', card['source']),
                     ])
@@ -356,14 +375,14 @@ class AgendaCardToDeck(Task):
     @classmethod
     def process(self, data_helper):
         done = []
-        id = -1
+        id_inc = -1
 
         for card in data_helper.data[contants.SOURCES.AGENDA]:
             if card['agenda'] not in done:
-                id += 1
+                id_inc += 1
                 data_helper.data[contants.SOURCES.AGENDA_DECKS].append(
                     OrderedDict([
-                        ('id', id),
+                        ('id', id_inc),
                         ('name', card['agenda']),
                         ('source', card['source']),
                     ])

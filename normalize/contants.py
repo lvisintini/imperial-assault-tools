@@ -13,6 +13,11 @@ class GAME_MODES:
         (SKIRMISH, SKIRMISH),
     ]
 
+    as_list = [
+        CAMPAIGN,
+        SKIRMISH
+    ]
+
 
 class SOURCES:
     SOURCE = 'sources'

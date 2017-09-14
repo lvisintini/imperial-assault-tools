@@ -100,7 +100,6 @@ class NormalizeImperialData(PipelineHelper):
 
 
         base.AddHashes(source=SOURCES.IMPERIAL_CLASS_CARD, exclude=['image', 'image_file', 'id', 'source']),
-        tasks.DeDupLog(source=SOURCES.IMPERIAL_CLASS_CARD),
         base.SortDataByAttrs('class', 'name', source=SOURCES.IMPERIAL_CLASS_CARD),
         base.RemoveField(field_name='id', source=SOURCES.IMPERIAL_CLASS_CARD),
         base.AddIds(source=SOURCES.IMPERIAL_CLASS_CARD),
@@ -108,10 +107,11 @@ class NormalizeImperialData(PipelineHelper):
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.IMPERIAL_CLASSES, fk_field_path=['source', ],
         ),
-        tasks.ChooseOne(field_name='image_file', source=SOURCES.DEPLOYMENT),
+        tasks.ChooseOne(field_name='image_file', source=SOURCES.IMPERIAL_CLASS_CARD),
 
 
         # Images handling
+        tasks.RenameImages(root='./images', source=SOURCES.DEPLOYMENT, file_attr='image_file', attrs_for_filename=['name', 'description', 'elite', 'modes']),
         tasks.RenameImages(root='./images', source=SOURCES.CARD, file_attr='image_file', attrs_for_filename=['deck', 'variant']),
         tasks.RenameImages(root='./images', source=SOURCES.IMPERIAL_CLASS_CARD, file_attr='image_file', attrs_for_filename=['class', 'name']),
         tasks.RenameImages(root='./images', source=SOURCES.COMMAND, file_attr='image_file', attrs_for_filename=['name', ]),
@@ -119,6 +119,7 @@ class NormalizeImperialData(PipelineHelper):
         tasks.RenameImages(root='./images', source=SOURCES.COMPANION, file_attr='image_file', attrs_for_filename=['name', ]),
         tasks.RenameImages(root='./images', source=SOURCES.HERO, file_attr='healthy_file', attrs_for_filename=['name', ], suffixes=['healthy', ]),
         tasks.RenameImages(root='./images', source=SOURCES.HERO, file_attr='wounded_file', attrs_for_filename=['name', ], suffixes=['wounded', ]),
+        tasks.RenameImages(root='./images', source=SOURCES.CONDITION, file_attr='image_file', attrs_for_filename=['name', ]),
         tasks.ClassHeroRenameImages(root='./images', source=SOURCES.HERO_CLASS, file_attr='image_file', attrs_for_filename=['name', ]),
 
 
@@ -136,14 +137,17 @@ class NormalizeImperialData(PipelineHelper):
         base.RemoveField(field_name='image', source=SOURCES.AGENDA),
         base.RemoveField(field_name='image', source=SOURCES.DEPLOYMENT),
         base.RemoveField(field_name='image', source=SOURCES.HERO_CLASS),
+        base.RemoveField(field_name='image', source=SOURCES.CONDITION),
 
         base.RenameField(field_name='image_file', source=SOURCES.CARD, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.COMMAND, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.AGENDA, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.DEPLOYMENT, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.IMPERIAL_CLASS_CARD, new_name='image'),
+        base.RenameField(field_name='image_file', source=SOURCES.HERO_CLASS, new_name='image'),
         base.RenameField(field_name='healthy_file', source=SOURCES.HERO, new_name='healthy'),
         base.RenameField(field_name='wounded_file', source=SOURCES.HERO, new_name='wounded'),
+        base.RenameField(field_name='image_file', source=SOURCES.CONDITION, new_name='image'),
 
         base.RemoveField(field_name='source', source=SOURCES.COMMAND),
         base.RemoveField(field_name='source', source=SOURCES.AGENDA),
@@ -154,7 +158,7 @@ class NormalizeImperialData(PipelineHelper):
 
         base.SaveData('./data/', SOURCES.as_list),
     ]
-
+#rewards, sidemissions,skirmish ams,sources, sorty missions, suppply, threat, upgrade
 
 def main():
     NormalizeImperialData().run()
