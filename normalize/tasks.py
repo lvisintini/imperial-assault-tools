@@ -9,6 +9,7 @@ from look_at.wmctrl import WmCtrl
 
 from normalize import base
 from normalize.manager import Task
+from normalize import contants
 
 
 class ImageAppendChoiceDataCollector(base.ShowImageMixin, base.AppendChoiceDataCollector):
@@ -30,23 +31,24 @@ class ImageTextDataCollector(base.ShowImageMixin, base.TextDataCollector):
 class ForeignKeyBuilder(Task):
     source = None
     source_pk = 'id'
-    source_field_path = None
     fk_source = None
     fk_source_pk = 'id'
     fk_field_path = None
+    id_name = 'source'
+    fk_id_name = 'content'
 
     attrs_to_copy = []
 
-    def __init__(self, source=None, source_pk=None, source_field_path=None, fk_source=None, fk_source_pk=None,
-                 fk_field_path=None, attrs_to_copy=None):
+    def __init__(self, source=None, source_pk=None, fk_source=None, fk_source_pk=None, fk_field_path=None, attrs_to_copy=None, id_name=None, fk_id_name=None):
         super(ForeignKeyBuilder, self).__init__()
         self.source = source or self.source
         self.source_pk = source_pk or self.source_pk
-        self.source_field_path = source_field_path or self.source_field_path
         self.fk_source = fk_source or self.fk_source
         self.fk_source_pk = fk_source_pk or self.fk_source_pk
         self.fk_field_path = fk_field_path or self.fk_field_path
         self.attrs_to_copy = attrs_to_copy or self.attrs_to_copy
+        self.id_name = id_name or self.id_name
+        self.fk_id_name = fk_id_name or self.fk_id_name
 
     def get_model_field(self, model, field_path):
         fk = model
@@ -67,23 +69,39 @@ class ForeignKeyBuilder(Task):
     def process(self, data_helper):
         for fk_model in data_helper.data[self.fk_source]:
             fk = self.get_model_field(fk_model, self.fk_field_path)
-            fks = [fk, ] if isinstance(fk, int) else fk
+            fks = [fk, ] if not isinstance(fk, list) else fk
             pk = fk_model[self.fk_source_pk]
 
             for fk in fks:
-                model = next(m for m in data_helper.data[self.source] if m[self.source_pk] == fk)
+                data_helper.data[self.source].append(
+                    OrderedDict([
+                        (f'{self.id_name}_id', fk),
+                        (f'{self.fk_id_name}_type', self.fk_source),
+                        (f'{self.fk_id_name}_id', pk),
+                    ] + [
+                        (a, fk_model[a]) for a in self.attrs_to_copy
+                    ])
+                )
 
-                current = self.get_model_field(model, self.source_field_path)
-                if current is None:
-                    current = []
+        return data_helper
 
-                current.append(OrderedDict([
-                    (self.fk_source_pk, pk),
-                    *[(a, fk_model[a]) for a in self.attrs_to_copy]
-                ]))
 
-                self.set_model_field(model, self.source_field_path, current)
+class DeDupLog(Task):
+    source = None
 
+    def __init__(self, source=None):
+        super(DeDupLog, self).__init__()
+        self.source = source or self.source
+
+    def process(self, data_helper):
+        hashes = []
+        for model in data_helper.data[self.source]:
+            hashes.append(model['hash'])
+
+        duplicate_hashes = [h for h, c in Counter(hashes).items() if c > 1]
+
+        for dh in duplicate_hashes:
+            self.log.warning(dh)
         return data_helper
 
 
@@ -267,4 +285,95 @@ class ImagesToPNG(Task):
                     model['wounded_file'] = model['wounded_file'].replace('.jpg', '.png')
                 if 'healthy_file' in model:
                     model['healthy_file'] = model['healthy_file'].replace('.jpg', '.png')
+        return data_helper
+
+
+class ClassHeroRenameImages(RenameImages):
+    def process(self, data_helper):
+        for model in data_helper.data[self.source]:
+            path_to_file = model[self.file_attr]
+
+            hero_name = next(m for m in data_helper.data['heroes'] if m['id'] == model['hero'])['name']
+
+            extension = path_to_file.split('.')[-1]
+
+            new_path = os.path.join(
+                self.root,
+                self.slugify(self.source),
+                *[self.slugify(str(model[a])) for a in self.attrs_for_path if model[a] is not None]
+            )
+
+            new_file_path = os.path.join(
+                new_path,
+                '-'.join(self.prefixes + [self.slugify(hero_name), ] + [
+                    self.slugify(str(model[a])) for a in self.attrs_for_filename if model[a] is not None
+                ] + self.suffixes) + f'.{extension}'
+            )
+
+            if not os.path.exists(new_path):
+                os.makedirs(new_path)
+
+            if os.path.exists(path_to_file):  # perhaps we have done this already.
+                with open(path_to_file, 'rb') as origin:
+                    file_obj = BytesIO(origin.read())
+
+                with open(os.path.join(new_file_path), 'bw') as destination:
+                    destination.write(file_obj.read())
+
+            model[self.file_attr] = new_file_path
+
+        return data_helper
+
+
+class ImperialClassCardToClass(Task):
+    @classmethod
+    def process(self, data_helper):
+        done = []
+        id = -1
+
+        for card in data_helper.data[contants.SOURCES.IMPERIAL_CLASS_CARD]:
+            if card['class'] not in done:
+                id += 1
+                data_helper.data[contants.SOURCES.IMPERIAL_CLASSES].append(
+                    OrderedDict([
+                        ('id', id),
+                        ('name', card['class']),
+                        ('source', card['source']),
+                    ])
+                )
+                done.append(card['class'])
+
+            card['class_id'] = next(
+                iclass
+                for iclass in data_helper.data[contants.SOURCES.IMPERIAL_CLASSES]
+                if iclass['name'] == card['class']
+            )['id']
+
+        return data_helper
+
+
+class AgendaCardToDeck(Task):
+    @classmethod
+    def process(self, data_helper):
+        done = []
+        id = -1
+
+        for card in data_helper.data[contants.SOURCES.AGENDA]:
+            if card['agenda'] not in done:
+                id += 1
+                data_helper.data[contants.SOURCES.AGENDA_DECKS].append(
+                    OrderedDict([
+                        ('id', id),
+                        ('name', card['agenda']),
+                        ('source', card['source']),
+                    ])
+                )
+                done.append(card['agenda'])
+
+            card['agenda_id'] = next(
+                iclass
+                for iclass in data_helper.data[contants.SOURCES.AGENDA_DECKS]
+                if iclass['name'] == card['agenda']
+            )['id']
+
         return data_helper

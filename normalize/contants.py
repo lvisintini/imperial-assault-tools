@@ -16,14 +16,17 @@ class GAME_MODES:
 
 class SOURCES:
     SOURCE = 'sources'
+    SOURCE_CONTENTS = 'source-contents'
     SKIRMISH_MAP = 'skirmish-maps'
     AGENDA = 'agenda-cards'
+    AGENDA_DECKS = 'agenda-decks'
     COMMAND = 'command-cards'
     CONDITION = 'condition-cards'
     DEPLOYMENT = 'deployment-cards'
     HERO = 'heroes'
     HERO_CLASS = 'hero-class-cards'
-    IMPERIAL_CLASS = 'imperial-class-cards'
+    IMPERIAL_CLASSES = 'imperial-classes'
+    IMPERIAL_CLASS_CARD = 'imperial-class-cards'
     SUPPLY = 'supply-cards'
     STORY_MISSION = 'story-mission-cards'
     SIDE_MISSION = 'side-mission-cards'
@@ -35,14 +38,17 @@ class SOURCES:
 
     as_list = [
         SOURCE,
+        SOURCE_CONTENTS,
         SKIRMISH_MAP,
         AGENDA,
+        AGENDA_DECKS,
         COMMAND,
         CONDITION,
         DEPLOYMENT,
         HERO,
         HERO_CLASS,
-        IMPERIAL_CLASS,
+        IMPERIAL_CLASSES,
+        IMPERIAL_CLASS_CARD,
         SUPPLY,
         STORY_MISSION,
         SIDE_MISSION,
@@ -68,7 +74,7 @@ class AFFILIATION:
     ]
 
 
-class DEPLOYMENT_CARD_TRAITS:
+class CARD_TRAITS:
     SPY = 'Spy'
     BRAWLER = 'Brawler'
     FORCE_USER = 'Force User'
@@ -100,6 +106,7 @@ class DEPLOYMENT_CARD_TRAITS:
         (HUNTER, HUNTER),
         (DROID, DROID),
     )
+
 
 DEPLOYMENT_CARD_PREFERRED_ATTR_ORDER = [
     "id",
