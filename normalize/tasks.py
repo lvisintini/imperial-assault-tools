@@ -168,7 +168,7 @@ class ChooseOne(base.ChoiceDataCollector):
     def pre_process_existing_value_to_prefill_input(self, value):
         return ''
 
-    def before_each(self, model):
+    def before_each(self, model, data_helper):
         self.choices = [(x, x) for x in model[self.field_name]]
 
         if len(model[self.field_name]) > 1 and isinstance(model[self.field_name], list):
@@ -177,7 +177,7 @@ class ChooseOne(base.ChoiceDataCollector):
             time.sleep(0.25)
             self.active_window.activate()
 
-    def after_each(self, model):
+    def after_each(self, model, data_helper):
         for p in self.viewers:
             p.terminate()
             p.kill()
@@ -395,4 +395,12 @@ class AgendaCardToDeck(Task):
                 if iclass['name'] == card['agenda']
             )['id']
 
+        return data_helper
+
+
+class CollectSources(ImageChoiceDataCollector):
+    field_name = 'source'
+
+    def pre_process(self, data_helper):
+        self.choices = [(x['id'], x['name']) for x in data_helper.data[contants.SOURCES.SOURCE]]
         return data_helper

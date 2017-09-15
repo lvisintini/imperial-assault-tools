@@ -64,6 +64,7 @@ class SaveData(Task):
 
 class DataCollector(Task):
     pk = 'id'
+    field_name = None
     amend_data = False
     use_memory = True
     null_input = '.'
@@ -88,10 +89,10 @@ class DataCollector(Task):
         elif skip_input is False:
             self.skip_input = None
 
-    def before_each(self, model):
+    def before_each(self, model, data_helper):
         pass
 
-    def after_each(self, model):
+    def after_each(self, model, data_helper):
         pass
 
     def input_text(self, model):
@@ -173,7 +174,7 @@ class DataCollector(Task):
                     if self.use_memory:
                         self.load_from_memory(data_helper, model)
 
-                self.before_each(model)
+                self.before_each(model, data_helper)
 
                 success, new_data = self.handle_input_loop(model)
 
@@ -181,7 +182,7 @@ class DataCollector(Task):
                     model[self.field_name] = new_data
                     if self.use_memory and hasattr(data_helper, 'memory'):
                         data_helper.memory[self.source][self.field_name][model[self.pk]] = new_data
-                self.after_each(model)
+                self.after_each(model, data_helper)
 
         except (KeyboardInterrupt, SystemExit):
             print('')
@@ -222,9 +223,6 @@ class ChoiceDataCollector(DataCollector):
 
     def __init__(self, choices=None, **kwargs):
         self.choices = choices or self.choices
-
-        if self.choices and hasattr(self, 'get_choices'):
-            self.choices = self.get_choices()
 
         super(ChoiceDataCollector, self).__init__(**kwargs)
 
@@ -413,12 +411,16 @@ class AddIds(Task):
         self.source = source or self.source
 
     def process(self, data_helper):
-        i = -1
+        id_inc = -1
 
         if all(['id' not in model for model in data_helper.data[self.source]]):
-            for model in data_helper.data[self.source]:
-                i += 1
-                model['id'] = i
+            for i in range(len(data_helper.data[self.source])):
+                id_inc += 1
+
+                data_helper.data[self.source][i] = OrderedDict(
+                    [('id', id_inc)] +
+                    [(k, v) for k, v in data_helper.data[self.source][i].items() if k != 'id']
+                )
 
         return data_helper
 
@@ -555,7 +557,7 @@ class ShowImageMixin(object):
         # This is because this lib is not python3 ready ...
         self.active_window.id = self.active_window.id.decode('utf-8')
 
-    def before_each(self, model):
+    def before_each(self, model, data_helper):
         if self.image_attr in model:
             self.viewers.append(subprocess.Popen(['eog', '--single-window', model[self.image_attr]]))
             time.sleep(0.25)
