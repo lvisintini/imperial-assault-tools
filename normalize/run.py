@@ -220,6 +220,7 @@ class NormalizeImperialData(PipelineHelper):
         base.RemoveField(field_name='hash', source=SOURCES.AGENDA),
         base.RemoveField(field_name='hash', source=SOURCES.DEPLOYMENT),
         base.RemoveField(field_name='hash', source=SOURCES.IMPERIAL_CLASS_CARD),
+        base.RemoveField(field_name='hash', source=SOURCES.SUPPLY),
 
         base.RemoveField(field_name='image', source=SOURCES.CARD),
         base.RemoveField(field_name='image', source=SOURCES.COMMAND),
@@ -231,6 +232,7 @@ class NormalizeImperialData(PipelineHelper):
         base.RemoveField(field_name='image', source=SOURCES.STORY_MISSION),
         base.RemoveField(field_name='image', source=SOURCES.SIDE_MISSION),
         base.RemoveField(field_name='image', source=SOURCES.THREAT_MISSION),
+        base.RemoveField(field_name='image', source=SOURCES.SUPPLY),
 
         base.RenameField(field_name='image_file', source=SOURCES.CARD, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.COMMAND, new_name='image'),
@@ -247,6 +249,7 @@ class NormalizeImperialData(PipelineHelper):
         base.RenameField(field_name='image_file', source=SOURCES.THREAT_MISSION, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.SKIRMISH_MAP, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.UPGRADE, new_name='image'),
+        base.RenameField(field_name='image_file', source=SOURCES.SUPPLY, new_name='image'),
 
         base.RenameField(field_name='hero', source=SOURCES.HERO_CLASS, new_name='hero_id'),
         base.SortDataKeys(source=SOURCES.HERO_CLASS, preferred_order=['id', 'name', 'hero_id', 'xp', 'image']),
@@ -266,7 +269,7 @@ class NormalizeImperialData(PipelineHelper):
 
         base.SaveData('./data/', SOURCES.as_list),
     ]
-# sources, supply
+# sources, supply, upgrade traits, supply traits
 
 def main():
     NormalizeImperialData().run()
