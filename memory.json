@@ -2724,6 +2724,332 @@
       "66": 600,
       "67": 1000,
       "68": 1250
+    },
+    "traits": {
+      "0": [
+        "Blaster",
+        "Pistol"
+      ],
+      "1": [
+        "Blaster",
+        "Rifle"
+      ],
+      "2": [
+        "Blade",
+        "Staff"
+      ],
+      "3": [
+        "Armor",
+        "Light"
+      ],
+      "4": [
+        "Accessory"
+      ],
+      "5": [
+        "Modification",
+        "Impact"
+      ],
+      "6": [
+        "Armor",
+        "Medium"
+      ],
+      "7": [
+        "Modification",
+        "Energy"
+      ],
+      "8": [
+        "Accessory"
+      ],
+      "9": [
+        "Modification",
+        "Barrel"
+      ],
+      "10": [
+        "Blaster",
+        "Heavy"
+      ],
+      "11": [
+        "Fist",
+        "Blade"
+      ],
+      "12": [
+        "Club"
+      ],
+      "13": [
+        "Projectile",
+        "Rifle"
+      ],
+      "14": [
+        "Blaster",
+        "Rifle"
+      ],
+      "15": [
+        "Modification",
+        "Energy"
+      ],
+      "16": [
+        "Blaster",
+        "Heavy"
+      ],
+      "17": [
+        "Accessory"
+      ],
+      "18": [
+        "Accessory"
+      ],
+      "19": [
+        "Accessory"
+      ],
+      "20": [
+        "Modification",
+        "Energy"
+      ],
+      "21": [
+        "Disruptor",
+        "Rifle"
+      ],
+      "22": [
+        "Staff"
+      ],
+      "23": [
+        "Armor",
+        "Medium"
+      ],
+      "24": [
+        "Accessory"
+      ],
+      "25": [
+        "Blaster",
+        "Rifle"
+      ],
+      "26": [
+        "Helmet"
+      ],
+      "27": [
+        "Modification",
+        "Impact"
+      ],
+      "28": [
+        "Blaster",
+        "Pistol"
+      ],
+      "29": [
+        "Modification",
+        "Sights"
+      ],
+      "30": [
+        "Blaster",
+        "Pistol"
+      ],
+      "31": [
+        "Modification",
+        "Barrel"
+      ],
+      "32": [
+        "Medical",
+        "Enhancement"
+      ],
+      "33": [
+        "Blade"
+      ],
+      "34": [
+        "Armor"
+      ],
+      "35": [
+        "Consumable",
+        "Explosive"
+      ],
+      "36": [
+        "Staff"
+      ],
+      "37": [
+        "Blaster",
+        "Rifle"
+      ],
+      "38": [
+        "Modification",
+        "Energy"
+      ],
+      "39": [
+        "Armor",
+        "Light"
+      ],
+      "40": [
+        "Blade"
+      ],
+      "41": [
+        "Accessory"
+      ],
+      "42": [
+        "Modification",
+        "Balance"
+      ],
+      "43": [
+        "Blaster",
+        "Pistol"
+      ],
+      "44": [
+        "Modification",
+        "Sights"
+      ],
+      "45": [
+        "Accessory"
+      ],
+      "46": [
+        "Accessory"
+      ],
+      "47": [
+        "Blaster",
+        "Pistol"
+      ],
+      "48": [
+        "Modification",
+        "Energy"
+      ],
+      "49": [
+        "Blade"
+      ],
+      "50": [
+        "Armor"
+      ],
+      "51": [
+        "Modification",
+        "Energy"
+      ],
+      "52": [
+        "Blaster",
+        "Rifle"
+      ],
+      "53": [
+        "Blade"
+      ],
+      "54": [
+        "Fist"
+      ],
+      "55": [
+        "Modification",
+        "Balance"
+      ],
+      "56": [
+        "Armor",
+        "Light"
+      ],
+      "57": [
+        "Blaster",
+        "Pistol"
+      ],
+      "58": [
+        "Blaster",
+        "Pistol"
+      ],
+      "59": [
+        "Blaster",
+        "Rifle"
+      ],
+      "60": [
+        "Modification",
+        "Balance"
+      ],
+      "61": [
+        "Modification",
+        "Barrel"
+      ],
+      "62": [
+        "Accessory"
+      ],
+      "63": [
+        "Accessory"
+      ],
+      "64": [
+        "Modification",
+        "Sights"
+      ],
+      "65": [
+        "Blade"
+      ],
+      "66": [
+        "Blaster",
+        "Pistol"
+      ],
+      "67": [
+        "Blade",
+        "Energy"
+      ],
+      "68": [
+        "Staff",
+        "Energy"
+      ]
+    },
+    "name": {
+      "0": "434 \"Deathhammer\"",
+      "1": "A280",
+      "2": "BD-1 Vibro-Ax",
+      "3": "Combat Coat",
+      "4": "Extra Ammunition",
+      "5": "High-Impact Guard",
+      "6": "Laminate Armor",
+      "7": "Overcharger",
+      "8": "Slicing Tools",
+      "9": "Spread Barrel",
+      "10": "T-21",
+      "11": "Vibro Knucklers",
+      "12": "Gaffi Stick",
+      "13": "Tatooine Hunting Rifle",
+      "14": "EE-3 Carbine",
+      "15": "Plasma Cell",
+      "16": "DLT-19",
+      "17": "Hidden Blade",
+      "18": "Combat Knife",
+      "19": "Combat Visor",
+      "20": "Disruption Cell",
+      "21": "DXR-6",
+      "22": "Force Pike",
+      "23": "Laminate Armor",
+      "24": "Personal Shields",
+      "25": "Pulse Cannon",
+      "26": "Reinforced Helmet",
+      "27": "Shock Emitter",
+      "28": "Sporting Blaster",
+      "29": "Telescoping Sights",
+      "30": "DDC Defender",
+      "31": "Under-Barrel HH-4",
+      "32": "Cybernetic Arm",
+      "33": "Vibroknife",
+      "34": "Environmental Hazard Suit",
+      "35": "Concussion Grenades",
+      "36": "Stun Baton",
+      "37": "Valken-38 Carbine",
+      "38": "Vibrogenerator",
+      "39": "Shadowsilk Cloak",
+      "40": "Vibrosword",
+      "41": "R5 Astromech",
+      "42": "Weighted Head",
+      "43": "Disruptor Pistol",
+      "44": "Sniper Scope",
+      "45": "Bacta Pump",
+      "46": "Emergency Injector",
+      "47": "Hand Cannon",
+      "48": "Bolt Upgrade",
+      "49": "Double Vibrosword",
+      "50": "Admiral's Uniform",
+      "51": "Energized Hilt",
+      "52": "Modified Energy Cannon",
+      "53": "Ryyk Blades",
+      "54": "Armored Gauntlets",
+      "55": "Balanced Hilt",
+      "56": "Combat Coat",
+      "57": "DH-17",
+      "58": "DL-44",
+      "59": "E-11",
+      "60": "Extended Haft",
+      "61": "Marksman Barrel",
+      "62": "Portable Medkit",
+      "63": "Survival Gear",
+      "64": "Tactical Display",
+      "65": "Vibroblade",
+      "66": "DT-12 Heavy Blaster Pistol",
+      "67": "Ancient Lightsaber",
+      "68": "Electrostaff"
     }
   },
   "hero-class-cards": {
@@ -3956,6 +4282,98 @@
       "36": 4,
       "37": 28,
       "38": 29
+    }
+  },
+  "supply-cards": {
+    "traits": {
+      "0": [
+        "Valuable"
+      ],
+      "1": [
+        "Tool"
+      ],
+      "2": [
+        "Consumable",
+        "Medical"
+      ],
+      "3": [
+        "Tool"
+      ],
+      "4": [
+        "Consumable",
+        "Energy"
+      ],
+      "5": [
+        "Tool"
+      ],
+      "6": [
+        "Consumable",
+        "Energy"
+      ],
+      "7": [
+        "Energy"
+      ],
+      "8": [
+        "Consumable",
+        "Medical"
+      ],
+      "9": [
+        "Consumable",
+        "Medical"
+      ],
+      "10": [
+        "Consumable",
+        "Tool"
+      ],
+      "11": [
+        "Consumable",
+        "Explosive"
+      ],
+      "12": [
+        "Consumable",
+        "Medical"
+      ],
+      "13": [
+        "Consumable",
+        "Explosive"
+      ],
+      "14": [
+        "Intel"
+      ],
+      "15": [
+        "Valuable"
+      ],
+      "16": [
+        "Consumable",
+        "Explosive"
+      ],
+      "17": [
+        "Medical"
+      ],
+      "18": [
+        "Droid"
+      ]
+    },
+    "name": {
+      "0": "Chance Cubes",
+      "1": "Macrobinoculars",
+      "2": "Artificial Stimulants",
+      "3": "Grappling Hook",
+      "4": "Power Generator",
+      "5": "Weapons Cache",
+      "7": "Turbocharger",
+      "8": "Adrenal Stim",
+      "9": "Bacta Infusion",
+      "10": "C1 Comlink",
+      "11": "C22 Frag Grenade",
+      "6": "Flash Emitter",
+      "12": "Emergency Medpac",
+      "13": "Shock Grenade",
+      "14": "Troop Data",
+      "15": "Valuable Goods",
+      "16": "Flash Bomb",
+      "17": "Painkillers",
+      "18": "Pit Droid"
     }
   }
 }

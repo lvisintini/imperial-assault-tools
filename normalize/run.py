@@ -2,7 +2,8 @@ from normalize.manager import PipelineHelper
 from normalize import tasks
 from normalize import base
 from normalize.contants import (
-    SOURCES, TRUE_FALSE_CHOICES, GAME_MODES, AFFILIATION, CARD_TRAITS, DEPLOYMENT_CARD_PREFERRED_ATTR_ORDER
+    SOURCES, TRUE_FALSE_CHOICES, GAME_MODES, AFFILIATION, DEPLOYMENT_TRAITS, DEPLOYMENT_CARD_PREFERRED_ATTR_ORDER,
+    UPGRADE_TRAITS, SUPPLY_TRAITS
 )
 
 
@@ -33,7 +34,7 @@ class NormalizeImperialData(PipelineHelper):
 
         # Data Collection
         tasks.ImageChoiceDataCollector(field_name='affiliation', source=SOURCES.DEPLOYMENT, choices=AFFILIATION.as_choices),
-        tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.DEPLOYMENT, choices=CARD_TRAITS.as_choices),
+        tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.DEPLOYMENT, choices=DEPLOYMENT_TRAITS.as_choices),
         tasks.ImageIntegerDataCollector(field_name='deployment_cost', source=SOURCES.DEPLOYMENT),
         tasks.ImageIntegerDataCollector(field_name='deployment_group', source=SOURCES.DEPLOYMENT),
         tasks.ImageIntegerDataCollector(field_name='reinforce_cost', source=SOURCES.DEPLOYMENT),
@@ -50,7 +51,11 @@ class NormalizeImperialData(PipelineHelper):
 
         tasks.ImageIntegerDataCollector(field_name='credits', source=SOURCES.UPGRADE),
         tasks.ImageIntegerDataCollector(field_name='influence', source=SOURCES.AGENDA),
-        tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.COMPANION, choices=CARD_TRAITS.as_choices),
+        tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.COMPANION, choices=DEPLOYMENT_TRAITS.as_choices),
+        tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.UPGRADE, choices=UPGRADE_TRAITS.as_choices),
+        tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.SUPPLY, choices=SUPPLY_TRAITS.as_choices),
+        tasks.ImageTextDataCollector(field_name='name', source=SOURCES.SUPPLY),
+        tasks.ImageTextDataCollector(field_name='name', source=SOURCES.UPGRADE),
         tasks.ImageIntegerDataCollector(field_name='xp', source=SOURCES.HERO_CLASS),
 
         tasks.ImageIntegerDataCollector(field_name='cost', source=SOURCES.COMMAND),
@@ -188,6 +193,9 @@ class NormalizeImperialData(PipelineHelper):
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.SUPPLY, fk_field_path=['source', ]
         ),
 
+        base.SortDataByAttrs('id', source=SOURCES.SOURCE),
+        base.SortDataKeys(source=SOURCES.SOURCE, preferred_order=['id', 'name', 'type', 'wave']),
+
         # Images handling
         tasks.RenameImages(root='./images', source=SOURCES.DEPLOYMENT, file_attr='image_file', attrs_for_filename=['name', 'description', 'elite', 'modes']),
         tasks.RenameImages(root='./images', source=SOURCES.CARD, file_attr='image_file', attrs_for_filename=['deck', 'variant']),
@@ -205,6 +213,7 @@ class NormalizeImperialData(PipelineHelper):
         tasks.RenameImages(root='./images', source=SOURCES.SKIRMISH_MAP, file_attr='image_file', attrs_for_filename=['name', ]),
         tasks.RenameImages(root='./images', source=SOURCES.UPGRADE, file_attr='image_file', attrs_for_filename=['name', ]),
         tasks.RenameImages(root='./images', source=SOURCES.SUPPLY, file_attr='image_file', attrs_for_filename=['name', ]),
+        tasks.RenameImages(root='./images', source=SOURCES.SOURCE, file_attr='image_file', attrs_for_filename=['name', ]),
         tasks.ClassHeroRenameImages(root='./images', source=SOURCES.HERO_CLASS, file_attr='image_file', attrs_for_filename=['name', ]),
 
 
@@ -223,6 +232,7 @@ class NormalizeImperialData(PipelineHelper):
         base.RemoveField(field_name='hash', source=SOURCES.SUPPLY),
 
         base.RemoveField(field_name='image', source=SOURCES.CARD),
+        base.RemoveField(field_name='image', source=SOURCES.SOURCE),
         base.RemoveField(field_name='image', source=SOURCES.COMMAND),
         base.RemoveField(field_name='image', source=SOURCES.AGENDA),
         base.RemoveField(field_name='image', source=SOURCES.DEPLOYMENT),
@@ -234,6 +244,7 @@ class NormalizeImperialData(PipelineHelper):
         base.RemoveField(field_name='image', source=SOURCES.THREAT_MISSION),
         base.RemoveField(field_name='image', source=SOURCES.SUPPLY),
 
+        base.RenameField(field_name='image_file', source=SOURCES.SOURCE, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.CARD, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.COMMAND, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.AGENDA, new_name='image'),
@@ -269,7 +280,7 @@ class NormalizeImperialData(PipelineHelper):
 
         base.SaveData('./data/', SOURCES.as_list),
     ]
-# sources, supply, upgrade traits, supply traits
+# sources
 
 def main():
     NormalizeImperialData().run()

@@ -79,7 +79,7 @@ class AFFILIATION:
     ]
 
 
-class CARD_TRAITS:
+class DEPLOYMENT_TRAITS:
     SPY = 'Spy'
     BRAWLER = 'Brawler'
     FORCE_USER = 'Force User'
@@ -129,3 +129,80 @@ DEPLOYMENT_CARD_PREFERRED_ATTR_ORDER = [
     "image_file",
     "source",
 ]
+
+class UPGRADE_TRAITS:
+    ACCESSORY = 'Accessory'
+    ARMOR = 'Armor'
+    BALANCE = 'Balance'
+    BARREL = 'Barrel'
+    BLADE = 'Blade'
+    BLASTER = 'Blaster'
+    CLUB = 'Club'
+    CONSUMABLE = 'Consumable'
+    DISRUPTOR = 'Disruptor'
+    ENERGY = 'Energy'
+    ENHANCEMENT = 'Enhancement'
+    EXPLOSIVE = 'Explosive'
+    FIST = 'Fist'
+    HEAVY = 'Heavy'
+    HELMET = 'Helmet'
+    IMPACT = 'Impact'
+    LIGHT = 'Light'
+    MEDICAL = 'Medical'
+    MEDIUM = 'Medium'
+    MODIFICATION = 'Modification'
+    PISTOL = 'Pistol'
+    PROJECTILE = 'Projectile'
+    RIFLE = 'Rifle'
+    SIGHTS = 'Sights'
+    STAFF = 'Staff'
+
+    as_choices = (
+        (ACCESSORY, ACCESSORY),
+        (ARMOR, ARMOR),
+        (BALANCE, BALANCE),
+        (BARREL, BARREL),
+        (BLADE, BLADE),
+        (BLASTER, BLASTER),
+        (CLUB, CLUB),
+        (CONSUMABLE, CONSUMABLE),
+        (DISRUPTOR, DISRUPTOR),
+        (ENERGY, ENERGY),
+        (ENHANCEMENT, ENHANCEMENT),
+        (EXPLOSIVE, EXPLOSIVE),
+        (FIST, FIST),
+        (HEAVY, HEAVY),
+        (HELMET, HELMET),
+        (IMPACT, IMPACT),
+        (LIGHT, LIGHT),
+        (MEDICAL, MEDICAL),
+        (MEDIUM, MEDIUM),
+        (MODIFICATION, MODIFICATION),
+        (PISTOL, PISTOL),
+        (PROJECTILE, PROJECTILE),
+        (RIFLE, RIFLE),
+        (SIGHTS, SIGHTS),
+        (STAFF, STAFF),
+    )
+
+
+class SUPPLY_TRAITS:
+    CONSUMABLE = 'Consumable'
+    DROID = 'Droid'
+    ENERGY = 'Energy'
+    EXPLOSIVE = 'Explosive'
+    INTEL = 'Intel'
+    MEDICAL = 'Medical'
+    TOOL = 'Tool'
+    VALUABLE = 'Valuable'
+
+    as_choices = (
+        (CONSUMABLE, CONSUMABLE),
+        (DROID, DROID),
+        (ENERGY, ENERGY),
+        (EXPLOSIVE, EXPLOSIVE),
+        (INTEL, INTEL),
+        (MEDICAL, MEDICAL),
+        (TOOL, TOOL),
+        (VALUABLE, VALUABLE),
+    )
