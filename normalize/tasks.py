@@ -281,6 +281,8 @@ class RenameImages(Task):
                     words.append(a)
             elif isinstance(model[a], str):
                 words.append(model[a])
+            elif isinstance(model[a], int):
+                words.append(str(model[a]))
             elif a == 'modes':
                 if set(model[a]) == set(contants.GAME_MODES.as_list):
                     continue

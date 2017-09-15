@@ -28,6 +28,7 @@ class NormalizeImperialData(PipelineHelper):
         base.AddIds(source=SOURCES.SIDE_MISSION),
         base.AddIds(source=SOURCES.THREAT_MISSION),
         base.AddIds(source=SOURCES.SKIRMISH_MAP),
+        base.AddIds(source=SOURCES.SUPPLY),
         base.SortDataByAttrs('deck', 'variant', source=SOURCES.CARD),
 
         # Data Collection
@@ -66,9 +67,9 @@ class NormalizeImperialData(PipelineHelper):
         base.AddHashes(source=SOURCES.STORY_MISSION, exclude=['image', 'image_file', 'id', 'source']),
         tasks.DeDupMerge(source=SOURCES.STORY_MISSION),
         base.RemoveField(field_name='id', source=SOURCES.STORY_MISSION),
-        base.AddIds(source=SOURCES.STORY_MISSION),
-        base.SortDataByAttrs('id', 'name', source=SOURCES.STORY_MISSION),
+        base.SortDataByAttrs('name', source=SOURCES.STORY_MISSION),
         base.SortDataKeys(source=SOURCES.STORY_MISSION, preferred_order=['id', 'name']),
+        base.AddIds(source=SOURCES.STORY_MISSION),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.STORY_MISSION, fk_field_path=['source', ]
         ),
@@ -78,9 +79,9 @@ class NormalizeImperialData(PipelineHelper):
         base.AddHashes(source=SOURCES.SIDE_MISSION, exclude=['image', 'image_file', 'id', 'source']),
         tasks.DeDupMerge(source=SOURCES.SIDE_MISSION),
         base.RemoveField(field_name='id', source=SOURCES.SIDE_MISSION),
+        base.SortDataByAttrs('name', source=SOURCES.SIDE_MISSION),
+        base.SortDataKeys(source=SOURCES.SIDE_MISSION, preferred_order=['name', 'color', ]),
         base.AddIds(source=SOURCES.SIDE_MISSION),
-        base.SortDataByAttrs('id', 'name', source=SOURCES.SIDE_MISSION),
-        base.SortDataKeys(source=SOURCES.SIDE_MISSION, preferred_order=['id', 'name', 'color']),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.SIDE_MISSION, fk_field_path=['source', ]
         ),
@@ -90,9 +91,9 @@ class NormalizeImperialData(PipelineHelper):
         base.AddHashes(source=SOURCES.THREAT_MISSION, exclude=['image', 'image_file', 'id', 'source']),
         tasks.DeDupMerge(source=SOURCES.THREAT_MISSION),
         base.RemoveField(field_name='id', source=SOURCES.THREAT_MISSION),
+        base.SortDataByAttrs('name', source=SOURCES.THREAT_MISSION),
+        base.SortDataKeys(source=SOURCES.THREAT_MISSION, preferred_order=['name', ]),
         base.AddIds(source=SOURCES.THREAT_MISSION),
-        base.SortDataByAttrs('id', 'name', source=SOURCES.THREAT_MISSION),
-        base.SortDataKeys(source=SOURCES.THREAT_MISSION, preferred_order=['id', 'name']),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.THREAT_MISSION, fk_field_path=['source', ]
         ),
@@ -102,9 +103,9 @@ class NormalizeImperialData(PipelineHelper):
         base.AddHashes(source=SOURCES.REWARD, exclude=['image', 'image_file', 'id', 'source']),
         tasks.DeDupMerge(source=SOURCES.REWARD),
         base.RemoveField(field_name='id', source=SOURCES.REWARD),
+        base.SortDataByAttrs('name', source=SOURCES.REWARD),
+        base.SortDataKeys(source=SOURCES.REWARD, preferred_order=['name', ]),
         base.AddIds(source=SOURCES.REWARD),
-        base.SortDataByAttrs('id', 'name', source=SOURCES.REWARD),
-        base.SortDataKeys(source=SOURCES.REWARD, preferred_order=['id', 'name']),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.REWARD, fk_field_path=['source', ]
         ),
@@ -120,10 +121,10 @@ class NormalizeImperialData(PipelineHelper):
 
         base.AddHashes(source=SOURCES.COMMAND, exclude=['image', 'image_file', 'id', 'source']),
         tasks.DeDupMerge(source=SOURCES.COMMAND),
-        base.SortDataByAttrs('name', 'cost', 'limit', source=SOURCES.COMMAND),
         base.RemoveField(field_name='id', source=SOURCES.COMMAND),
+        base.SortDataByAttrs('name', 'cost', 'limit', source=SOURCES.COMMAND),
+        base.SortDataKeys(source=SOURCES.COMMAND, preferred_order=['name', 'cost', 'limit']),
         base.AddIds(source=SOURCES.COMMAND),
-        base.SortDataKeys(source=SOURCES.COMMAND, preferred_order=['id', 'name', 'cost', 'limit']),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.COMMAND, fk_field_path=['source', ]
         ),
@@ -132,10 +133,10 @@ class NormalizeImperialData(PipelineHelper):
 
         base.AddHashes(source=SOURCES.AGENDA, exclude=['image', 'image_file', 'id', 'source']),
         tasks.DeDupMerge(source=SOURCES.AGENDA),
-        base.SortDataByAttrs('agenda_id', 'influence', 'name', source=SOURCES.AGENDA),
         base.RemoveField(field_name='id', source=SOURCES.AGENDA),
+        base.SortDataByAttrs('agenda_id', 'influence', 'name', source=SOURCES.AGENDA),
+        base.SortDataKeys(source=SOURCES.AGENDA, preferred_order=['name', 'agenda_id', 'influence']),
         base.AddIds(source=SOURCES.AGENDA),
-        base.SortDataKeys(source=SOURCES.AGENDA, preferred_order=['id', 'name', 'agenda_id', 'influence']),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.AGENDA_DECKS, fk_field_path=['source', ]
         ),
@@ -143,10 +144,10 @@ class NormalizeImperialData(PipelineHelper):
 
         base.AddHashes(source=SOURCES.DEPLOYMENT, exclude=['image', 'image_file', 'id', 'source']),
         tasks.DeDupMerge(source=SOURCES.DEPLOYMENT),
+        base.RemoveField(field_name='id', source=SOURCES.DEPLOYMENT),
         base.SortDataByAttrs('name', 'deployment_cost', source=SOURCES.DEPLOYMENT),
         base.SortAttrData(source=SOURCES.DEPLOYMENT, attr='traits'),
         base.SortAttrData(source=SOURCES.DEPLOYMENT, attr='modes'),
-        base.RemoveField(field_name='id', source=SOURCES.DEPLOYMENT),
         base.AddIds(source=SOURCES.DEPLOYMENT),
         base.SortDataKeys(source=SOURCES.DEPLOYMENT, preferred_order=DEPLOYMENT_CARD_PREFERRED_ATTR_ORDER),
         tasks.ForeignKeyBuilder(
@@ -156,10 +157,10 @@ class NormalizeImperialData(PipelineHelper):
 
 
         base.AddHashes(source=SOURCES.IMPERIAL_CLASS_CARD, exclude=['image', 'image_file', 'id', 'source']),
-        base.SortDataByAttrs('class', 'name', source=SOURCES.IMPERIAL_CLASS_CARD),
         base.RemoveField(field_name='id', source=SOURCES.IMPERIAL_CLASS_CARD),
+        base.SortDataByAttrs('class_id', 'name', source=SOURCES.IMPERIAL_CLASS_CARD),
+        base.SortDataKeys(source=SOURCES.IMPERIAL_CLASS_CARD, preferred_order=['class_id', 'name', 'xp']),
         base.AddIds(source=SOURCES.IMPERIAL_CLASS_CARD),
-        base.SortDataKeys(source=SOURCES.IMPERIAL_CLASS_CARD, preferred_order=['id', 'class_id', 'name', 'xp']),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.IMPERIAL_CLASSES, fk_field_path=['source', ],
         ),
@@ -168,6 +169,23 @@ class NormalizeImperialData(PipelineHelper):
 
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.SKIRMISH_MAP, fk_field_path=['source', ]
+        ),
+
+        base.RemoveField(field_name='id', source=SOURCES.UPGRADE),
+        base.SortDataByAttrs('tier', 'name', source=SOURCES.UPGRADE),
+        base.SortDataKeys(source=SOURCES.UPGRADE, preferred_order=['tier', 'name', 'credits']),
+        base.AddIds(source=SOURCES.UPGRADE),
+        tasks.ForeignKeyBuilder(
+            source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.UPGRADE, fk_field_path=['source', ]
+        ),
+
+
+        base.RemoveField(field_name='id', source=SOURCES.SUPPLY),
+        base.SortDataByAttrs('name', source=SOURCES.SUPPLY),
+        base.SortDataKeys(source=SOURCES.SUPPLY, preferred_order=['name', ]),
+        base.AddIds(source=SOURCES.SUPPLY),
+        tasks.ForeignKeyBuilder(
+            source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.SUPPLY, fk_field_path=['source', ]
         ),
 
         # Images handling
@@ -185,6 +203,8 @@ class NormalizeImperialData(PipelineHelper):
         tasks.RenameImages(root='./images', source=SOURCES.STORY_MISSION, file_attr='image_file', attrs_for_filename=['name', ]),
         tasks.RenameImages(root='./images', source=SOURCES.THREAT_MISSION, file_attr='image_file', attrs_for_filename=['name', ]),
         tasks.RenameImages(root='./images', source=SOURCES.SKIRMISH_MAP, file_attr='image_file', attrs_for_filename=['name', ]),
+        tasks.RenameImages(root='./images', source=SOURCES.UPGRADE, file_attr='image_file', attrs_for_filename=['name', ]),
+        tasks.RenameImages(root='./images', source=SOURCES.SUPPLY, file_attr='image_file', attrs_for_filename=['name', ]),
         tasks.ClassHeroRenameImages(root='./images', source=SOURCES.HERO_CLASS, file_attr='image_file', attrs_for_filename=['name', ]),
 
 
@@ -226,6 +246,7 @@ class NormalizeImperialData(PipelineHelper):
         base.RenameField(field_name='image_file', source=SOURCES.SIDE_MISSION, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.THREAT_MISSION, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.SKIRMISH_MAP, new_name='image'),
+        base.RenameField(field_name='image_file', source=SOURCES.UPGRADE, new_name='image'),
 
         base.RenameField(field_name='hero', source=SOURCES.HERO_CLASS, new_name='hero_id'),
         base.SortDataKeys(source=SOURCES.HERO_CLASS, preferred_order=['id', 'name', 'hero_id', 'xp', 'image']),
@@ -241,10 +262,11 @@ class NormalizeImperialData(PipelineHelper):
         base.RemoveField(field_name='source', source=SOURCES.SIDE_MISSION),
         base.RemoveField(field_name='source', source=SOURCES.THREAT_MISSION),
         base.RemoveField(field_name='source', source=SOURCES.SKIRMISH_MAP),
+        base.RemoveField(field_name='source', source=SOURCES.UPGRADE),
 
         base.SaveData('./data/', SOURCES.as_list),
     ]
-# skirmish ams,sources, sorty missions, supply, upgrade
+# sources, supply
 
 def main():
     NormalizeImperialData().run()
