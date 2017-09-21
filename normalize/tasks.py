@@ -1,15 +1,20 @@
 import os
+import math
+import struct
+import imghdr
 import re
 import subprocess
 import time
 from io import BytesIO
 from collections import Counter, OrderedDict
 
+from PIL import Image
 from look_at.wmctrl import WmCtrl
 
 from normalize import base
 from normalize.manager import Task
 from normalize import contants
+
 
 
 class ImageAppendChoiceDataCollector(base.ShowImageMixin, base.AppendChoiceDataCollector):
@@ -375,7 +380,7 @@ class ImperialClassCardToClass(Task):
 
 class AgendaCardToDeck(Task):
     @classmethod
-    def process(self, data_helper):
+    def process(cls, data_helper):
         done = []
         id_inc = -1
 
@@ -406,3 +411,114 @@ class CollectSources(ImageChoiceDataCollector):
     def pre_process(self, data_helper):
         self.choices = [(x['id'], x['name']) for x in data_helper.data[contants.SOURCES.SOURCE]]
         return data_helper
+
+
+class StandardImageDimension(Task):
+    sources = None
+    image_attrs = []
+
+    def __init__(self, sources=None, image_attrs=None, min_width=None, min_height=None):
+        super(StandardImageDimension, self).__init__()
+        self.sources = sources or self.sources
+        self.image_attrs = image_attrs or self.image_attrs
+
+        self.min_width = min_width
+        self.min_height = min_height
+
+    def get_dimensions_summary(self, data_helper):
+        widths = []
+        heights = []
+        for source in self.sources:
+            for model in data_helper.data[source]:
+                for attr in self.image_attrs:
+                    path = model.get(attr, None)
+                    if path is None:
+                        continue
+                    width, height = self.get_image_size(path)
+                    widths.append(width)
+                    heights.append(height)
+        summary = {}
+
+        if widths and heights:
+            summary['max_width'] = max(widths)
+            summary['min_width'] = min(widths)
+            summary['max_height'] = max(heights)
+            summary['min_height'] = min(heights)
+
+            self.log.info(f'Dimensions for sources={self.sources!r} and image_attrs={self.image_attrs!r}')
+            self.log.info(f'Max width: {summary["max_width"]}')
+            self.log.info(f'Min width: {summary["min_width"]}')
+            self.log.info(f'Max height: {summary["max_height"]}')
+            self.log.info(f'Min height: {summary["min_height"]}')
+
+        return summary
+
+    def pre_process(self, data_helper):
+        summary = self.get_dimensions_summary(data_helper)
+
+        if self.min_width is None:
+            self.min_width = summary["min_width"]
+        if self.min_height is None:
+            self.min_height = summary["min_height"]
+        return data_helper
+
+    def post_process(self, data_helper):
+        self.get_dimensions_summary(data_helper)
+        return data_helper
+
+    def process(self, data_helper):
+        if self.min_width and self.min_height:
+
+            for source in self.sources:
+                for model in data_helper.data[source]:
+                    for attr in self.image_attrs:
+                        path = model.get(attr, None)
+                        if path is not None:
+                            im = Image.open(path)
+                            im = im.convert("RGBA")
+                            im.thumbnail((self.min_width, self.min_height), Image.ANTIALIAS)
+                            old_width, old_height = im.size
+                            x1 = int(math.floor((self.min_width - old_width) / 2))
+                            y1 = int(math.floor((self.min_height - old_height) / 2))
+                            new_image = Image.new(im.mode, (self.min_width, self.min_height))
+                            new_image.paste(im, (x1, y1, x1 + old_width, y1 + old_height))
+                            new_image.save(path)
+        else:
+            self.log.error('No dimensions found for images')
+        return data_helper
+
+    @staticmethod
+    def get_image_size(fname):
+        # https://stackoverflow.com/questions/8032642/how-to-obtain-image-size-using-standard-python-class-without-using-external-lib/20380514#20380514
+        with open(fname, 'rb') as fhandle:
+            head = fhandle.read(24)
+            if len(head) != 24:
+                return
+            if imghdr.what(fname) == 'png':
+                check = struct.unpack('>i', head[4:8])[0]
+                if check != 0x0d0a1a0a:
+                    return
+                width, height = struct.unpack('>ii', head[16:24])
+            elif imghdr.what(fname) == 'gif':
+                width, height = struct.unpack('<HH', head[6:10])
+            elif imghdr.what(fname) == 'jpeg':
+                try:
+                    fhandle.seek(0) # Read 0xff next
+                    size = 2
+                    ftype = 0
+                    while not 0xc0 <= ftype <= 0xcf:
+                        fhandle.seek(size, 1)
+                        byte = fhandle.read(1)
+                        while ord(byte) == 0xff:
+                            byte = fhandle.read(1)
+                        ftype = ord(byte)
+                        size = struct.unpack('>H', fhandle.read(2))[0] - 2
+                    # We are at a SOFn block
+                    fhandle.seek(1, 1)  # Skip `precision' byte.
+                    height, width = struct.unpack('>HH', fhandle.read(4))
+                except Exception:  #IGNORE:W0703
+                    return
+            else:
+                return
+            return width, height
+

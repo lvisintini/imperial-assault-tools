@@ -278,6 +278,21 @@ class NormalizeImperialData(PipelineHelper):
         base.RemoveField(field_name='source', source=SOURCES.SKIRMISH_MAP),
         base.RemoveField(field_name='source', source=SOURCES.UPGRADE),
 
+        tasks.StandardImageDimension(sources=[SOURCES.HERO, ], image_attrs=['healthy', 'wounded']),
+        tasks.StandardImageDimension(sources=[SOURCES.HERO_CLASS, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.DEPLOYMENT, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.COMMAND, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.AGENDA, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.CONDITION, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.UPGRADE, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.SUPPLY, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.REWARD, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.STORY_MISSION, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.SIDE_MISSION, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.THREAT_MISSION, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.IMPERIAL_CLASS_CARD, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.SOURCE, ], image_attrs=['image', ]),
+
         base.SaveData('./data/', SOURCES.as_list),
     ]
 # sources
