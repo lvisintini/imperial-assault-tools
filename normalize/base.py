@@ -270,6 +270,19 @@ class ChoiceDataCollector(DataCollector):
         )
 
 
+class BooleanChoiceDataCollector(ChoiceDataCollector):
+    choices = [
+        (True, 'False'),
+        (False, 'True'),
+    ]
+
+    def __init__(self, **kwargs):
+        if 'choices' in kwargs:
+            self.log.warning('You should not be providing choices for a BooleanChoiceDataCollector Task')
+            kwargs.pop('choices')
+        super(BooleanChoiceDataCollector, self).__init__(**kwargs)
+
+
 class AppendChoiceDataCollector(ChoiceDataCollector):
     done_input = '*'
     accept_duplicates = False

@@ -33,6 +33,10 @@ class ImageTextDataCollector(base.ShowImageMixin, base.TextDataCollector):
     pass
 
 
+class ImageBooleanChoiceDataCollector(base.ShowImageMixin, base.BooleanChoiceDataCollector):
+    pass
+
+
 class ForeignKeyBuilder(Task):
     source = None
     source_pk = 'id'

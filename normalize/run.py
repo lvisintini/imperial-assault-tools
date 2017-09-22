@@ -34,6 +34,7 @@ class NormalizeImperialData(PipelineHelper):
 
         # Data Collection
         tasks.ImageChoiceDataCollector(field_name='affiliation', source=SOURCES.DEPLOYMENT, choices=AFFILIATION.as_choices),
+        tasks.ImageBooleanChoiceDataCollector(field_name='mission', source=SOURCES.AGENDA),
         tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.DEPLOYMENT, choices=DEPLOYMENT_TRAITS.as_choices),
         tasks.ImageIntegerDataCollector(field_name='deployment_cost', source=SOURCES.DEPLOYMENT),
         tasks.ImageIntegerDataCollector(field_name='deployment_group', source=SOURCES.DEPLOYMENT),
@@ -261,6 +262,7 @@ class NormalizeImperialData(PipelineHelper):
         base.RenameField(field_name='image_file', source=SOURCES.SKIRMISH_MAP, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.UPGRADE, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.SUPPLY, new_name='image'),
+        base.RenameField(field_name='image_file', source=SOURCES.COMPANION, new_name='image'),
 
         base.RenameField(field_name='hero', source=SOURCES.HERO_CLASS, new_name='hero_id'),
         base.SortDataKeys(source=SOURCES.HERO_CLASS, preferred_order=['id', 'name', 'hero_id', 'xp', 'image']),
@@ -284,6 +286,7 @@ class NormalizeImperialData(PipelineHelper):
         tasks.StandardImageDimension(sources=[SOURCES.COMMAND, ], image_attrs=['image', ]),
         tasks.StandardImageDimension(sources=[SOURCES.AGENDA, ], image_attrs=['image', ]),
         tasks.StandardImageDimension(sources=[SOURCES.CONDITION, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(sources=[SOURCES.COMPANION, ], image_attrs=['image', ]),
         tasks.StandardImageDimension(sources=[SOURCES.UPGRADE, ], image_attrs=['image', ]),
         tasks.StandardImageDimension(sources=[SOURCES.SUPPLY, ], image_attrs=['image', ]),
         tasks.StandardImageDimension(sources=[SOURCES.REWARD, ], image_attrs=['image', ]),
@@ -296,6 +299,7 @@ class NormalizeImperialData(PipelineHelper):
         base.SaveData('./data/', SOURCES.as_list),
     ]
 # sources
+# http://pythonhosted.org/imreg_dft/quickstart.html#quickstart
 
 def main():
     NormalizeImperialData().run()
