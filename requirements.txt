@@ -4,3 +4,4 @@ Scrapy==1.4.0
 ImageHash==3.4
 Pillow==4.2.1
 requests==2.18.4
+look-at==1.1
