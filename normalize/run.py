@@ -280,10 +280,10 @@ class NormalizeImperialData(PipelineHelper):
         base.RemoveField(field_name='source', source=SOURCES.SKIRMISH_MAP),
         base.RemoveField(field_name='source', source=SOURCES.UPGRADE),
 
-        tasks.OpenCVAlignImages(
-            './images/agenda-cards/defensive-tactics-counter-strike.png',
-            image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: not model['mission']
-        ),
+        #tasks.OpenCVAlignImages(
+        #    './images/agenda-cards/defensive-tactics-counter-strike.png',
+        #    image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: not model['mission']
+        #),
 
         # tasks.StandardImageDimension(sources=[SOURCES.HERO, ], image_attrs=['healthy', 'wounded']),
         # tasks.StandardImageDimension(sources=[SOURCES.HERO_CLASS, ], image_attrs=['image', ]),
