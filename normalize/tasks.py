@@ -15,6 +15,8 @@ from normalize import base
 from normalize.manager import Task
 from normalize import contants
 
+import cv2
+import numpy as np
 
 
 class ImageAppendChoiceDataCollector(base.ShowImageMixin, base.AppendChoiceDataCollector):
@@ -526,3 +528,97 @@ class StandardImageDimension(Task):
                 return
             return width, height
 
+
+class OpenCVSTask(Task):
+    source = None
+    image_attr = None
+    filter = None
+
+    def __init__(self, source=None, image_attr=None, filter_function=None):
+        super(OpenCVSTask, self).__init__()
+        self.source = source or self.source
+        self.image_attr = image_attr or self.image_attr
+        self.filter_function = filter_function or self.filter_function
+
+    def filter(self, model):
+        if self.image_attr not in model:
+            return False
+
+        if self.filter_function is None:
+            return True
+
+        return self.filter_function(model)
+
+    def before_each(self, model, data_helper):
+        pass
+
+    def process(self, data_helper):
+        for model in data_helper.data[self.source]:
+            self.before_each(model, data_helper)
+            if self.filter(model):
+                self.log.info(repr(model))
+                self.opencv_processing(model[self.image_attr])
+        return data_helper
+
+    def opencv_processing(self, model):
+        raise NotImplementedError
+
+
+class OpenCVAlignImages(base.ShowImageMixin, OpenCVSTask):
+
+    def __init__(self, reference_image_path, **kwargs):
+        super().__init__(**kwargs)
+        self.reference_image_path = reference_image_path
+
+    def opencv_processing(self, image_path):
+        # https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
+
+        if self.reference_image_path == image_path:
+            return
+
+        # Read the images to be aligned
+        im1 = cv2.imread(self.reference_image_path)
+        im2 = cv2.imread(image_path)
+
+        # Convert images to grayscale
+        im1_gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
+        im2_gray = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
+
+        # Find size of image1
+        sz = im1.shape
+
+        # Define the motion model
+        warp_mode = cv2.MOTION_EUCLIDEAN
+
+        # Define 2x3 or 3x3 matrices and initialize the matrix to identity
+        if warp_mode == cv2.MOTION_HOMOGRAPHY:
+            warp_matrix = np.eye(3, 3, dtype=np.float32)
+        else:
+            warp_matrix = np.eye(2, 3, dtype=np.float32)
+
+        # Specify the number of iterations.
+        number_of_iterations = 5000
+
+        # Specify the threshold of the increment
+        # in the correlation coefficient between two iterations
+        termination_eps = 1e-10
+
+        # Define termination criteria
+        criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, number_of_iterations,  termination_eps)
+
+        # Run the ECC algorithm. The results are stored in warp_matrix.
+        (cc, warp_matrix) = cv2.findTransformECC(im1_gray, im2_gray, warp_matrix, warp_mode, criteria)
+
+        if warp_mode == cv2.MOTION_HOMOGRAPHY:
+            # Use warpPerspective for Homography
+            im2_aligned = cv2.warpPerspective(
+                im2, warp_matrix, (sz[1], sz[0]), flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP
+            )
+        else:
+            # Use warpAffine for Translation, Euclidean and Affine
+            im2_aligned = cv2.warpAffine(
+                im2, warp_matrix, (sz[1], sz[0]), flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP
+            )
+        #cv2.imshow('img-windows', im2_aligned)
+        #cv2.waitKey(3)
+        cv2.imwrite(image_path.replace('./images/', './simages/'), im2_aligned)

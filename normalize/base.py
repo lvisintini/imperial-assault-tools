@@ -272,8 +272,8 @@ class ChoiceDataCollector(DataCollector):
 
 class BooleanChoiceDataCollector(ChoiceDataCollector):
     choices = [
-        (True, 'False'),
-        (False, 'True'),
+        (False, 'False'),
+        (True, 'True'),
     ]
 
     def __init__(self, **kwargs):
@@ -564,7 +564,7 @@ class ShowImageMixin(object):
 
     def __init__(self, *args, image_attr=None, **kwargs):
         self.image_attr = image_attr if image_attr is not None else self.image_attr
-        super(ShowImageMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.viewers = []
         self.active_window = WmCtrl().get_active_window()
         # This is because this lib is not python3 ready ...
@@ -582,7 +582,7 @@ class ShowImageMixin(object):
             self.viewers = []
 
     def process(self, *args, **kwargs):
-        res = super(ShowImageMixin, self).process(*args, **kwargs)
+        res = super().process(*args, **kwargs)
         for p in self.viewers:
             p.terminate()
             p.kill()
