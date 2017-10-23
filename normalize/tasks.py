@@ -579,12 +579,12 @@ class OpenCVAlignImages(OpenCVSTask):
             return
 
         # Read the images to be aligned
-        im1 = cv2.imread(os.path.abspath(os.path.join(self.root, self.reference_image_path)), cv2.IMREAD_UNCHANGED)
-        im2 = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)), cv2.IMREAD_UNCHANGED)
+        im1 = cv2.imread(os.path.abspath(os.path.join(self.root, self.reference_image_path)))
+        im2 = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)))
 
         # Convert images to grayscale
-        im1_gray = cv2.cvtColor(im1, cv2.COLOR_BGRA2GRAY)
-        im2_gray = cv2.cvtColor(im2, cv2.COLOR_BGRA2GRAY)
+        im1_gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
+        im2_gray = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
 
         # Find size of image1
         sz = im1.shape
@@ -606,7 +606,7 @@ class OpenCVAlignImages(OpenCVSTask):
         termination_eps = 1e-10
 
         # Define termination criteria
-        criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, number_of_iterations,  termination_eps)
+        criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, number_of_iterations, termination_eps)
 
         # Run the ECC algorithm. The results are stored in warp_matrix.
         (cc, warp_matrix) = cv2.findTransformECC(im1_gray, im2_gray, warp_matrix, warp_mode, criteria)
@@ -616,17 +616,16 @@ class OpenCVAlignImages(OpenCVSTask):
             im2_aligned = cv2.warpPerspective(
                 im2, warp_matrix, (sz[1], sz[0]),
                 flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
-                #borderMode=cv2.BORDER_TRANSPARENT,
-                #borderMode=cv2.BORDER_CONSTANT, borderValue=[0, 0, 0, 0]
             )
         else:
             # Use warpAffine for Translation, Euclidean and Affine
             im2_aligned = cv2.warpAffine(
                 im2, warp_matrix, (sz[1], sz[0]),
                 flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
-                #borderMode=cv2.BORDER_TRANSPARENT,
-                #borderMode=cv2.BORDER_CONSTANT, borderValue=[0, 0, 0, 0]
             )
+
+        cv2.imshow("Aligned Image 2", im2_aligned)
+        cv2.waitKey(0)
 
         cv2.imwrite(
             os.path.abspath(os.path.join(self.root, image_path.replace('./images/', './simages/'))),
