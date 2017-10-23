@@ -1,10 +1,21 @@
 import logging
 from colorlog import ColoredFormatter
+from tqdm import tqdm
+
+
+class TqdmHandler(logging.StreamHandler):
+    def __init__(self):
+        logging.StreamHandler.__init__(self)
+
+    def emit(self, record):
+        msg = self.format(record)
+        tqdm.write(msg)
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-ch = logging.StreamHandler()
+ch = TqdmHandler()
 ch.setLevel(logging.DEBUG)
 
 color_formatter = ColoredFormatter(

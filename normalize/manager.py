@@ -1,5 +1,6 @@
 import logging
 from types import MethodType
+from tqdm import tqdm
 
 
 class DataHelperInstanceNotReturnedError(Exception):
@@ -24,7 +25,7 @@ class PipelineHelper(object):
         self.data_helper.log = logger
 
     def run(self):
-        for task in self.tasks:
+        for task in tqdm(self.tasks, desc='Setups ...'):
             try:
                 self.data_helper = task.do_setup(self.data_helper)
             except Exception as e:
@@ -32,7 +33,7 @@ class PipelineHelper(object):
                 break
             self.log.debug('Success: Setup for {!r}'.format(task))
 
-        for task in self.tasks:
+        for task in tqdm(self.tasks, desc='Processes ...'):
             try:
                 self.data_helper = task.do_pre_process(self.data_helper)
             except Exception as e:
@@ -40,7 +41,6 @@ class PipelineHelper(object):
                 self.log.exception(e)
                 break
             self.log.debug('Success: Pre-Process for {!r}'.format(task))
-
 
             try:
                 self.data_helper = task.do_process(self.data_helper)
@@ -58,7 +58,7 @@ class PipelineHelper(object):
                 break
             self.log.debug('Success: Post-Process for {!r}'.format(task))
 
-        for task in self.tasks:
+        for task in tqdm(self.tasks, desc='Teardowns'):
             try:
                 self.data_helper = task.do_teardown(self.data_helper)
             except Exception as e:

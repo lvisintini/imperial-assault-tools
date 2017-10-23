@@ -8,15 +8,15 @@ import time
 from io import BytesIO
 from collections import Counter, OrderedDict
 
-from PIL import Image
+import cv2
+import numpy
 from look_at.wmctrl import WmCtrl
+from PIL import Image
+from tqdm import tqdm
 
 from normalize import base
 from normalize.manager import Task
 from normalize import contants
-
-import cv2
-import numpy as np
 
 
 class ImageAppendChoiceDataCollector(base.ShowImageMixin, base.AppendChoiceDataCollector):
@@ -533,12 +533,14 @@ class OpenCVSTask(Task):
     source = None
     image_attr = None
     filter = None
+    root = '.'
 
-    def __init__(self, source=None, image_attr=None, filter_function=None):
+    def __init__(self, source=None, image_attr=None, filter_function=None, root=None):
         super(OpenCVSTask, self).__init__()
         self.source = source or self.source
         self.image_attr = image_attr or self.image_attr
         self.filter_function = filter_function or self.filter_function
+        self.root = root or self.root
 
     def filter(self, model):
         if self.image_attr not in model:
@@ -553,7 +555,7 @@ class OpenCVSTask(Task):
         pass
 
     def process(self, data_helper):
-        for model in data_helper.data[self.source]:
+        for model in tqdm(data_helper.data[self.source], desc='Aligning images'):
             self.before_each(model, data_helper)
             if self.filter(model):
                 self.log.info(repr(model))
@@ -564,7 +566,7 @@ class OpenCVSTask(Task):
         raise NotImplementedError
 
 
-class OpenCVAlignImages(base.ShowImageMixin, OpenCVSTask):
+class OpenCVAlignImages(OpenCVSTask):
 
     def __init__(self, reference_image_path, **kwargs):
         super().__init__(**kwargs)
@@ -577,12 +579,12 @@ class OpenCVAlignImages(base.ShowImageMixin, OpenCVSTask):
             return
 
         # Read the images to be aligned
-        im1 = cv2.imread(self.reference_image_path)
-        im2 = cv2.imread(image_path)
+        im1 = cv2.imread(os.path.abspath(os.path.join(self.root, self.reference_image_path)), cv2.IMREAD_UNCHANGED)
+        im2 = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)), cv2.IMREAD_UNCHANGED)
 
         # Convert images to grayscale
-        im1_gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
-        im2_gray = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
+        im1_gray = cv2.cvtColor(im1, cv2.COLOR_BGRA2GRAY)
+        im2_gray = cv2.cvtColor(im2, cv2.COLOR_BGRA2GRAY)
 
         # Find size of image1
         sz = im1.shape
@@ -592,9 +594,9 @@ class OpenCVAlignImages(base.ShowImageMixin, OpenCVSTask):
 
         # Define 2x3 or 3x3 matrices and initialize the matrix to identity
         if warp_mode == cv2.MOTION_HOMOGRAPHY:
-            warp_matrix = np.eye(3, 3, dtype=np.float32)
+            warp_matrix = numpy.eye(3, 3, dtype=numpy.float32)
         else:
-            warp_matrix = np.eye(2, 3, dtype=np.float32)
+            warp_matrix = numpy.eye(2, 3, dtype=numpy.float32)
 
         # Specify the number of iterations.
         number_of_iterations = 5000
@@ -612,13 +614,22 @@ class OpenCVAlignImages(base.ShowImageMixin, OpenCVSTask):
         if warp_mode == cv2.MOTION_HOMOGRAPHY:
             # Use warpPerspective for Homography
             im2_aligned = cv2.warpPerspective(
-                im2, warp_matrix, (sz[1], sz[0]), flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP
+                im2, warp_matrix, (sz[1], sz[0]),
+                flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
+                #borderMode=cv2.BORDER_TRANSPARENT,
+                #borderMode=cv2.BORDER_CONSTANT, borderValue=[0, 0, 0, 0]
             )
         else:
             # Use warpAffine for Translation, Euclidean and Affine
             im2_aligned = cv2.warpAffine(
-                im2, warp_matrix, (sz[1], sz[0]), flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP
+                im2, warp_matrix, (sz[1], sz[0]),
+                flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
+                #borderMode=cv2.BORDER_TRANSPARENT,
+                #borderMode=cv2.BORDER_CONSTANT, borderValue=[0, 0, 0, 0]
             )
-        #cv2.imshow('img-windows', im2_aligned)
-        #cv2.waitKey(3)
-        cv2.imwrite(image_path.replace('./images/', './simages/'), im2_aligned)
+
+        cv2.imwrite(
+            os.path.abspath(os.path.join(self.root, image_path.replace('./images/', './simages/'))),
+            im2_aligned,
+            [cv2.IMWRITE_PNG_COMPRESSION, 0]
+        )

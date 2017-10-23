@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+print(__name__)
+
 # Read the images to be aligned
 #im1 = cv2.imread("./raw-images/agenda-cards/070b4d452d2d0f09.png")  # Good one
 im1 = cv2.imread("./images/agenda-cards/defensive-tactics-counter-strike.png")  # Good one
