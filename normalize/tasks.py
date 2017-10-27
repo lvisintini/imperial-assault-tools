@@ -475,20 +475,21 @@ class StandardImageDimension(Task):
     def process(self, data_helper):
         if self.min_width and self.min_height:
 
-            for source in self.sources:
-                for model in data_helper.data[source]:
+            for source in tqdm(self.sources):
+                for model in tqdm(data_helper.data[source]):
                     for attr in self.image_attrs:
                         path = model.get(attr, None)
                         if path is not None:
                             im = Image.open(path)
                             im = im.convert("RGBA")
                             im.thumbnail((self.min_width, self.min_height), Image.ANTIALIAS)
-                            old_width, old_height = im.size
-                            x1 = int(math.floor((self.min_width - old_width) / 2))
-                            y1 = int(math.floor((self.min_height - old_height) / 2))
-                            new_image = Image.new(im.mode, (self.min_width, self.min_height))
-                            new_image.paste(im, (x1, y1, x1 + old_width, y1 + old_height))
-                            new_image.save(path)
+                            im.save(path)
+                            #old_width, old_height = im.size
+                            #x1 = int(math.floor((self.min_width - old_width) / 2))
+                            #y1 = int(math.floor((self.min_height - old_height) / 2))
+                            #new_image = Image.new(im.mode, (self.min_width, self.min_height))
+                            #new_image.paste(im, (x1, y1, x1 + old_width, y1 + old_height))
+                            #new_image.save(path)
         else:
             self.log.error('No dimensions found for images')
         return data_helper
@@ -534,6 +535,7 @@ class OpenCVSTask(Task):
     image_attr = None
     filter = None
     root = '.'
+    filter_function = None
 
     def __init__(self, source=None, image_attr=None, filter_function=None, root=None):
         super(OpenCVSTask, self).__init__()
@@ -555,11 +557,10 @@ class OpenCVSTask(Task):
         pass
 
     def process(self, data_helper):
-        for model in tqdm(data_helper.data[self.source], desc='Aligning images'):
+        for model in tqdm([m for m in data_helper.data[self.source] if self.filter(m)], desc='Aligning images'):
             self.before_each(model, data_helper)
-            if self.filter(model):
-                self.log.info(repr(model))
-                self.opencv_processing(model[self.image_attr])
+            self.log.info(repr(model))
+            self.opencv_processing(model[self.image_attr])
         return data_helper
 
     def opencv_processing(self, model):
@@ -574,23 +575,27 @@ class OpenCVAlignImages(OpenCVSTask):
 
     def opencv_processing(self, image_path):
         # https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
+        destination_path = os.path.abspath(os.path.join(self.root, image_path.replace('./images/', './simages/')))
 
         if self.reference_image_path == image_path:
-            return
+            if not os.path.exists(os.path.split(destination_path)[0]):
+                os.makedirs(os.path.split(destination_path)[0])
+            im = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)), cv2.IMREAD_UNCHANGED)
+            cv2.imwrite(destination_path, im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
         # Read the images to be aligned
-        im1 = cv2.imread(os.path.abspath(os.path.join(self.root, self.reference_image_path)))
-        im2 = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)))
+        im1 = cv2.imread(os.path.abspath(os.path.join(self.root, self.reference_image_path)), cv2.IMREAD_UNCHANGED)
+        im2 = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)), cv2.IMREAD_UNCHANGED)
 
         # Convert images to grayscale
-        im1_gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
-        im2_gray = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
+        im1_gray = cv2.cvtColor(im1, cv2.COLOR_RGBA2GRAY)
+        im2_gray = cv2.cvtColor(im2, cv2.COLOR_RGBA2GRAY)
 
         # Find size of image1
         sz = im1.shape
 
         # Define the motion model
-        warp_mode = cv2.MOTION_EUCLIDEAN
+        warp_mode = cv2.MOTION_AFFINE
 
         # Define 2x3 or 3x3 matrices and initialize the matrix to identity
         if warp_mode == cv2.MOTION_HOMOGRAPHY:
@@ -616,19 +621,19 @@ class OpenCVAlignImages(OpenCVSTask):
             im2_aligned = cv2.warpPerspective(
                 im2, warp_matrix, (sz[1], sz[0]),
                 flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
+                #borderMode=cv2.BORDER_TRANSPARENT,
+                borderMode=cv2.BORDER_CONSTANT, borderValue=[255, 255, 255, 0]
             )
         else:
             # Use warpAffine for Translation, Euclidean and Affine
             im2_aligned = cv2.warpAffine(
                 im2, warp_matrix, (sz[1], sz[0]),
                 flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
+                #borderMode=cv2.BORDER_TRANSPARENT,
+                borderMode=cv2.BORDER_CONSTANT, borderValue=[255, 255, 255, 0]
             )
 
-        cv2.imshow("Aligned Image 2", im2_aligned)
-        cv2.waitKey(0)
+        if not os.path.exists(os.path.split(destination_path)[0]):
+            os.makedirs(os.path.split(destination_path)[0])
 
-        cv2.imwrite(
-            os.path.abspath(os.path.join(self.root, image_path.replace('./images/', './simages/'))),
-            im2_aligned,
-            [cv2.IMWRITE_PNG_COMPRESSION, 0]
-        )
+        cv2.imwrite(destination_path, im2_aligned, [cv2.IMWRITE_PNG_COMPRESSION, 0])

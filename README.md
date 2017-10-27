@@ -1,3 +1,5 @@
+Install Opencv 3 as well -> [Instructions](http://www.pyimagesearch.com/2015/07/20/install-opencv-3-0-and-python-3-4-on-ubuntu/)
+
 ```
 sudo add-apt-repository ppa:jonathonf/python-3.6
 sudo apt update
