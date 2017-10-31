@@ -1,10 +1,10 @@
 import os
-import math
 import struct
 import imghdr
 import re
 import subprocess
 import time
+import uuid
 from io import BytesIO
 from collections import Counter, OrderedDict
 
@@ -571,17 +571,25 @@ class OpenCVAlignImages(OpenCVSTask):
 
     def __init__(self, reference_image_path, **kwargs):
         super().__init__(**kwargs)
+        self.uuid = str(uuid.uuid4())
         self.reference_image_path = reference_image_path
 
     def opencv_processing(self, image_path):
         # https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
-        destination_path = os.path.abspath(os.path.join(self.root, image_path.replace('./images/', './simages/')))
+        destination_path = os.path.split(
+            os.path.abspath(os.path.join(self.root, image_path.replace('./images/', './simages/')))
+        )
+        result_destination_path = os.path.join(destination_path[0], self.uuid, 'aligned', destination_path[1])
+        original_destination_path = os.path.join(destination_path[0], self.uuid, 'not-aligned', destination_path[1])
 
         if self.reference_image_path == image_path:
-            if not os.path.exists(os.path.split(destination_path)[0]):
-                os.makedirs(os.path.split(destination_path)[0])
+            if not os.path.exists(os.path.split(result_destination_path)[0]):
+                os.makedirs(os.path.split(result_destination_path)[0])
+            if not os.path.exists(os.path.split(original_destination_path)[0]):
+                os.makedirs(os.path.split(original_destination_path)[0])
             im = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)), cv2.IMREAD_UNCHANGED)
-            cv2.imwrite(destination_path, im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            cv2.imwrite(result_destination_path, im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            cv2.imwrite(original_destination_path, im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
         # Read the images to be aligned
         im1 = cv2.imread(os.path.abspath(os.path.join(self.root, self.reference_image_path)), cv2.IMREAD_UNCHANGED)
@@ -633,7 +641,11 @@ class OpenCVAlignImages(OpenCVSTask):
                 borderMode=cv2.BORDER_CONSTANT, borderValue=[255, 255, 255, 0]
             )
 
-        if not os.path.exists(os.path.split(destination_path)[0]):
-            os.makedirs(os.path.split(destination_path)[0])
+        if not os.path.exists(os.path.split(result_destination_path)[0]):
+            os.makedirs(os.path.split(result_destination_path)[0])
 
-        cv2.imwrite(destination_path, im2_aligned, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        if not os.path.exists(os.path.split(original_destination_path)[0]):
+            os.makedirs(os.path.split(original_destination_path)[0])
+
+        cv2.imwrite(result_destination_path, im2_aligned, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        cv2.imwrite(original_destination_path, im2, [cv2.IMWRITE_PNG_COMPRESSION, 0])

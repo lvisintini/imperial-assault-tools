@@ -148,6 +148,7 @@ class UPGRADE_TRAITS:
     HELMET = 'Helmet'
     IMPACT = 'Impact'
     LIGHT = 'Light'
+    LIGHTSABER = 'Lightsaber'
     MEDICAL = 'Medical'
     MEDIUM = 'Medium'
     MODIFICATION = 'Modification'
@@ -175,6 +176,7 @@ class UPGRADE_TRAITS:
         (HELMET, HELMET),
         (IMPACT, IMPACT),
         (LIGHT, LIGHT),
+        (LIGHTSABER, LIGHTSABER),
         (MEDICAL, MEDICAL),
         (MEDIUM, MEDIUM),
         (MODIFICATION, MODIFICATION),
@@ -183,6 +185,26 @@ class UPGRADE_TRAITS:
         (RIFLE, RIFLE),
         (SIGHTS, SIGHTS),
         (STAFF, STAFF),
+    )
+
+
+class HERO_CLASS_UPGRADE_TYPES:
+    EQUIPMENT = 'Equipment'
+    MELEE = 'Melee Weapon'
+    RANGED = 'Ranged Weapon'
+    ARMOR = 'Armor'
+    MELEE_MOD = 'Melee Weapon Modification'
+    RANGED_MOD = 'Ranged Weapon Modification'
+    FEAT = 'Feat'
+
+    as_choices = (
+        (EQUIPMENT, EQUIPMENT),
+        (MELEE, MELEE),
+        (RANGED, RANGED),
+        (ARMOR, ARMOR),
+        (MELEE_MOD, MELEE_MOD),
+        (RANGED_MOD, RANGED_MOD),
+        (FEAT, FEAT),
     )
 
 

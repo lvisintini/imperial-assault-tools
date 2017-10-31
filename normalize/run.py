@@ -3,7 +3,7 @@ from normalize import tasks
 from normalize import base
 from normalize.contants import (
     SOURCES, TRUE_FALSE_CHOICES, GAME_MODES, AFFILIATION, DEPLOYMENT_TRAITS, DEPLOYMENT_CARD_PREFERRED_ATTR_ORDER,
-    UPGRADE_TRAITS, SUPPLY_TRAITS
+    UPGRADE_TRAITS, SUPPLY_TRAITS, HERO_CLASS_UPGRADE_TYPES
 )
 
 
@@ -42,6 +42,7 @@ class NormalizeImperialData(PipelineHelper):
         tasks.ImageChoiceDataCollector(field_name='elite', source=SOURCES.DEPLOYMENT, choices=TRUE_FALSE_CHOICES),
         tasks.ImageTextDataCollector(field_name='name', source=SOURCES.DEPLOYMENT),
         tasks.ImageTextDataCollector(field_name='name', source=SOURCES.COMPANION),
+        tasks.ImageTextDataCollector(field_name='name', source=SOURCES.THREAT_MISSION),
         tasks.ImageTextDataCollector(field_name='description', source=SOURCES.DEPLOYMENT),
         tasks.ImageTextDataCollector(field_name='class', source=SOURCES.IMPERIAL_CLASS_CARD),
         tasks.ImageIntegerDataCollector(field_name='xp', source=SOURCES.IMPERIAL_CLASS_CARD),
@@ -58,9 +59,16 @@ class NormalizeImperialData(PipelineHelper):
         tasks.ImageTextDataCollector(field_name='name', source=SOURCES.SUPPLY),
         tasks.ImageTextDataCollector(field_name='name', source=SOURCES.UPGRADE),
         tasks.ImageIntegerDataCollector(field_name='xp', source=SOURCES.HERO_CLASS),
+        tasks.ImageChoiceDataCollector(field_name='type', source=SOURCES.HERO_CLASS, choices=HERO_CLASS_UPGRADE_TYPES.as_choices),
+        tasks.ImageChoiceDataCollector(field_name='type', source=SOURCES.UPGRADE, choices=HERO_CLASS_UPGRADE_TYPES.as_choices),
+        tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.HERO_CLASS, choices=UPGRADE_TRAITS.as_choices),
 
         tasks.ImageIntegerDataCollector(field_name='cost', source=SOURCES.COMMAND),
         tasks.ImageIntegerDataCollector(field_name='limit', source=SOURCES.COMMAND),
+
+        tasks.ImageBooleanChoiceDataCollector(field_name='period_restricted', source=SOURCES.AGENDA),
+        tasks.ImageBooleanChoiceDataCollector(field_name='period_restricted', source=SOURCES.SIDE_MISSION),
+
 
         tasks.CollectSources(source=SOURCES.SKIRMISH_MAP),
 
@@ -72,10 +80,8 @@ class NormalizeImperialData(PipelineHelper):
 
         base.AddHashes(source=SOURCES.STORY_MISSION, exclude=['image', 'image_file', 'id', 'source']),
         tasks.DeDupMerge(source=SOURCES.STORY_MISSION),
-        base.RemoveField(field_name='id', source=SOURCES.STORY_MISSION),
-        base.SortDataByAttrs('name', source=SOURCES.STORY_MISSION),
+        base.SortDataByAttrs('id', source=SOURCES.STORY_MISSION),
         base.SortDataKeys(source=SOURCES.STORY_MISSION, preferred_order=['id', 'name']),
-        base.AddIds(source=SOURCES.STORY_MISSION),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.STORY_MISSION, fk_field_path=['source', ]
         ),
@@ -84,10 +90,9 @@ class NormalizeImperialData(PipelineHelper):
 
         base.AddHashes(source=SOURCES.SIDE_MISSION, exclude=['image', 'image_file', 'id', 'source']),
         tasks.DeDupMerge(source=SOURCES.SIDE_MISSION),
-        base.RemoveField(field_name='id', source=SOURCES.SIDE_MISSION),
-        base.SortDataByAttrs('name', source=SOURCES.SIDE_MISSION),
-        base.SortDataKeys(source=SOURCES.SIDE_MISSION, preferred_order=['name', 'color', ]),
-        base.AddIds(source=SOURCES.SIDE_MISSION),
+        base.SortDataByAttrs('id', source=SOURCES.SIDE_MISSION),
+        base.SortDataKeys(source=SOURCES.SIDE_MISSION, preferred_order=['id', 'name', 'color', ]),
+
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.SIDE_MISSION, fk_field_path=['source', ]
         ),
@@ -280,7 +285,6 @@ class NormalizeImperialData(PipelineHelper):
         base.RemoveField(field_name='source', source=SOURCES.SKIRMISH_MAP),
         base.RemoveField(field_name='source', source=SOURCES.UPGRADE),
 
-
         tasks.StandardImageDimension(sources=[SOURCES.AGENDA, ], image_attrs=['image', ]),
         tasks.StandardImageDimension(sources=[SOURCES.COMMAND, ], image_attrs=['image', ]),
         tasks.StandardImageDimension(sources=[SOURCES.COMPANION, ], image_attrs=['image', ]),
@@ -297,17 +301,44 @@ class NormalizeImperialData(PipelineHelper):
         tasks.StandardImageDimension(sources=[SOURCES.THREAT_MISSION, ], image_attrs=['image', ]),
         tasks.StandardImageDimension(sources=[SOURCES.UPGRADE, ], image_attrs=['image', ]),
 
-        #tasks.OpenCVAlignImages('./images/agenda-cards/defensive-tactics-counter-strike.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: not model['mission']),
-        #tasks.OpenCVAlignImages('./images/agenda-cards/crimson-empire-infection.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: model['mission']),
-        #tasks.OpenCVAlignImages('./images/command-cards/of-no-importance.png', image_attr='image', source=SOURCES.COMMAND),
-        #tasks.OpenCVAlignImages('./images/companion-cards/salacious-b-crumb.png', image_attr='image', source=SOURCES.COMPANION),
-        #tasks.OpenCVAlignImages('./images/condition-cards/weakened.png', image_attr='image', source=SOURCES.CONDITION),
-        #tasks.OpenCVAlignImages('./images/deployment-cards/leia-organa-rebel-commander-campaign.png', image_attr='image', source=SOURCES.DEPLOYMENT, filter_function=lambda model: DEPLOYMENT_TRAITS.SKIRMISH_UPGRADE not in model['traits']),
-        #tasks.OpenCVAlignImages('./images/deployment-cards/last-resort-skirmish.png', image_attr='image', source=SOURCES.DEPLOYMENT, filter_function=lambda model: DEPLOYMENT_TRAITS.SKIRMISH_UPGRADE in model['traits']),
-        #tasks.OpenCVAlignImages('./images/heroes/murne-rin-healthy.png', image_attr='healthy', source=SOURCES.HERO),
-        #tasks.OpenCVAlignImages('./images/heroes/diala-passil-wounded.png', image_attr='wounded', source=SOURCES.HERO),
-        tasks.OpenCVAlignImages('./images/supply-cards/troop-data.png', image_attr='image', source=SOURCES.SUPPLY),
+        # tasks.OpenCVAlignImages('./images/agenda-cards/defensive-tactics-counter-strike.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: not model['mission']),
+        # tasks.OpenCVAlignImages('./images/side-mission-cards/homecoming.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: model['mission'] and model['period_restricted']),
 
+        # This are the tests ones
+        tasks.OpenCVAlignImages('./images/agenda-cards/stormtrooper-support-strength-of-command.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: model['mission'] and not model['period_restricted']),
+        tasks.OpenCVAlignImages('./images/command-cards/call-the-vanguard.png', image_attr='image', source=SOURCES.COMMAND),
+        tasks.OpenCVAlignImages('./images/side-mission-cards/born-from-death.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: model['period_restricted']),
+        tasks.OpenCVAlignImages('./images/side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted']),
+        tasks.OpenCVAlignImages('./images/story-mission-cards/chain-of-command.png', image_attr='image', source=SOURCES.STORY_MISSION),
+        # Those where the tests ones
+
+        # tasks.OpenCVAlignImages('./images/threat-mission-cards/scouring-of-the-homestead.png', image_attr='image', source=SOURCES.THREAT_MISSION),
+        # tasks.OpenCVAlignImages('./images/companion-cards/salacious-b-crumb.png', image_attr='image', source=SOURCES.COMPANION),
+        # tasks.OpenCVAlignImages('./images/condition-cards/weakened.png', image_attr='image', source=SOURCES.CONDITION),
+        # tasks.OpenCVAlignImages('./images/deployment-cards/leia-organa-rebel-commander-campaign.png', image_attr='image', source=SOURCES.DEPLOYMENT, filter_function=lambda model: DEPLOYMENT_TRAITS.SKIRMISH_UPGRADE not in model['traits']),
+        # tasks.OpenCVAlignImages('./images/deployment-cards/last-resort-skirmish.png', image_attr='image', source=SOURCES.DEPLOYMENT, filter_function=lambda model: DEPLOYMENT_TRAITS.SKIRMISH_UPGRADE in model['traits']),
+        # tasks.OpenCVAlignImages('./images/heroes/murne-rin-healthy.png', image_attr='healthy', source=SOURCES.HERO),
+        # tasks.OpenCVAlignImages('./images/heroes/diala-passil-wounded.png', image_attr='wounded', source=SOURCES.HERO),
+        # tasks.OpenCVAlignImages('./images/supply-cards/troop-data.png', image_attr='image', source=SOURCES.SUPPLY),
+        #
+        # tasks.OpenCVAlignImages('./images/upgrade-cards/electrostaff.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE),
+        # tasks.OpenCVAlignImages('./images/upgrade-cards/dh-17.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED),
+        # tasks.OpenCVAlignImages('./images/upgrade-cards/sniper-scope.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED_MOD),
+        # tasks.OpenCVAlignImages('./images/upgrade-cards/energized-hilt.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE_MOD),
+        # tasks.OpenCVAlignImages('./images/upgrade-cards/laminate-armor.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.ARMOR),
+        # tasks.OpenCVAlignImages('./images/upgrade-cards/concussion-grenades.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.EQUIPMENT),
+        # tasks.OpenCVAlignImages('./images/hero-class-cards/davith-elso-embody-the-force.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.FEAT),
+        #
+        # tasks.OpenCVAlignImages('./images/upgrade-cards/electrostaff.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE),
+        # tasks.OpenCVAlignImages('./images/upgrade-cards/dh-17.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED),
+        # tasks.OpenCVAlignImages('./images/upgrade-cards/sniper-scope.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED_MOD),
+        # tasks.OpenCVAlignImages('./images/upgrade-cards/energized-hilt.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE_MOD),
+        # tasks.OpenCVAlignImages('./images/upgrade-cards/laminate-armor.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.ARMOR),
+        # tasks.OpenCVAlignImages('./images/upgrade-cards/concussion-grenades.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.EQUIPMENT),
+
+
+        base.RemoveField(field_name='period_restricted', source=SOURCES.AGENDA),
+        base.RemoveField(field_name='period_restricted', source=SOURCES.SIDE_MISSION),
 
 
         base.SaveData('./data/', SOURCES.as_list),

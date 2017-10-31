@@ -302,6 +302,9 @@ class AppendChoiceDataCollector(ChoiceDataCollector):
                 for x in new_data
             ])
 
+        if new_data is None:
+            return self.null_input is not None
+
         return super().validate_input(new_data)
 
     def input_text(self, model, collected):
@@ -359,6 +362,11 @@ class AppendChoiceDataCollector(ChoiceDataCollector):
                     return False, None
 
                 if new_data == self.done_input:
+                    done_with_this_model = True
+                    break
+
+                if new_data == self.null_input:
+                    collected = None
                     done_with_this_model = True
                     break
 
