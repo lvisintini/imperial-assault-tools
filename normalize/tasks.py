@@ -270,7 +270,9 @@ class RenameImages(Task):
                 with open(os.path.join(new_file_path), 'bw') as destination:
                     destination.write(file_obj.read())
 
-            model[self.file_attr] = new_file_path
+            model[self.file_attr] = new_file_path.replace(
+                self.root if self.root.endswith('/') else self.root + '/', '', 1
+            )
 
         return data_helper
 
@@ -352,7 +354,9 @@ class ClassHeroRenameImages(RenameImages):
                 with open(os.path.join(new_file_path), 'bw') as destination:
                     destination.write(file_obj.read())
 
-            model[self.file_attr] = new_file_path
+            model[self.file_attr] = new_file_path.replace(
+                self.root if self.root.endswith('/') else self.root + '/', '', 1
+            )
 
         return data_helper
 
@@ -421,10 +425,12 @@ class CollectSources(ImageChoiceDataCollector):
 
 class StandardImageDimension(Task):
     sources = None
+    root = '.'
     image_attrs = []
 
-    def __init__(self, sources=None, image_attrs=None, min_width=None, min_height=None):
+    def __init__(self, root=None, sources=None, image_attrs=None, min_width=None, min_height=None):
         super(StandardImageDimension, self).__init__()
+        self.root = root or self.root
         self.sources = sources or self.sources
         self.image_attrs = image_attrs or self.image_attrs
 
@@ -440,7 +446,7 @@ class StandardImageDimension(Task):
                     path = model.get(attr, None)
                     if path is None:
                         continue
-                    width, height = self.get_image_size(path)
+                    width, height = self.get_image_size(os.path.join(self.root, path))
                     widths.append(width)
                     heights.append(height)
         summary = {}
@@ -480,16 +486,16 @@ class StandardImageDimension(Task):
                     for attr in self.image_attrs:
                         path = model.get(attr, None)
                         if path is not None:
-                            im = Image.open(path)
+                            im = Image.open(os.path.join(self.root, path))
                             im = im.convert("RGBA")
                             im.thumbnail((self.min_width, self.min_height), Image.ANTIALIAS)
-                            im.save(path)
+                            im.save(os.path.join(self.root, path))
                             #old_width, old_height = im.size
                             #x1 = int(math.floor((self.min_width - old_width) / 2))
                             #y1 = int(math.floor((self.min_height - old_height) / 2))
                             #new_image = Image.new(im.mode, (self.min_width, self.min_height))
                             #new_image.paste(im, (x1, y1, x1 + old_width, y1 + old_height))
-                            #new_image.save(path)
+                            #new_image.save(os.path.join(self.root, path))
         else:
             self.log.error('No dimensions found for images')
         return data_helper
@@ -535,14 +541,30 @@ class OpenCVSTask(Task):
     image_attr = None
     filter = None
     root = '.'
+    destination_root = '.'
     filter_function = None
 
-    def __init__(self, source=None, image_attr=None, filter_function=None, root=None):
+    def __init__(self, source=None, image_attr=None, filter_function=None, root=None, destination_root=None):
         super(OpenCVSTask, self).__init__()
         self.source = source or self.source
         self.image_attr = image_attr or self.image_attr
         self.filter_function = filter_function or self.filter_function
         self.root = root or self.root
+        self.destination_root = destination_root or self.destination_root
+
+    def get_read_path(self, image_path):
+        abs_path = os.path.abspath(os.path.join(self.root, image_path))
+        if not os.path.exists(abs_path):
+            raise Exception(f'File path does not exists: {abs_path}')
+        return abs_path
+
+    def get_write_path(self, image_path, create_path=True):
+        abs_path = os.path.abspath(os.path.join(self.destination_root, image_path))
+
+        if not os.path.exists(os.path.split(abs_path)[0]) and create_path:
+            os.makedirs(os.path.split(abs_path)[0])
+
+        return abs_path
 
     def filter(self, model):
         if self.image_attr not in model:
@@ -574,33 +596,45 @@ class OpenCVAlignImages(OpenCVSTask):
         self.uuid = str(uuid.uuid4())
         self.reference_image_path = reference_image_path
 
+        self.reference_image = cv2.imread(self.get_read_path(reference_image_path), cv2.IMREAD_UNCHANGED)
+        self.reference_image_gray = cv2.cvtColor(self.reference_image, cv2.COLOR_RGBA2GRAY)
+        self.reference_image_shape = self.reference_image.shape
+
+    def get_write_path(self, image_path, create_path=True):
+        abs_path = super().get_write_path(image_path, create_path=False)
+
+        directory, filename = os.path.split(abs_path)
+
+        result_destination_path = os.path.join(directory, self.uuid, 'aligned')
+        original_destination_path = os.path.join(directory, self.uuid, 'not-aligned')
+
+        if create_path:
+            if not os.path.exists(result_destination_path):
+                os.makedirs(result_destination_path)
+
+            if not os.path.exists(original_destination_path):
+                os.makedirs(original_destination_path)
+
+        return os.path.join(result_destination_path, filename), os.path.join(original_destination_path, filename)
+
     def opencv_processing(self, image_path):
         # https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
-        destination_path = os.path.split(
-            os.path.abspath(os.path.join(self.root, image_path.replace('./images/', './simages/')))
-        )
-        result_destination_path = os.path.join(destination_path[0], self.uuid, 'aligned', destination_path[1])
-        original_destination_path = os.path.join(destination_path[0], self.uuid, 'not-aligned', destination_path[1])
+        abs_path = self.get_read_path(image_path)
 
         if self.reference_image_path == image_path:
-            if not os.path.exists(os.path.split(result_destination_path)[0]):
-                os.makedirs(os.path.split(result_destination_path)[0])
-            if not os.path.exists(os.path.split(original_destination_path)[0]):
-                os.makedirs(os.path.split(original_destination_path)[0])
-            im = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)), cv2.IMREAD_UNCHANGED)
+            result_destination_path, original_destination_path = self.get_write_path(image_path)
+
+            im = cv2.imread(abs_path, cv2.IMREAD_UNCHANGED)
+
             cv2.imwrite(result_destination_path, im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
             cv2.imwrite(original_destination_path, im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            return
 
         # Read the images to be aligned
-        im1 = cv2.imread(os.path.abspath(os.path.join(self.root, self.reference_image_path)), cv2.IMREAD_UNCHANGED)
-        im2 = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)), cv2.IMREAD_UNCHANGED)
+        img = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)), cv2.IMREAD_UNCHANGED)
 
         # Convert images to grayscale
-        im1_gray = cv2.cvtColor(im1, cv2.COLOR_RGBA2GRAY)
-        im2_gray = cv2.cvtColor(im2, cv2.COLOR_RGBA2GRAY)
-
-        # Find size of image1
-        sz = im1.shape
+        img_gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
 
         # Define the motion model
         warp_mode = cv2.MOTION_AFFINE
@@ -622,30 +656,24 @@ class OpenCVAlignImages(OpenCVSTask):
         criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, number_of_iterations, termination_eps)
 
         # Run the ECC algorithm. The results are stored in warp_matrix.
-        (cc, warp_matrix) = cv2.findTransformECC(im1_gray, im2_gray, warp_matrix, warp_mode, criteria)
+        (cc, warp_matrix) = cv2.findTransformECC(self.reference_image_gray, img_gray, warp_matrix, warp_mode, criteria)
 
         if warp_mode == cv2.MOTION_HOMOGRAPHY:
             # Use warpPerspective for Homography
-            im2_aligned = cv2.warpPerspective(
-                im2, warp_matrix, (sz[1], sz[0]),
+            aligned_img = cv2.warpPerspective(
+                img, warp_matrix, (self.reference_image_shape[1], self.reference_image_shape[0]),
                 flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
-                #borderMode=cv2.BORDER_TRANSPARENT,
                 borderMode=cv2.BORDER_CONSTANT, borderValue=[255, 255, 255, 0]
             )
         else:
             # Use warpAffine for Translation, Euclidean and Affine
-            im2_aligned = cv2.warpAffine(
-                im2, warp_matrix, (sz[1], sz[0]),
+            aligned_img = cv2.warpAffine(
+                img, warp_matrix, (self.reference_image_shape[1], self.reference_image_shape[0]),
                 flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
-                #borderMode=cv2.BORDER_TRANSPARENT,
                 borderMode=cv2.BORDER_CONSTANT, borderValue=[255, 255, 255, 0]
             )
 
-        if not os.path.exists(os.path.split(result_destination_path)[0]):
-            os.makedirs(os.path.split(result_destination_path)[0])
+        result_destination_path, original_destination_path = self.get_write_path(image_path)
 
-        if not os.path.exists(os.path.split(original_destination_path)[0]):
-            os.makedirs(os.path.split(original_destination_path)[0])
-
-        cv2.imwrite(result_destination_path, im2_aligned, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-        cv2.imwrite(original_destination_path, im2, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        cv2.imwrite(result_destination_path, aligned_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        cv2.imwrite(original_destination_path, img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
