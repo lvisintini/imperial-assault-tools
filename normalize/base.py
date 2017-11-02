@@ -569,9 +569,11 @@ class SortAttrData(Task):
 
 class ShowImageMixin(object):
     image_attr = 'image_file'
+    root = '.'
 
-    def __init__(self, *args, image_attr=None, **kwargs):
-        self.image_attr = image_attr if image_attr is not None else self.image_attr
+    def __init__(self, *args, image_attr=None, root=None, **kwargs):
+        self.image_attr = image_attr or self.image_attr
+        self.root = root or self.root
         super().__init__(*args, **kwargs)
         self.viewers = []
         self.active_window = WmCtrl().get_active_window()

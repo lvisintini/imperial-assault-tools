@@ -20,23 +20,23 @@ from normalize import contants
 
 
 class ImageAppendChoiceDataCollector(base.ShowImageMixin, base.AppendChoiceDataCollector):
-    pass
+    root = './images'
 
 
 class ImageChoiceDataCollector(base.ShowImageMixin, base.ChoiceDataCollector):
-    pass
+    root = './images'
 
 
 class ImageIntegerDataCollector(base.ShowImageMixin, base.IntegerDataCollector):
-    pass
+    root = './images'
 
 
 class ImageTextDataCollector(base.ShowImageMixin, base.TextDataCollector):
-    pass
+    root = './images'
 
 
 class ImageBooleanChoiceDataCollector(base.ShowImageMixin, base.BooleanChoiceDataCollector):
-    pass
+    root = './images'
 
 
 class ForeignKeyBuilder(Task):
