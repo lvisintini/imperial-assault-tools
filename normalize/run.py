@@ -5,6 +5,7 @@ from normalize.contants import (
     SOURCES, TRUE_FALSE_CHOICES, GAME_MODES, AFFILIATION, DEPLOYMENT_TRAITS, DEPLOYMENT_CARD_PREFERRED_ATTR_ORDER,
     UPGRADE_TRAITS, SUPPLY_TRAITS, HERO_CLASS_UPGRADE_TYPES
 )
+import cv2
 
 
 class NormalizeImperialData(PipelineHelper):
@@ -285,56 +286,56 @@ class NormalizeImperialData(PipelineHelper):
         base.RemoveField(field_name='source', source=SOURCES.SKIRMISH_MAP),
         base.RemoveField(field_name='source', source=SOURCES.UPGRADE),
 
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.AGENDA, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.COMMAND, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.COMPANION, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.CONDITION, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.DEPLOYMENT, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.HERO_CLASS, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.HERO, ], image_attrs=['healthy', 'wounded']),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.IMPERIAL_CLASS_CARD, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.REWARD, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.SIDE_MISSION, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.SOURCE, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.STORY_MISSION, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.SUPPLY, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.THREAT_MISSION, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.UPGRADE, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.AGENDA, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.COMMAND, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.COMPANION, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.CONDITION, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.DEPLOYMENT, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.HERO_CLASS, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.HERO, ], image_attrs=['healthy', 'wounded']),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.IMPERIAL_CLASS_CARD, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.REWARD, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.SIDE_MISSION, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.SOURCE, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.STORY_MISSION, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.SUPPLY, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.THREAT_MISSION, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.UPGRADE, ], image_attrs=['image', ]),
 
-        # tasks.OpenCVAlignImages('agenda-cards/defensive-tactics-counter-strike.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: not model['mission'], root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('side-mission-cards/homecoming.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: model['mission'] and model['period_restricted'], root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('side-mission-cards/born-from-death.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: model['period_restricted'], root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'agenda-cards/defensive-tactics-counter-strike.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: not model['mission'], root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'side-mission-cards/homecoming.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: model['mission'] and model['period_restricted'], root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'side-mission-cards/born-from-death.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: model['period_restricted'], root='./images', destination_root='./aligned-images'),
 
         # This are the tests ones
-        tasks.OpenCVAlignImages('agenda-cards/stormtrooper-support-strength-of-command.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: model['mission'] and not model['period_restricted'], root='./images', destination_root='./aligned-images'),
-        #tasks.OpenCVAlignImages('command-cards/call-the-vanguard.png', image_attr='image', source=SOURCES.COMMAND, root='./images', destination_root='./aligned-images'),
-        #tasks.OpenCVAlignImages('side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted'], root='./images', destination_root='./aligned-images'),
-        #tasks.OpenCVAlignImages('story-mission-cards/chain-of-command.png', image_attr='image', source=SOURCES.STORY_MISSION, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'agenda-cards/stormtrooper-support-strength-of-command.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: model['mission'] and not model['period_restricted'], root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'command-cards/call-the-vanguard.png', image_attr='image', source=SOURCES.COMMAND, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted'], root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'story-mission-cards/chain-of-command.png', image_attr='image', source=SOURCES.STORY_MISSION, root='./images', destination_root='./aligned-images'),
         # Those where the tests ones
 
-        # tasks.OpenCVAlignImages('threat-mission-cards/scouring-of-the-homestead.png', image_attr='image', source=SOURCES.THREAT_MISSION, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('companion-cards/salacious-b-crumb.png', image_attr='image', source=SOURCES.COMPANION, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('condition-cards/weakened.png', image_attr='image', source=SOURCES.CONDITION, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('deployment-cards/leia-organa-rebel-commander-campaign.png', image_attr='image', source=SOURCES.DEPLOYMENT, filter_function=lambda model: DEPLOYMENT_TRAITS.SKIRMISH_UPGRADE not in model['traits'], root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('deployment-cards/last-resort-skirmish.png', image_attr='image', source=SOURCES.DEPLOYMENT, filter_function=lambda model: DEPLOYMENT_TRAITS.SKIRMISH_UPGRADE in model['traits'], root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('heroes/murne-rin-healthy.png', image_attr='healthy', source=SOURCES.HERO, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('heroes/diala-passil-wounded.png', image_attr='wounded', source=SOURCES.HERO, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('supply-cards/troop-data.png', image_attr='image', source=SOURCES.SUPPLY, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'threat-mission-cards/scouring-of-the-homestead.png', image_attr='image', source=SOURCES.THREAT_MISSION, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'companion-cards/salacious-b-crumb.png', image_attr='image', source=SOURCES.COMPANION, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'condition-cards/weakened.png', image_attr='image', source=SOURCES.CONDITION, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'standard-card-template-2.png', image_attr='image', source=SOURCES.DEPLOYMENT, filter_function=lambda model: DEPLOYMENT_TRAITS.SKIRMISH_UPGRADE not in model['traits'], root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'standard-card-template-2.png', image_attr='image', source=SOURCES.DEPLOYMENT, filter_function=lambda model: DEPLOYMENT_TRAITS.SKIRMISH_UPGRADE in model['traits'], root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'heroes/murne-rin-healthy.png', image_attr='healthy', source=SOURCES.HERO, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'heroes/diala-passil-wounded.png', image_attr='wounded', source=SOURCES.HERO, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'supply-cards/troop-data.png', image_attr='image', source=SOURCES.SUPPLY, root='./images', destination_root='./aligned-images'),
         #
-        # tasks.OpenCVAlignImages('upgrade-cards/electrostaff.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('upgrade-cards/dh-17.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('upgrade-cards/sniper-scope.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED_MOD, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('upgrade-cards/energized-hilt.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE_MOD, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('upgrade-cards/laminate-armor.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.ARMOR, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('upgrade-cards/concussion-grenades.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.EQUIPMENT, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('hero-class-cards/davith-elso-embody-the-force.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.FEAT, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/electrostaff.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/dh-17.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/sniper-scope.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED_MOD, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/energized-hilt.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE_MOD, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/laminate-armor.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.ARMOR, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/concussion-grenades.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.EQUIPMENT, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'hero-class-cards/davith-elso-embody-the-force.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.FEAT, root='./images', destination_root='./aligned-images'),
         #
-        # tasks.OpenCVAlignImages('upgrade-cards/electrostaff.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('upgrade-cards/dh-17.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('upgrade-cards/sniper-scope.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED_MOD, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('upgrade-cards/energized-hilt.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE_MOD, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('upgrade-cards/laminate-armor.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.ARMOR, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages('upgrade-cards/concussion-grenades.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.EQUIPMENT, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/electrostaff.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/dh-17.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/sniper-scope.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED_MOD, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/energized-hilt.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE_MOD, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/laminate-armor.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.ARMOR, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/concussion-grenades.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.EQUIPMENT, root='./images', destination_root='./aligned-images'),
 
 
         base.RemoveField(field_name='period_restricted', source=SOURCES.AGENDA),
@@ -346,8 +347,10 @@ class NormalizeImperialData(PipelineHelper):
 # sources
 # http://pythonhosted.org/imreg_dft/quickstart.html#quickstart
 
+
 def main():
-    NormalizeImperialData().run()
+    import datetime
+    NormalizeImperialData(timestamp=datetime.datetime.now()).run()
 
 
 if __name__ == '__main__':

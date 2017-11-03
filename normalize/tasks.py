@@ -310,7 +310,7 @@ class RenameImages(Task):
 
 class ImagesToPNG(Task):
     @classmethod
-    def process(self, data_helper):
+    def process(cls, data_helper):
         for source in data_helper.data:
             for model in data_helper.data[source]:
                 if 'image_file' in model:
@@ -323,6 +323,8 @@ class ImagesToPNG(Task):
 
 
 class ClassHeroRenameImages(RenameImages):
+    label = '#############################################################################'
+
     def process(self, data_helper):
         for model in data_helper.data[self.source]:
             path_to_file = model[self.file_attr]
@@ -437,7 +439,7 @@ class StandardImageDimension(Task):
         self.min_width = min_width
         self.min_height = min_height
 
-    def get_dimensions_summary(self, data_helper):
+    def get_dimensions_summary(self, data_helper, log_results=True):
         widths = []
         heights = []
         for source in self.sources:
@@ -456,17 +458,17 @@ class StandardImageDimension(Task):
             summary['min_width'] = min(widths)
             summary['max_height'] = max(heights)
             summary['min_height'] = min(heights)
-
-            self.log.info(f'Dimensions for sources={self.sources!r} and image_attrs={self.image_attrs!r}')
-            self.log.info(f'Max width: {summary["max_width"]}')
-            self.log.info(f'Min width: {summary["min_width"]}')
-            self.log.info(f'Max height: {summary["max_height"]}')
-            self.log.info(f'Min height: {summary["min_height"]}')
+            if log_results:
+                self.log.info(f'Dimensions for sources={self.sources!r} and image_attrs={self.image_attrs!r}')
+                self.log.info(f'Max width: {summary["max_width"]}')
+                self.log.info(f'Min width: {summary["min_width"]}')
+                self.log.info(f'Max height: {summary["max_height"]}')
+                self.log.info(f'Min height: {summary["min_height"]}')
 
         return summary
 
     def pre_process(self, data_helper):
-        summary = self.get_dimensions_summary(data_helper)
+        summary = self.get_dimensions_summary(data_helper, log_results=False)
 
         if self.min_width is None:
             self.min_width = summary["min_width"]
@@ -475,7 +477,7 @@ class StandardImageDimension(Task):
         return data_helper
 
     def post_process(self, data_helper):
-        self.get_dimensions_summary(data_helper)
+        self.get_dimensions_summary(data_helper, log_results=True)
         return data_helper
 
     def process(self, data_helper):
@@ -585,23 +587,47 @@ class OpenCVSTask(Task):
             self.opencv_processing(model[self.image_attr])
         return data_helper
 
-    def opencv_processing(self, model):
+    def opencv_processing(self, image_path):
         raise NotImplementedError
+
+
+class OpenCVContours(OpenCVSTask):
+    def opencv_processing(self, image_path):
+        abs_path = self.get_read_path(image_path)
+        destination = self.get_write_path(image_path)
+
+        img = cv2.imread(abs_path, cv2.IMREAD_UNCHANGED)
+        img_gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
+        ret, thresh = cv2.threshold(img_gray, 127, 255, 0)
+        image, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        cv2.drawContours(img, contours, -1, (0, 255, 0), 3)
+
+        cv2.imwrite(destination, img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
 
 class OpenCVAlignImages(OpenCVSTask):
 
-    def __init__(self, reference_image_path, **kwargs):
+    def __init__(self, motion_type,  reference_image_path, **kwargs):
         super().__init__(**kwargs)
+        self.timestamp = None
         self.uuid = str(uuid.uuid4())
+
+        # defines the motion type
+        self.motion_type = motion_type
+
         self.reference_image_path = reference_image_path
 
         self.reference_image = cv2.imread(self.get_read_path(reference_image_path), cv2.IMREAD_UNCHANGED)
         self.reference_image_gray = cv2.cvtColor(self.reference_image, cv2.COLOR_RGBA2GRAY)
         self.reference_image_shape = self.reference_image.shape
 
+    def setup(self, data_helper):
+        self.timestamp = data_helper.timestamp.isoformat()
+        return data_helper
+
     def get_write_path(self, image_path, create_path=True):
-        abs_path = super().get_write_path(image_path, create_path=False)
+        abs_path = os.path.abspath(os.path.join(self.destination_root, self.timestamp, image_path))
 
         directory, filename = os.path.split(abs_path)
 
@@ -636,11 +662,8 @@ class OpenCVAlignImages(OpenCVSTask):
         # Convert images to grayscale
         img_gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
 
-        # Define the motion model
-        warp_mode = cv2.MOTION_AFFINE
-
         # Define 2x3 or 3x3 matrices and initialize the matrix to identity
-        if warp_mode == cv2.MOTION_HOMOGRAPHY:
+        if self.motion_type == cv2.MOTION_HOMOGRAPHY:
             warp_matrix = numpy.eye(3, 3, dtype=numpy.float32)
         else:
             warp_matrix = numpy.eye(2, 3, dtype=numpy.float32)
@@ -656,9 +679,11 @@ class OpenCVAlignImages(OpenCVSTask):
         criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, number_of_iterations, termination_eps)
 
         # Run the ECC algorithm. The results are stored in warp_matrix.
-        (cc, warp_matrix) = cv2.findTransformECC(self.reference_image_gray, img_gray, warp_matrix, warp_mode, criteria)
+        (cc, warp_matrix) = cv2.findTransformECC(
+            self.reference_image_gray, img_gray, warp_matrix, self.motion_type, criteria
+        )
 
-        if warp_mode == cv2.MOTION_HOMOGRAPHY:
+        if self.motion_type == cv2.MOTION_HOMOGRAPHY:
             # Use warpPerspective for Homography
             aligned_img = cv2.warpPerspective(
                 img, warp_matrix, (self.reference_image_shape[1], self.reference_image_shape[0]),

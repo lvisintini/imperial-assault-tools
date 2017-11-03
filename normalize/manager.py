@@ -141,10 +141,32 @@ def _do_teardown(this, data_helper):
     return data_helper
 
 
-class Task(object):
+class ReprMeta(type):
+    def __call__(cls, *args, **kwargs):
+        label = kwargs.pop('label', None)
+
+        inst = super(ReprMeta, cls).__call__(*args, **kwargs)
+
+        if not label:
+            if not getattr(inst, 'label', None):
+                if args and kwargs:
+                    inst.label = f'{cls.__name__} args={args!r}, kwargs={kwargs!r}'
+                elif args:
+                    inst.label = f'{cls.__name__} args={args!r}'
+                elif kwargs:
+                    inst.label = f'{cls.__name__} kwargs={kwargs!r}'
+                else:
+                    inst.label = cls.__name__
+        else:
+            inst.label = label
+
+        return inst
+
+
+class Task(object, metaclass=ReprMeta):
     log = logging.getLogger(__name__)
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.do_setup = MethodType(_do_setup, self)
         self.do_pre_process = MethodType(_do_pre_process, self)
         self.do_process = MethodType(_do_process, self)
@@ -156,3 +178,6 @@ class Task(object):
     do_process = classmethod(_do_process)
     do_post_process = classmethod(_do_post_process)
     do_teardown = classmethod(_do_teardown)
+
+    def __repr__(self):
+        return getattr(self, 'label', super().__repr__())
