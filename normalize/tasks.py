@@ -581,7 +581,8 @@ class OpenCVSTask(Task):
         pass
 
     def process(self, data_helper):
-        for model in tqdm([m for m in data_helper.data[self.source] if self.filter(m)], desc='Aligning images'):
+
+        for model in tqdm([m for m in data_helper.data[self.source] if self.filter(m)], desc='OpenCV process'):
             self.before_each(model, data_helper)
             self.log.info(repr(model))
             self.opencv_processing(model[self.image_attr])
@@ -593,18 +594,38 @@ class OpenCVSTask(Task):
 
 class OpenCVContours(OpenCVSTask):
     def opencv_processing(self, image_path):
+        # http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contours_begin/py_contours_begin.html?highlight=canny
         abs_path = self.get_read_path(image_path)
         destination = self.get_write_path(image_path)
 
         img = cv2.imread(abs_path, cv2.IMREAD_UNCHANGED)
-        img_gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
-        ret, thresh = cv2.threshold(img_gray, 127, 255, 0)
-        image, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
 
-        cv2.drawContours(img, contours, -1, (0, 255, 0), 3)
+        # liked this 2
+        # blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+        # edges = cv2.Canny(blurred, 100, 150)
 
-        cv2.imwrite(destination, img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+        edges = self.auto_canny(blurred)
 
+        image, contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        cv2.drawContours(img, contours, -1, (0, 0, 0, 255), 1)
+
+        cv2.imwrite(destination, image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+    def auto_canny(self, image, sigma=0.33):
+        # https://www.pyimagesearch.com/2015/04/06/zero-parameter-automatic-canny-edge-detection-with-python-and-opencv/
+        # compute the median of the single channel pixel intensities
+        v = numpy.median(image)
+
+        # apply automatic Canny edge detection using the computed median
+        lower = int(max(0, (1.0 - sigma) * v))
+        upper = int(min(255, (1.0 + sigma) * v))
+        edged = cv2.Canny(image, lower, upper)
+
+        # return the edged image
+        return edged
 
 class OpenCVAlignImages(OpenCVSTask):
 
@@ -702,3 +723,130 @@ class OpenCVAlignImages(OpenCVSTask):
 
         cv2.imwrite(result_destination_path, aligned_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
         cv2.imwrite(original_destination_path, img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+
+class OpenCVAlignImages2(OpenCVSTask):
+
+    def __init__(self, motion_type,  reference_image_path, **kwargs):
+        super().__init__(**kwargs)
+        self.timestamp = None
+        self.uuid = str(uuid.uuid4())
+
+        # defines the motion type
+        self.motion_type = motion_type
+
+        self.reference_image_path = reference_image_path
+
+        self.reference_image = cv2.imread(self.get_read_path(reference_image_path), cv2.IMREAD_UNCHANGED)
+
+        processed_image = cv2.cvtColor(self.reference_image, cv2.COLOR_RGBA2GRAY)
+        processed_image = cv2.GaussianBlur(processed_image, (5, 5), 0)
+        edges = self.auto_canny(processed_image)
+        processed_image, contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        self.reference_image_gray = processed_image
+        self.reference_image_shape = processed_image.shape
+
+    def setup(self, data_helper):
+        self.timestamp = data_helper.timestamp.isoformat()
+        return data_helper
+
+    def get_write_path(self, image_path, create_path=True):
+        abs_path = os.path.abspath(os.path.join(self.destination_root, self.timestamp, image_path))
+
+        directory, filename = os.path.split(abs_path)
+
+        result_destination_path = os.path.join(directory, self.uuid, 'aligned')
+        original_destination_path = os.path.join(directory, self.uuid, 'not-aligned')
+
+        if create_path:
+            if not os.path.exists(result_destination_path):
+                os.makedirs(result_destination_path)
+
+            if not os.path.exists(original_destination_path):
+                os.makedirs(original_destination_path)
+
+        return os.path.join(result_destination_path, filename), os.path.join(original_destination_path, filename)
+
+    def opencv_processing(self, image_path):
+        # https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
+        abs_path = self.get_read_path(image_path)
+
+        if self.reference_image_path == image_path:
+            result_destination_path, original_destination_path = self.get_write_path(image_path)
+
+            im = cv2.imread(abs_path, cv2.IMREAD_UNCHANGED)
+
+            cv2.imwrite(result_destination_path, im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            cv2.imwrite(original_destination_path, im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            return
+
+        # Read the images to be aligned
+        img = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)), cv2.IMREAD_UNCHANGED)
+
+        # Convert images to grayscale
+        img_gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
+        blurred = cv2.GaussianBlur(img_gray, (5, 5), 0)
+        edges = self.auto_canny(blurred)
+
+        processed_image, contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        # Define 2x3 or 3x3 matrices and initialize the matrix to identity
+        if self.motion_type == cv2.MOTION_HOMOGRAPHY:
+            warp_matrix = numpy.eye(3, 3, dtype=numpy.float32)
+        else:
+            warp_matrix = numpy.eye(2, 3, dtype=numpy.float32)
+
+        # Specify the number of iterations.
+        number_of_iterations = 5000
+
+        # Specify the threshold of the increment
+        # in the correlation coefficient between two iterations
+        termination_eps = 1e-10
+
+        # Define termination criteria
+        criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, number_of_iterations, termination_eps)
+
+        # Run the ECC algorithm. The results are stored in warp_matrix.
+        (cc, warp_matrix) = cv2.findTransformECC(
+            self.reference_image_gray, processed_image, warp_matrix, self.motion_type, criteria
+        )
+
+        if self.motion_type == cv2.MOTION_HOMOGRAPHY:
+            # Use warpPerspective for Homography
+            aligned_img = cv2.warpPerspective(
+                img, warp_matrix, (self.reference_image_shape[1], self.reference_image_shape[0]),
+                flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
+                borderMode=cv2.BORDER_CONSTANT, borderValue=[255, 255, 255, 0]
+            )
+        else:
+            # Use warpAffine for Translation, Euclidean and Affine
+            aligned_img = cv2.warpAffine(
+                img, warp_matrix, (self.reference_image_shape[1], self.reference_image_shape[0]),
+                flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
+                borderMode=cv2.BORDER_CONSTANT, borderValue=[255, 255, 255, 0]
+            )
+
+        result_destination_path, original_destination_path = self.get_write_path(image_path)
+
+        cv2.imwrite(result_destination_path, aligned_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        cv2.imwrite(original_destination_path, img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+    def auto_canny(self, image, sigma=0.33):
+        # https://www.pyimagesearch.com/2015/04/06/zero-parameter-automatic-canny-edge-detection-with-python-and-opencv/
+        # compute the median of the single channel pixel intensities
+        v = numpy.median(image)
+
+        # apply automatic Canny edge detection using the computed median
+        lower = int(max(0, (1.0 - sigma) * v))
+        upper = int(min(255, (1.0 + sigma) * v))
+        edged = cv2.Canny(image, lower, upper)
+
+        # return the edged image
+        return edged
+
+
+
+# Idea: Iterate pixels "average" them out
+# If the colors match keep them, if they dont, drop them
+# use a threshold for this

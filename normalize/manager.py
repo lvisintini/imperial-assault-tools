@@ -26,47 +26,49 @@ class PipelineHelper(object):
 
     def run(self):
         for task in tqdm([t for t in self.tasks if hasattr(t, 'setup')], desc='Setups'):
+            self.log.debug('Setup for {!r}'.format(task))
             try:
                 self.data_helper = task.do_setup(self.data_helper)
             except Exception as e:
+                self.log.error('Setup for {!r}'.format(task))
                 self.log.exception(e)
                 break
-            self.log.debug('Success: Setup for {!r}'.format(task))
 
         for task in tqdm([t for t in self.tasks if hasattr(t, 'process')], desc='Processes'):
             if hasattr(task, 'pre_process'):
+                self.log.debug('Pre-Process for {!r}'.format(task))
                 try:
                     self.data_helper = task.do_pre_process(self.data_helper)
                 except Exception as e:
-                    self.log.error('Error: Pre-Process for {!r}'.format(task))
+                    self.log.error('Pre-Process for {!r}'.format(task))
                     self.log.exception(e)
                     break
-                self.log.debug('Success: Pre-Process for {!r}'.format(task))
 
+            self.log.debug('Process for {!r}'.format(task))
             try:
                 self.data_helper = task.do_process(self.data_helper)
             except Exception as e:
                 self.log.error('Error: Process for {!r}'.format(task))
                 self.log.exception(e)
                 break
-            self.log.debug('Success: Process for {!r}'.format(task))
 
             if hasattr(task, 'post_process'):
+                self.log.debug('Post-Process for {!r}'.format(task))
                 try:
                     self.data_helper = task.do_post_process(self.data_helper)
                 except Exception as e:
-                    self.log.error('Error: Post-Process for {!r}'.format(task))
+                    self.log.error('Post-Process for {!r}'.format(task))
                     self.log.exception(e)
                     break
-                self.log.debug('Success: Post-Process for {!r}'.format(task))
 
         for task in tqdm([t for t in self.tasks if hasattr(t, 'teardown')], desc='Teardowns'):
+            self.log.debug('Teardown for {!r}'.format(task))
             try:
                 self.data_helper = task.do_teardown(self.data_helper)
             except Exception as e:
+                self.log.error('Teardown for {!r}'.format(task))
                 self.log.exception(e)
                 break
-            self.log.debug('Success: Teardown for {!r}'.format(task))
 
 
 # These functions are attached to Task as a class method (were `this` would the Task class)
