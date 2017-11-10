@@ -307,13 +307,13 @@ class NormalizeImperialData(PipelineHelper):
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'side-mission-cards/born-from-death.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: model['period_restricted'], root='./images', destination_root='./aligned-images'),
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'agenda-cards/stormtrooper-support-strength-of-command.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: model['mission'] and not model['period_restricted'] and model['id'] != 62, root='./images', destination_root='./aligned-images'),
         # tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'agenda-cards/stormtrooper-support-strength-of-command.png', image_attr='image', source=SOURCES.AGENDA, filter_function=lambda model: model['id'] == 62, root='./images', destination_root='./aligned-images'),
+        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted'] and model['id'] not in [26, 14], root='./images', destination_root='./aligned-images'),
+        tasks.OpenCVAlignImages2(cv2.MOTION_AFFINE, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: model['id'] == 26, root='./images', destination_root='./aligned-images'),
+        tasks.OpenCVAlignImages(cv2.MOTION_EUCLIDEAN, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: model['id'] == 14, root='./images', destination_root='./aligned-images'),
 
         # This are the tests ones
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'command-cards/call-the-vanguard.png', image_attr='image', source=SOURCES.COMMAND, root='./images', destination_root='./aligned-images'),
-        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted'], root='./images', destination_root='./aligned-images/cv-afine'),
-        tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted'], root='./images', destination_root='./aligned-images/cv-homo'),
-        tasks.OpenCVAlignImages2(cv2.MOTION_AFFINE, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted'], root='./images', destination_root='./aligned-images/cv2-afine'),
-        tasks.OpenCVAlignImages2(cv2.MOTION_HOMOGRAPHY, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted'], root='./images', destination_root='./aligned-images/cv2-homo'),
+
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'story-mission-cards/chain-of-command.png', image_attr='image', source=SOURCES.STORY_MISSION, root='./images', destination_root='./aligned-images'),
         # Those where the tests ones
 
