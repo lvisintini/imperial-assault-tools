@@ -286,7 +286,7 @@ class NormalizeImperialData(PipelineHelper):
         base.RemoveField(field_name='source', source=SOURCES.SKIRMISH_MAP),
         base.RemoveField(field_name='source', source=SOURCES.UPGRADE),
 
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.AGENDA, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.AGENDA, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.COMMAND, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.COMPANION, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.CONDITION, ], image_attrs=['image', ]),
@@ -295,7 +295,7 @@ class NormalizeImperialData(PipelineHelper):
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.HERO, ], image_attrs=['healthy', 'wounded']),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.IMPERIAL_CLASS_CARD, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.REWARD, ], image_attrs=['image', ]),
-        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.SIDE_MISSION, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(root='./images', sources=[SOURCES.SIDE_MISSION, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.SOURCE, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.STORY_MISSION, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.SUPPLY, ], image_attrs=['image', ]),
@@ -310,7 +310,10 @@ class NormalizeImperialData(PipelineHelper):
 
         # This are the tests ones
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'command-cards/call-the-vanguard.png', image_attr='image', source=SOURCES.COMMAND, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted'], root='./images', destination_root='./aligned-images'),
+        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted'], root='./images', destination_root='./aligned-images/cv-afine'),
+        tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted'], root='./images', destination_root='./aligned-images/cv-homo'),
+        tasks.OpenCVAlignImages2(cv2.MOTION_AFFINE, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted'], root='./images', destination_root='./aligned-images/cv2-afine'),
+        tasks.OpenCVAlignImages2(cv2.MOTION_HOMOGRAPHY, 'side-mission-cards/cloud-citys-secret.png', image_attr='image', source=SOURCES.SIDE_MISSION, filter_function=lambda model: not model['period_restricted'], root='./images', destination_root='./aligned-images/cv2-homo'),
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'story-mission-cards/chain-of-command.png', image_attr='image', source=SOURCES.STORY_MISSION, root='./images', destination_root='./aligned-images'),
         # Those where the tests ones
 

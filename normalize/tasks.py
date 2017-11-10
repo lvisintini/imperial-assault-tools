@@ -323,8 +323,6 @@ class ImagesToPNG(Task):
 
 
 class ClassHeroRenameImages(RenameImages):
-    label = '#############################################################################'
-
     def process(self, data_helper):
         for model in data_helper.data[self.source]:
             path_to_file = model[self.file_attr]
@@ -626,6 +624,7 @@ class OpenCVContours(OpenCVSTask):
 
         # return the edged image
         return edged
+
 
 class OpenCVAlignImages(OpenCVSTask):
 
