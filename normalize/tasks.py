@@ -629,9 +629,10 @@ class OpenCVContours(OpenCVSTask):
 class OpenCVAlignImages(OpenCVSTask):
 
     def __init__(self, motion_type,  reference_image_path, **kwargs):
+        self.sub_dir = kwargs.pop('sub_dir', str(uuid.uuid4()))
+
         super().__init__(**kwargs)
         self.timestamp = None
-        self.uuid = str(uuid.uuid4())
 
         # defines the motion type
         self.motion_type = motion_type
@@ -642,6 +643,10 @@ class OpenCVAlignImages(OpenCVSTask):
         self.reference_image_gray = cv2.cvtColor(self.reference_image, cv2.COLOR_RGBA2GRAY)
         self.reference_image_shape = self.reference_image.shape
 
+    def pre_process(self, data_helper):
+        self.log.info(self.sub_dir)
+        return data_helper
+
     def setup(self, data_helper):
         self.timestamp = data_helper.timestamp.isoformat()
         return data_helper
@@ -651,8 +656,8 @@ class OpenCVAlignImages(OpenCVSTask):
 
         directory, filename = os.path.split(abs_path)
 
-        result_destination_path = os.path.join(directory, self.uuid, 'aligned')
-        original_destination_path = os.path.join(directory, self.uuid, 'not-aligned')
+        result_destination_path = os.path.join(directory, self.sub_dir, 'aligned')
+        original_destination_path = os.path.join(directory, self.sub_dir, 'not-aligned')
 
         if create_path:
             if not os.path.exists(result_destination_path):
@@ -724,12 +729,13 @@ class OpenCVAlignImages(OpenCVSTask):
         cv2.imwrite(original_destination_path, img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
 
-class OpenCVAlignImages2(OpenCVSTask):
+class OpenCVAlignImagesUsingCannyEdge(OpenCVSTask):
 
     def __init__(self, motion_type,  reference_image_path, **kwargs):
+        self.sub_dir = kwargs.pop('sub_dir', str(uuid.uuid4()))
+
         super().__init__(**kwargs)
         self.timestamp = None
-        self.uuid = str(uuid.uuid4())
 
         # defines the motion type
         self.motion_type = motion_type
@@ -750,13 +756,17 @@ class OpenCVAlignImages2(OpenCVSTask):
         self.timestamp = data_helper.timestamp.isoformat()
         return data_helper
 
+    def pre_process(self, data_helper):
+        self.log.info(self.sub_dir)
+        return data_helper
+
     def get_write_path(self, image_path, create_path=True):
         abs_path = os.path.abspath(os.path.join(self.destination_root, self.timestamp, image_path))
 
         directory, filename = os.path.split(abs_path)
 
-        result_destination_path = os.path.join(directory, self.uuid, 'aligned')
-        original_destination_path = os.path.join(directory, self.uuid, 'not-aligned')
+        result_destination_path = os.path.join(directory, self.sub_dir, 'aligned')
+        original_destination_path = os.path.join(directory, self.sub_dir, 'not-aligned')
 
         if create_path:
             if not os.path.exists(result_destination_path):
@@ -843,9 +853,3 @@ class OpenCVAlignImages2(OpenCVSTask):
 
         # return the edged image
         return edged
-
-
-
-# Idea: Iterate pixels "average" them out
-# If the colors match keep them, if they dont, drop them
-# use a threshold for this
