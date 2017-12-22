@@ -71,6 +71,10 @@ class NormalizeImperialData(PipelineHelper):
         tasks.ImageBooleanChoiceDataCollector(field_name='period_restricted', source=SOURCES.AGENDA),
         tasks.ImageBooleanChoiceDataCollector(field_name='period_restricted', source=SOURCES.SIDE_MISSION),
 
+        tasks.ImageChoiceDataCollector(field_name='type', source=SOURCES.REWARD, choices=HERO_CLASS_UPGRADE_TYPES.as_choices),
+        tasks.ImageBooleanChoiceDataCollector(field_name='empire', source=SOURCES.REWARD),
+        tasks.ImageAppendChoiceDataCollector(field_name='traits', source=SOURCES.REWARD, choices=UPGRADE_TRAITS.as_choices),
+
 
         tasks.CollectSources(source=SOURCES.SKIRMISH_MAP),
 
@@ -115,10 +119,7 @@ class NormalizeImperialData(PipelineHelper):
 
         base.AddHashes(source=SOURCES.REWARD, exclude=['image', 'image_file', 'id', 'source']),
         tasks.DeDupMerge(source=SOURCES.REWARD),
-        base.RemoveField(field_name='id', source=SOURCES.REWARD),
-        base.SortDataByAttrs('name', source=SOURCES.REWARD),
-        base.SortDataKeys(source=SOURCES.REWARD, preferred_order=['name', ]),
-        base.AddIds(source=SOURCES.REWARD),
+        base.SortDataKeys(source=SOURCES.REWARD, preferred_order=['id', 'name', ]),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.REWARD, fk_field_path=['source', ]
         ),
@@ -295,9 +296,9 @@ class NormalizeImperialData(PipelineHelper):
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.HERO_CLASS, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.HERO, ], image_attrs=['healthy', 'wounded']),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.IMPERIAL_CLASS_CARD, ], image_attrs=['image', ]),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.REWARD, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.REWARD, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.SIDE_MISSION, ], image_attrs=['image', ]),
-        # THISSS ONE NEEDS WORK tasks.StandardImageDimension(root='./images', sources=[SOURCES.SOURCE, ], image_attrs=['image', ]),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.SOURCE, ], image_attrs=['image', ], min_height=300, min_width=300),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.STORY_MISSION, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.SUPPLY, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.THREAT_MISSION, ], image_attrs=['image', ]),
@@ -350,14 +351,25 @@ class NormalizeImperialData(PipelineHelper):
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/energized-hilt.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE_MOD, root='./images', destination_root='./aligned-images'),
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/laminate-armor.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.ARMOR, root='./images', destination_root='./aligned-images'),
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/concussion-grenades.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.EQUIPMENT, root='./images', destination_root='./aligned-images'),
-        #
-        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'imperial-class-cards/subversive-tactics-weary-target.png', image_attr='image', source=SOURCES.IMPERIAL_CLASS_CARD, root='./images', destination_root='./aligned-images'),
 
-        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'imperial-class-cards/subversive-tactics-weary-target.png', image_attr='image', source=SOURCES.REWARD, root='./images', destination_root='./aligned-images'),
+
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'imperial-class-cards/hutt-mercenaries-most-wanted.png', image_attr='image', source=SOURCES.IMPERIAL_CLASS_CARD, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'imperial-class-cards/hutt-mercenaries-most-wanted.png', image_attr='image', source=SOURCES.REWARD, root='./images', destination_root='./aligned-images', filter_function=lambda model: model['empire'] and model['id'] != 31),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'imperial-class-cards/hutt-mercenaries-guild-hunters.png', image_attr='image', source=SOURCES.REWARD, root='./images', destination_root='./aligned-images', filter_function=lambda model: model['id'] == 31),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'hero-class-cards/davith-elso-embody-the-force.png', image_attr='image', source=SOURCES.REWARD, root='./images', destination_root='./aligned-images', filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.FEAT and not model['empire']),
+        #
+        # tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'upgrade-cards/electrostaff.png', image_attr='image', source=SOURCES.REWARD, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'upgrade-cards/dh-17.png', image_attr='image', source=SOURCES.REWARD, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'upgrade-cards/sniper-scope.png', image_attr='image', source=SOURCES.REWARD, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED_MOD, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'upgrade-cards/energized-hilt.png', image_attr='image', source=SOURCES.REWARD, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE_MOD, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'upgrade-cards/laminate-armor.png', image_attr='image', source=SOURCES.REWARD, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.ARMOR, root='./images', destination_root='./aligned-images'),
+        # tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'upgrade-cards/concussion-grenades.png', image_attr='image', source=SOURCES.REWARD, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.EQUIPMENT, root='./images', destination_root='./aligned-images'),
+
 
         base.RemoveField(field_name='period_restricted', source=SOURCES.AGENDA),
         base.RemoveField(field_name='period_restricted', source=SOURCES.SIDE_MISSION),
         base.RemoveField(field_name='template', source=SOURCES.COMMAND),
+        base.RemoveField(field_name='empire', source=SOURCES.REWARD),
 
         base.SaveData('./data/', SOURCES.as_list),
     ]
