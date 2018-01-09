@@ -116,6 +116,22 @@ class DeDupLog(Task):
         return data_helper
 
 
+class LogTask(Task):
+    source = None
+
+    def __init__(self, source=None):
+        super(LogTask, self).__init__()
+        self.source = source or self.source
+
+    def process(self, data_helper):
+        decks = set()
+        for model in data_helper.data[self.source]:
+            decks.add(model['deck'])
+        self.log.warning(decks)
+        return data_helper
+
+
+
 class DeDupMerge(Task):
     source = None
 
@@ -427,8 +443,9 @@ class StandardImageDimension(Task):
     sources = None
     root = '.'
     image_attrs = []
+    filter_function = None
 
-    def __init__(self, root=None, sources=None, image_attrs=None, min_width=None, min_height=None):
+    def __init__(self, root=None, sources=None, image_attrs=None, min_width=None, min_height=None, filter_function=None):
         super(StandardImageDimension, self).__init__()
         self.root = root or self.root
         self.sources = sources or self.sources
@@ -436,12 +453,13 @@ class StandardImageDimension(Task):
 
         self.min_width = min_width
         self.min_height = min_height
+        self.filter_function = filter_function or self.filter_function
 
     def get_dimensions_summary(self, data_helper, log_results=True):
         widths = []
         heights = []
         for source in self.sources:
-            for model in data_helper.data[source]:
+            for model in [m for m in data_helper.data[source] if self.filter(m)]:
                 for attr in self.image_attrs:
                     path = model.get(attr, None)
                     if path is None:
@@ -478,11 +496,16 @@ class StandardImageDimension(Task):
         self.get_dimensions_summary(data_helper, log_results=True)
         return data_helper
 
+    def filter(self, model):
+        if self.filter_function is None:
+            return True
+        return self.filter_function(model)
+
     def process(self, data_helper):
         if self.min_width and self.min_height:
 
             for source in tqdm(self.sources):
-                for model in tqdm(data_helper.data[source]):
+                for model in tqdm([m for m in data_helper.data[source] if self.filter(m)]):
                     for attr in self.image_attrs:
                         path = model.get(attr, None)
                         if path is not None:
