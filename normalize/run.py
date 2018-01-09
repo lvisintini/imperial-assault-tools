@@ -374,8 +374,9 @@ class NormalizeImperialData(PipelineHelper):
 
 
         tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/threat-mission-return-to-hoth.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Side Mission', 'Story Mission', 'Threat Mission']),
-        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/deployment-imperial.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Deployment', 'Companion']),
-        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/rebel-hero-gideon-argus.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Imperial Class', 'Rebel Hero']),
+        tasks.OpenCVAlignImages(cv2.MOTION_EUCLIDEAN, 'card-backs/deployment-imperial.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Deployment', ]),
+        tasks.OpenCVAlignImagesUsingCannyEdge(cv2.MOTION_EUCLIDEAN, 'card-backs/rebel-hero-gideon-argus.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Rebel Hero', ]),
+        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/imperial-class-inspiring-leadership.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Imperial Class', ]),
         tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/rebel-upgrade-tier-1.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Rebel Upgrade', ]),
         tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/condition-focused.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Condition', ]),
 
