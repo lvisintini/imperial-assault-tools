@@ -11,7 +11,7 @@ from collections import Counter, OrderedDict
 import cv2
 import numpy
 from look_at.wmctrl import WmCtrl
-from PIL import Image
+from PIL import Image, ImageChops, ImageDraw, ImageOps
 from tqdm import tqdm
 
 from normalize import base
@@ -320,7 +320,6 @@ class RenameImages(Task):
         return [self.slugify(w) for w in words]
 
 
-# RoundCorners -> https://raw.githubusercontent.com/firestrand/phatch/master/phatch/actions/round.py
 # Images to PNG format
 # Tinify
 
@@ -876,3 +875,250 @@ class OpenCVAlignImagesUsingCannyEdge(OpenCVSTask):
 
         # return the edged image
         return edged
+
+
+class RoundCorners(Task):
+    # RoundCorners -> https://raw.githubusercontent.com/firestrand/phatch/master/phatch/actions/round.py
+    # tasks.RoundCorners(100, 255, root='./images', sources=[SOURCES.DEPLOYMENT, ], image_attrs=['image', ]),
+    CROSS = 'Cross'
+    ROUNDED = 'Rounded'
+    SQUARE = 'Square'
+
+    CORNERS = [ROUNDED, SQUARE, CROSS]
+    CORNER_ID = 'rounded_corner_r%d_f%d'
+    CROSS_POS = (CROSS, CROSS, CROSS, CROSS)
+    ROUNDED_POS = (ROUNDED, ROUNDED, ROUNDED, ROUNDED)
+    ROUNDED_RECTANGLE_ID = 'rounded_rectangle_r%d_f%d_s%s_p%s'
+
+    sources = None
+    root = '.'
+    image_attrs = []
+    filter_function = None
+
+    def __init__(self, radius, opacity, root=None, sources=None, image_attrs=None, filter_function=None):
+        super(RoundCorners, self).__init__()
+        self.radius = radius
+        self.opacity = opacity
+        self.root = root or self.root
+        self.sources = sources or self.sources
+        self.image_attrs = image_attrs or self.image_attrs
+
+        self.filter_function = filter_function or self.filter_function
+
+    def filter(self, model):
+        if self.filter_function is None:
+            return True
+        return self.filter_function(model)
+
+    def process(self, data_helper):
+        for source in tqdm(self.sources):
+            for model in tqdm([m for m in data_helper.data[source] if self.filter(m)]):
+                for attr in self.image_attrs:
+                    path = model.get(attr, None)
+                    if path is not None:
+                        im = Image.open(os.path.join(self.root, path))
+                        im = im.convert("RGBA")
+                        self.round_image(im, radius=self.radius, opacity=self.opacity)
+                        im.save(os.path.join(self.root, path))
+
+        return data_helper
+
+    def round_image(self, image, cache=None, round_all=True, rounding_type=ROUNDED, radius=100, opacity=255,
+                    pos=ROUNDED_POS, back_color='#FFFFFF'):
+        if cache is None:
+            cache = {}
+        if image.mode != 'RGBA':
+            image = image.convert('RGBA')
+
+        if round_all:
+            pos = 4 * (rounding_type, )
+
+        mask = self.create_rounded_rectangle(image.size, cache, radius, opacity, pos)
+
+        self.paste(image, Image.new('RGB', image.size, back_color), (0, 0), ImageChops.invert(mask))
+        image.putalpha(mask)
+        return image
+
+    def create_rounded_rectangle(self, size=(600, 400), cache=None, radius=100, opacity=255, pos=ROUNDED_POS):
+        # rounded_rectangle
+        if cache is None:
+            cache = {}
+
+        im_x, im_y = size
+        rounded_rectangle_id = self.ROUNDED_RECTANGLE_ID % (radius, opacity, size, pos)
+        if rounded_rectangle_id in cache:
+            return cache[rounded_rectangle_id]
+        else:
+            # cross
+            cross_id = self.ROUNDED_RECTANGLE_ID % (radius, opacity, size, self.CROSS_POS)
+            if cross_id in cache:
+                cross = cache[cross_id]
+            else:
+                cross = cache[cross_id] = Image.new('L', size, 0)
+                draw = ImageDraw.Draw(cross)
+                draw.rectangle((radius, 0, im_x - radius, im_y), fill=opacity)
+                draw.rectangle((0, radius, im_x, im_y - radius), fill=opacity)
+            if pos == self.CROSS_POS:
+                return cross
+            # corner
+            corner_id = self.CORNER_ID % (radius, opacity)
+            if corner_id in cache:
+                corner = cache[corner_id]
+            else:
+                corner = cache[corner_id] = self.create_corner(radius, opacity)
+            # rounded rectangle
+            rectangle = Image.new('L', (radius, radius), 255)
+            rounded_rectangle = cross.copy()
+            for index, angle in enumerate(pos):
+                if angle == self.CROSS:
+                    continue
+                if angle == self.ROUNDED:
+                    element = corner
+                else:
+                    element = rectangle
+                if index % 2:
+                    x = im_x - radius
+                    element = element.transpose(Image.FLIP_LEFT_RIGHT)
+                else:
+                    x = 0
+                if index < 2:
+                    y = 0
+                else:
+                    y = im_y - radius
+                    element = element.transpose(Image.FLIP_TOP_BOTTOM)
+                self.paste(rounded_rectangle, element, (x, y))
+            cache[rounded_rectangle_id] = rounded_rectangle
+            return rounded_rectangle
+
+    @staticmethod
+    def create_corner(radius=100, opacity=255, factor=2):
+        corner = Image.new('L', (factor * radius, factor * radius), 0)
+        draw = ImageDraw.Draw(corner)
+        draw.pieslice((0, 0, 2 * factor * radius, 2 * factor * radius), 180, 270, fill=opacity)
+        corner = corner.resize((radius, radius), Image.ANTIALIAS)
+        return corner
+
+    def paste(self, destination, source, box=(0, 0), mask=None, force=False):
+        """"Pastes the source image into the destination image while using an
+        alpha channel if available.
+
+        :param destination: destination image
+        :type destination:  PIL image object
+        :param source: source image
+        :type source: PIL image object
+        :param box:
+
+            The box argument is either a 2-tuple giving the upper left corner,
+            a 4-tuple defining the left, upper, right, and lower pixel coordinate,
+            or None (same as (0, 0)). If a 4-tuple is given, the size of the
+            pasted image must match the size of the region.
+
+        :type box: tuple
+        :param mask: mask or None
+
+        :type mask: bool or PIL image object
+        :param force:
+
+            With mask: Force the invert alpha paste or not.
+
+            Without mask:
+
+            - If ``True`` it will overwrite the alpha channel of the destination
+              with the alpha channel of the source image. So in that case the
+              pixels of the destination layer will be abandoned and replaced
+              by exactly the same pictures of the destination image. This is mostly
+              what you need if you paste on a transparent canvas.
+            - If ``False`` this will use a mask when the image has an alpha
+              channel. In this case pixels of the destination image will appear
+              through where the source image is transparent.
+
+        :type force: bool
+        """
+        # Paste on top
+        if source == mask:
+            if self.has_alpha(source):
+                # invert_alpha = the transparent pixels of the destination
+                if self.has_alpha(destination) and (destination.size == source.size or force):
+                    invert_alpha = ImageOps.invert(self.get_alpha(destination))
+                    if invert_alpha.size != source.size:
+                        # if sizes are not the same be careful!
+                        # check the results visually
+                        if len(box) == 2:
+                            w, h = source.size
+                            box = (box[0], box[1], box[0] + w, box[1] + h)
+                        invert_alpha = invert_alpha.crop(box)
+                else:
+                    invert_alpha = None
+                # we don't want composite of the two alpha channels
+                source_without_alpha = self.remove_alpha(source)
+                # paste on top of the opaque destination pixels
+                destination.paste(source_without_alpha, box, source)
+                if invert_alpha is not None:
+                    # the alpha channel is ok now, so save it
+                    destination_alpha = self.get_alpha(destination)
+                    # paste on top of the transparent destination pixels
+                    # the transparent pixels of the destination should
+                    # be filled with the color information from the source
+                    destination.paste(source_without_alpha, box, invert_alpha)
+                    # restore the correct alpha channel
+                    destination.putalpha(destination_alpha)
+            else:
+                destination.paste(source, box)
+        elif mask:
+            destination.paste(source, box, mask)
+        else:
+            destination.paste(source, box)
+            if force and self.has_alpha(source):
+                destination_alpha = self.get_alpha(destination)
+                source_alpha = self.get_alpha(source)
+                destination_alpha.paste(source_alpha, box)
+                destination.putalpha(destination_alpha)
+
+    @staticmethod
+    def remove_alpha(image):
+        """Returns a copy of the image after removing the alpha band or
+        transparency
+
+        :param image: input image
+        :type image: PIL image object
+        :returns: the input image after removing the alpha band or transparency
+        :rtype: PIL image object
+        """
+        if image.mode == 'RGBA':
+            return image.convert('RGB')
+        if image.mode == 'LA':
+            return image.convert('L')
+        if image.mode == 'P' and 'transparency' in image.info:
+            img = image.convert('RGB')
+            del img.info['transparency']
+            return img
+        return image
+
+    @staticmethod
+    def has_alpha(image):
+        """Checks if the image has an alpha band.
+        i.e. the image mode is either RGBA or LA.
+        The transparency in the P mode doesn't count as an alpha band
+
+        :param image: the image to check
+        :type image: PIL image object
+        :returns: True or False
+        :rtype: boolean
+        """
+        return image.mode.endswith('A')
+
+    def get_alpha(self, image):
+        """Gets the image alpha band. Can handles P mode images with transpareny.
+        Returns a band with all values set to 255 if no alpha band exists.
+
+        :param image: input image
+        :type image: PIL image object
+        :returns: alpha as a band
+        :rtype: single band image object
+        """
+        if self.has_alpha(image):
+            return image.split()[-1]
+        if image.mode == 'P' and 'transparency' in image.info:
+            return image.convert('RGBA').split()[-1]
+        # No alpha layer, create one.
+        return Image.new('L', image.size, 255)
