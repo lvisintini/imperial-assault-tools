@@ -289,7 +289,7 @@ class NormalizeImperialData(PipelineHelper):
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.COMMAND, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.COMPANION, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.CONDITION, ], image_attrs=['image', ]),
-        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.DEPLOYMENT, ], image_attrs=['image', ]),
+        tasks.StandardImageDimension(root='./images', sources=[SOURCES.DEPLOYMENT, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.HERO_CLASS, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.HERO, ], image_attrs=['healthy', 'wounded']),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.IMPERIAL_CLASS_CARD, ], image_attrs=['image', ]),
@@ -301,8 +301,8 @@ class NormalizeImperialData(PipelineHelper):
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.THREAT_MISSION, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.UPGRADE, ], image_attrs=['image', ]),
 
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.CARD, ], image_attrs=['image', ], filter_function=lambda m: m['deck'] in ['Condition', 'Command', 'Reward', 'Supply', 'Rebel Upgrade', 'Rebel Hero', 'Imperial Class']),
-        tasks.StandardImageDimension(root='./images', sources=[SOURCES.CARD, ], image_attrs=['image', ], filter_function=lambda m: m['deck'] in ['Side Mission', 'Story Mission', 'Deployment', 'Companion', 'Agenda', 'Threat Mission']),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.CARD, ], image_attrs=['image', ], filter_function=lambda m: m['deck'] in ['Condition', 'Command', 'Reward', 'Supply', 'Rebel Upgrade', 'Rebel Hero', 'Imperial Class']),
+        # tasks.StandardImageDimension(root='./images', sources=[SOURCES.CARD, ], image_attrs=['image', ], filter_function=lambda m: m['deck'] in ['Side Mission', 'Story Mission', 'Deployment', 'Companion', 'Agenda', 'Threat Mission']),
 
         # # TEMPLATES -> tasks.OpenCVAlignImages(cv2.MOTION_EUCLIDEAN, '../templates/side-mission-cards/homecoming.png', image_attr='image', source=SOURCES.AGENDA, root='./images', destination_root='./aligned-images', filter_function=lambda model: model['id'] in [56, ]),
         # # TEMPLATES -> tasks.OpenCVAlignImages(cv2.MOTION_EUCLIDEAN, '../templates/side-mission-cards/homecoming.png', image_attr='image', source=SOURCES.SIDE_MISSION, root='./images', destination_root='./aligned-images', filter_function=lambda model: model['id'] in [7, 23, 30, ]),
@@ -334,8 +334,10 @@ class NormalizeImperialData(PipelineHelper):
         # tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, '../templates/command-cards/bodyguard.png', image_attr='image', source=SOURCES.COMMAND, root='./images', destination_root='./aligned-images', filter_function=lambda model: model['limit'] == 2 and model['id'] == 25),
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'companion-cards/salacious-b-crumb.png', image_attr='image', source=SOURCES.COMPANION, root='./images', destination_root='./aligned-images'),
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'condition-cards/weakened.png', image_attr='image', source=SOURCES.CONDITION, root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'deployment-cards/leia-organa-rebel-commander-campaign.png', image_attr='image', source=SOURCES.DEPLOYMENT, filter_function=lambda model: DEPLOYMENT_TRAITS.SKIRMISH_UPGRADE not in model['traits'], root='./images', destination_root='./aligned-images'),
-        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'deployment-cards/last-resort-skirmish.png', image_attr='image', source=SOURCES.DEPLOYMENT, filter_function=lambda model: DEPLOYMENT_TRAITS.SKIRMISH_UPGRADE in model['traits'], root='./images', destination_root='./aligned-images'),
+
+        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'deployment-cards/leia-organa-rebel-commander-campaign.png', image_attr='image', source=SOURCES.DEPLOYMENT, filter_function=lambda model: DEPLOYMENT_TRAITS.SKIRMISH_UPGRADE not in model['traits'], root='./images', destination_root='./aligned-images', radius=55),
+        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'deployment-cards/last-resort-skirmish.png', image_attr='image', source=SOURCES.DEPLOYMENT, filter_function=lambda model: DEPLOYMENT_TRAITS.SKIRMISH_UPGRADE in model['traits'], root='./images', destination_root='./aligned-images', radius=55),
+
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'heroes/murne-rin-healthy.png', image_attr='healthy', source=SOURCES.HERO, root='./images', destination_root='./aligned-images'),
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'heroes/diala-passil-wounded.png', image_attr='wounded', source=SOURCES.HERO, root='./images', destination_root='./aligned-images'),
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'supply-cards/troop-data.png', image_attr='image', source=SOURCES.SUPPLY, root='./images', destination_root='./aligned-images'),
@@ -373,13 +375,12 @@ class NormalizeImperialData(PipelineHelper):
         # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'hero-class-cards/davith-elso-embody-the-force.png', image_attr='image', source=SOURCES.REWARD, root='./images', destination_root='./aligned-images', filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.FEAT and not model['empire']),
 
 
-        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/threat-mission-return-to-hoth.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Side Mission', 'Story Mission', 'Threat Mission']),
-        tasks.OpenCVAlignImages(cv2.MOTION_EUCLIDEAN, 'card-backs/deployment-imperial.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Deployment', ]),
-        tasks.OpenCVAlignImagesUsingCannyEdge(cv2.MOTION_EUCLIDEAN, 'card-backs/rebel-hero-gideon-argus.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Rebel Hero', ]),
-        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/imperial-class-inspiring-leadership.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Imperial Class', ]),
-        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/rebel-upgrade-tier-1.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Rebel Upgrade', ]),
-        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/condition-focused.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Condition', ]),
-
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/threat-mission-return-to-hoth.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Side Mission', 'Story Mission', 'Threat Mission']),
+        # tasks.OpenCVAlignImages(cv2.MOTION_EUCLIDEAN, 'card-backs/deployment-imperial.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Deployment', ]),
+        # tasks.OpenCVAlignImagesUsingCannyEdge(cv2.MOTION_EUCLIDEAN, 'card-backs/rebel-hero-gideon-argus.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Rebel Hero', ]),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/imperial-class-inspiring-leadership.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Imperial Class', ]),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/rebel-upgrade-tier-1.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Rebel Upgrade', ]),
+        # tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'card-backs/condition-focused.png', image_attr='image', source=SOURCES.CARD, root='./images', destination_root='./aligned-images', filter_function=lambda m: m['deck'] in ['Condition', ]),
 
         base.RemoveField(field_name='period_restricted', source=SOURCES.AGENDA),
         base.RemoveField(field_name='period_restricted', source=SOURCES.SIDE_MISSION),

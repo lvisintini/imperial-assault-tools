@@ -3,7 +3,7 @@ import tinify
 from tqdm import tqdm
 tinify.key = "ztlmPV5XG4sib4jGK5LYWX7X25hVhKhS"
 
-ASSETS_DIR = '/home/lvisintini/src/imperial-assault/raw-images/'
+ASSETS_DIR = '/home/lvisintini/src/imperial-assault/images/'
 
 
 def get_file_paths(root):
