@@ -918,12 +918,14 @@ class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
 
         self.reference_image_path = reference_image_path
 
-        self.reference_image = cv2.imread(self.get_read_path(reference_image_path), cv2.IMREAD_UNCHANGED)
-        self.reference_image_gray = cv2.cvtColor(self.reference_image, cv2.COLOR_RGBA2GRAY)
-        self.reference_image_shape = self.reference_image.shape
+        self.reference_image = None
+        self.reference_image_gray = None
+        self.reference_image_shape = None
 
     def pre_process(self, data_helper):
-        self.log.info(self.sub_dir)
+        self.reference_image = cv2.imread(self.get_read_path(self.reference_image_path), cv2.IMREAD_UNCHANGED)
+        self.reference_image_gray = cv2.cvtColor(self.reference_image, cv2.COLOR_RGBA2GRAY)
+        self.reference_image_shape = self.reference_image.shape
         return data_helper
 
     def setup(self, data_helper):
@@ -1023,16 +1025,9 @@ class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
         self.motion_type = motion_type
 
         self.reference_image_path = reference_image_path
-
-        self.reference_image = cv2.imread(self.get_read_path(reference_image_path), cv2.IMREAD_UNCHANGED)
-
-        processed_image = cv2.cvtColor(self.reference_image, cv2.COLOR_RGBA2GRAY)
-        processed_image = cv2.GaussianBlur(processed_image, (5, 5), 0)
-        edges = self.auto_canny(processed_image)
-        processed_image, contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-        self.reference_image_gray = processed_image
-        self.reference_image_shape = processed_image.shape
+        self.reference_image = None
+        self.reference_image_gray = None
+        self.reference_image_shape = None
 
     def setup(self, data_helper):
         self.timestamp = data_helper.timestamp.isoformat()
@@ -1050,7 +1045,15 @@ class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
         return data_helper
 
     def pre_process(self, data_helper):
-        self.log.info(self.sub_dir)
+        self.reference_image = cv2.imread(self.get_read_path(self.reference_image_path), cv2.IMREAD_UNCHANGED)
+
+        processed_image = cv2.cvtColor(self.reference_image, cv2.COLOR_RGBA2GRAY)
+        processed_image = cv2.GaussianBlur(processed_image, (5, 5), 0)
+        edges = self.auto_canny(processed_image)
+        processed_image, contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        self.reference_image_gray = processed_image
+        self.reference_image_shape = processed_image.shape
         return data_helper
 
     def opencv_processing(self, image_path):
