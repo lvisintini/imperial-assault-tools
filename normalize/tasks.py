@@ -774,7 +774,6 @@ class OpenCVSTask(Task):
     source = None
     image_attr = None
     root = '.'
-    destination_root = '.'
     filter_function = None
 
     def __init__(self, source=None, image_attr=None, filter_function=None, root=None, destination_root=None):
@@ -783,7 +782,7 @@ class OpenCVSTask(Task):
         self.image_attr = image_attr or self.image_attr
         self.filter_function = filter_function or self.filter_function
         self.root = root or self.root
-        self.destination_root = destination_root or self.destination_root
+        self.destination_root = destination_root or self.root
 
     def get_read_path(self, image_path):
         abs_path = os.path.abspath(os.path.join(self.root, image_path))
@@ -876,10 +875,7 @@ class CopyTask(Task):
 class OpenCVContours(OpenCVSTask):
     def opencv_processing(self, image_path):
         # http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contours_begin/py_contours_begin.html?highlight=canny
-        abs_path = self.get_read_path(image_path)
-        destination = self.get_write_path(image_path)
-
-        img = cv2.imread(abs_path, cv2.IMREAD_UNCHANGED)
+        img = cv2.imread(self.get_read_path(image_path), cv2.IMREAD_UNCHANGED)
         gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
 
         # liked this 2
@@ -893,7 +889,7 @@ class OpenCVContours(OpenCVSTask):
 
         cv2.drawContours(img, contours, -1, (0, 0, 0, 255), 1)
 
-        cv2.imwrite(destination, image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        cv2.imwrite(self.get_write_path(image_path), image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
     def auto_canny(self, image, sigma=0.33):
         # https://www.pyimagesearch.com/2015/04/06/zero-parameter-automatic-canny-edge-detection-with-python-and-opencv/
@@ -942,8 +938,7 @@ class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
             im = im.convert("RGBA")
             if self.radius and self.opacity:
                 self.round_image(im, radius=self.radius, opacity=self.opacity)
-            im.save(self.get_write_path(image_path)[0][::-1].replace('.', '.1', 1)[::-1])
-            #im.save(self.get_write_path(image_path)[0])
+            im.save(self.get_write_path(image_path))
 
         return data_helper
 
@@ -966,19 +961,13 @@ class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
 
     def opencv_processing(self, image_path):
         # https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
-        abs_path = self.get_read_path(image_path)
-
         if self.reference_image_path == image_path:
-            result_destination_path, original_destination_path = self.get_write_path(image_path)
-
-            im = cv2.imread(abs_path, cv2.IMREAD_UNCHANGED)
-
-            cv2.imwrite(result_destination_path, im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-            cv2.imwrite(original_destination_path, im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            im = cv2.imread(self.get_read_path(image_path), cv2.IMREAD_UNCHANGED)
+            cv2.imwrite(self.get_write_path(image_path), im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
             return
 
         # Read the images to be aligned
-        img = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)), cv2.IMREAD_UNCHANGED)
+        img = cv2.imread(self.get_read_path(image_path), cv2.IMREAD_UNCHANGED)
 
         # Convert images to grayscale
         img_gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
@@ -1019,10 +1008,7 @@ class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
                 borderMode=cv2.BORDER_CONSTANT, borderValue=[255, 255, 255, 0]
             )
 
-        result_destination_path, original_destination_path = self.get_write_path(image_path)
-
-        cv2.imwrite(result_destination_path, aligned_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-        cv2.imwrite(original_destination_path, img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        cv2.imwrite(self.get_write_path(image_path), aligned_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
 
 class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
@@ -1060,46 +1046,23 @@ class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
             im = im.convert("RGBA")
             if self.radius and self.opacity:
                 self.round_image(im, radius=self.radius, opacity=self.opacity)
-            im.save(self.get_write_path(image_path)[0][::-1].replace('.', '.1', 1)[::-1])
-            #im.save(self.get_write_path(image_path)[0])
+            im.save(self.get_write_path(image_path))
         return data_helper
 
     def pre_process(self, data_helper):
         self.log.info(self.sub_dir)
         return data_helper
 
-    def get_write_path(self, image_path, create_path=True):
-        abs_path = os.path.abspath(os.path.join(self.destination_root, self.timestamp, image_path))
-
-        directory, filename = os.path.split(abs_path)
-
-        result_destination_path = os.path.join(directory, self.sub_dir, 'aligned')
-        original_destination_path = os.path.join(directory, self.sub_dir, 'not-aligned')
-
-        if create_path:
-            if not os.path.exists(result_destination_path):
-                os.makedirs(result_destination_path)
-
-            if not os.path.exists(original_destination_path):
-                os.makedirs(original_destination_path)
-
-        return os.path.join(result_destination_path, filename), os.path.join(original_destination_path, filename)
-
     def opencv_processing(self, image_path):
         # https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
-        abs_path = self.get_read_path(image_path)
 
         if self.reference_image_path == image_path:
-            result_destination_path, original_destination_path = self.get_write_path(image_path)
-
-            im = cv2.imread(abs_path, cv2.IMREAD_UNCHANGED)
-
-            cv2.imwrite(result_destination_path, im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-            cv2.imwrite(original_destination_path, im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            im = cv2.imread(self.get_read_path(image_path), cv2.IMREAD_UNCHANGED)
+            cv2.imwrite(self.get_write_path(image_path), im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
             return
 
         # Read the images to be aligned
-        img = cv2.imread(os.path.abspath(os.path.join(self.root, image_path)), cv2.IMREAD_UNCHANGED)
+        img = cv2.imread(self.get_read_path(image_path), cv2.IMREAD_UNCHANGED)
 
         # Convert images to grayscale
         img_gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
@@ -1144,10 +1107,7 @@ class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
                 borderMode=cv2.BORDER_CONSTANT, borderValue=[255, 255, 255, 0]
             )
 
-        result_destination_path, original_destination_path = self.get_write_path(image_path)
-
-        cv2.imwrite(result_destination_path, aligned_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-        cv2.imwrite(original_destination_path, img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        cv2.imwrite(self.get_write_path(image_path), aligned_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
     def auto_canny(self, image, sigma=0.33):
         # https://www.pyimagesearch.com/2015/04/06/zero-parameter-automatic-canny-edge-detection-with-python-and-opencv/
