@@ -1,7 +1,8 @@
-import os
-import struct
 import imghdr
+import math
+import os
 import re
+import struct
 import subprocess
 import time
 import uuid
@@ -11,7 +12,7 @@ from collections import Counter, OrderedDict
 import cv2
 import numpy
 from look_at.wmctrl import WmCtrl
-from PIL import Image, ImageChops, ImageDraw, ImageOps
+from PIL import Image, ImageDraw
 from tqdm import tqdm
 
 from normalize import base
@@ -119,17 +120,21 @@ class DeDupLog(Task):
 class LogTask(Task):
     source = None
 
-    def __init__(self, source=None):
+    def __init__(self):
         super(LogTask, self).__init__()
-        self.source = source or self.source
 
-    def process(self, data_helper):
-        decks = set()
-        for model in data_helper.data[self.source]:
-            decks.add(model['deck'])
-        self.log.warning(decks)
+    def setup(self, data_helper):
+        data_helper.processed_images = []
         return data_helper
 
+    def process(self, data_helper):
+        for source in data_helper.data:
+            for model in data_helper.data[source]:
+                for image_attr in ['image', 'healthy', 'wounded']:
+                    path = model.get(image_attr)
+                    if path and path not in data_helper.processed_images:
+                        self.log.warning(path)
+        return data_helper
 
 
 class DeDupMerge(Task):
@@ -320,9 +325,6 @@ class RenameImages(Task):
         return [self.slugify(w) for w in words]
 
 
-# Images to PNG format
-# Tinify
-
 class ImagesToPNG(Task):
     @classmethod
     def process(cls, data_helper):
@@ -443,8 +445,9 @@ class StandardImageDimension(Task):
     root = '.'
     image_attrs = []
     filter_function = None
+    canvas_to_size = False
 
-    def __init__(self, root=None, sources=None, image_attrs=None, min_width=None, min_height=None, filter_function=None):
+    def __init__(self, root=None, sources=None, image_attrs=None, min_width=None, min_height=None, filter_function=None, canvas_to_size=False):
         super(StandardImageDimension, self).__init__()
         self.root = root or self.root
         self.sources = sources or self.sources
@@ -453,6 +456,7 @@ class StandardImageDimension(Task):
         self.min_width = min_width
         self.min_height = min_height
         self.filter_function = filter_function or self.filter_function
+        self.canvas_to_size = canvas_to_size or self.canvas_to_size
 
     def get_dimensions_summary(self, data_helper, log_results=True):
         widths = []
@@ -512,12 +516,15 @@ class StandardImageDimension(Task):
                             im = im.convert("RGBA")
                             im.thumbnail((self.min_width, self.min_height), Image.ANTIALIAS)
                             im.save(os.path.join(self.root, path))
-                            #old_width, old_height = im.size
-                            #x1 = int(math.floor((self.min_width - old_width) / 2))
-                            #y1 = int(math.floor((self.min_height - old_height) / 2))
-                            #new_image = Image.new(im.mode, (self.min_width, self.min_height))
-                            #new_image.paste(im, (x1, y1, x1 + old_width, y1 + old_height))
-                            #new_image.save(os.path.join(self.root, path))
+                            if self.canvas_to_size:
+                                old_width, old_height = im.size
+                                x1 = int(math.floor((self.min_width - old_width) / 2))
+                                y1 = int(math.floor((self.min_height - old_height) / 2))
+                                new_image = Image.new(im.mode, (self.min_width, self.min_height))
+                                new_image.paste(im, (x1, y1, x1 + old_width, y1 + old_height))
+                                new_image.save(os.path.join(self.root, path))
+                            else:
+                                im.save(os.path.join(self.root, path))
         else:
             self.log.error('No dimensions found for images')
         return data_helper
@@ -558,10 +565,214 @@ class StandardImageDimension(Task):
             return width, height
 
 
+class RoundCornersMixin:
+    # RoundCorners -> https://raw.githubusercontent.com/firestrand/phatch/master/phatch/actions/round.py
+    # tasks.RoundCorners(100, 255, root='./images', sources=[SOURCES.DEPLOYMENT, ], image_attrs=['image', ]),
+    CROSS = 'Cross'
+    ROUNDED = 'Rounded'
+    SQUARE = 'Square'
+
+    CORNERS = [ROUNDED, SQUARE, CROSS]
+    CROSS_POS = (CROSS, CROSS, CROSS, CROSS)
+    ROUNDED_POS = (ROUNDED, ROUNDED, ROUNDED, ROUNDED)
+
+    def __init__(self, *args, **kwargs):
+        self.radius = kwargs.pop('radius', None)
+        self.opacity = kwargs.pop('opacity', 255)
+        super(RoundCornersMixin, self).__init__(*args, **kwargs)
+
+    def round_image(self, image, round_all=True, rounding_type=ROUNDED, radius=100, opacity=255, pos=ROUNDED_POS):
+        if image.mode != 'RGBA':
+            image = image.convert('RGBA')
+
+        if round_all:
+            pos = 4 * (rounding_type, )
+
+        mask = self.create_rounded_rectangle(image.size, radius, opacity, pos)
+
+        alpha_array = numpy.asarray(self.get_alpha(image))
+        mask_array = numpy.asarray(mask)
+
+        width, height = image.size
+        new_alpha_array = numpy.zeros(shape=(height, width), dtype=numpy.uint8)
+
+        for x in range(len(alpha_array)):
+            for y in range(len(alpha_array[0])):
+                new_alpha_array[x, y] = min(alpha_array[x, y], mask_array[x, y])
+
+        # self.get_alpha(image).show('current_alpha')
+        # mask.show('rounded_alpha')
+        # Image.fromarray(new_alpha_array, 'L').show('New')
+
+        image.putalpha(Image.fromarray(new_alpha_array, 'L'))
+        return image
+
+    def create_rounded_rectangle(self, size=(600, 400), radius=100, opacity=255, pos=ROUNDED_POS):
+        # rounded_rectangle
+        im_x, im_y = size
+
+        cross = Image.new('L', size, 0)
+        draw = ImageDraw.Draw(cross)
+        draw.rectangle((radius, 0, im_x - radius, im_y), fill=opacity)
+        draw.rectangle((0, radius, im_x, im_y - radius), fill=opacity)
+
+        if pos == self.CROSS_POS:
+            return cross
+
+        corner = self.create_corner(radius, opacity)
+        # rounded rectangle
+        rectangle = Image.new('L', (radius, radius), 255)
+        rounded_rectangle = cross.copy()
+        for index, angle in enumerate(pos):
+            if angle == self.CROSS:
+                continue
+            if angle == self.ROUNDED:
+                element = corner
+            else:
+                element = rectangle
+            if index % 2:
+                x = im_x - radius
+                element = element.transpose(Image.FLIP_LEFT_RIGHT)
+            else:
+                x = 0
+            if index < 2:
+                y = 0
+            else:
+                y = im_y - radius
+                element = element.transpose(Image.FLIP_TOP_BOTTOM)
+            rounded_rectangle.paste(element, (x, y))
+        return rounded_rectangle
+
+    @staticmethod
+    def create_corner(radius=100, opacity=255, factor=2):
+        corner = Image.new('L', (factor * radius, factor * radius), 0)
+        draw = ImageDraw.Draw(corner)
+        draw.pieslice((0, 0, 2 * factor * radius, 2 * factor * radius), 180, 270, fill=opacity)
+        corner = corner.resize((radius, radius), Image.ANTIALIAS)
+        return corner
+
+    @staticmethod
+    def remove_alpha(image):
+        """Returns a copy of the image after removing the alpha band or
+        transparency
+
+        :param image: input image
+        :type image: PIL image object
+        :returns: the input image after removing the alpha band or transparency
+        :rtype: PIL image object
+        """
+        if image.mode == 'RGBA':
+            return image.convert('RGB')
+        if image.mode == 'LA':
+            return image.convert('L')
+        if image.mode == 'P' and 'transparency' in image.info:
+            img = image.convert('RGB')
+            del img.info['transparency']
+            return img
+        return image
+
+    @staticmethod
+    def has_alpha(image):
+        """Checks if the image has an alpha band.
+        i.e. the image mode is either RGBA or LA.
+        The transparency in the P mode doesn't count as an alpha band
+
+        :param image: the image to check
+        :type image: PIL image object
+        :returns: True or False
+        :rtype: boolean
+        """
+        return image.mode.endswith('A')
+
+    def get_alpha(self, image):
+        """Gets the image alpha band. Can handles P mode images with transpareny.
+        Returns a band with all values set to 255 if no alpha band exists.
+
+        :param image: input image
+        :type image: PIL image object
+        :returns: alpha as a band
+        :rtype: single band image object
+        """
+        if self.has_alpha(image):
+            return image.split()[-1]
+        if image.mode == 'P' and 'transparency' in image.info:
+            return image.convert('RGBA').split()[-1]
+        # No alpha layer, create one.
+        return Image.new('L', image.size, 255)
+
+
+class RoundCornersTask(RoundCornersMixin, Task):
+    source = None
+    image_attr = None
+    root = '.'
+    destination_root = '.'
+
+    def __init__(self, source=None, image_attr=None, filter_function=None, root=None, destination_root=None, **kwargs):
+        self.sub_dir = kwargs.pop('sub_dir', str(uuid.uuid4()))
+
+        super().__init__(**kwargs)
+        self.timestamp = None
+        self.source = source or self.source
+        self.image_attr = image_attr or self.image_attr
+        self.filter_function = filter_function or self.filter_function
+        self.root = root or self.root
+        self.destination_root = destination_root or self.destination_root
+
+    def filter(self, model):
+        if self.image_attr not in model:
+            return False
+
+        if self.filter_function is None:
+            return True
+
+        return self.filter_function(model)
+
+    def setup(self, data_helper):
+        self.timestamp = data_helper.timestamp.isoformat()
+        return data_helper
+
+    def process(self, data_helper):
+        for model in tqdm([m for m in data_helper.data[self.source] if self.filter(m)], desc='Rounding Corner'):
+            image_path = model.get(self.image_attr, None)
+            if image_path is not None and self.radius and self.opacity:
+                im = Image.open(self.get_read_path(image_path))
+                im.save(self.get_write_path(image_path)[0])
+                im = im.convert("RGBA")
+                if self.radius and self.opacity:
+                    self.round_image(im, radius=self.radius, opacity=self.opacity)
+                im.save(self.get_write_path(image_path)[0][::-1].replace('.', '.1', 1)[::-1])
+
+            data_helper.processed_images.append(model[self.image_attr])
+
+        return data_helper
+
+    def get_read_path(self, image_path):
+        abs_path = os.path.abspath(os.path.join(self.root, image_path))
+        if not os.path.exists(abs_path):
+            raise Exception(f'File path does not exists: {abs_path}')
+        return abs_path
+
+    def get_write_path(self, image_path, create_path=True):
+        abs_path = os.path.abspath(os.path.join(self.destination_root, self.timestamp, image_path))
+
+        directory, filename = os.path.split(abs_path)
+
+        result_destination_path = os.path.join(directory, self.sub_dir, 'aligned')
+        original_destination_path = os.path.join(directory, self.sub_dir, 'not-aligned')
+
+        if create_path:
+            if not os.path.exists(result_destination_path):
+                os.makedirs(result_destination_path)
+
+            if not os.path.exists(original_destination_path):
+                os.makedirs(original_destination_path)
+
+        return os.path.join(result_destination_path, filename), os.path.join(original_destination_path, filename)
+
+
 class OpenCVSTask(Task):
     source = None
     image_attr = None
-    filter = None
     root = '.'
     filter_function = None
 
@@ -597,18 +808,68 @@ class OpenCVSTask(Task):
         return self.filter_function(model)
 
     def before_each(self, model, data_helper):
-        pass
+        return data_helper
+
+    def after_each(self, model, data_helper):
+        data_helper.processed_images.append(model[self.image_attr])
+        return data_helper
 
     def process(self, data_helper):
-
         for model in tqdm([m for m in data_helper.data[self.source] if self.filter(m)], desc='OpenCV process'):
-            self.before_each(model, data_helper)
+
+            data_helper = self.before_each(model, data_helper)
             self.log.info(repr(model))
             self.opencv_processing(model[self.image_attr])
+            data_helper = self.after_each(model, data_helper)
         return data_helper
 
     def opencv_processing(self, image_path):
         raise NotImplementedError
+
+
+class CopyTask(Task):
+    image_attrs = []
+    root = '.'
+    destination_root = '.'
+    filter_function = None
+
+    def __init__(self, image_attrs=None, filter_function=None, root=None, destination_root=None):
+        super(CopyTask, self).__init__()
+        self.image_attrs = image_attrs or self.image_attrs
+        self.filter_function = filter_function or self.filter_function
+        self.root = root or self.root
+        self.destination_root = destination_root or self.destination_root
+
+    def get_read_path(self, image_path):
+        abs_path = os.path.abspath(os.path.join(self.root, image_path))
+        if not os.path.exists(abs_path):
+            raise Exception(f'File path does not exists: {abs_path}')
+        return abs_path
+
+    def get_write_path(self, image_path, create_path=True):
+        abs_path = os.path.abspath(os.path.join(self.destination_root, image_path))
+
+        if not os.path.exists(os.path.split(abs_path)[0]) and create_path:
+            os.makedirs(os.path.split(abs_path)[0])
+
+        return abs_path
+
+    def filter(self, model, image_attr):
+        if image_attr not in model:
+            return False
+
+        if self.filter_function is None:
+            return True
+
+        return self.filter_function(model)
+
+    def process(self, data_helper):
+        for source in data_helper.data.keys():
+            for image_attr in self.image_attrs:
+                for model in [m for m in data_helper.data[source] if self.filter(m, image_attr)]:
+                    im = Image.open(self.get_read_path(model[image_attr]))
+                    im.save(self.get_write_path(model[image_attr]))
+        return data_helper
 
 
 class OpenCVContours(OpenCVSTask):
@@ -644,7 +905,7 @@ class OpenCVContours(OpenCVSTask):
         return edged
 
 
-class OpenCVAlignImages(OpenCVSTask):
+class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
 
     def __init__(self, motion_type,  reference_image_path, **kwargs):
         self.sub_dir = kwargs.pop('sub_dir', str(uuid.uuid4()))
@@ -668,6 +929,35 @@ class OpenCVAlignImages(OpenCVSTask):
     def setup(self, data_helper):
         self.timestamp = data_helper.timestamp.isoformat()
         return data_helper
+
+    def after_each(self, model, data_helper):
+        super().after_each(model, data_helper)
+        image_path = model.get(self.image_attr, None)
+        if image_path is not None and self.radius and self.opacity:
+            im = Image.open(self.get_write_path(image_path)[0])
+            im = im.convert("RGBA")
+            if self.radius and self.opacity:
+                self.round_image(im, radius=self.radius, opacity=self.opacity)
+            im.save(self.get_write_path(image_path))
+
+        return data_helper
+
+    def get_write_path(self, image_path, create_path=True):
+        abs_path = os.path.abspath(os.path.join(self.destination_root, self.timestamp, image_path))
+
+        directory, filename = os.path.split(abs_path)
+
+        result_destination_path = os.path.join(directory, self.sub_dir, 'aligned')
+        original_destination_path = os.path.join(directory, self.sub_dir, 'not-aligned')
+
+        if create_path:
+            if not os.path.exists(result_destination_path):
+                os.makedirs(result_destination_path)
+
+            if not os.path.exists(original_destination_path):
+                os.makedirs(original_destination_path)
+
+        return os.path.join(result_destination_path, filename), os.path.join(original_destination_path, filename)
 
     def opencv_processing(self, image_path):
         # https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
@@ -721,7 +1011,7 @@ class OpenCVAlignImages(OpenCVSTask):
         cv2.imwrite(self.get_write_path(image_path), aligned_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
 
-class OpenCVAlignImagesUsingCannyEdge(OpenCVSTask):
+class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
 
     def __init__(self, motion_type,  reference_image_path, **kwargs):
         self.sub_dir = kwargs.pop('sub_dir', str(uuid.uuid4()))
@@ -746,6 +1036,17 @@ class OpenCVAlignImagesUsingCannyEdge(OpenCVSTask):
 
     def setup(self, data_helper):
         self.timestamp = data_helper.timestamp.isoformat()
+        return data_helper
+
+    def after_each(self, model, data_helper):
+        super().after_each(model, data_helper)
+        image_path = model.get(self.image_attr, None)
+        if image_path is not None and self.radius and self.opacity:
+            im = Image.open(self.get_write_path(image_path)[0])
+            im = im.convert("RGBA")
+            if self.radius and self.opacity:
+                self.round_image(im, radius=self.radius, opacity=self.opacity)
+            im.save(self.get_write_path(image_path))
         return data_helper
 
     def pre_process(self, data_helper):
@@ -820,250 +1121,3 @@ class OpenCVAlignImagesUsingCannyEdge(OpenCVSTask):
 
         # return the edged image
         return edged
-
-
-class RoundCorners(Task):
-    # RoundCorners -> https://raw.githubusercontent.com/firestrand/phatch/master/phatch/actions/round.py
-    # tasks.RoundCorners(100, 255, root='./images', sources=[SOURCES.DEPLOYMENT, ], image_attrs=['image', ]),
-    CROSS = 'Cross'
-    ROUNDED = 'Rounded'
-    SQUARE = 'Square'
-
-    CORNERS = [ROUNDED, SQUARE, CROSS]
-    CORNER_ID = 'rounded_corner_r%d_f%d'
-    CROSS_POS = (CROSS, CROSS, CROSS, CROSS)
-    ROUNDED_POS = (ROUNDED, ROUNDED, ROUNDED, ROUNDED)
-    ROUNDED_RECTANGLE_ID = 'rounded_rectangle_r%d_f%d_s%s_p%s'
-
-    sources = None
-    root = '.'
-    image_attrs = []
-    filter_function = None
-
-    def __init__(self, radius, opacity, root=None, sources=None, image_attrs=None, filter_function=None):
-        super(RoundCorners, self).__init__()
-        self.radius = radius
-        self.opacity = opacity
-        self.root = root or self.root
-        self.sources = sources or self.sources
-        self.image_attrs = image_attrs or self.image_attrs
-
-        self.filter_function = filter_function or self.filter_function
-
-    def filter(self, model):
-        if self.filter_function is None:
-            return True
-        return self.filter_function(model)
-
-    def process(self, data_helper):
-        for source in tqdm(self.sources):
-            for model in tqdm([m for m in data_helper.data[source] if self.filter(m)]):
-                for attr in self.image_attrs:
-                    path = model.get(attr, None)
-                    if path is not None:
-                        im = Image.open(os.path.join(self.root, path))
-                        im = im.convert("RGBA")
-                        self.round_image(im, radius=self.radius, opacity=self.opacity)
-                        im.save(os.path.join(self.root, path))
-
-        return data_helper
-
-    def round_image(self, image, cache=None, round_all=True, rounding_type=ROUNDED, radius=100, opacity=255,
-                    pos=ROUNDED_POS, back_color='#FFFFFF'):
-        if cache is None:
-            cache = {}
-        if image.mode != 'RGBA':
-            image = image.convert('RGBA')
-
-        if round_all:
-            pos = 4 * (rounding_type, )
-
-        mask = self.create_rounded_rectangle(image.size, cache, radius, opacity, pos)
-
-        self.paste(image, Image.new('RGB', image.size, back_color), (0, 0), ImageChops.invert(mask))
-        image.putalpha(mask)
-        return image
-
-    def create_rounded_rectangle(self, size=(600, 400), cache=None, radius=100, opacity=255, pos=ROUNDED_POS):
-        # rounded_rectangle
-        if cache is None:
-            cache = {}
-
-        im_x, im_y = size
-        rounded_rectangle_id = self.ROUNDED_RECTANGLE_ID % (radius, opacity, size, pos)
-        if rounded_rectangle_id in cache:
-            return cache[rounded_rectangle_id]
-        else:
-            # cross
-            cross_id = self.ROUNDED_RECTANGLE_ID % (radius, opacity, size, self.CROSS_POS)
-            if cross_id in cache:
-                cross = cache[cross_id]
-            else:
-                cross = cache[cross_id] = Image.new('L', size, 0)
-                draw = ImageDraw.Draw(cross)
-                draw.rectangle((radius, 0, im_x - radius, im_y), fill=opacity)
-                draw.rectangle((0, radius, im_x, im_y - radius), fill=opacity)
-            if pos == self.CROSS_POS:
-                return cross
-            # corner
-            corner_id = self.CORNER_ID % (radius, opacity)
-            if corner_id in cache:
-                corner = cache[corner_id]
-            else:
-                corner = cache[corner_id] = self.create_corner(radius, opacity)
-            # rounded rectangle
-            rectangle = Image.new('L', (radius, radius), 255)
-            rounded_rectangle = cross.copy()
-            for index, angle in enumerate(pos):
-                if angle == self.CROSS:
-                    continue
-                if angle == self.ROUNDED:
-                    element = corner
-                else:
-                    element = rectangle
-                if index % 2:
-                    x = im_x - radius
-                    element = element.transpose(Image.FLIP_LEFT_RIGHT)
-                else:
-                    x = 0
-                if index < 2:
-                    y = 0
-                else:
-                    y = im_y - radius
-                    element = element.transpose(Image.FLIP_TOP_BOTTOM)
-                self.paste(rounded_rectangle, element, (x, y))
-            cache[rounded_rectangle_id] = rounded_rectangle
-            return rounded_rectangle
-
-    @staticmethod
-    def create_corner(radius=100, opacity=255, factor=2):
-        corner = Image.new('L', (factor * radius, factor * radius), 0)
-        draw = ImageDraw.Draw(corner)
-        draw.pieslice((0, 0, 2 * factor * radius, 2 * factor * radius), 180, 270, fill=opacity)
-        corner = corner.resize((radius, radius), Image.ANTIALIAS)
-        return corner
-
-    def paste(self, destination, source, box=(0, 0), mask=None, force=False):
-        """"Pastes the source image into the destination image while using an
-        alpha channel if available.
-
-        :param destination: destination image
-        :type destination:  PIL image object
-        :param source: source image
-        :type source: PIL image object
-        :param box:
-
-            The box argument is either a 2-tuple giving the upper left corner,
-            a 4-tuple defining the left, upper, right, and lower pixel coordinate,
-            or None (same as (0, 0)). If a 4-tuple is given, the size of the
-            pasted image must match the size of the region.
-
-        :type box: tuple
-        :param mask: mask or None
-
-        :type mask: bool or PIL image object
-        :param force:
-
-            With mask: Force the invert alpha paste or not.
-
-            Without mask:
-
-            - If ``True`` it will overwrite the alpha channel of the destination
-              with the alpha channel of the source image. So in that case the
-              pixels of the destination layer will be abandoned and replaced
-              by exactly the same pictures of the destination image. This is mostly
-              what you need if you paste on a transparent canvas.
-            - If ``False`` this will use a mask when the image has an alpha
-              channel. In this case pixels of the destination image will appear
-              through where the source image is transparent.
-
-        :type force: bool
-        """
-        # Paste on top
-        if source == mask:
-            if self.has_alpha(source):
-                # invert_alpha = the transparent pixels of the destination
-                if self.has_alpha(destination) and (destination.size == source.size or force):
-                    invert_alpha = ImageOps.invert(self.get_alpha(destination))
-                    if invert_alpha.size != source.size:
-                        # if sizes are not the same be careful!
-                        # check the results visually
-                        if len(box) == 2:
-                            w, h = source.size
-                            box = (box[0], box[1], box[0] + w, box[1] + h)
-                        invert_alpha = invert_alpha.crop(box)
-                else:
-                    invert_alpha = None
-                # we don't want composite of the two alpha channels
-                source_without_alpha = self.remove_alpha(source)
-                # paste on top of the opaque destination pixels
-                destination.paste(source_without_alpha, box, source)
-                if invert_alpha is not None:
-                    # the alpha channel is ok now, so save it
-                    destination_alpha = self.get_alpha(destination)
-                    # paste on top of the transparent destination pixels
-                    # the transparent pixels of the destination should
-                    # be filled with the color information from the source
-                    destination.paste(source_without_alpha, box, invert_alpha)
-                    # restore the correct alpha channel
-                    destination.putalpha(destination_alpha)
-            else:
-                destination.paste(source, box)
-        elif mask:
-            destination.paste(source, box, mask)
-        else:
-            destination.paste(source, box)
-            if force and self.has_alpha(source):
-                destination_alpha = self.get_alpha(destination)
-                source_alpha = self.get_alpha(source)
-                destination_alpha.paste(source_alpha, box)
-                destination.putalpha(destination_alpha)
-
-    @staticmethod
-    def remove_alpha(image):
-        """Returns a copy of the image after removing the alpha band or
-        transparency
-
-        :param image: input image
-        :type image: PIL image object
-        :returns: the input image after removing the alpha band or transparency
-        :rtype: PIL image object
-        """
-        if image.mode == 'RGBA':
-            return image.convert('RGB')
-        if image.mode == 'LA':
-            return image.convert('L')
-        if image.mode == 'P' and 'transparency' in image.info:
-            img = image.convert('RGB')
-            del img.info['transparency']
-            return img
-        return image
-
-    @staticmethod
-    def has_alpha(image):
-        """Checks if the image has an alpha band.
-        i.e. the image mode is either RGBA or LA.
-        The transparency in the P mode doesn't count as an alpha band
-
-        :param image: the image to check
-        :type image: PIL image object
-        :returns: True or False
-        :rtype: boolean
-        """
-        return image.mode.endswith('A')
-
-    def get_alpha(self, image):
-        """Gets the image alpha band. Can handles P mode images with transpareny.
-        Returns a band with all values set to 255 if no alpha band exists.
-
-        :param image: input image
-        :type image: PIL image object
-        :returns: alpha as a band
-        :rtype: single band image object
-        """
-        if self.has_alpha(image):
-            return image.split()[-1]
-        if image.mode == 'P' and 'transparency' in image.info:
-            return image.convert('RGBA').split()[-1]
-        # No alpha layer, create one.
-        return Image.new('L', image.size, 255)
