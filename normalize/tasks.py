@@ -708,8 +708,6 @@ class RoundCornersTask(RoundCornersMixin, Task):
     destination_root = '.'
 
     def __init__(self, source=None, image_attr=None, filter_function=None, root=None, destination_root=None, **kwargs):
-        self.sub_dir = kwargs.pop('sub_dir', str(uuid.uuid4()))
-
         super().__init__(**kwargs)
         self.timestamp = None
         self.source = source or self.source
@@ -727,10 +725,6 @@ class RoundCornersTask(RoundCornersMixin, Task):
 
         return self.filter_function(model)
 
-    def setup(self, data_helper):
-        self.timestamp = data_helper.timestamp.isoformat()
-        return data_helper
-
     def process(self, data_helper):
         for model in tqdm([m for m in data_helper.data[self.source] if self.filter(m)], desc='Rounding Corner'):
             image_path = model.get(self.image_attr, None)
@@ -740,7 +734,7 @@ class RoundCornersTask(RoundCornersMixin, Task):
                 im = im.convert("RGBA")
                 if self.radius and self.opacity:
                     self.round_image(im, radius=self.radius, opacity=self.opacity)
-                im.save(self.get_write_path(image_path)[0][::-1].replace('.', '.1', 1)[::-1])
+                im.save(self.get_write_path(image_path))
 
             data_helper.processed_images.append(model[self.image_attr])
 
@@ -753,27 +747,22 @@ class RoundCornersTask(RoundCornersMixin, Task):
         return abs_path
 
     def get_write_path(self, image_path, create_path=True):
-        abs_path = os.path.abspath(os.path.join(self.destination_root, self.timestamp, image_path))
+        abs_path = os.path.abspath(os.path.join(self.destination_root, image_path))
 
         directory, filename = os.path.split(abs_path)
 
-        result_destination_path = os.path.join(directory, self.sub_dir, 'aligned')
-        original_destination_path = os.path.join(directory, self.sub_dir, 'not-aligned')
-
         if create_path:
-            if not os.path.exists(result_destination_path):
-                os.makedirs(result_destination_path)
+            if not os.path.exists(directory):
+                os.makedirs(directory)
 
-            if not os.path.exists(original_destination_path):
-                os.makedirs(original_destination_path)
-
-        return os.path.join(result_destination_path, filename), os.path.join(original_destination_path, filename)
+        return abs_path
 
 
 class OpenCVSTask(Task):
     source = None
     image_attr = None
     root = '.'
+    destination_root = '.'
     filter_function = None
 
     def __init__(self, source=None, image_attr=None, filter_function=None, root=None, destination_root=None):
@@ -782,7 +771,7 @@ class OpenCVSTask(Task):
         self.image_attr = image_attr or self.image_attr
         self.filter_function = filter_function or self.filter_function
         self.root = root or self.root
-        self.destination_root = destination_root or self.root
+        self.destination_root = destination_root or self.destination_root or self.root
 
     def get_read_path(self, image_path):
         abs_path = os.path.abspath(os.path.join(self.root, image_path))
@@ -908,8 +897,6 @@ class OpenCVContours(OpenCVSTask):
 class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
 
     def __init__(self, motion_type,  reference_image_path, **kwargs):
-        self.sub_dir = kwargs.pop('sub_dir', str(uuid.uuid4()))
-
         super().__init__(**kwargs)
         self.timestamp = None
 
@@ -928,10 +915,6 @@ class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
         self.reference_image_shape = self.reference_image.shape
         return data_helper
 
-    def setup(self, data_helper):
-        self.timestamp = data_helper.timestamp.isoformat()
-        return data_helper
-
     def after_each(self, model, data_helper):
         super().after_each(model, data_helper)
         image_path = model.get(self.image_attr, None)
@@ -943,23 +926,6 @@ class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
             im.save(self.get_write_path(image_path))
 
         return data_helper
-
-    def get_write_path(self, image_path, create_path=True):
-        abs_path = os.path.abspath(os.path.join(self.destination_root, self.timestamp, image_path))
-
-        directory, filename = os.path.split(abs_path)
-
-        result_destination_path = os.path.join(directory, self.sub_dir, 'aligned')
-        original_destination_path = os.path.join(directory, self.sub_dir, 'not-aligned')
-
-        if create_path:
-            if not os.path.exists(result_destination_path):
-                os.makedirs(result_destination_path)
-
-            if not os.path.exists(original_destination_path):
-                os.makedirs(original_destination_path)
-
-        return os.path.join(result_destination_path, filename), os.path.join(original_destination_path, filename)
 
     def opencv_processing(self, image_path):
         # https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
@@ -1028,10 +994,6 @@ class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
         self.reference_image = None
         self.reference_image_gray = None
         self.reference_image_shape = None
-
-    def setup(self, data_helper):
-        self.timestamp = data_helper.timestamp.isoformat()
-        return data_helper
 
     def after_each(self, model, data_helper):
         super().after_each(model, data_helper)
