@@ -730,7 +730,7 @@ class RoundCornersTask(RoundCornersMixin, Task):
             image_path = model.get(self.image_attr, None)
             if image_path is not None and self.radius and self.opacity:
                 im = Image.open(self.get_read_path(image_path))
-                im.save(self.get_write_path(image_path)[0])
+                im.save(self.get_write_path(image_path))
                 im = im.convert("RGBA")
                 if self.radius and self.opacity:
                     self.round_image(im, radius=self.radius, opacity=self.opacity)
@@ -762,7 +762,6 @@ class OpenCVSTask(Task):
     source = None
     image_attr = None
     root = '.'
-    destination_root = '.'
     filter_function = None
 
     def __init__(self, source=None, image_attr=None, filter_function=None, root=None, destination_root=None):
@@ -898,7 +897,6 @@ class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
 
     def __init__(self, motion_type,  reference_image_path, **kwargs):
         super().__init__(**kwargs)
-        self.timestamp = None
 
         # defines the motion type
         self.motion_type = motion_type
@@ -919,7 +917,7 @@ class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
         super().after_each(model, data_helper)
         image_path = model.get(self.image_attr, None)
         if image_path is not None and self.radius and self.opacity:
-            im = Image.open(self.get_write_path(image_path)[0])
+            im = Image.open(self.get_write_path(image_path))
             im = im.convert("RGBA")
             if self.radius and self.opacity:
                 self.round_image(im, radius=self.radius, opacity=self.opacity)
@@ -999,7 +997,7 @@ class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
         super().after_each(model, data_helper)
         image_path = model.get(self.image_attr, None)
         if image_path is not None and self.radius and self.opacity:
-            im = Image.open(self.get_write_path(image_path)[0])
+            im = Image.open(self.get_write_path(image_path))
             im = im.convert("RGBA")
             if self.radius and self.opacity:
                 self.round_image(im, radius=self.radius, opacity=self.opacity)

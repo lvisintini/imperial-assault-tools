@@ -342,7 +342,7 @@ class NormalizeImperialData(PipelineHelper):
         tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'condition-cards/weakened.png', image_attr='image', source=SOURCES.CONDITION, root='./images', radius=30),
         tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'supply-cards/troop-data.png', image_attr='image', source=SOURCES.SUPPLY, root='./images', radius=30),
 
-        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'imperial-class-cards/hutt-mercenaries-most-wanted.png', image_attr='image', source=SOURCES.IMPERIAL_CLASS_CARD, root='./images'),
+        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'imperial-class-cards/hutt-mercenaries-most-wanted.png', image_attr='image', source=SOURCES.IMPERIAL_CLASS_CARD, root='./images', radius=35),
         tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'imperial-class-cards/hutt-mercenaries-most-wanted.png', image_attr='image', source=SOURCES.REWARD, root='./images', filter_function=lambda model: model['empire'] and model['id'] != 31, radius=35),
         tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'imperial-class-cards/hutt-mercenaries-guild-hunters.png', image_attr='image', source=SOURCES.REWARD, root='./images', filter_function=lambda model: model['id'] == 31, radius=35),
 
@@ -355,7 +355,7 @@ class NormalizeImperialData(PipelineHelper):
         tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'upgrade-cards/dh-17.png', image_attr='image', source=SOURCES.REWARD, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED, root='./images', radius=35),
 
         tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/sniper-scope.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED_MOD, root='./images', radius=35),
-        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/sniper-scope.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED_MOD, root='./images'),
+        tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/sniper-scope.png', image_attr='image', source=SOURCES.UPGRADE, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED_MOD, root='./images', radius=35),
         tasks.OpenCVAlignImages(cv2.MOTION_HOMOGRAPHY, 'upgrade-cards/sniper-scope.png', image_attr='image', source=SOURCES.REWARD, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.RANGED_MOD, root='./images', radius=35),
 
         tasks.OpenCVAlignImages(cv2.MOTION_AFFINE, 'upgrade-cards/energized-hilt.png', image_attr='image', source=SOURCES.HERO_CLASS, filter_function=lambda model: model['type'] == HERO_CLASS_UPGRADE_TYPES.MELEE_MOD, root='./images', radius=35),
