@@ -1,872 +1,164 @@
 [
   {
-    "name": "Plasteel Staff",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Diala%20Passil/Plasteel%20Staff.jpg",
-    "hero": 0,
-    "image_file": "./raw-images/hero-class-cards/692f3b4d0f2b2f67.jpg"
+    "name": "MGL-9 Boomer",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/MGL-9%20Boomer.jpg",
+    "hero": 16,
+    "image_file": "./images/hero-class-cards/6562f90613333b67.jpg"
   },
   {
-    "name": "Force Throw",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Diala%20Passil/Force%20Throw.jpg",
-    "hero": 0,
-    "image_file": "./raw-images/hero-class-cards/696d572d3b2b2713.jpg"
+    "name": "Charging Up",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Charging%20Up.jpg",
+    "hero": 16,
+    "image_file": "./images/hero-class-cards/6933074b23230313.jpg"
   },
   {
-    "name": "Infantry Rifle",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Fenn%20Signis/Infantry%20Rifle.jpg",
-    "hero": 1,
-    "image_file": "./raw-images/hero-class-cards/6970da0a0b336767.jpg"
+    "name": "Leave No One Behind",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Leave%20No%20One%20Behind.jpg",
+    "hero": 16,
+    "image_file": "./images/hero-class-cards/41452b1b13033313.jpg"
   },
   {
-    "name": "Force Adept",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Diala%20Passil/Force%20Adept.jpg",
-    "hero": 0,
-    "image_file": "./raw-images/hero-class-cards/6927273b6d312553.jpg"
+    "name": "Bank Shot",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Bank%20Shot.jpg",
+    "hero": 16,
+    "image_file": "./images/hero-class-cards/7939376727231b53.jpg"
   },
   {
-    "name": "Tactical Movement",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Fenn%20Signis/Tactical%20Movement.jpg",
-    "hero": 1,
-    "image_file": "./raw-images/hero-class-cards/514d272523232b53.jpg"
+    "name": "Shrapnel Rounds",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Shrapnel%20Rounds.jpg",
+    "hero": 16,
+    "image_file": "./images/hero-class-cards/dacad9994b6f5b73.jpg"
   },
   {
-    "name": "Battle Meditation",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Diala%20Passil/Battle%20Meditation.jpg",
-    "hero": 0,
-    "image_file": "./raw-images/hero-class-cards/75456f3723233513.jpg"
+    "name": "Repeater Cannon",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Repeater%20Cannon.jpg",
+    "hero": 16,
+    "image_file": "./images/hero-class-cards/6521cc4f0f734743.jpg"
   },
   {
-    "name": "Take Cover",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Fenn%20Signis/Take%20Cover.jpg",
-    "hero": 1,
-    "image_file": "./raw-images/hero-class-cards/7923673b03235153.jpg"
+    "name": "Structural Exploitation",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Structural%20Exploitation.jpg",
+    "hero": 16,
+    "image_file": "./images/hero-class-cards/492f756767073713.jpg"
   },
   {
-    "name": "Defensive Stance",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Diala%20Passil/Defensive%20Stance.jpg",
-    "hero": 0,
-    "image_file": "./raw-images/hero-class-cards/6d5d1b7737074553.jpg"
+    "name": "Thermal Explosives",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Thermal%20Explosives.jpg",
+    "hero": 16,
+    "image_file": "./images/hero-class-cards/4165371f3f671703.jpg"
   },
   {
-    "name": "Adrenaline Rush",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Fenn%20Signis/Adrenaline%20Rush.jpg",
-    "hero": 1,
-    "image_file": "./raw-images/hero-class-cards/796d555323232303.jpg"
+    "name": "Vibro-Claws",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Vibro-Claws.jpg",
+    "hero": 17,
+    "image_file": "./images/hero-class-cards/6963234f1b370313.jpg"
   },
   {
-    "name": "Art of Movement",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Diala%20Passil/Art%20of%20Movement.jpg",
-    "hero": 0,
-    "image_file": "./raw-images/hero-class-cards/51352f6131231913.jpg"
+    "name": "Wookiee Wrath",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Wookiee%20Wrath.jpg",
+    "hero": 16,
+    "image_file": "./images/hero-class-cards/696927253b333f13.jpg"
   },
   {
-    "name": "Weapon Expert",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Fenn%20Signis/Weapon%20Expert.jpg",
-    "hero": 1,
-    "image_file": "./raw-images/hero-class-cards/696d373b23233b13.jpg"
+    "name": "Balanced Approach",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Balanced%20Approach.jpg",
+    "hero": 17,
+    "image_file": "./images/hero-class-cards/556d195179413f13.jpg"
   },
   {
-    "name": "Snap Kick",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Diala%20Passil/Snap%20Kick.jpg",
-    "hero": 0,
-    "image_file": "./raw-images/hero-class-cards/71232d3337233953.jpg"
+    "name": "Service Rifle",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Service%20Rifle.jpg",
+    "hero": 18,
+    "image_file": "./images/hero-class-cards/69faf809477d7b63.jpg"
   },
   {
-    "name": "Suppressive Fire",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Fenn%20Signis/Suppressive%20Fire.jpg",
-    "hero": 1,
-    "image_file": "./raw-images/hero-class-cards/5975373965272b53.jpg"
+    "name": "Forward Momentum",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Forward%20Momentum.jpg",
+    "hero": 17,
+    "image_file": "./images/hero-class-cards/516527232b230713.jpg"
   },
   {
-    "name": "Way of the Sarlacc",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Diala%20Passil/Way%20of%20the%20Sarlacc.jpg",
-    "hero": 0,
-    "image_file": "./raw-images/hero-class-cards/554d6d2b132b0f53.jpg"
+    "name": "Auxiliary Training",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Auxiliary%20Training.jpg",
+    "hero": 18,
+    "image_file": "./images/hero-class-cards/494d296313131d13.jpg"
   },
   {
-    "name": "Trench Fighter",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Fenn%20Signis/Trench%20Fighter.jpg",
-    "hero": 1,
-    "image_file": "./raw-images/hero-class-cards/69696d3b23232b53.jpg"
+    "name": "Scouts Loadout",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Scouts%20Loadout.jpg",
+    "hero": 17,
+    "image_file": "./images/hero-class-cards/694d0b2b57653f03.jpg"
   },
   {
-    "name": "Dancing Weapon",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Diala%20Passil/Dancing%20Weapon.jpg",
-    "hero": 0,
-    "image_file": "./raw-images/hero-class-cards/616d655303232353.jpg"
+    "name": "Inch By Inch",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Inch%20By%20Inch.jpg",
+    "hero": 18,
+    "image_file": "./images/hero-class-cards/796957232b132b53.jpg"
   },
   {
-    "name": "Rebel Elite",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Fenn%20Signis/Rebel%20Elite.jpg",
-    "hero": 1,
-    "image_file": "./raw-images/hero-class-cards/79333f2b23232d13.jpg"
+    "name": "Slicers Upgrades",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Slicers%20Upgrades.jpg",
+    "hero": 17,
+    "image_file": "./images/hero-class-cards/456d3d7171613b13.jpg"
   },
   {
-    "name": "Vibro-Ax",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gaarkhan/Vibro-Ax.jpg",
-    "hero": 2,
-    "image_file": "./raw-images/hero-class-cards/79363e4d07332b67.jpg"
+    "name": "Combat Logistics",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Combat%20Logistics.jpg",
+    "hero": 18,
+    "image_file": "./images/hero-class-cards/6969556b272b3b53.jpg"
   },
   {
-    "name": "Superior Positioning",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Fenn%20Signis/Superior%20Positioning.jpg",
-    "hero": 1,
-    "image_file": "./raw-images/hero-class-cards/454d2d3337130353.jpg"
+    "name": "Explosive Reflexes",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Explosive%20Reflexes.jpg",
+    "hero": 17,
+    "image_file": "./images/hero-class-cards/6d652f2f371b3b13.jpg"
   },
   {
-    "name": "Wookiee Fortitude",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gaarkhan/Wookiee%20Fortitude.jpg",
-    "hero": 2,
-    "image_file": "./raw-images/hero-class-cards/4d6d6f2d23033553.jpg"
+    "name": "Dig In",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Dig%20In.jpg",
+    "hero": 18,
+    "image_file": "./images/hero-class-cards/717757372f232f33.jpg"
   },
   {
-    "name": "Wookie Loyalty",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gaarkhan/Wookie%20Loyalty.jpg",
-    "hero": 2,
-    "image_file": "./raw-images/hero-class-cards/4969372b0b0b1353.jpg"
+    "name": "Mutual Progression",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Mutual%20Progression.jpg",
+    "hero": 17,
+    "image_file": "./images/hero-class-cards/5d75332b23232b23.jpg"
   },
   {
-    "name": "Ferocity",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gaarkhan/Ferocity.jpg",
-    "hero": 2,
-    "image_file": "./raw-images/hero-class-cards/71312f0937072d03.jpg"
+    "name": "Fire Support Specialist",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Fire%20Support%20Specialist.jpg",
+    "hero": 18,
+    "image_file": "./images/hero-class-cards/496f77532b033713.jpg"
   },
   {
-    "name": "Staggering Blow",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gaarkhan/Staggering%20Blow.jpg",
-    "hero": 2,
-    "image_file": "./raw-images/hero-class-cards/696d272733332713.jpg"
+    "name": "Leaping Slash",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Leaping%20Slash.jpg",
+    "hero": 17,
+    "image_file": "./images/hero-class-cards/692d356527233713.jpg"
   },
   {
-    "name": "Rampage",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gaarkhan/Rampage.jpg",
-    "hero": 2,
-    "image_file": "./raw-images/hero-class-cards/71333f1b232f1b13.jpg"
+    "name": "Opportunist",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Opportunist.jpg",
+    "hero": 18,
+    "image_file": "./images/hero-class-cards/6969676727232f13.jpg"
   },
   {
-    "name": "Vicious Strike",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gaarkhan/Vicious%20Strike.jpg",
-    "hero": 2,
-    "image_file": "./raw-images/hero-class-cards/692717332b2b3353.jpg"
+    "name": "Mechanical Master",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Mechanical%20Master.jpg",
+    "hero": 17,
+    "image_file": "./images/hero-class-cards/6d55272d2f750d03.jpg"
   },
   {
-    "name": "Brutal Cleave",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gaarkhan/Brutal%20Cleave.jpg",
-    "hero": 2,
-    "image_file": "./raw-images/hero-class-cards/6967373513233113.jpg"
+    "name": "Self-sufficient",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Self-sufficient.jpg",
+    "hero": 18,
+    "image_file": "./images/hero-class-cards/61616b27290b2f03.jpg"
   },
   {
-    "name": "Unstoppable",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gaarkhan/Unstoppable.jpg",
-    "hero": 2,
-    "image_file": "./raw-images/hero-class-cards/692125333b333113.jpg"
-  },
-  {
-    "name": "Holdout Blaster",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gideon%20Argus/Holdout%20Blaster.jpg",
-    "hero": 3,
-    "image_file": "./raw-images/hero-class-cards/696c784a0f332363.jpg"
-  },
-  {
-    "name": "Called Shot",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gideon%20Argus/Called%20Shot.jpg",
-    "hero": 3,
-    "image_file": "./raw-images/hero-class-cards/7929473b33233b13.jpg"
-  },
-  {
-    "name": "Military Efficiency",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gideon%20Argus/Military%20Efficiency.jpg",
-    "hero": 3,
-    "image_file": "./raw-images/hero-class-cards/654d3b2f33031b13.jpg"
-  },
-  {
-    "name": "Air of Command",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gideon%20Argus/Air%20of%20Command.jpg",
-    "hero": 3,
-    "image_file": "./raw-images/hero-class-cards/59653f3d2b132d13.jpg"
-  },
-  {
-    "name": "Mobile Tactician",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gideon%20Argus/Mobile%20Tactician.jpg",
-    "hero": 3,
-    "image_file": "./raw-images/hero-class-cards/696d372b2b031b13.jpg"
-  },
-  {
-    "name": "For the Cause",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gideon%20Argus/For%20the%20Cause.jpg",
-    "hero": 3,
-    "image_file": "./raw-images/hero-class-cards/69656f172b233553.jpg"
-  },
-  {
-    "name": "Rallying Shout",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gideon%20Argus/Rallying%20Shout.jpg",
-    "hero": 3,
-    "image_file": "./raw-images/hero-class-cards/69693b3b23233353.jpg"
-  },
-  {
-    "name": "Hammer and Anvil",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gideon%20Argus/Hammer%20and%20Anvil.jpg",
-    "hero": 3,
-    "image_file": "./raw-images/hero-class-cards/4d4d3d5b33330b13.jpg"
-  },
-  {
-    "name": "Masterstroke",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Gideon%20Argus/Masterstroke.jpg",
-    "hero": 3,
-    "image_file": "./raw-images/hero-class-cards/69696f6d23031913.jpg"
-  },
-  {
-    "name": "Repeating Blaster",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Repeating%20Blaster.jpg",
-    "hero": 4,
-    "image_file": "./raw-images/hero-class-cards/656c7c0e0b236363.jpg"
-  },
-  {
-    "name": "Advance",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Advance.jpg",
-    "hero": 4,
-    "image_file": "./raw-images/hero-class-cards/7133577b330b6f43.jpg"
-  },
-  {
-    "name": "Shake It Off",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Shake%20It%20Off.jpg",
-    "hero": 4,
-    "image_file": "./raw-images/hero-class-cards/6969497323236b43.jpg"
-  },
-  {
-    "name": "Crushing Blow",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Crushing%20Blow.jpg",
-    "hero": 4,
-    "image_file": "./raw-images/hero-class-cards/6161673f333b2b13.jpg"
-  },
-  {
-    "name": "Into The Fray",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Into%20The%20Fray.jpg",
-    "hero": 4,
-    "image_file": "./raw-images/hero-class-cards/696963370b235b13.jpg"
-  },
-  {
-    "name": "Trophy Armor",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Trophy%20Armor.jpg",
-    "hero": 4,
-    "image_file": "./raw-images/hero-class-cards/696361c90f3f1b53.jpg"
-  },
-  {
-    "name": "Vibrobayonet",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Vibrobayonet.jpg",
-    "hero": 4,
-    "image_file": "./raw-images/hero-class-cards/0e0c9d953b6f2373.jpg"
-  },
-  {
-    "name": "Stay Down",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Stay%20Down.jpg",
-    "hero": 4,
-    "image_file": "./raw-images/hero-class-cards/79376f6b13332743.jpg"
-  },
-  {
-    "name": "Modified Blaster",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Modified%20Blaster.jpg",
-    "hero": 5,
-    "image_file": "./raw-images/hero-class-cards/7939f8491b7b7f67.jpg"
-  },
-  {
-    "name": "Final Stand",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Biv%20Bodhrik/Final%20Stand.jpg",
-    "hero": 4,
-    "image_file": "./raw-images/hero-class-cards/6173776763332b13.jpg"
-  },
-  {
-    "name": "Unstable Device",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Unstable%20Device.jpg",
-    "hero": 5,
-    "image_file": "./raw-images/hero-class-cards/7969155767276713.jpg"
-  },
-  {
-    "name": "Tool Kit",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Tool%20Kit.jpg",
-    "hero": 5,
-    "image_file": "./raw-images/hero-class-cards/3173270b65271f13.jpg"
-  },
-  {
-    "name": "Structural Weakness",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Structural%20Weakness.jpg",
-    "hero": 5,
-    "image_file": "./raw-images/hero-class-cards/65693b0f37336b13.jpg"
-  },
-  {
-    "name": "Energy Shield",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Energy%20Shield.jpg",
-    "hero": 5,
-    "image_file": "./raw-images/hero-class-cards/6961775b2b337f13.jpg"
-  },
-  {
-    "name": "Gadgeteer",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Gadgeteer.jpg",
-    "hero": 5,
-    "image_file": "./raw-images/hero-class-cards/79312f3f032b3b43.jpg"
-  },
-  {
-    "name": "Power Converter",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Power%20Converter.jpg",
-    "hero": 5,
-    "image_file": "./raw-images/hero-class-cards/756d2f271b3b0313.jpg"
-  },
-  {
-    "name": "Adrenaline Injector",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Adrenaline%20Injector.jpg",
-    "hero": 5,
-    "image_file": "./raw-images/hero-class-cards/59692f573f0b3353.jpg"
-  },
-  {
-    "name": "Remote Distribution",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Rebel%20Heroes/Saska%20Teft/Remote%20Distribution.jpg",
-    "hero": 5,
-    "image_file": "./raw-images/hero-class-cards/55353f2b35332f13.jpg"
-  },
-  {
-    "name": "Vintage Blaster",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Vintage%20Blaster.jpg",
-    "hero": 6,
-    "image_file": "./raw-images/hero-class-cards/699fb56c0b336d67.jpg"
-  },
-  {
-    "name": "Quick As A Whip",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Quick%20As%20A%20Whip.jpg",
-    "hero": 6,
-    "image_file": "./raw-images/hero-class-cards/69451333232b3353.jpg"
-  },
-  {
-    "name": "Longblaster",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Longblaster.jpg",
-    "hero": 7,
-    "image_file": "./raw-images/hero-class-cards/733fef4a0b777b73.jpg"
-  },
-  {
-    "name": "Smugglers Luck",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Smugglers%20Luck.jpg",
-    "hero": 6,
-    "image_file": "./raw-images/hero-class-cards/59491727332b0f13.jpg"
-  },
-  {
-    "name": "Disengage",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Disengage.jpg",
-    "hero": 7,
-    "image_file": "./raw-images/hero-class-cards/7933672323232b53.jpg"
-  },
-  {
-    "name": "Cheap Shot",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Cheap%20Shot.jpg",
-    "hero": 6,
-    "image_file": "./raw-images/hero-class-cards/69692f2f23233d13.jpg"
-  },
-  {
-    "name": "Supply Network",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Supply%20Network.jpg",
-    "hero": 7,
-    "image_file": "./raw-images/hero-class-cards/79490727271f2353.jpg"
-  },
-  {
-    "name": "Roll With It",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Roll%20With%20It.jpg",
-    "hero": 6,
-    "image_file": "./raw-images/hero-class-cards/7173556523275513.jpg"
-  },
-  {
-    "name": "Target Acquired",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Target%20Acquired.jpg",
-    "hero": 7,
-    "image_file": "./raw-images/hero-class-cards/696d37371f2b2b53.jpg"
-  },
-  {
-    "name": "Get Cocky",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Get%20Cocky.jpg",
-    "hero": 6,
-    "image_file": "./raw-images/hero-class-cards/79694d3723332713.jpg"
-  },
-  {
-    "name": "Jeswandi Training",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Jeswandi%20Training.jpg",
-    "hero": 7,
-    "image_file": "./raw-images/hero-class-cards/59752f292f1b2953.jpg"
-  },
-  {
-    "name": "Gunslinger",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Gunslinger.jpg",
-    "hero": 6,
-    "image_file": "./raw-images/hero-class-cards/71636d2f373b2313.jpg"
-  },
-  {
-    "name": "Execute",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Execute.jpg",
-    "hero": 7,
-    "image_file": "./raw-images/hero-class-cards/71332f27373b3313.jpg"
-  },
-  {
-    "name": "Trick Shot",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Trick%20Shot.jpg",
-    "hero": 6,
-    "image_file": "./raw-images/hero-class-cards/7133372b23232d13.jpg"
-  },
-  {
-    "name": "Expertise",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Expertise.jpg",
-    "hero": 7,
-    "image_file": "./raw-images/hero-class-cards/7133373d2b236303.jpg"
-  },
-  {
-    "name": "Sidewinder",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Jyn%20Odan/Sidewinder.jpg",
-    "hero": 6,
-    "image_file": "./raw-images/hero-class-cards/69613d2b23232903.jpg"
-  },
-  {
-    "name": "No Escape",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/No%20Escape.jpg",
-    "hero": 7,
-    "image_file": "./raw-images/hero-class-cards/696567653d0b3113.jpg"
-  },
-  {
-    "name": "Decoy",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Rebel%20Heroes/Mak%20Eshka%27rey/Decoy.jpg",
-    "hero": 7,
-    "image_file": "./raw-images/hero-class-cards/73716d25650b2353.jpg"
-  },
-  {
-    "name": "All-Weather Rifle",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/All-Weather%20Rifle.jpg",
-    "hero": 8,
-    "image_file": "./raw-images/hero-class-cards/69bd3b0a0b3b6b67.jpg"
-  },
-  {
-    "name": "Combat Spotter",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Combat%20Spotter.jpg",
-    "hero": 8,
-    "image_file": "./raw-images/hero-class-cards/69692b3b7b0f3313.jpg"
-  },
-  {
-    "name": "Scouting Report",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Scouting%20Report.jpg",
-    "hero": 8,
-    "image_file": "./raw-images/hero-class-cards/6965677513231b53.jpg"
-  },
-  {
-    "name": "Overwatch",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Overwatch.jpg",
-    "hero": 8,
-    "image_file": "./raw-images/hero-class-cards/69691f57675b3343.jpg"
-  },
-  {
-    "name": "Spectrum Scanner",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Spectrum%20Scanner.jpg",
-    "hero": 8,
-    "image_file": "./raw-images/hero-class-cards/4dc1f8981f753b13.jpg"
-  },
-  {
-    "name": "Scouts Guidance",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Scouts%20Guidance.jpg",
-    "hero": 8,
-    "image_file": "./raw-images/hero-class-cards/61653733652b3313.jpg"
-  },
-  {
-    "name": "Study of Enemies",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Study%20of%20Enemies.jpg",
-    "hero": 8,
-    "image_file": "./raw-images/hero-class-cards/6d45373b6b233713.jpg"
-  },
-  {
-    "name": "Coordinated Attack",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Coordinated%20Attack.jpg",
-    "hero": 8,
-    "image_file": "./raw-images/hero-class-cards/5955673d3b233f03.jpg"
-  },
-  {
-    "name": "Sidearm Blaster",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/Sidearm%20Blaster.jpg",
-    "hero": 9,
-    "image_file": "./raw-images/hero-class-cards/697a34460f7b4b13.jpg"
-  },
-  {
-    "name": "Mon Cala Special Forces",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Loku%20Kanoloa/Mon%20Cala%20Special%20Forces.jpg",
-    "hero": 8,
-    "image_file": "./raw-images/hero-class-cards/53351f69352f2513.jpg"
-  },
-  {
-    "name": "Bacta Injector",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/Bacta%20Injector.jpg",
-    "hero": 9,
-    "image_file": "./raw-images/hero-class-cards/69654f512b132d43.jpg"
-  },
-  {
-    "name": "Fighting Knife",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Fighting%20Knife.jpg",
-    "hero": 10,
-    "image_file": "./raw-images/hero-class-cards/69500c4d073b370b.jpg"
-  },
-  {
-    "name": "Improper Procedure",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/Improper%20Procedure.jpg",
-    "hero": 9,
-    "image_file": "./raw-images/hero-class-cards/494d6f1b1b237753.jpg"
-  },
-  {
-    "name": "Military Blaster",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Military%20Blaster.jpg",
-    "hero": 10,
-    "image_file": "./raw-images/hero-class-cards/6dd9b84857777763.jpg"
-  },
-  {
-    "name": "Field Surgeon",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/Field%20Surgeon.jpg",
-    "hero": 9,
-    "image_file": "./raw-images/hero-class-cards/69616b1329513313.jpg"
-  },
-  {
-    "name": "Combat Momentum",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Combat%20Momentum.jpg",
-    "hero": 10,
-    "image_file": "./raw-images/hero-class-cards/51452f2f67232b13.jpg"
-  },
-  {
-    "name": "Fuel Injection",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/Fuel%20Injection.jpg",
-    "hero": 9,
-    "image_file": "./raw-images/hero-class-cards/69613f57672b2b13.jpg"
-  },
-  {
-    "name": "Create Opening",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Create%20Opening.jpg",
-    "hero": 10,
-    "image_file": "./raw-images/hero-class-cards/6165252d0f337713.jpg"
-  },
-  {
-    "name": "Adrenal Vapor",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/Adrenal%20Vapor.jpg",
-    "hero": 9,
-    "image_file": "./raw-images/hero-class-cards/696d77792b033353.jpg"
-  },
-  {
-    "name": "Ktara Maneuver",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Ktara%20Maneuver.jpg",
-    "hero": 10,
-    "image_file": "./raw-images/hero-class-cards/716555712b031313.jpg"
-  },
-  {
-    "name": "Miracle Worker",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/Miracle%20Worker.jpg",
-    "hero": 9,
-    "image_file": "./raw-images/hero-class-cards/61692d79132b6303.jpg"
-  },
-  {
-    "name": "Student of Battle",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Student%20of%20Battle.jpg",
-    "hero": 10,
-    "image_file": "./raw-images/hero-class-cards/696d352f330b3713.jpg"
-  },
-  {
-    "name": "Bacta Radiator",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/Bacta%20Radiator.jpg",
-    "hero": 9,
-    "image_file": "./raw-images/hero-class-cards/616935572b233113.jpg"
-  },
-  {
-    "name": "Improvised Cover",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Improvised%20Cover.jpg",
-    "hero": 10,
-    "image_file": "./raw-images/hero-class-cards/65556d791b030913.jpg"
-  },
-  {
-    "name": "Combat Override",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/MHD-19/Combat%20Override.jpg",
-    "hero": 9,
-    "image_file": "./raw-images/hero-class-cards/594d67552d297303.jpg"
-  },
-  {
-    "name": "Point Blank Shot",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Point%20Blank%20Shot.jpg",
-    "hero": 10,
-    "image_file": "./raw-images/hero-class-cards/51756d6527033353.jpg"
-  },
-  {
-    "name": "Combat Mastery",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Combat%20Mastery.jpg",
-    "hero": 10,
-    "image_file": "./raw-images/hero-class-cards/694d7d3303233913.jpg"
-  },
-  {
-    "name": "Master Operative",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Rebel%20Heroes/Verena%20Talos/Master%20Operative.jpg",
-    "hero": 10,
-    "image_file": "./raw-images/hero-class-cards/55650f6937035343.jpg"
-  },
-  {
-    "name": "Heirloom Dagger",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Heirloom%20Dagger.jpg",
-    "hero": 11,
-    "image_file": "./raw-images/hero-class-cards/69841c490b636363.jpg"
-  },
-  {
-    "name": "Covert Operative",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Covert%20Operative.jpg",
-    "hero": 11,
-    "image_file": "./raw-images/hero-class-cards/7525372d2b2f2f13.jpg"
-  },
-  {
-    "name": "Elusive Agent",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Elusive%20Agent.jpg",
-    "hero": 11,
-    "image_file": "./raw-images/hero-class-cards/69691b3b2b0b0503.jpg"
-  },
-  {
-    "name": "Blindside",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Blindside.jpg",
-    "hero": 11,
-    "image_file": "./raw-images/hero-class-cards/79312d691d3b3703.jpg"
-  },
-  {
-    "name": "Falling Leaf",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Falling%20Leaf.jpg",
-    "hero": 11,
-    "image_file": "./raw-images/hero-class-cards/7933373f0b6d3513.jpg"
-  },
-  {
-    "name": "Force Illusion",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Force%20Illusion.jpg",
-    "hero": 11,
-    "image_file": "./raw-images/hero-class-cards/6167673333677b03.jpg"
-  },
-  {
-    "name": "Shrouded Lightsaber",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Shrouded%20Lightsaber.jpg",
-    "hero": 11,
-    "image_file": "./raw-images/hero-class-cards/782130400b3b2b03.jpg"
-  },
-  {
-    "name": "Fell Swoop",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Fell%20Swoop.jpg",
-    "hero": 11,
-    "image_file": "./raw-images/hero-class-cards/7961252535334f03.jpg"
-  },
-  {
-    "name": "Diplomats Blaster",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Diplomats%20Blaster.jpg",
-    "hero": 12,
-    "image_file": "./raw-images/hero-class-cards/6d19304e0b771f13.jpg"
-  },
-  {
-    "name": "Embody the Force",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Davith%20Elso/Embody%20the%20Force.jpg",
-    "hero": 11,
-    "image_file": "./raw-images/hero-class-cards/59650f2f2f2b1b13.jpg"
-  },
-  {
-    "name": "Company of Heroes",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Company%20of%20Heroes.jpg",
-    "hero": 12,
-    "image_file": "./raw-images/hero-class-cards/4d25253b23232b03.jpg"
-  },
-  {
-    "name": "Sonic Bellow",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Sonic%20Bellow.jpg",
-    "hero": 12,
-    "image_file": "./raw-images/hero-class-cards/69291f25370b6f13.jpg"
-  },
-  {
-    "name": "Rebel Propaganda",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Rebel%20Propaganda.jpg",
-    "hero": 12,
-    "image_file": "./raw-images/hero-class-cards/45253f2f731f2b13.jpg"
-  },
-  {
-    "name": "Professional Aide",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Professional%20Aide.jpg",
-    "hero": 12,
-    "image_file": "./raw-images/hero-class-cards/5951353d23132753.jpg"
-  },
-  {
-    "name": "Solidarity",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Solidarity.jpg",
-    "hero": 12,
-    "image_file": "./raw-images/hero-class-cards/713127270f232b53.jpg"
-  },
-  {
-    "name": "Double Agent",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Double%20Agent.jpg",
-    "hero": 12,
-    "image_file": "./raw-images/hero-class-cards/6969372b2f0b2f03.jpg"
-  },
-  {
-    "name": "Waylay",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Waylay.jpg",
-    "hero": 12,
-    "image_file": "./raw-images/hero-class-cards/7133252727652363.jpg"
-  },
-  {
-    "name": "Lead from the Front",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Rebel%20Heroes/Murne%20Rin/Lead%20from%20the%20Front.jpg",
-    "hero": 12,
-    "image_file": "./raw-images/hero-class-cards/5d5531670f293113.jpg"
-  },
-  {
-    "name": "Bodyguard Rifle",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Bodyguard%20Rifle.jpg",
-    "hero": 13,
-    "image_file": "./raw-images/hero-class-cards/7918f8180f753317.jpg"
-  },
-  {
-    "name": "Get Down",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Get%20Down.jpg",
-    "hero": 13,
-    "image_file": "./raw-images/hero-class-cards/71714f2b37332b13.jpg"
-  },
-  {
-    "name": "Keep Up",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Keep%20Up.jpg",
-    "hero": 13,
-    "image_file": "./raw-images/hero-class-cards/7171472323033b13.jpg"
-  },
-  {
-    "name": "Mutual Destruction",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Mutual%20Destruction.jpg",
-    "hero": 13,
-    "image_file": "./raw-images/hero-class-cards/55552b571b2b2b53.jpg"
-  },
-  {
-    "name": "Stay Behind Me",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Stay%20Behind%20Me.jpg",
-    "hero": 13,
-    "image_file": "./raw-images/hero-class-cards/5165373d55374b53.jpg"
-  },
-  {
-    "name": "Brute Strength",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Brute%20Strength.jpg",
-    "hero": 13,
-    "image_file": "./raw-images/hero-class-cards/49651d6b6b5f3f53.jpg"
-  },
-  {
-    "name": "Hold Still",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Hold%20Still.jpg",
-    "hero": 13,
-    "image_file": "./raw-images/hero-class-cards/71336d2d25373333.jpg"
-  },
-  {
-    "name": "Black Sun Armor",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Black%20Sun%20Armor.jpg",
-    "hero": 13,
-    "image_file": "./raw-images/hero-class-cards/5978b0810d292b13.jpg"
-  },
-  {
-    "name": "Duelists Blade",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Duelists%20Blade.jpg",
-    "hero": 14,
-    "image_file": "./raw-images/hero-class-cards/69e3c64c0b7f6767.jpg"
-  },
-  {
-    "name": "Dont Make Me Hurt You",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Onar%20Koma/Dont%20Make%20Me%20Hurt%20You.jpg",
-    "hero": 13,
-    "image_file": "./raw-images/hero-class-cards/796b5d3f65073b53.jpg"
-  },
-  {
-    "name": "All-Out Attack",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/All-Out%20Attack.jpg",
-    "hero": 14,
-    "image_file": "./raw-images/hero-class-cards/6969270f23236753.jpg"
-  },
-  {
-    "name": "Hair-Trigger Pistol",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Hair-Trigger%20Pistol.jpg",
-    "hero": 15,
-    "image_file": "./raw-images/hero-class-cards/55f1f34a0b776763.jpg"
-  },
-  {
-    "name": "Responsiveness",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Responsiveness.jpg",
-    "hero": 14,
-    "image_file": "./raw-images/hero-class-cards/7949475b1b233d03.jpg"
-  },
-  {
-    "name": "Pinpoint Shot",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Pinpoint%20Shot.jpg",
-    "hero": 15,
-    "image_file": "./raw-images/hero-class-cards/69696507692b0d13.jpg"
-  },
-  {
-    "name": "Proximity Strike",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Proximity%20Strike.jpg",
-    "hero": 14,
-    "image_file": "./raw-images/hero-class-cards/597967636b2b7513.jpg"
-  },
-  {
-    "name": "Shot on the Run",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Shot%20on%20the%20Run.jpg",
-    "hero": 15,
-    "image_file": "./raw-images/hero-class-cards/6965370b554d3313.jpg"
-  },
-  {
-    "name": "Smoke Bombs",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Smoke%20Bombs.jpg",
-    "hero": 14,
-    "image_file": "./raw-images/hero-class-cards/693b734c1f6b7733.jpg"
-  },
-  {
-    "name": "Battlefield Experience",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Battlefield%20Experience.jpg",
-    "hero": 15,
-    "image_file": "./raw-images/hero-class-cards/59652f2f23236513.jpg"
-  },
-  {
-    "name": "Remote Detonator",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Remote%20Detonator.jpg",
-    "hero": 14,
-    "image_file": "./raw-images/hero-class-cards/557b790d1b6d7513.jpg"
-  },
-  {
-    "name": "Sharpshooter",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Sharpshooter.jpg",
-    "hero": 15,
-    "image_file": "./raw-images/hero-class-cards/69793b7313236553.jpg"
-  },
-  {
-    "name": "Swords Dance",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Swords%20Dance.jpg",
-    "hero": 14,
-    "image_file": "./raw-images/hero-class-cards/696d774527533d03.jpg"
-  },
-  {
-    "name": "Dead On",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Dead%20On.jpg",
-    "hero": 15,
-    "image_file": "./raw-images/hero-class-cards/71712d6357575313.jpg"
-  },
-  {
-    "name": "Full Sweep",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Full%20Sweep.jpg",
-    "hero": 14,
-    "image_file": "./raw-images/hero-class-cards/716165231b2b3913.jpg"
-  },
-  {
-    "name": "Off-Hand Blaster",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Off-Hand%20Blaster.jpg",
-    "hero": 15,
-    "image_file": "./raw-images/hero-class-cards/6552494c0b6b4f13.jpg"
-  },
-  {
-    "name": "Deadly Grace",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Shyla%20Varad/Deadly%20Grace.jpg",
-    "hero": 14,
-    "image_file": "./raw-images/hero-class-cards/69610f3531031753.jpg"
-  },
-  {
-    "name": "Merciless",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Merciless.jpg",
-    "hero": 15,
-    "image_file": "./raw-images/hero-class-cards/7961192b232b3753.jpg"
-  },
-  {
-    "name": "Rapid Fire",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Rebel%20Heroes/Vinto%20Hreeda/Rapid%20Fire.jpg",
-    "hero": 15,
-    "image_file": "./raw-images/hero-class-cards/7973551b6f393913.jpg"
+    "name": "Squad Cohesion",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Squad%20Cohesion.jpg",
+    "hero": 18,
+    "image_file": "./images/hero-class-cards/7969577b57555533.jpg"
   }
 ]

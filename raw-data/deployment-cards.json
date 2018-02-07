@@ -1,143 +1,26 @@
 [
   {
-    "name": "0-0-0",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/BT-1%20and%200-0-0/Deployment%20Cards/0-0-0.jpg",
-    "source": 32,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73ec0f356d595555.jpg"
-  },
-  {
-    "name": "AT-ST",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/AT-ST.jpg",
+    "name": "AT-DP",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Imperial/AT-DP.jpg",
     "faction": "Imperial",
-    "source": 0,
+    "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/3319184d4d695155.jpg"
+    "image_file": "./images/deployment-cards/3373335d496d5554.jpg"
   },
   {
-    "name": "AT-ST",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/General%20Weiss/Deployment%20Cards/AT-ST.jpg",
-    "source": 36,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/3319184d4d695555.jpg"
-  },
-  {
-    "name": "Advanced Com Systems",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/The%20Grand%20Inquisitor/Deployment%20Cards/Advanced%20Com%20Systems.jpg",
-    "source": 27,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/3be4761d2d715d51.jpg"
-  },
-  {
-    "name": "Agent Blaise",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Imperial/Agent%20Blaise%20Campaign.jpg",
-    "faction": "Imperial",
-    "source": 3,
-    "scope": "Campaign",
-    "image_file": "./raw-images/deployment-cards/63e3e44d4d795554.jpg"
-  },
-  {
-    "name": "Agent Blaise",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Imperial/Agent%20Blaise%20Skirmish.jpg",
-    "faction": "Imperial",
-    "source": 3,
-    "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/63e3e44d49655555.jpg"
-  },
-  {
-    "name": "Agent Blaise",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Agent%20Blaise/Deployment%20Cards/Agent%20Blaise%20Campaign.jpg",
-    "source": 21,
-    "scope": "Campaign",
-    "image_file": "./raw-images/deployment-cards/63e3e44d4d795554.jpg"
-  },
-  {
-    "name": "Agent Blaise",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Agent%20Blaise/Deployment%20Cards/Agent%20Blaise%20Skirmish.jpg",
-    "source": 21,
-    "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/63e3e44d49655555.jpg"
-  },
-  {
-    "name": "Alliance Smuggler",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-4/Alliance%20Smuggler/Deployment%20Cards/Alliance%20Smuggler.jpg",
-    "source": 15,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6ba49d6975635154.jpg"
-  },
-  {
-    "name": "BT-1",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/BT-1%20and%200-0-0/Deployment%20Cards/BT-1.jpg",
-    "source": 32,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/37ecc9696d4d5555.jpg"
-  },
-  {
-    "name": "Balance of the Force",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Balance%20of%20the%20Force.jpg",
+    "name": "Ahsoka Tano",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Rebel/Ahsoka%20Tano.jpg",
     "faction": "Rebel",
-    "source": 0,
+    "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/5bfbf8ca5b555161.jpg"
+    "image_file": "./images/deployment-cards/7b1b3363754d5155.jpg"
   },
   {
-    "name": "Bantha Rider",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-4/Bantha%20Rider/Deployment%20Cards/Bantha%20Rider.jpg",
-    "source": 16,
+    "name": "Ahsoka Tano",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-10/Ahsoka/Deployment%20Cards/Ahsoka%20Tano.jpg",
+    "source": 39,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/7bd970655b555555.jpg"
-  },
-  {
-    "name": "Beast Tamer",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-4/Bantha%20Rider/Deployment%20Cards/Beast%20Tamer.jpg",
-    "source": 16,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73b92636176b5113.jpg"
-  },
-  {
-    "name": "Biv Bodhrik",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Deployment%20Cards/Rebel/Biv%20Bodhrik.jpg",
-    "faction": "Rebel",
-    "source": 1,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7399595553755154.jpg"
-  },
-  {
-    "name": "Black Market",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Jabba%20the%20Hutt/Deployment%20Cards/Black%20Market.jpg",
-    "source": 30,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7bde4e46526d5d1d.jpg"
-  },
-  {
-    "name": "Boba Fett",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Deployment%20Cards/Mercenary/Boba%20Fett.jpg",
-    "faction": "Mercenary",
-    "source": 1,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7339234765755155.jpg"
-  },
-  {
-    "name": "Boba Fett",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Deployment%20Cards/Boba%20Fett.jpg",
-    "source": 9,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/737963476d755155.jpg"
-  },
-  {
-    "name": "Bossk",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Mercenary/Bossk.jpg",
-    "faction": "Mercenary",
-    "source": 3,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/339669754975575d.jpg"
-  },
-  {
-    "name": "Bossk",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Bossk/Deployment%20Cards/Bossk.jpg",
-    "source": 22,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/339669754975575d.jpg"
+    "image_file": "./images/deployment-cards/7b1b3363754d5155.jpg"
   },
   {
     "name": "C-3PO",
@@ -145,88 +28,47 @@
     "faction": "Rebel",
     "source": 1,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/638c1f4f556d5554.jpg"
+    "image_file": "./images/deployment-cards/638c1f4f556d5554.jpg"
   },
   {
-    "name": "C-3PO",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/R2-D2%20and%20C-3PO/Deployment%20Cards/C-3PO.jpg",
-    "source": 11,
+    "name": "Clawdite Form Scout",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Mercenary/Clawdite%20Form%20Scout.jpg",
+    "faction": "Mercenary",
+    "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/638c1f4f556d5554.jpg"
+    "image_file": "./images/deployment-cards/53577d3949794d4d.jpg"
   },
   {
-    "name": "C1-10P",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Hera%20Syndulla%20and%20C1-10P/Deployment%20Cards/C1-10P.jpg",
-    "source": 33,
+    "name": "Clawdite Form Senator",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Mercenary/Clawdite%20Form%20Senator.jpg",
+    "faction": "Mercenary",
+    "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/634e7829577d5754.jpg"
+    "image_file": "./images/deployment-cards/477539394d594d4d.jpg"
   },
   {
-    "name": "Captain Terro",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Imperial/Captain%20Terro.jpg",
-    "faction": "Imperial",
-    "source": 4,
+    "name": "Clawdite Form Streetrat",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Mercenary/Clawdite%20Form%20Streetrat.jpg",
+    "faction": "Mercenary",
+    "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/7be4b05b4d695154.jpg"
+    "image_file": "./images/deployment-cards/19796d7b19494d4d.jpg"
   },
   {
-    "name": "Captain Terro",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Captain%20Terro/Deployment%20Cards/Captain%20Terro.jpg",
-    "source": 29,
+    "name": "Clawdite Shapeshifter elite",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Mercenary/Clawdite%20Shapeshifter%20elite.jpg",
+    "faction": "Mercenary",
+    "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/7becb05b4d695555.jpg"
+    "image_file": "./images/deployment-cards/7b32125957775911.jpg"
   },
   {
-    "name": "Channel the Force",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Obi-Wan%20Kenobi/Deployment%20Cards/Channel%20the%20Force.jpg",
-    "source": 26,
+    "name": "Clawdite Shapeshifter regular",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Mercenary/Clawdite%20Shapeshifter%20regular.jpg",
+    "faction": "Mercenary",
+    "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/f30c68723255715d.jpg"
-  },
-  {
-    "name": "Chewbacca",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Chewbacca.jpg",
-    "faction": "Rebel",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/37a4246953695154.jpg"
-  },
-  {
-    "name": "Chewbacca",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Chewbacca/Deployment%20Cards/Chewbacca.jpg",
-    "source": 35,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/77a42c6953695154.jpg"
-  },
-  {
-    "name": "Combat Suit",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Echo%20Base%20Troopers/Deployment%20Cards/Combat%20Suit.jpg",
-    "source": 18,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73b9b0f471535561.jpg"
-  },
-  {
-    "name": "Cross-Training",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Deployment%20Cards/Cross-Training.jpg",
-    "source": 23,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73373ba90f694d51.jpg"
-  },
-  {
-    "name": "Darth Vader",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Darth%20Vader.jpg",
-    "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6b3c3c5b6d6f5555.jpg"
-  },
-  {
-    "name": "Davith Elso",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Rebel/Davith%20Elso.jpg",
-    "faction": "Rebel",
-    "source": 3,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/3be9e065176d5554.jpg"
+    "image_file": "./images/deployment-cards/7b32125d57775915.jpg"
   },
   {
     "name": "Dengar",
@@ -234,1050 +76,132 @@
     "faction": "Mercenary",
     "source": 2,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/67c413137d455555.jpg"
+    "image_file": "./images/deployment-cards/67c413137d455555.jpg"
   },
   {
-    "name": "Dengar",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Dengar/Deployment%20Cards/Dengar.jpg",
-    "source": 17,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/67c413137d455555.jpg"
-  },
-  {
-    "name": "Devious Scheme",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Mercenary/Devious%20Scheme.jpg",
-    "faction": "Mercenary",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7bbc6f2f77716d55.jpg"
-  },
-  {
-    "name": "Dewback Rider",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Captain%20Terro/Deployment%20Cards/Dewback%20Rider.jpg",
-    "source": 29,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6b1c1859656d5955.jpg"
-  },
-  {
-    "name": "Diala Passil",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Diala%20Passil.jpg",
-    "faction": "Rebel",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7b6c92136577575c.jpg"
-  },
-  {
-    "name": "Elite Alliance Rangers",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Alliance%20Rangers/Deployment%20Cards/Elite%20Alliance%20Rangers.jpg",
-    "source": 28,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/77334e4d57715154.jpg"
-  },
-  {
-    "name": "Elite E-Web Engineer",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Elite%20E-Web%20Engineer.jpg",
+    "name": "Driven by Hatred",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Imperial/Driven%20by%20Hatred.jpg",
     "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7bf1f3514d6d595c.jpg"
-  },
-  {
-    "name": "Elite Echo Base Troopers",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Echo%20Base%20Troopers/Deployment%20Cards/Elite%20Echo%20Base%20Trooper.jpg",
-    "source": 18,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/5719ce63556d5955.jpg"
-  },
-  {
-    "name": "Elite Gamorrean Guards",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Mercenary/Elite%20Gamorrean%20Guards.jpg",
-    "faction": "Mercenary",
-    "source": 4,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/77b9185d5f75515c.jpg"
-  },
-  {
-    "name": "Elite HK Assassin Droids",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Mercenary/Elite%20HK%20Assassin%20Droids.jpg",
-    "faction": "Mercenary",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/f779797b6d5d5155.jpg"
-  },
-  {
-    "name": "Elite Heavy Stormtrooper",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Deployment%20Cards/Imperial/Elite%20Heavy%20Stormtrooper.jpg",
-    "faction": "Imperial",
-    "source": 1,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/5fc9f8316d695555.jpg"
-  },
-  {
-    "name": "Elite Hired Guns",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Deployment%20Cards/Elite%20Hired%20Gun.jpg",
-    "source": 12,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/762d0d5547575d54.jpg"
-  },
-  {
-    "name": "Elite ISB Infiltrators",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Deployment%20Cards/Elite%20ISB%20Infiltrators.jpg",
-    "source": 23,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/767471594d6d5555.jpg"
-  },
-  {
-    "name": "Elite Imperial Officer",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Elite%20Imperial%20Officer.jpg",
-    "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6bdc943d496d5554.jpg"
-  },
-  {
-    "name": "Elite Jawa Scavenger",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Deployment%20Cards/Elite%20Jawa%20Scavenger%20Campaign.jpg",
-    "source": 34,
-    "scope": "Campaign",
-    "image_file": "./raw-images/deployment-cards/7b99d840776f5155.jpg"
-  },
-  {
-    "name": "Elite Jawa Scavenger",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Deployment%20Cards/Elite%20Jawa%20Scavenger%20Skirmish.jpg",
-    "source": 34,
-    "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/7b99d84275575555.jpg"
-  },
-  {
-    "name": "Elite Jet Troopers",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Imperial/Elite%20Jet%20Troopers.jpg",
-    "faction": "Imperial",
-    "source": 4,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/377390096b695158.jpg"
-  },
-  {
-    "name": "Elite Nexu",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Mercenary/Elite%20Nexu.jpg",
-    "faction": "Mercenary",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/37fe5b53596f5555.jpg"
-  },
-  {
-    "name": "Elite Probe Droid",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Elite%20Probe%20Droid.jpg",
-    "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/63b3f2054d6f5555.jpg"
-  },
-  {
-    "name": "Elite Rebel Saboteurs",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Rebel%20Saboteurs/Deployment%20Cards/Elite-Rebel-Saboteur_errata.png",
-    "source": 6,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/76f9d05755795155.png"
-  },
-  {
-    "name": "Elite Rebel Troopers",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Rebel%20Troopers/Deployment%20Cards/Elite%20Rebel%20Trooper.jpg",
-    "source": 7,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6781a96d55695154.jpg"
-  },
-  {
-    "name": "Elite Royal Guards",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Elite-Royal-Guard_errata.png",
-    "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/77d3c3494d6d5555.png"
-  },
-  {
-    "name": "Elite Snowtroopers",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Imperial/Elite%20Snowtroopers.jpg",
-    "faction": "Imperial",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/77352143796d5555.jpg"
-  },
-  {
-    "name": "Elite Stormtroopers",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Elite%20Stormtrooper.jpg",
-    "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7649c1336d795154.jpg"
-  },
-  {
-    "name": "Elite Stormtroopers",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Deployment%20Cards/Elite%20Stormtrooper.jpg",
-    "source": 13,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7649c1336d795154.jpg"
-  },
-  {
-    "name": "Elite Trandoshan Hunter",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Mercenary/Elite%20Trandoshan%20Hunter.jpg",
-    "faction": "Mercenary",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/77edec6d7b4d5555.jpg"
-  },
-  {
-    "name": "Elite Tusken Raider",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Deployment%20Cards/Mercenary/Elite%20Tusken%20Raider.jpg",
-    "faction": "Mercenary",
-    "source": 1,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/77a7664179755555.jpg"
-  },
-  {
-    "name": "Elite Ugnaught Tinkerer",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Mercenary/Elite%20Ugnaught%20Tinkerer.jpg",
-    "faction": "Mercenary",
-    "source": 3,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6bab8a7767755954.jpg"
-  },
-  {
-    "name": "Elite Wampa",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Mercenary/Elite%20Wampa.jpg",
-    "faction": "Mercenary",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/33956265597d5555.jpg"
-  },
-  {
-    "name": "Elite Weequay Pirates",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Mercenary/Elite%20Weequay%20Pirates.jpg",
-    "faction": "Mercenary",
-    "source": 4,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7759b011674d5154.jpg"
-  },
-  {
-    "name": "Elite Wing Guard",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Mercenary/Elite%20Wing%20Guard.jpg",
-    "faction": "Mercenary",
-    "source": 3,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7715d02965755555.jpg"
-  },
-  {
-    "name": "Elite Wookie Warriors",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Wookie%20Warriors/Deployment%20Cards/Elite%20Wookie%20Warrior.jpg",
-    "source": 14,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7739985b75655155.jpg"
-  },
-  {
-    "name": "Explosive Armaments",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Deployment%20Cards/Explosive%20Armaments.jpg",
-    "source": 9,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/db1c7cfc73715515.jpg"
-  },
-  {
-    "name": "Feeding Frenzy",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Captain%20Terro/Deployment%20Cards/Feeding%20Frenzy.jpg",
-    "source": 29,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7b65234476496919.jpg"
-  },
-  {
-    "name": "Fenn Signis",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Fenn%20Signis.jpg",
-    "faction": "Rebel",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/33cc797147455154.jpg"
-  },
-  {
-    "name": "First Strike",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Mercenary/First%20Strike.jpg",
-    "faction": "Mercenary",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/3bfeaca863355149.jpg"
-  },
-  {
-    "name": "Focused on the Kill",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Deployment%20Cards/Focused%20on%20the%20Kill.jpg",
-    "source": 34,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7bde9b93d163650f.jpg"
-  },
-  {
-    "name": "Fury Of Kashyyyk",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Wookie%20Warriors/Deployment%20Cards/Fury%20Of%20Kashyyyk.jpg",
-    "source": 14,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73f3b11161714569.jpg"
-  },
-  {
-    "name": "Gaarkhan",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Gaarkhan.jpg",
-    "faction": "Rebel",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/3f6ce84157675b5a.jpg"
-  },
-  {
-    "name": "General Sorin",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Imperial/General%20Sorin.jpg",
-    "faction": "Imperial",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73dddd594d6d5155.jpg"
-  },
-  {
-    "name": "General Sorin",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/General%20Sorin/Deployment%20Cards/General%20Sorin.jpg",
-    "source": 19,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73dd99596d6d5154.jpg"
-  },
-  {
-    "name": "General Weiss",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/General%20Weiss.jpg",
-    "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6bf1dc6d596d5555.jpg"
-  },
-  {
-    "name": "General Weiss",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/General%20Weiss/Deployment%20Cards/General%20Weiss.jpg",
-    "source": 36,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6bf1dc4d596d5555.jpg"
-  },
-  {
-    "name": "Gideon Argus",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Gideon%20Argus.jpg",
-    "faction": "Rebel",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7bf8f857556d5150.jpg"
-  },
-  {
-    "name": "Greedo",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Greedo/Deployment%20Cards/Greedo.jpg",
-    "source": 25,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/739993196d575555.jpg"
-  },
-  {
-    "name": "Han Solo",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Han%20Solo.jpg",
-    "faction": "Rebel",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/333c615357655354.jpg"
-  },
-  {
-    "name": "Han Solo",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Han%20Solo/Deployment%20Cards/Han%20Solo.jpg",
-    "source": 37,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73bc415355615155.jpg"
-  },
-  {
-    "name": "Headhunter",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Bossk/Deployment%20Cards/Headhunter.jpg",
-    "source": 22,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/731771c257795173.jpg"
-  },
-  {
-    "name": "Hera Syndulla",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Hera%20Syndulla%20and%20C1-10P/Deployment%20Cards/Hera%20Syndulla.jpg",
-    "source": 33,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/733db619756d5154.jpg"
-  },
-  {
-    "name": "Heroic Effort",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Lando%20Calrissian/Deployment%20Cards/Heroic%20Effort.jpg",
-    "source": 24,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73dac86b33557161.jpg"
-  },
-  {
-    "name": "IG-88",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Mercenary/IG-88.jpg",
-    "faction": "Mercenary",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/33bc3049737b5d55.jpg"
-  },
-  {
-    "name": "IG-88",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/IG88/Deployment%20Cards/IG88.jpg",
     "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/33bc3059737b5d55.jpg"
+    "image_file": "./images/deployment-cards/7bf1a2e3737d4d33.jpg"
   },
   {
-    "name": "Indentured Jester",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Mercenary/Indentured%20Jester.jpg",
-    "faction": "Mercenary",
-    "source": 4,
+    "name": "Drokkatta",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Rebel/Drokkatta%20skirmish.jpg",
+    "faction": "Rebel",
+    "source": 5,
+    "scope": "Skirmish",
+    "image_file": "./images/deployment-cards/3b29745355655554.jpg"
+  },
+  {
+    "name": "Emperor Palpatine",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Imperial/Emperor%20Palpatine.jpg",
+    "faction": "Imperial",
+    "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/7bb1347273714517.jpg"
+    "image_file": "./images/deployment-cards/7b382043696d5354.jpg"
   },
   {
-    "name": "Jabba the Hutt",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Mercenary/Jabba%20the%20Hutt%20Campaign.jpg",
+    "name": "Emperor Palpatine",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-10/Emperor%20Palpatine/Deployment%20Cards/Emperor%20Palpatine.jpg",
+    "source": 40,
+    "scope": null,
+    "image_file": "./images/deployment-cards/7b382043696d5354.jpg"
+  },
+  {
+    "name": "Jarrod Kelvin",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Rebel/Jarrod%20Kelvin%20skirmish.jpg",
+    "faction": "Rebel",
+    "source": 5,
+    "scope": "Skirmish",
+    "image_file": "./images/deployment-cards/7b39f25d5d4b5954.jpg"
+  },
+  {
+    "name": "Ko-Tun Feralo",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Rebel/Ko-Tun%20Feralo%20skirmish.jpg",
+    "faction": "Rebel",
+    "source": 5,
+    "scope": "Skirmish",
+    "image_file": "./images/deployment-cards/7b6b713155755754.jpg"
+  },
+  {
+    "name": "Maul",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Mercenary/Maul.jpg",
     "faction": "Mercenary",
-    "source": 4,
+    "source": 5,
+    "scope": null,
+    "image_file": "./images/deployment-cards/33dc783945555555.jpg"
+  },
+  {
+    "name": "Maul",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-10/Maul/Deployment%20Cards/Maul.jpg",
+    "source": 41,
+    "scope": null,
+    "image_file": "./images/deployment-cards/33dc783945555555.jpg"
+  },
+  {
+    "name": "Riot Trooper elite",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Imperial/Riot%20Trooper%20elite%20campaign.jpg",
+    "faction": "Imperial",
+    "source": 5,
     "scope": "Campaign",
-    "image_file": "./raw-images/deployment-cards/7be66f3b795b5d54.jpg"
+    "image_file": "./images/deployment-cards/6e34664369555555.jpg"
   },
   {
-    "name": "Jabba the Hutt",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Mercenary/Jabba%20the%20Hutt%20Skirmish.jpg",
-    "faction": "Mercenary",
-    "source": 4,
+    "name": "Riot Trooper elite",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Imperial/Riot%20Trooper%20elite%20skirmish.jpg",
+    "faction": "Imperial",
+    "source": 5,
     "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/7be66f3b5f455d54.jpg"
+    "image_file": "./images/deployment-cards/6e34e64375755554.jpg"
   },
   {
-    "name": "Jabba the Hutt",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Jabba%20the%20Hutt/Deployment%20Cards/Jabba%20the%20Hutt%20campaign.jpg",
-    "source": 30,
+    "name": "Riot Trooper regular",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Imperial/Riot%20Trooper%20regular%20campaign.jpg",
+    "faction": "Imperial",
+    "source": 5,
     "scope": "Campaign",
-    "image_file": "./raw-images/deployment-cards/7be66f3b795b5d55.jpg"
+    "image_file": "./images/deployment-cards/6e34664b5d755154.jpg"
   },
   {
-    "name": "Jabba the Hutt",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Jabba%20the%20Hutt/Deployment%20Cards/Jabba%20the%20Hutt%20skirmish.jpg",
-    "source": 30,
+    "name": "Riot Trooper regular",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Imperial/Riot%20Trooper%20regular%20skirmish.jpg",
+    "faction": "Imperial",
+    "source": 5,
     "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/7be62f3b5f455d55.jpg"
+    "image_file": "./images/deployment-cards/6e34664b55695154.jpg"
   },
   {
-    "name": "Jyn Odan",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Jyn%20Odan.jpg",
+    "name": "Rogue Smuggler",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Rebel/Rogue%20Smuggler.jpg",
     "faction": "Rebel",
-    "source": 0,
+    "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/33ddd976576d535c.jpg"
+    "image_file": "./images/deployment-cards/7bd9ccdc79717d63.jpg"
   },
   {
-    "name": "Kayn Somos",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Deployment%20Cards/Imperial/Kayn%20Somos.jpg",
+    "name": "Sentry Droid elite",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Imperial/Sentry%20Droid%20elite.jpg",
     "faction": "Imperial",
-    "source": 1,
+    "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/73f12b695d6d5150.jpg"
+    "image_file": "./images/deployment-cards/7e6ecf59696d5d54.jpg"
   },
   {
-    "name": "Kayn Somos",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/Kayn%20Somos/Deployment%20Cards/Kayn%20Somos.jpg",
-    "source": 10,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73fb2b6b5d6d5554.jpg"
-  },
-  {
-    "name": "Lando Calrissian",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Rebel/Lando%20Calrissian.jpg",
-    "faction": "Rebel",
-    "source": 3,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7bdc6d6355635555.jpg"
-  },
-  {
-    "name": "Lando Calrissian",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Lando%20Calrissian/Deployment%20Cards/Lando%20Calrissian.jpg",
-    "source": 24,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7bdc6d6355635555.jpg"
-  },
-  {
-    "name": "Last Resort",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Deployment%20Cards/Last%20Resort.jpg",
-    "source": 12,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/331d0fce2b615d13.jpg"
-  },
-  {
-    "name": "Leia Organa",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Rebel/Leia%20Organa.jpg",
-    "faction": "Rebel",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73a63f5751795154.jpg"
-  },
-  {
-    "name": "Leia Organa",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Leia%20Organa/Deployment%20Cards/Leia%20Organa%20Campaign.jpg",
-    "source": 20,
-    "scope": "Campaign",
-    "image_file": "./raw-images/deployment-cards/73a63f1751795155.jpg"
-  },
-  {
-    "name": "Leia Organa",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Leia%20Organa/Deployment%20Cards/Leia%20Organa%20Skirmish.jpg",
-    "source": 20,
-    "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/73263f1551595155.jpg"
-  },
-  {
-    "name": "Loku Kanoloa",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Rebel/Loku%20Kanoloa.jpg",
-    "faction": "Rebel",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73313161534d5950.jpg"
-  },
-  {
-    "name": "Luke Skywalker",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Luke%20Skywalker.jpg",
-    "faction": "Rebel",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73e2465157635154.jpg"
-  },
-  {
-    "name": "Luke Skywalker Jedi Knight",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Rebel/Luke%20Skywalker%20Jedi%20Knight.jpg",
-    "faction": "Rebel",
-    "source": 4,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6b34b1594d655358.jpg"
-  },
-  {
-    "name": "Luke Skywalker Jedi Knight",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Luke%20Skywalker%20Jedi%20Knight/Deployment%20Cards/Luke%20Skywalker%20Jedi%20Knight.jpg",
-    "source": 31,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7b34b1594d6d5554.jpg"
-  },
-  {
-    "name": "MHD-19",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Rebel/MHD-19.jpg",
-    "faction": "Rebel",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/63d1d1496d795154.jpg"
-  },
-  {
-    "name": "Mak Eshkarey",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Mak%20Eshkarey.jpg",
-    "faction": "Rebel",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6be2555d57655155.jpg"
-  },
-  {
-    "name": "Motivation",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Luke%20Skywalker%20Jedi%20Knight/Deployment%20Cards/Motivation.jpg",
-    "source": 31,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7b0c9eca63797113.jpg"
-  },
-  {
-    "name": "Murne Rin",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Rebel/Murne%20Rin.jpg",
-    "faction": "Rebel",
-    "source": 3,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73b1e15957675154.jpg"
-  },
-  {
-    "name": "Obi-Wan Kenobi",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Obi-Wan%20Kenobi/Deployment%20Cards/Obi-Wan%20Kenobi%20Campaign.jpg",
-    "source": 26,
-    "scope": "Campaign",
-    "image_file": "./raw-images/deployment-cards/7339385157615555.jpg"
-  },
-  {
-    "name": "Obi-Wan Kenobi",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Obi-Wan%20Kenobi/Deployment%20Cards/Obi-Wan%20Kenobi%20Skirmish.jpg",
-    "source": 26,
-    "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/73393861576d5554.jpg"
-  },
-  {
-    "name": "On a Diplomatic Mission",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Leia%20Organa/Deployment%20Cards/On%20a%20Diplomatic%20Mission.jpg",
-    "source": 20,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/f3999d9343757539.jpg"
-  },
-  {
-    "name": "Onar Koma",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Mercenary/Onar%20Koma%20Skirmish.jpg",
-    "faction": "Mercenary",
-    "source": 4,
-    "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/7b39715073775758.jpg"
-  },
-  {
-    "name": "Prey on the Weak",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Greedo/Deployment%20Cards/Prey%20on%20the%20Weak.jpg",
-    "source": 25,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7bf7f77a73715513.jpg"
-  },
-  {
-    "name": "Punishing Strike",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Dengar/Deployment%20Cards/Punishing%20Strike.jpg",
-    "source": 17,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7b1c24a547515513.jpg"
-  },
-  {
-    "name": "R2-D2",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Deployment%20Cards/Rebel/R2-D2%20Campaign.jpg",
-    "faction": "Rebel",
-    "source": 1,
-    "scope": "Campaign",
-    "image_file": "./raw-images/deployment-cards/73541c4355695154.jpg"
-  },
-  {
-    "name": "R2-D2",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Deployment%20Cards/Rebel/R2-D2%20Skirmish.jpg",
-    "faction": "Rebel",
-    "source": 1,
-    "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/73541c4375695154.jpg"
-  },
-  {
-    "name": "R2-D2",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/R2-D2%20and%20C-3PO/Deployment%20Cards/R2-D2%20Campaign.jpg",
-    "source": 11,
-    "scope": "Campaign",
-    "image_file": "./raw-images/deployment-cards/73545c4355695350.jpg"
-  },
-  {
-    "name": "R2-D2",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/R2-D2%20and%20C-3PO/Deployment%20Cards/R2-D2%20Skirmish.jpg",
-    "source": 11,
-    "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/73541c4375695954.jpg"
-  },
-  {
-    "name": "Rancor",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Mercenary/Rancor%20Campaign.jpg",
-    "faction": "Mercenary",
-    "source": 4,
-    "scope": "Campaign",
-    "image_file": "./raw-images/deployment-cards/33f0d10571735754.jpg"
-  },
-  {
-    "name": "Rancor",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Mercenary/Rancor%20Skirmish.jpg",
-    "faction": "Mercenary",
-    "source": 4,
-    "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/33f0d1457b775d54.jpg"
-  },
-  {
-    "name": "Rebel High Command",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Rebel%20High%20Command.jpg",
-    "faction": "Rebel",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7b999b8b15775571.jpg"
-  },
-  {
-    "name": "Regular Alliance Rangers",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Rebel/Regular%20Alliance%20Rangers.jpg",
-    "faction": "Rebel",
-    "source": 4,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/76324e4d576d595a.jpg"
-  },
-  {
-    "name": "Regular Alliance Rangers",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Alliance%20Rangers/Deployment%20Cards/Alliance%20Rangers.jpg",
-    "source": 28,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/77324e4d576d5554.jpg"
-  },
-  {
-    "name": "Regular E-Web Engineer",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/E-Web%20Enigneer.jpg",
+    "name": "Sentry Droid regular",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Imperial/Sentry%20Droid%20regular.jpg",
     "faction": "Imperial",
-    "source": 0,
+    "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/7bf3f333616f515c.jpg"
+    "image_file": "./images/deployment-cards/7e4ecf59696d5d54.jpg"
   },
   {
-    "name": "Regular Echo Base Troopers",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Rebel/Echo%20Base%20Troopers.jpg",
+    "name": "Wookiee Avenger",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Rebel/Wookiee%20Avenger.jpg",
     "faction": "Rebel",
-    "source": 2,
+    "source": 5,
     "scope": null,
-    "image_file": "./raw-images/deployment-cards/5719ca6357695150.jpg"
-  },
-  {
-    "name": "Regular Echo Base Troopers",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Echo%20Base%20Troopers/Deployment%20Cards/Echo%20Base%20Trooper.jpg",
-    "source": 18,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/5719ca6355695155.jpg"
-  },
-  {
-    "name": "Regular Gamorrean Guards",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Mercenary/Regular%20Gamorrean%20Guards.jpg",
-    "faction": "Mercenary",
-    "source": 4,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/77b9185967655b58.jpg"
-  },
-  {
-    "name": "Regular HK Assassin Droids",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Mercenary/HK%20Assassin%20Droids.jpg",
-    "faction": "Mercenary",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/777979736d6d5555.jpg"
-  },
-  {
-    "name": "Regular Heavy Stormtrooper",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Deployment%20Cards/Imperial/Heavy%20Stormtrooper.jpg",
-    "faction": "Imperial",
-    "source": 1,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/5f89b1316d695555.jpg"
-  },
-  {
-    "name": "Regular Hired Guns",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Deployment%20Cards/Hired%20Gun.jpg",
-    "source": 12,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/762c0d6163575555.jpg"
-  },
-  {
-    "name": "Regular ISB Infiltrators",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Deployment%20Cards/ISB%20Infiltrators.jpg",
-    "source": 23,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7674714969695555.jpg"
-  },
-  {
-    "name": "Regular Imperial Officer",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Imperial-Officer_errata.png",
-    "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6bdc94394b695555.png"
-  },
-  {
-    "name": "Regular Jawa Scavenger",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Deployment%20Cards/Jawa%20Scavenger.jpg",
-    "source": 34,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6b99d86273415555.jpg"
-  },
-  {
-    "name": "Regular Jet Troopers",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Imperial/Regular%20Jet%20Troopers.jpg",
-    "faction": "Imperial",
-    "source": 4,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/777390096b2b5154.jpg"
-  },
-  {
-    "name": "Regular Nexu",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Mercenary/Nexu.jpg",
-    "faction": "Mercenary",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/37fedb535b6f5755.jpg"
-  },
-  {
-    "name": "Regular Probe Droid",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Probe%20Droid.jpg",
-    "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/63b172056d695155.jpg"
-  },
-  {
-    "name": "Regular Rebel Saboteurs",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Rebel-Saboteur_errata.png",
-    "faction": "Rebel",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/76f9d05755715155.png"
-  },
-  {
-    "name": "Regular Rebel Saboteurs",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Rebel%20Saboteurs/Deployment%20Cards/Rebel-Saboteur_errata.png",
-    "source": 6,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/76f9d05755715155.png"
-  },
-  {
-    "name": "Regular Rebel Troopers",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Rebel/Rebel%20Trooper.jpg",
-    "faction": "Rebel",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6783a96d55615155.jpg"
-  },
-  {
-    "name": "Regular Rebel Troopers",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Rebel%20Troopers/Deployment%20Cards/Rebel%20Trooper.jpg",
-    "source": 7,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6783a96d55695154.jpg"
-  },
-  {
-    "name": "Regular Royal Guards",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Royal-Guard_errata.png",
-    "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/76d3c371495b5755.png"
-  },
-  {
-    "name": "Regular Snowtroopers",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Imperial/Snowtroopers.jpg",
-    "faction": "Imperial",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/77342143696d5555.jpg"
-  },
-  {
-    "name": "Regular Stormtroopers",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Stormtrooper.jpg",
-    "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7649c3336969515e.jpg"
-  },
-  {
-    "name": "Regular Stormtroopers",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Deployment%20Cards/Stormtrooper.jpg",
-    "source": 13,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7649c3336969515e.jpg"
-  },
-  {
-    "name": "Regular Trandoshan Hunter",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Mercenary/Trandoshan%20Hunter.jpg",
-    "faction": "Mercenary",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/77e4ec6d5b555555.jpg"
-  },
-  {
-    "name": "Regular Tusken Raider",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Deployment%20Cards/Mercenary/Tusken%20Raider.jpg",
-    "faction": "Mercenary",
-    "source": 1,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/77e7664379755950.jpg"
-  },
-  {
-    "name": "Regular Ugnaught Tinkerer",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Mercenary/Ugnaught%20Tinkerer.jpg",
-    "faction": "Mercenary",
-    "source": 3,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6bab8a7e67195555.jpg"
-  },
-  {
-    "name": "Regular Wampa",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Mercenary/Wampa.jpg",
-    "faction": "Mercenary",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/33942264597d5755.jpg"
-  },
-  {
-    "name": "Regular Weequay Pirates",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Mercenary/Regular%20Weequay%20Pirates.jpg",
-    "faction": "Mercenary",
-    "source": 4,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7759b0396b555154.jpg"
-  },
-  {
-    "name": "Regular Wing Guard",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Mercenary/Wing%20Guard.jpg",
-    "faction": "Mercenary",
-    "source": 3,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7715502865715555.jpg"
-  },
-  {
-    "name": "Regular Wookie Warriors",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Wookie%20Warriors/Deployment%20Cards/Wookie%20Warrior.jpg",
-    "source": 14,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/5731b85b75615555.jpg"
-  },
-  {
-    "name": "Royal Guard Champion",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Royal%20Guard%20Champion.jpg",
-    "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/5b0839356b695555.jpg"
-  },
-  {
-    "name": "Royal Guard Champion Deployment Card",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Royal%20Guard%20Champion/Deployment%20Card/Royal%20Guard%20Champion%20Deployment%20Card.jpg",
-    "source": 8,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/5b08393569695555.jpg"
-  },
-  {
-    "name": "Rule by Fear",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/Kayn%20Somos/Deployment%20Cards/Rule%20by%20Fear.jpg",
-    "source": 10,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7bfe67ad33794951.jpg"
-  },
-  {
-    "name": "SC2-M Repulsor Tank",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Imperial/SC2-M%20Repulsor%20Tank.jpg",
-    "faction": "Imperial",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73c9d8194d6f5554.jpg"
-  },
-  {
-    "name": "Saska Teft",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Deployment%20Cards/Rebel/Saska%20Teft.jpg",
-    "faction": "Rebel",
-    "source": 1,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/731c78755d6d5550.jpg"
-  },
-  {
-    "name": "Scavenged Weaponry",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Hera%20Syndulla%20and%20C1-10P/Deployment%20Cards/Scavenged%20Weaponry.jpg",
-    "source": 33,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/fbd3539673796911.jpg"
-  },
-  {
-    "name": "Shyla Varad",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Mercenary/Shyla%20Varad%20Skirmish.jpg",
-    "faction": "Mercenary",
-    "source": 4,
-    "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/7bf17225497b5b58.jpg"
-  },
-  {
-    "name": "Smugglers Run",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-4/Alliance%20Smuggler/Deployment%20Cards/Smugglers%20Run.jpg",
-    "source": 15,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7b779bbe67515561.jpg"
-  },
-  {
-    "name": "Survivalist",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Alliance%20Rangers/Deployment%20Cards/Survivalist.jpg",
-    "source": 28,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/e39839cc59736b41.jpg"
-  },
-  {
-    "name": "Targeting Computer",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Neutral/Targeting%20Computer.jpg",
-    "faction": "Neutral",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7b303d9053696969.jpg"
-  },
-  {
-    "name": "Temporary Alliance",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Mercenary/Temporary%20Alliance.jpg",
-    "faction": "Mercenary",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/5b33e5e84c334551.jpg"
-  },
-  {
-    "name": "Temporary Alliance",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Deployment%20Cards/Imperial/Temporary%20Alliance.jpg",
-    "faction": "Imperial",
-    "source": 0,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7b25657273494951.jpg"
-  },
-  {
-    "name": "The Generals Ranks",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/General%20Sorin/Deployment%20Cards/The%20Generals%20Ranks.jpg",
-    "source": 19,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/5b9ca5a571694d51.jpg"
-  },
-  {
-    "name": "The Grand Inquisitor",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/The%20Grand%20Inquisitor/Deployment%20Cards/The%20Grand%20Inquisitor.jpg",
-    "source": 27,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/53b1c469696f5555.jpg"
-  },
-  {
-    "name": "Trusted Ally",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/BT-1%20and%200-0-0/Deployment%20Cards/Trusted%20Ally.jpg",
-    "source": 32,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/731228a8734b7941.jpg"
-  },
-  {
-    "name": "Under Duress",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Mercenary/Under%20Duress.jpg",
-    "faction": "Mercenary",
-    "source": 3,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/736d689717695551.jpg"
-  },
-  {
-    "name": "Unshakable",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Deployment%20Cards/Neutral/Unshakable.jpg",
-    "faction": "Neutral",
-    "source": 3,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/73db71b069456d19.jpg"
-  },
-  {
-    "name": "Vader's Finest",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Deployment%20Cards/Vaders%20Finest.jpg",
-    "source": 13,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/33f8f4b379694f13.jpg"
-  },
-  {
-    "name": "Verena Talos",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Rebel/Verena%20Talos.jpg",
-    "faction": "Rebel",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/2bd97819576d5954.jpg"
-  },
-  {
-    "name": "Vinto Hreeda",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Deployment%20Cards/Mercenary/Vinto%20Hreeda%20Skirmish.jpg",
-    "faction": "Mercenary",
-    "source": 4,
-    "scope": "Skirmish",
-    "image_file": "./raw-images/deployment-cards/7bdcd42567695958.jpg"
-  },
-  {
-    "name": "Zillo Technique",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Agent%20Blaise/Deployment%20Cards/Zillo%20Technique.jpg",
-    "source": 21,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/7beea98991694d71.jpg"
-  },
-  {
-    "name": "elite Alliance Smuggler",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-4/Alliance%20Smuggler/Deployment%20Cards/elite%20Alliance%20Smuggler.jpg",
-    "source": 15,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/6b24995d55635154.jpg"
+    "image_file": "./images/deployment-cards/5b13634b63535d61.jpg"
   }
 ]

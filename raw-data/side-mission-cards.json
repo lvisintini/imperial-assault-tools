@@ -1,226 +1,30 @@
 [
   {
-    "name": "Hunted Down",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Side%20Missions/Green/Hunted%20Down.jpg",
-    "source": 1,
-    "color": "Green",
-    "image_file": "./raw-images/side-mission-cards/be8f0f0f2f2d0f4d.jpg"
-  },
-  {
-    "name": "Canyon Run",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Side%20Missions/Grey/Canyon%20Run.jpg",
-    "source": 1,
+    "name": "Civil Unrest",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Side%20Missions/Grey/Civil%20Unrest.jpg",
+    "source": 5,
     "color": "Grey",
-    "image_file": "./raw-images/side-mission-cards/0a078f0f0d2f0d0d.jpg"
+    "image_file": "./images/side-mission-cards/fbcf4f0f4d0d0d4f.jpg"
   },
   {
-    "name": "Past Life Enemies",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Side%20Missions/Red/Past%20Life%20Enemies.jpg",
-    "source": 1,
+    "name": "Extraction",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Side%20Missions/Red/Extraction.jpg",
+    "source": 5,
     "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/106c4f174f0f0f0f.jpg"
+    "image_file": "./images/side-mission-cards/1d530b0f2d0d0f0d.jpg"
   },
   {
-    "name": "Shady Dealings",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Side%20Missions/Red/Shady%20Dealings.jpg",
-    "source": 1,
+    "name": "Test of Metal",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Side%20Missions/Red/Test%20of%20Metal.jpg",
+    "source": 5,
     "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/7e9e8f0f0d8f2d0f.jpg"
+    "image_file": "./images/side-mission-cards/ac71cf0f4d2d0d0f.jpg"
   },
   {
-    "name": "Constant Vigilance",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Side%20Missions/Red/Constant%20Vigilance.jpg",
-    "source": 2,
+    "name": "Unfninished Business",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Side%20Missions/Red/Unfninished%20Business.jpg",
+    "source": 5,
     "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/b63e0f1f0d850d4b.jpg"
-  },
-  {
-    "name": "Know Your Enemy",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Side%20Missions/Red/Know%20Your%20Enemy.jpg",
-    "source": 2,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/2f0b8f0f0dad0d4f.jpg"
-  },
-  {
-    "name": "Preventative Measures",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Side%20Missions/Red/Preventative%20Measures.jpg",
-    "source": 2,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/d8cacb1f4d9d0d4f.jpg"
-  },
-  {
-    "name": "Homecoming",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Green/Homecoming.jpg",
-    "source": 0,
-    "color": "Green",
-    "image_file": "./raw-images/side-mission-cards/1b394f07258d2d49.jpg"
-  },
-  {
-    "name": "Sorry About the Mess",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Green/Sorry%20About%20the%20Mess.jpg",
-    "source": 0,
-    "color": "Green",
-    "image_file": "./raw-images/side-mission-cards/cdce8b0f351f2d49.jpg"
-  },
-  {
-    "name": "A Simple Task",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Grey/A%20Simple%20Task.jpg",
-    "source": 0,
-    "color": "Grey",
-    "image_file": "./raw-images/side-mission-cards/9fd34f1f1d072d4b.jpg"
-  },
-  {
-    "name": "Target of Opportunity",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Green/Target%20of%20Opportunity.jpg",
-    "source": 0,
-    "color": "Green",
-    "image_file": "./raw-images/side-mission-cards/28214b0f2d1d2d59.jpg"
-  },
-  {
-    "name": "Generous Donations",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Grey/Generous%20Donations.jpg",
-    "source": 0,
-    "color": "Grey",
-    "image_file": "./raw-images/side-mission-cards/83860f074d0d2d1b.jpg"
-  },
-  {
-    "name": "The Spice Job",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Green/The%20Spice%20Job.jpg",
-    "source": 0,
-    "color": "Green",
-    "image_file": "./raw-images/side-mission-cards/194a471f158d2d09.jpg"
-  },
-  {
-    "name": "Brushfire",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Red/Brushfire.jpg",
-    "source": 0,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/c8a60f2f35cd290f.jpg"
-  },
-  {
-    "name": "Luxury Cruise",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Grey/Luxury%20Cruise.jpg",
-    "source": 0,
-    "color": "Grey",
-    "image_file": "./raw-images/side-mission-cards/4987471f0d290f4f.jpg"
-  },
-  {
-    "name": "Friends of Old",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Red/Friends%20of%20Old.jpg",
-    "source": 0,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/2cbe8f07258d2d09.jpg"
-  },
-  {
-    "name": "Sympathy for the Rebellion",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Grey/Sympathy%20for%20the%20Rebellion.jpg",
-    "source": 0,
-    "color": "Grey",
-    "image_file": "./raw-images/side-mission-cards/3a3b0d0f2f8d0d0d.jpg"
-  },
-  {
-    "name": "High Moon",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Red/High%20Moon.jpg",
-    "source": 0,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/88898f2f0d0d2d09.jpg"
-  },
-  {
-    "name": "Vipers Den",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Grey/Vipers%20Den.jpg",
-    "source": 0,
-    "color": "Grey",
-    "image_file": "./raw-images/side-mission-cards/bb7b070f0d2d2d49.jpg"
-  },
-  {
-    "name": "Indebted",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Red/Indebted.jpg",
-    "source": 0,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/e4fd4f0f1f892d0d.jpg"
-  },
-  {
-    "name": "Loose Cannon",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Red/Loose%20Cannon.jpg",
-    "source": 0,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/73b0950f15152d0f.jpg"
-  },
-  {
-    "name": "Temptation",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Side%20Missions/Red/Temptation.jpg",
-    "source": 0,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/e68ccf0f0d192d0f.jpg"
-  },
-  {
-    "name": "Reclamation",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Side%20Missions/Green/Reclamation.jpg",
-    "source": 3,
-    "color": "Green",
-    "image_file": "./raw-images/side-mission-cards/f0c04f172d2d0f49.jpg"
-  },
-  {
-    "name": "Cloud Citys Secret",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Side%20Missions/Grey/Cloud%20Citys%20Secret.jpg",
-    "source": 3,
-    "color": "Grey",
-    "image_file": "./raw-images/side-mission-cards/8707cf1f070f0d4d.jpg"
-  },
-  {
-    "name": "Freedom Fighters",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Side%20Missions/Grey/Freedom%20Fighters.jpg",
-    "source": 3,
-    "color": "Grey",
-    "image_file": "./raw-images/side-mission-cards/9c284f0f0d0d0d4d.jpg"
-  },
-  {
-    "name": "Panic in the Streets",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Side%20Missions/Red/Panic%20in%20the%20Streets.jpg",
-    "source": 3,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/67268f1f2d9d0d0f.jpg"
-  },
-  {
-    "name": "Hostile Takeover",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Side%20Missions/Grey/Hostile%20Takeover.jpg",
-    "source": 3,
-    "color": "Grey",
-    "image_file": "./raw-images/side-mission-cards/0c8c0f0f0d1d1d4d.jpg"
-  },
-  {
-    "name": "Reclassified",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Side%20Missions/Red/Reclassified.jpg",
-    "source": 3,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/84ba3f0f0d8d0d0f.jpg"
-  },
-  {
-    "name": "Perilous Hunt",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Side%20Missions/Grey/Perilous%20Hunt.jpg",
-    "source": 4,
-    "color": "Grey",
-    "image_file": "./raw-images/side-mission-cards/63612f0705052d0b.jpg"
-  },
-  {
-    "name": "A Heros Welcome",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Side%20Missions/Red/A%20Heros%20Welcome.jpg",
-    "source": 4,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/069c8d07151d0d0f.jpg"
-  },
-  {
-    "name": "Born from Death",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Side%20Missions/Red/Born%20from%20Death.jpg",
-    "source": 4,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/4d9a8f0f15350d0f.jpg"
-  },
-  {
-    "name": "Extortion",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Side%20Missions/Red/Extortion.jpg",
-    "source": 4,
-    "color": "Red",
-    "image_file": "./raw-images/side-mission-cards/648d8f174d0d2d0d.jpg"
+    "image_file": "./images/side-mission-cards/33730b0f57950f0f.jpg"
   }
 ]

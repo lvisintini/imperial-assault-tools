@@ -1,176 +1,68 @@
 [
   {
-    "name": "Disaster",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Story%20Missions/Disaster.jpg",
-    "source": 2,
-    "image_file": "./raw-images/story-mission-cards/6cf2871f554d4d0f.jpg"
+    "name": "Capital Escape",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Story%20Missions/Capital%20Escape.jpg",
+    "source": 5,
+    "image_file": "./images/story-mission-cards/f9713b0f6d556d0f.jpg"
   },
   {
-    "name": "Home Front",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Story%20Missions/Home%20Front.jpg",
-    "source": 2,
-    "image_file": "./raw-images/story-mission-cards/e7ce8f47655d4d0f.jpg"
+    "name": "Disruption",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Story%20Missions/Disruption.jpg",
+    "source": 5,
+    "image_file": "./images/story-mission-cards/1b339f4f65555d0f.jpg"
   },
   {
-    "name": "One Step Behind",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Story%20Missions/One%20Step%20Behind.jpg",
-    "source": 2,
-    "image_file": "./raw-images/story-mission-cards/f4a6cf4f4d5d4d4f.jpg"
+    "name": "Double Agent",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Story%20Missions/Double%20Agent.jpg",
+    "source": 5,
+    "image_file": "./images/story-mission-cards/c9888f574d5d5d0f.jpg"
   },
   {
-    "name": "Our Last Hope",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Story%20Missions/Our%20Last%20Hope.jpg",
-    "source": 2,
-    "image_file": "./raw-images/story-mission-cards/23270f4f6d4d4d0f.jpg"
+    "name": "Enemies Closer",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Story%20Missions/Enemies%20Closer.jpg",
+    "source": 5,
+    "image_file": "./images/story-mission-cards/26298b4f494d4d0f.jpg"
   },
   {
-    "name": "Rescue Ops",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Story%20Missions/Rescue%20Ops.jpg",
-    "source": 2,
-    "image_file": "./raw-images/story-mission-cards/37bf5f074d4d4d0f.jpg"
+    "name": "From Dark Clutches",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Story%20Missions/From%20Dark%20Clutches.jpg",
+    "source": 5,
+    "image_file": "./images/story-mission-cards/7fdf4f0f555d4d07.jpg"
   },
   {
-    "name": "Return to Echo Base",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Story%20Missions/Return%20to%20Echo%20Base.jpg",
-    "source": 2,
-    "image_file": "./raw-images/story-mission-cards/53333f4f455d0f0f.jpg"
+    "name": "History Repeats",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Story%20Missions/History%20Repeats.jpg",
+    "source": 5,
+    "image_file": "./images/story-mission-cards/4c6e4f5f4d454d0f.jpg"
   },
   {
-    "name": "The Last Line",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Story%20Missions/The%20Last%20Line.jpg",
-    "source": 2,
-    "image_file": "./raw-images/story-mission-cards/b2b2074f45654d0f.jpg"
+    "name": "Inside Man",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Story%20Missions/Inside%20Man.jpg",
+    "source": 5,
+    "image_file": "./images/story-mission-cards/6d7d4f4775454d0f.jpg"
   },
   {
-    "name": "White Noise",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Story%20Missions/White%20Noise.jpg",
-    "source": 2,
-    "image_file": "./raw-images/story-mission-cards/25404f1755454d4f.jpg"
+    "name": "Into a Corner",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Story%20Missions/Into%20a%20Corner.jpg",
+    "source": 5,
+    "image_file": "./images/story-mission-cards/73330f4f4d4d5d0f.jpg"
   },
   {
-    "name": "A New Threat",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Story%20Missions/A%20New%20Threat.jpg",
-    "source": 0,
-    "image_file": "./raw-images/story-mission-cards/8f850d0f7d452d0f.jpg"
+    "name": "On the Run",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Story%20Missions/On%20the%20Run.jpg",
+    "source": 5,
+    "image_file": "./images/story-mission-cards/4b0f874f454d4d0f.jpg"
   },
   {
-    "name": "Chain of Command",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Story%20Missions/Chain%20of%20Command.jpg",
-    "source": 0,
-    "image_file": "./raw-images/story-mission-cards/e9a8890f6d2d2d0f.jpg"
+    "name": "On the Trail",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Story%20Missions/On%20the%20Trail.jpg",
+    "source": 5,
+    "image_file": "./images/story-mission-cards/4e644f47454d5d0f.jpg"
   },
   {
-    "name": "Despertate Hour",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Story%20Missions/Despertate%20Hour.jpg",
-    "source": 0,
-    "image_file": "./raw-images/story-mission-cards/31260f0f4d4d2d0f.jpg"
-  },
-  {
-    "name": "Drawn In",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Story%20Missions/Drawn%20In.jpg",
-    "source": 0,
-    "image_file": "./raw-images/story-mission-cards/30230f0f4d792d0f.jpg"
-  },
-  {
-    "name": "Fly Solo",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Story%20Missions/Fly%20Solo.jpg",
-    "source": 0,
-    "image_file": "./raw-images/story-mission-cards/2793830f7565690f.jpg"
-  },
-  {
-    "name": "Imperial Hospitality",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Story%20Missions/Imperial%20Hospitality.jpg",
-    "source": 0,
-    "image_file": "./raw-images/story-mission-cards/9c9c594f754d2d0f.jpg"
-  },
-  {
-    "name": "Incoming",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Story%20Missions/Incoming.jpg",
-    "source": 0,
-    "image_file": "./raw-images/story-mission-cards/696d070f7d6d2d0f.jpg"
-  },
-  {
-    "name": "Last Stand",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Story%20Missions/Last%20Stand.jpg",
-    "source": 0,
-    "image_file": "./raw-images/story-mission-cards/167e870f6d7d090f.jpg"
-  },
-  {
-    "name": "The Source",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Story%20Missions/The%20Source.jpg",
-    "source": 0,
-    "image_file": "./raw-images/story-mission-cards/1ff0c70f754d2d0f.jpg"
-  },
-  {
-    "name": "Under Siege",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Story%20Missions/Under%20Siege.jpg",
-    "source": 0,
-    "image_file": "./raw-images/story-mission-cards/27678f1f6d59690f.jpg"
-  },
-  {
-    "name": "Almost Home",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Story%20Missions/Almost%20Home.jpg",
-    "source": 4,
-    "image_file": "./raw-images/story-mission-cards/b254474769556d0f.jpg"
-  },
-  {
-    "name": "Dangerous Allies",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Story%20Missions/Dangerous%20Allies.jpg",
-    "source": 4,
-    "image_file": "./raw-images/story-mission-cards/58dc8f4f45652d0f.jpg"
-  },
-  {
-    "name": "Execute the Plan",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Story%20Missions/Execute%20the%20Plan.jpg",
-    "source": 4,
-    "image_file": "./raw-images/story-mission-cards/36cdcf0f6d4d2d0f.jpg"
-  },
-  {
-    "name": "From All Sides",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Story%20Missions/From%20All%20Sides.jpg",
-    "source": 4,
-    "image_file": "./raw-images/story-mission-cards/9d354f4f4d4d6d0f.jpg"
-  },
-  {
-    "name": "Hostile Negotiations",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Story%20Missions/Hostile%20Negotiations.jpg",
-    "source": 4,
-    "image_file": "./raw-images/story-mission-cards/48b0434f65650d0f.jpg"
-  },
-  {
-    "name": "Moment of Fate",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Story%20Missions/Moment%20of%20Fate.jpg",
-    "source": 4,
-    "image_file": "./raw-images/story-mission-cards/a1e1871f454d6d0f.jpg"
-  },
-  {
-    "name": "Mutiny",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Story%20Missions/Mutiny.jpg",
-    "source": 4,
-    "image_file": "./raw-images/story-mission-cards/80904b07554d690f.jpg"
-  },
-  {
-    "name": "Overcharged",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Story%20Missions/Overcharged.jpg",
-    "source": 4,
-    "image_file": "./raw-images/story-mission-cards/7373c74f554d4d0f.jpg"
-  },
-  {
-    "name": "Storming the Palace",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Story%20Missions/Storming%20the%20Palace.jpg",
-    "source": 4,
-    "image_file": "./raw-images/story-mission-cards/7ecfcf4f55456d0f.jpg"
-  },
-  {
-    "name": "Trophy Hunting",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Story%20Missions/Trophy%20Hunting.jpg",
-    "source": 4,
-    "image_file": "./raw-images/story-mission-cards/0636074f55656d0f.jpg"
-  },
-  {
-    "name": "Turf War",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Story%20Missions/Turf%20War.jpg",
-    "source": 4,
-    "image_file": "./raw-images/story-mission-cards/2d8c4f4f6579070f.jpg"
+    "name": "The Realm of the Dark Side",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Story%20Missions/The%20Realm%20of%20the%20Dark%20Side.jpg",
+    "source": 5,
+    "image_file": "./images/story-mission-cards/4fc4c34f656d0d0f.jpg"
   }
 ]

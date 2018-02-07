@@ -1,716 +1,93 @@
 [
   {
-    "name": "Imperial Informants",
-    "agenda": "Agents of the Empire",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Agents%20of%20the%20Empire/Imperial%20Informants.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/072b656d0d1d0f09.jpg"
-  },
-  {
-    "name": "Impounded",
-    "agenda": "Agents of the Empire",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Agents%20of%20the%20Empire/Impounded.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/b1f3070525092d41.jpg"
-  },
-  {
-    "name": "Tracking Beacon",
-    "agenda": "Agents of the Empire",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Agents%20of%20the%20Empire/Tracking%20Beacon.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/170b5d4d4d0d0f09.jpg"
-  },
-  {
-    "name": "High-Value Target",
-    "agenda": "For The Right Price",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/For%20The%20Right%20Price/High%20Value%20Target.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/072b656d0d030f09.jpg"
-  },
-  {
-    "name": "Hired Help",
-    "agenda": "For The Right Price",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/For%20The%20Right%20Price/Hired%20Help.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/170b4d7d6d6d0f09.jpg"
-  },
-  {
-    "name": "Wanted",
-    "agenda": "For The Right Price",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/For%20The%20Right%20Price/Wanted.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/4e664d0f2d2d2d41.jpg"
-  },
-  {
-    "name": "Fire at Will",
-    "agenda": "Imperial Discipline",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Imperial%20Discipline/Fire%20at%20Will.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/170b456d0f010f29.jpg"
-  },
-  {
-    "name": "Impending Doom",
-    "agenda": "Imperial Discipline",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Imperial%20Discipline/Impending%20Doom.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/072b6d555d3d0f29.jpg"
-  },
-  {
-    "name": "Tactical Maneuvering",
-    "agenda": "Imperial Discipline",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Imperial%20Discipline/Tactical%20Maneuvering.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/070b556d6d7d0f29.jpg"
-  },
-  {
-    "name": "Interrogation Protocol",
-    "agenda": "Imperial Industry",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Imperial%20Industry/Interrogation%20Protocol.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/070b3d2d757d0f09.jpg"
-  },
-  {
-    "name": "Means of Production",
-    "agenda": "Imperial Industry",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Imperial%20Industry/Means%20of%20Production.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/b2a8891d2d0d0541.jpg"
-  },
-  {
-    "name": "Restorative Supplies",
-    "agenda": "Imperial Industry",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Imperial%20Industry/Restorative%20Supplies.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/072b4d4d4d050f09.jpg"
-  },
-  {
-    "name": "ISB Enforcers",
-    "agenda": "Imperial Security Bureau",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Imperial%20Security%20Bureau/ISB%20Enforcers.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/172b454555750f09.jpg"
-  },
-  {
-    "name": "Imperial Operative",
-    "agenda": "Imperial Security Bureau",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Imperial%20Security%20Bureau/Imperial%20Operative.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/170b456d5d4d0f09.jpg"
-  },
-  {
-    "name": "Internal Affairs",
-    "agenda": "Imperial Security Bureau",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Imperial%20Security%20Bureau/Internal%20Affairs.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/170b654d0f030f09.jpg"
-  },
-  {
-    "name": "A Dark Power",
-    "agenda": "Lord Vaders Command",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Lord%20Vaders%20Command/A%20Dark%20Power.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/170b4d4d0d050f29.jpg"
-  },
-  {
-    "name": "As You Wish",
-    "agenda": "Lord Vaders Command",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Lord%20Vaders%20Command/As%20You%20Wish.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/170b454d4d2d0f29.jpg"
-  },
-  {
-    "name": "Dark Obsession",
-    "agenda": "Lord Vaders Command",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Lord%20Vaders%20Command/Dark%20Obsession.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/d8d84f0f2d0d0749.jpg"
-  },
-  {
-    "name": "Breaking Point",
-    "agenda": "Retaliation",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Retaliation/Breaking%20Point.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/e6928f0f2d2d0741.jpg"
-  },
-  {
-    "name": "Tactical Explosives",
-    "agenda": "Retaliation",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Retaliation/Tactical%20Explosives.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/172b554d4d750f09.jpg"
-  },
-  {
-    "name": "Weakness Revealed",
-    "agenda": "Retaliation",
-    "image": "http://cards.boardwars.eu/albums/Core-Box/Agenda%20Decks/Retaliation/Weakness%20Revealed.jpg",
-    "source": 0,
-    "image_file": "./raw-images/agenda-cards/1f0b45451d0d0f09.jpg"
-  },
-  {
-    "name": "Death Mark",
-    "agenda": "Pursuit of the Enemy",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Agenda%20Decks/Pursuit%20of%20the%20Enemy/Death%20Mark.jpg",
-    "source": 1,
-    "image_file": "./raw-images/agenda-cards/170b4d0d55170f29.jpg"
-  },
-  {
-    "name": "Fire in the Sky",
-    "agenda": "Pursuit of the Enemy",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Agenda%20Decks/Pursuit%20of%20the%20Enemy/Fire%20in%20the%20Sky.jpg",
-    "source": 1,
-    "image_file": "./raw-images/agenda-cards/b6078f0d270f0d49.jpg"
-  },
-  {
-    "name": "Strike and Subdue",
-    "agenda": "Pursuit of the Enemy",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Agenda%20Decks/Pursuit%20of%20the%20Enemy/Strike%20and%20Subdue.jpg",
-    "source": 1,
-    "image_file": "./raw-images/agenda-cards/070b652d45750f09.jpg"
-  },
-  {
-    "name": "Advanced Prototypes",
-    "agenda": "The Empires Reach",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Agenda%20Decks/The%20Empires%20Reach/Advanced%20Prototypes.jpg",
-    "source": 1,
-    "image_file": "./raw-images/agenda-cards/0f0b454d4d250f29.jpg"
-  },
-  {
-    "name": "Data Security",
-    "agenda": "The Empires Reach",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Agenda%20Decks/The%20Empires%20Reach/Data%20Security.jpg",
-    "source": 1,
-    "image_file": "./raw-images/agenda-cards/170b4d6d4d070f29.jpg"
-  },
-  {
-    "name": "Infiltrated",
-    "agenda": "The Empires Reach",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Agenda%20Decks/The%20Empires%20Reach/Infiltrated.jpg",
-    "source": 1,
-    "image_file": "./raw-images/agenda-cards/b1a54f0f3d2d0d41.jpg"
-  },
-  {
-    "name": "Counter Strike",
-    "agenda": "Defensive Tactics",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Agenda%20Decks/Defensive%20Tactics/Counter%20Strike.jpg",
-    "source": 2,
-    "image_file": "./raw-images/agenda-cards/070b4d452d2d0f09.jpg"
-  },
-  {
-    "name": "Enhanced Armor",
-    "agenda": "Defensive Tactics",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Agenda%20Decks/Defensive%20Tactics/Enhanced%20Armor.jpg",
-    "source": 2,
-    "image_file": "./raw-images/agenda-cards/070b4d454d6d0f09.jpg"
-  },
-  {
-    "name": "Personal Shield Generators",
-    "agenda": "Defensive Tactics",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Agenda%20Decks/Defensive%20Tactics/Personal%20Shield%20Generators.jpg",
-    "source": 2,
-    "image_file": "./raw-images/agenda-cards/070b454d0d070f89.jpg"
-  },
-  {
-    "name": "Bestial Fury",
-    "agenda": "Natural Warfare",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Agenda%20Decks/Natural%20Warfare/Bestial%20Fury.jpg",
-    "source": 2,
-    "image_file": "./raw-images/agenda-cards/170b4d0d454d0f09.jpg"
-  },
-  {
-    "name": "Exposed to the Elements",
-    "agenda": "Natural Warfare",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Agenda%20Decks/Natural%20Warfare/Exposed%20to%20the%20Elements.jpg",
-    "source": 2,
-    "image_file": "./raw-images/agenda-cards/0f0b454d5d6d0f09.jpg"
-  },
-  {
-    "name": "Unchained",
-    "agenda": "Natural Warfare",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Agenda%20Decks/Natural%20Warfare/Unchained.jpg",
-    "source": 2,
-    "image_file": "./raw-images/agenda-cards/170b4d4d65150f89.jpg"
-  },
-  {
-    "name": "Blackmail",
-    "agenda": "Enhanced Interrogation",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Agenda%20Decks/Enhanced%20Interrogation/Blackmail.jpg",
-    "source": 3,
-    "image_file": "./raw-images/agenda-cards/170b4d6505030f29.jpg"
-  },
-  {
-    "name": "Learn Their Weaknesses",
-    "agenda": "Enhanced Interrogation",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Agenda%20Decks/Enhanced%20Interrogation/Learn%20Their%20Weaknesses.jpg",
-    "source": 3,
-    "image_file": "./raw-images/agenda-cards/072b454d2d5d0f29.jpg"
-  },
-  {
-    "name": "Weak Links",
-    "agenda": "Enhanced Interrogation",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Agenda%20Decks/Enhanced%20Interrogation/Weak%20Links.jpg",
-    "source": 3,
-    "image_file": "./raw-images/agenda-cards/170b4d4d4d450f09.jpg"
-  },
-  {
-    "name": "Contingency Plan",
-    "agenda": "Evasive Maneuvers",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Agenda%20Decks/Evasive%20Maneuvers/Contingency%20Plan.jpg",
-    "source": 3,
-    "image_file": "./raw-images/agenda-cards/070b656d45070f29.jpg"
-  },
-  {
-    "name": "Feigned Retreat",
-    "agenda": "Evasive Maneuvers",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Agenda%20Decks/Evasive%20Maneuvers/Feigned%20Retreat.jpg",
-    "source": 3,
-    "image_file": "./raw-images/agenda-cards/170b4d653d0d0f29.jpg"
-  },
-  {
-    "name": "Hasty Ambush",
-    "agenda": "Evasive Maneuvers",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/The-Bespin-Gambit/Agenda%20Decks/Evasive%20Maneuvers/Hasty%20Ambush.jpg",
-    "source": 3,
-    "image_file": "./raw-images/agenda-cards/070b4d4d0d030f29.jpg"
-  },
-  {
-    "name": "Abandoned Contract",
-    "agenda": "Guild Hunters",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Agenda%20Decks/Guild%20Hunters/Abandoned%20Contract.jpg",
-    "source": 4,
-    "image_file": "./raw-images/agenda-cards/172b4d65756d0f09.jpg"
-  },
-  {
-    "name": "Call Your Shot",
-    "agenda": "Guild Hunters",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Agenda%20Decks/Guild%20Hunters/Call%20Your%20Shot.jpg",
-    "source": 4,
-    "image_file": "./raw-images/agenda-cards/170b456d3d030f09.jpg"
-  },
-  {
-    "name": "Shoot First",
-    "agenda": "Guild Hunters",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Agenda%20Decks/Guild%20Hunters/Shoot%20First.jpg",
-    "source": 4,
-    "image_file": "./raw-images/agenda-cards/170b453d0d010f09.jpg"
-  },
-  {
-    "name": "Jetpacks",
-    "agenda": "Persistence",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Agenda%20Decks/Persistence/Jetpacks.jpg",
-    "source": 4,
-    "image_file": "./raw-images/agenda-cards/970b652d654d0f09.jpg"
-  },
-  {
-    "name": "No Rest for the Weary",
-    "agenda": "Persistence",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Agenda%20Decks/Persistence/No%20Rest%20for%20the%20Weary.jpg",
-    "source": 4,
-    "image_file": "./raw-images/agenda-cards/8f2b4d1d1d010f09.jpg"
-  },
-  {
-    "name": "Snap Fire",
-    "agenda": "Persistence",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Jabbas-Realm/Agenda%20Decks/Persistence/Snap%20Fire.jpg",
-    "source": 4,
-    "image_file": "./raw-images/agenda-cards/170b4d65756d0f09.jpg"
-  },
-  {
-    "name": "Binary Revolution",
-    "agenda": "Droid Uprising",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/IG88/Agenda%20Deck/Binary%20Revolution.jpg",
+    "name": "Assault Coordination",
+    "agenda": "Field Commander",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Agenda%20Decks/Field%20Commander/Assault%20Coordination.jpg",
     "source": 5,
-    "image_file": "./raw-images/agenda-cards/b7cd0b05253d0541.jpg"
+    "image_file": "./images/agenda-cards/070b453d6d6d0f09.jpg"
   },
   {
-    "name": "Firepower Upgrade",
-    "agenda": "Droid Uprising",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/IG88/Agenda%20Deck/Firepower%20Upgrade.jpg",
+    "name": "Reinforcements En Route",
+    "agenda": "Field Commander",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Agenda%20Decks/Field%20Commander/Reinforcements%20En%20Route.jpg",
     "source": 5,
-    "image_file": "./raw-images/agenda-cards/0f0b4d5d1d070f09.jpg"
+    "image_file": "./images/agenda-cards/0f0b455d0d030f09.jpg"
   },
   {
-    "name": "Sabotaged Plans",
-    "agenda": "Droid Uprising",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/IG88/Agenda%20Deck/Sabotaged%20Plans.jpg",
+    "name": "Unyieldng Dedication",
+    "agenda": "Field Commander",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Agenda%20Decks/Field%20Commander/Unyieldng%20Dedication.jpg",
     "source": 5,
-    "image_file": "./raw-images/agenda-cards/170b5d6d2d1d0f29.jpg"
+    "image_file": "./images/agenda-cards/070b555555750f09.jpg"
   },
   {
-    "name": "Best of the Best",
-    "agenda": "Crimson Empire",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Royal%20Guard%20Champion/Agenda%20Deck/Best%20of%20the%20Best.jpg",
-    "source": 8,
-    "image_file": "./raw-images/agenda-cards/170b454d4d4d0f29.jpg"
+    "name": "Heavy Riot Gear",
+    "agenda": "Security Protocols",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Agenda%20Decks/Security%20Protocols/Heavy%20Riot%20Gear.jpg",
+    "source": 5,
+    "image_file": "./images/agenda-cards/070b45550d010f09.jpg"
   },
   {
-    "name": "Infection",
-    "agenda": "Crimson Empire",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Royal%20Guard%20Champion/Agenda%20Deck/Infection.jpg",
-    "source": 8,
-    "image_file": "./raw-images/agenda-cards/898c0f17273d0741.jpg"
+    "name": "Shields Online",
+    "agenda": "Security Protocols",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Agenda%20Decks/Security%20Protocols/Shields%20Online.jpg",
+    "source": 5,
+    "image_file": "./images/agenda-cards/170b454d7d2d0f29.jpg"
   },
   {
-    "name": "Pulling the Strings",
-    "agenda": "Crimson Empire",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/Royal%20Guard%20Champion/Agenda%20Deck/Pulling%20the%20Strings.jpg",
-    "source": 8,
-    "image_file": "./raw-images/agenda-cards/1f0b4d4d0d070f29.jpg"
-  },
-  {
-    "name": "By Any Means Necessary",
-    "agenda": "Soldiers for Hire",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Agenda%20Deck/By%20Any%20Means%20Necessary.jpg",
-    "source": 9,
-    "image_file": "./raw-images/agenda-cards/0e0b4d6d4d0d0f09.jpg"
-  },
-  {
-    "name": "No Disintegrations",
-    "agenda": "Soldiers for Hire",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Agenda%20Deck/No%20Disintegrations.jpg",
-    "source": 9,
-    "image_file": "./raw-images/agenda-cards/0f0b4d4d65750f09.jpg"
-  },
-  {
-    "name": "Predator and Prey",
-    "agenda": "Soldiers for Hire",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/Boba%20Fett/Agenda%20Deck/Predator%20and%20Prey.jpg",
-    "source": 9,
-    "image_file": "./raw-images/agenda-cards/93d38f0d254d0549.jpg"
-  },
-  {
-    "name": "Military Presence",
-    "agenda": "Stormtrooper support",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/Kayn%20Somos/Agenda%20Deck/Military%20Presence.jpg",
-    "source": 10,
-    "image_file": "./raw-images/agenda-cards/0e2b4d6d6d2d0f09.jpg"
-  },
-  {
-    "name": "Perpetual Reinforcements",
-    "agenda": "Stormtrooper support",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/Kayn%20Somos/Agenda%20Deck/Perpetual%20Reinforcements.jpg",
-    "source": 10,
-    "image_file": "./raw-images/agenda-cards/060b4d4d651d0f09.jpg"
-  },
-  {
-    "name": "Strength Of Command",
-    "agenda": "Stormtrooper support",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-2/Kayn%20Somos/Agenda%20Deck/Strenght%20Of%20Command.jpg",
-    "source": 10,
-    "image_file": "./raw-images/agenda-cards/35694b0f0d250541.jpg"
-  },
-  {
-    "name": "Back-Room Bargains",
-    "agenda": "Nefarious Dealings",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Agenda%20Deck/Back-Room%20Bargains.jpg",
-    "source": 12,
-    "image_file": "./raw-images/agenda-cards/fa39090f252d0549.jpg"
-  },
-  {
-    "name": "Final Blast",
-    "agenda": "Nefarious Dealings",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Agenda%20Deck/Final%20Blast.jpg",
-    "source": 12,
-    "image_file": "./raw-images/agenda-cards/170b4d6d5d070f09.jpg"
-  },
-  {
-    "name": "Trade Routes Disrupted",
-    "agenda": "Nefarious Dealings",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Hired%20Guns/Agenda%20Deck/Trade%20Routes%20Disrupted.jpg",
-    "source": 12,
-    "image_file": "./raw-images/agenda-cards/0f0b6d4d35030f29.jpg"
-  },
-  {
-    "name": "Bunker Buster",
-    "agenda": "Vader's Fist",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Agenda%20Deck/Bunker%20Buster.jpg",
-    "source": 13,
-    "image_file": "./raw-images/agenda-cards/4d4c4d1f6d070741.jpg"
-  },
-  {
-    "name": "Set For Stun",
-    "agenda": "Vader's Fist",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Agenda%20Deck/Set%20For%20Stun.jpg",
-    "source": 13,
-    "image_file": "./raw-images/agenda-cards/170b4d555d2d0f09.jpg"
-  },
-  {
-    "name": "To The Last Man",
-    "agenda": "Vader's Fist",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-3/Stormtrooper/Agenda%20Deck/To%20The%20Last%20Man.jpg",
-    "source": 13,
-    "image_file": "./raw-images/agenda-cards/170b554d0d750f09.jpg"
-  },
-  {
-    "name": "Grievous Wound",
-    "agenda": "Tusken Treachery",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-4/Bantha%20Rider/Agenda%20Deck/Grievous%20Wound.jpg",
-    "source": 16,
-    "image_file": "./raw-images/agenda-cards/070b454d0d070f09.jpg"
-  },
-  {
-    "name": "Into the Wastes",
-    "agenda": "Tusken Treachery",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-4/Bantha%20Rider/Agenda%20Deck/Into%20the%20Wastes.jpg",
-    "source": 16,
-    "image_file": "./raw-images/agenda-cards/36b4450f2d070741.jpg"
-  },
-  {
-    "name": "Relocated",
-    "agenda": "Tusken Treachery",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-4/Bantha%20Rider/Agenda%20Deck/Relocated.jpg",
-    "source": 16,
-    "image_file": "./raw-images/agenda-cards/170b452d0d3d0f29.jpg"
-  },
-  {
-    "name": "A Bounty Protected",
-    "agenda": "Punishing Tactics",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Dengar/Agenda%20Deck/A%20Bounty%20Protected.jpg",
-    "source": 17,
-    "image_file": "./raw-images/agenda-cards/963b0b0d2d3d0541.jpg"
-  },
-  {
-    "name": "Beaten Down",
-    "agenda": "Punishing Tactics",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Dengar/Agenda%20Deck/Beaten%20Down.jpg",
-    "source": 17,
-    "image_file": "./raw-images/agenda-cards/170b5d4d05070f29.jpg"
-  },
-  {
-    "name": "Targeted Cruelty",
-    "agenda": "Punishing Tactics",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/Dengar/Agenda%20Deck/Targeted%20Cruelty.jpg",
-    "source": 17,
-    "image_file": "./raw-images/agenda-cards/070b650d4d2d0f29.jpg"
-  },
-  {
-    "name": "Armored Division",
-    "agenda": "Bombardment",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/General%20Sorin/Agenda%20Deck/Armored%20Division.jpg",
-    "source": 19,
-    "image_file": "./raw-images/agenda-cards/070b552535070f09.jpg"
-  },
-  {
-    "name": "Explosive Shrapnel",
-    "agenda": "Bombardment",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/General%20Sorin/Agenda%20Deck/Explosive%20Shrapnel.jpg",
-    "source": 19,
-    "image_file": "./raw-images/agenda-cards/072b4d6d4d7d0f09.jpg"
-  },
-  {
-    "name": "Fully Charged",
-    "agenda": "Bombardment",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-5/General%20Sorin/Agenda%20Deck/Fully%20Charged.jpg",
-    "source": 19,
-    "image_file": "./raw-images/agenda-cards/3f194f0d1d1d0549.jpg"
-  },
-  {
-    "name": "Classified Techniques",
-    "agenda": "Imperial Intelligence",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Agent%20Blaise/Agenda%20Deck/Classified%20Techniques.jpg",
-    "source": 21,
-    "image_file": "./raw-images/agenda-cards/070b4d6d0f030f29.jpg"
-  },
-  {
-    "name": "Security Breach",
-    "agenda": "Imperial Intelligence",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Agent%20Blaise/Agenda%20Deck/Security%20Breach.jpg",
-    "source": 21,
-    "image_file": "./raw-images/agenda-cards/76644f0f252d0541.jpg"
-  },
-  {
-    "name": "Under Surveillance",
-    "agenda": "Imperial Intelligence",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Agent%20Blaise/Agenda%20Deck/Under%20Surveillance.jpg",
-    "source": 21,
-    "image_file": "./raw-images/agenda-cards/070b45454d5d0f29.jpg"
-  },
-  {
-    "name": "Furious Retaliation",
-    "agenda": "Base Instincts",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Bossk/Agenda%20Deck/Furious%20Retaliation.jpg",
-    "source": 22,
-    "image_file": "./raw-images/agenda-cards/170b6d6d6d3d0f29.jpg"
-  },
-  {
-    "name": "Gunrunner",
-    "agenda": "Base Instincts",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Bossk/Agenda%20Deck/Gunrunner.jpg",
-    "source": 22,
-    "image_file": "./raw-images/agenda-cards/8fdb1b052d2d0541.jpg"
-  },
-  {
-    "name": "On the Hunt",
-    "agenda": "Base Instincts",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/Bossk/Agenda%20Deck/On%20the%20Hunt.jpg",
-    "source": 22,
-    "image_file": "./raw-images/agenda-cards/170b555d0d030f29.jpg"
+    "name": "Surveillance Cams",
+    "agenda": "Security Protocols",
+    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Agenda%20Decks/Security%20Protocols/Surveillance%20Cams.jpg",
+    "source": 5,
+    "image_file": "./images/agenda-cards/070b555d656d0f09.jpg"
   },
   {
     "name": "Misdirection",
     "agenda": "Infiltration",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Agenda%20Deck/Misdirection.jpg",
-    "source": 23,
-    "image_file": "./raw-images/agenda-cards/170b4d4d4d2d0f09.jpg"
-  },
-  {
-    "name": "Quiet Entry",
-    "agenda": "Infiltration",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Agenda%20Deck/Quiet%20Entry.jpg",
-    "source": 23,
-    "image_file": "./raw-images/agenda-cards/161b4d4d6d4d0f09.jpg"
-  },
-  {
-    "name": "Trip Mine",
-    "agenda": "Infiltration",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-6/ISB%20Infiltrators/Agenda%20Deck/Trip%20Mine.jpg",
-    "source": 23,
-    "image_file": "./raw-images/agenda-cards/170b4d4d4d2d0f09.jpg"
-  },
-  {
-    "name": "Hunter for a Fee",
-    "agenda": "Contract Gunmen",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Greedo/Agenda%20Deck/Hunter%20for%20a%20Fee.jpg",
-    "source": 25,
-    "image_file": "./raw-images/agenda-cards/0f0b4d4d4d350f09.jpg"
-  },
-  {
-    "name": "Stealth Squad",
-    "agenda": "Contract Gunmen",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Greedo/Agenda%20Deck/Stealth%20Squad.jpg",
-    "source": 25,
-    "image_file": "./raw-images/agenda-cards/170b4d2d4d6d0f09.jpg"
-  },
-  {
-    "name": "Top Target",
-    "agenda": "Contract Gunmen",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/Greedo/Agenda%20Deck/Top%20Target.jpg",
-    "source": 25,
-    "image_file": "./raw-images/agenda-cards/1ec2cf0d0d0d0749.jpg"
-  },
-  {
-    "name": "Cornered",
-    "agenda": "Inquisition",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/The%20Grand%20Inquisitor/Agenda%20Set/Cornered.jpg",
     "source": 27,
-    "image_file": "./raw-images/agenda-cards/3d5c4f250d1d0749.jpg"
+    "image_file": "./images/agenda-cards/170b4d4d4d2d0f09.jpg"
   },
   {
-    "name": "Targeted by the Empire",
-    "agenda": "Inquisition",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/The%20Grand%20Inquisitor/Agenda%20Set/Targeted%20by%20the%20Empire.jpg",
-    "source": 27,
-    "image_file": "./raw-images/agenda-cards/1f0b654d4d650f09.jpg"
+    "name": "For the Emperor",
+    "agenda": "The Emperor's Plots",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-10/Emperor%20Palpatine/Agenda%20Deck/For%20the%20Emperor.jpg",
+    "source": 40,
+    "image_file": "./images/agenda-cards/070b4d6d35130f09.jpg"
   },
   {
-    "name": "When They Least Expect It",
-    "agenda": "Inquisition",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-7/The%20Grand%20Inquisitor/Agenda%20Set/When%20They%20Least%20Expect%20It.jpg",
-    "source": 27,
-    "image_file": "./raw-images/agenda-cards/0f0b654d0d070f09.jpg"
+    "name": "Insidious",
+    "agenda": "The Emperor's Plots",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-10/Emperor%20Palpatine/Agenda%20Deck/Insidious.jpg",
+    "source": 40,
+    "image_file": "./images/agenda-cards/b33f0f0d253d0541.jpg"
   },
   {
-    "name": "Anchorhead Affair",
-    "agenda": "Wasteland Patrol",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Captain%20Terro/Agenda%20Deck/Anchorhead%20Affair.jpg",
-    "source": 29,
-    "image_file": "./raw-images/agenda-cards/0f18190d0d2d0549.jpg"
+    "name": "Isolation",
+    "agenda": "The Emperor's Plots",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-10/Emperor%20Palpatine/Agenda%20Deck/Isolation.jpg",
+    "source": 40,
+    "image_file": "./images/agenda-cards/170b456d4d4d0f09.jpg"
   },
   {
-    "name": "Dewback Patrol",
-    "agenda": "Wasteland Patrol",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Captain%20Terro/Agenda%20Deck/Dewback%20Patrol.jpg",
-    "source": 29,
-    "image_file": "./raw-images/agenda-cards/070b5d4d3d110f09.jpg"
+    "name": "Critical Strikes",
+    "agenda": "A Former Sith",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-10/Maul/Agenda%20Deck/Critical%20Strikes.jpg",
+    "source": 41,
+    "image_file": "./images/agenda-cards/170b6d6d7d3d0f09.jpg"
   },
   {
-    "name": "Flamethrower",
-    "agenda": "Wasteland Patrol",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Captain%20Terro/Agenda%20Deck/Flamethrower.jpg",
-    "source": 29,
-    "image_file": "./raw-images/agenda-cards/170b5d5d65490f09.jpg"
+    "name": "Dubious Disposition",
+    "agenda": "A Former Sith",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-10/Maul/Agenda%20Deck/Dubious%20Disposition.jpg",
+    "source": 41,
+    "image_file": "./images/agenda-cards/adc00b0f2d2d0549.jpg"
   },
   {
-    "name": "Head-Hunting",
-    "agenda": "Jabba's Empire",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Jabba%20the%20Hutt/Agenda%20Deck/Head-Hunting.jpg",
-    "source": 30,
-    "image_file": "./raw-images/agenda-cards/170b656d7d2d0f09.jpg"
-  },
-  {
-    "name": "On Jabbas Orders",
-    "agenda": "Jabba's Empire",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Jabba%20the%20Hutt/Agenda%20Deck/On%20Jabbas%20Orders.jpg",
-    "source": 30,
-    "image_file": "./raw-images/agenda-cards/170b454d4d650f09.jpg"
-  },
-  {
-    "name": "One Fat Slug",
-    "agenda": "Jabba's Empire",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-8/Jabba%20the%20Hutt/Agenda%20Deck/One%20Fat%20Slug.jpg",
-    "source": 30,
-    "image_file": "./raw-images/agenda-cards/ae5f0f0d072d0549.jpg"
-  },
-  {
-    "name": "Etiquette and Torture",
-    "agenda": "Devious Droids",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/BT-1%20and%200-0-0/Agenda%20Set/Etiquette%20and%20Torture.jpg",
-    "source": 32,
-    "image_file": "./raw-images/agenda-cards/b3338f4d352d0549.jpg"
-  },
-  {
-    "name": "Invasive Procedure",
-    "agenda": "Devious Droids",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/BT-1%20and%200-0-0/Agenda%20Set/Invasive%20Procedure.jpg",
-    "source": 32,
-    "image_file": "./raw-images/agenda-cards/0e0b7d6d65750f0b.jpg"
-  },
-  {
-    "name": "Missile Salvo",
-    "agenda": "Devious Droids",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/BT-1%20and%200-0-0/Agenda%20Set/Missile%20Salvo.jpg",
-    "source": 32,
-    "image_file": "./raw-images/agenda-cards/170b456d6d450f09.jpg"
-  },
-  {
-    "name": "Ion Blasters",
-    "agenda": "Desert Scavengers",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Agenda%20Set/Ion%20Blasters.jpg",
-    "source": 34,
-    "image_file": "./raw-images/agenda-cards/170b454d6d6d0f09.jpg"
-  },
-  {
-    "name": "Jawa Raid",
-    "agenda": "Desert Scavengers",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Agenda%20Set/Jawa%20Raid.jpg",
-    "source": 34,
-    "image_file": "./raw-images/agenda-cards/970b4d4545650f09.jpg"
-  },
-  {
-    "name": "Salvage Operatives",
-    "agenda": "Desert Scavengers",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-9/Jawa%20Scavenger/Agenda%20Set/Salvage%20Operatives.jpg",
-    "source": 34,
-    "image_file": "./raw-images/agenda-cards/6d660f0d353d0549.jpg"
-  },
-  {
-    "name": "Forest Ambush",
-    "agenda": "The General's Scheme",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/General%20Weiss/Agenda%20Deck/Forest%20Ambush.jpg",
-    "source": 36,
-    "image_file": "./raw-images/agenda-cards/f1950d1b052d0741.jpg"
-  },
-  {
-    "name": "Inspiring Command",
-    "agenda": "The General's Scheme",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/General%20Weiss/Agenda%20Deck/Inspiring%20Command.jpg",
-    "source": 36,
-    "image_file": "./raw-images/agenda-cards/070b4d4d0f030f29.jpg"
-  },
-  {
-    "name": "Special Modifications",
-    "agenda": "The General's Scheme",
-    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-1/General%20Weiss/Agenda%20Deck/Special%20Modifications.jpg",
-    "source": 36,
-    "image_file": "./raw-images/agenda-cards/070b4d7d555d0f29.jpg"
+    "name": "Imminent Reprisal",
+    "agenda": "A Former Sith",
+    "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-10/Maul/Agenda%20Deck/Imminent%20Reprisal.jpg",
+    "source": 41,
+    "image_file": "./images/agenda-cards/170b454d65450f09.jpg"
   }
 ]
