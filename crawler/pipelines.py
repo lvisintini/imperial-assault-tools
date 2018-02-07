@@ -8,7 +8,7 @@ import requests
 from io import BytesIO
 from PIL import Image
 import imagehash
-
+import hashlib
 
 from scrapy.exceptions import DropItem
 
@@ -134,6 +134,8 @@ class ProcessAgendasPipeline(ProcessItemPipeline):
         'Jabba the Hutt': "Jabba's Empire",
         'BT-1 and 0-0-0': 'Devious Droids',
         'Jawa Scavenger': 'Desert Scavengers',
+        'Maul': 'A Former Sith',
+        'Emperor Palpatine': "The Emperor's Plots"
     }
 
     def process_item(self, item, spider):
@@ -233,6 +235,11 @@ class ImageProcessingPipeline(ProcessItemPipeline):
         items.ThreatMissionCardItem: './images/threat-mission-cards/'
     }
 
+    def __init__(self):
+        self.old = []
+        with open('/home/lvisintini/src/imperial-assault/original-images-sha512.txt', 'r') as destination:
+            self.old = destination.read().split()
+
     def process_item(self, item, spider):
         # make and exception here - > card back story mission core box
         for attr in self.image_attrs:
@@ -242,6 +249,10 @@ class ImageProcessingPipeline(ProcessItemPipeline):
                 item[attr] = 'http://cards.boardwars.eu' + item[attr]
 
                 url = requests.get(item[attr])
+
+                if str(hashlib.sha512(url.content).hexdigest()) in self.old:
+                    raise DropItem('{}: Old one found'.format(item.__class__.__name__))
+
                 file_obj = BytesIO(url.content)
 
                 item[attr + '_file'] = '{}{}.{}'.format(

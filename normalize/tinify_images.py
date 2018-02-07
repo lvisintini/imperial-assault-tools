@@ -5,7 +5,7 @@ import tinify
 from tqdm import tqdm
 from colorlog import ColoredFormatter
 
-
+tinify.key = "place-your-key-here"
 
 ASSETS_DIR = '/home/lvisintini/src/imperial-assault/FinalData/final/'
 

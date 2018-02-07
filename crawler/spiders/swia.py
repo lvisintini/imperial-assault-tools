@@ -53,15 +53,23 @@ class ImperialAssaultCrawler(scrapy.Spider):
         section = self.get_section(response)
         breadcrumbs = self.get_breadcrumbs(response)
 
+        image_fallbacks = {
+            'Maul': '/cache/Ally-and-Villain-Packs/Wave-10/Maul/Mail%20Pack_275_thumb_ffflogog_whatermark_cc.png',
+            'Ahsoka': '/cache/Ally-and-Villain-Packs/Wave-10/Ahsoka/Ahsoka%20Pack_275_thumb_ffflogog_whatermark_cc.png',
+            'Emperor Palpatine': '/cache/Ally-and-Villain-Packs/Wave-10/Emperor%20Palpatine/Emperor%20Palpatine%20Pack_275_thumb_ffflogog_whatermark_cc.png',
+        }
+
         s_type = 'Ally Pack'
         if 'Agenda Deck' in [album.css('a ::text').extract_first() for album in response.css('div.album')]:
             s_type = 'Villain Pack'
+
+        image = response.css('div.image img ::attr(src)').extract_first()
 
         yield items.SourceItem(
             type=s_type,
             wave=int(breadcrumbs[-1].lower().replace('wave ', '').replace('wave-', '')),
             name=section,
-            image=response.css('div.image img ::attr(src)').extract_first().strip(),
+            image=image.strip() if image is not None else image_fallbacks.get(section),
         )
 
         for item in self.parse_source_contents(response):
