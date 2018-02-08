@@ -432,7 +432,7 @@ class AddIds(Task):
         self.source = source or self.source
 
     def process(self, data_helper):
-        id_inc = -1
+        id_inc = data_helper.memory.get('initial_ids', {}).get(self.source) or -1
 
         if all(['id' not in model for model in data_helper.data[self.source]]):
             for i in range(len(data_helper.data[self.source])):
