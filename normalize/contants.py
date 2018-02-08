@@ -20,6 +20,7 @@ class GAME_MODES:
 
 
 class SOURCES:
+    FORM_CARDS = 'form-cards'
     SOURCE = 'sources'
     SOURCE_CONTENTS = 'source-contents'
     SKIRMISH_MAP = 'skirmish-maps'
@@ -62,6 +63,7 @@ class SOURCES:
         UPGRADE,
         CARD,
         THREAT_MISSION,
+        FORM_CARDS,
     ]
 
 
@@ -228,3 +230,25 @@ class SUPPLY_TRAITS:
         (TOOL, TOOL),
         (VALUABLE, VALUABLE),
     )
+
+
+INITIAL_IDS = {
+    "agenda-cards": 101,
+    "agenda-decks": 33,
+    "command-cards": 163,
+    "companion-cards": 4,
+    "deployment-cards": 142,
+    "hero-class-cards": 144,
+    "heroes": 15,
+    "imperial-class-cards": 81,
+    "imperial-classes": 8,
+    "rewards-cards": 39,
+    "side-mission-cards": 31,
+    "skirmish-maps": 38,
+    "sources": 37,
+    "story-mission-cards": 28,
+    "supply-cards": 18,
+    "threat-mission-cards": 3,
+    "upgrade-cards": 68,
+    "form-cards": -1
+}

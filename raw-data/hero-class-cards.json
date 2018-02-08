@@ -3,162 +3,162 @@
     "name": "MGL-9 Boomer",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/MGL-9%20Boomer.jpg",
     "hero": 16,
-    "image_file": "./images/hero-class-cards/6562f90613333b67.jpg"
+    "image_file": "./raw-images/hero-class-cards/6562f90613333b67.jpg"
   },
   {
     "name": "Charging Up",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Charging%20Up.jpg",
     "hero": 16,
-    "image_file": "./images/hero-class-cards/6933074b23230313.jpg"
+    "image_file": "./raw-images/hero-class-cards/6933074b23230313.jpg"
   },
   {
     "name": "Leave No One Behind",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Leave%20No%20One%20Behind.jpg",
     "hero": 16,
-    "image_file": "./images/hero-class-cards/41452b1b13033313.jpg"
+    "image_file": "./raw-images/hero-class-cards/41452b1b13033313.jpg"
   },
   {
     "name": "Bank Shot",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Bank%20Shot.jpg",
     "hero": 16,
-    "image_file": "./images/hero-class-cards/7939376727231b53.jpg"
+    "image_file": "./raw-images/hero-class-cards/7939376727231b53.jpg"
   },
   {
     "name": "Shrapnel Rounds",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Shrapnel%20Rounds.jpg",
     "hero": 16,
-    "image_file": "./images/hero-class-cards/dacad9994b6f5b73.jpg"
+    "image_file": "./raw-images/hero-class-cards/dacad9994b6f5b73.jpg"
   },
   {
     "name": "Repeater Cannon",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Repeater%20Cannon.jpg",
     "hero": 16,
-    "image_file": "./images/hero-class-cards/6521cc4f0f734743.jpg"
+    "image_file": "./raw-images/hero-class-cards/6521cc4f0f734743.jpg"
   },
   {
     "name": "Structural Exploitation",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Structural%20Exploitation.jpg",
     "hero": 16,
-    "image_file": "./images/hero-class-cards/492f756767073713.jpg"
+    "image_file": "./raw-images/hero-class-cards/492f756767073713.jpg"
   },
   {
     "name": "Thermal Explosives",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Thermal%20Explosives.jpg",
     "hero": 16,
-    "image_file": "./images/hero-class-cards/4165371f3f671703.jpg"
+    "image_file": "./raw-images/hero-class-cards/4165371f3f671703.jpg"
   },
   {
     "name": "Vibro-Claws",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Vibro-Claws.jpg",
     "hero": 17,
-    "image_file": "./images/hero-class-cards/6963234f1b370313.jpg"
+    "image_file": "./raw-images/hero-class-cards/6963234f1b370313.jpg"
   },
   {
     "name": "Wookiee Wrath",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Drokkatta/Wookiee%20Wrath.jpg",
     "hero": 16,
-    "image_file": "./images/hero-class-cards/696927253b333f13.jpg"
+    "image_file": "./raw-images/hero-class-cards/696927253b333f13.jpg"
   },
   {
     "name": "Balanced Approach",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Balanced%20Approach.jpg",
     "hero": 17,
-    "image_file": "./images/hero-class-cards/556d195179413f13.jpg"
+    "image_file": "./raw-images/hero-class-cards/556d195179413f13.jpg"
   },
   {
     "name": "Service Rifle",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Service%20Rifle.jpg",
     "hero": 18,
-    "image_file": "./images/hero-class-cards/69faf809477d7b63.jpg"
+    "image_file": "./raw-images/hero-class-cards/69faf809477d7b63.jpg"
   },
   {
     "name": "Forward Momentum",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Forward%20Momentum.jpg",
     "hero": 17,
-    "image_file": "./images/hero-class-cards/516527232b230713.jpg"
+    "image_file": "./raw-images/hero-class-cards/516527232b230713.jpg"
   },
   {
     "name": "Auxiliary Training",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Auxiliary%20Training.jpg",
     "hero": 18,
-    "image_file": "./images/hero-class-cards/494d296313131d13.jpg"
+    "image_file": "./raw-images/hero-class-cards/494d296313131d13.jpg"
   },
   {
     "name": "Scouts Loadout",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Scouts%20Loadout.jpg",
     "hero": 17,
-    "image_file": "./images/hero-class-cards/694d0b2b57653f03.jpg"
+    "image_file": "./raw-images/hero-class-cards/694d0b2b57653f03.jpg"
   },
   {
     "name": "Inch By Inch",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Inch%20By%20Inch.jpg",
     "hero": 18,
-    "image_file": "./images/hero-class-cards/796957232b132b53.jpg"
+    "image_file": "./raw-images/hero-class-cards/796957232b132b53.jpg"
   },
   {
     "name": "Slicers Upgrades",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Slicers%20Upgrades.jpg",
     "hero": 17,
-    "image_file": "./images/hero-class-cards/456d3d7171613b13.jpg"
+    "image_file": "./raw-images/hero-class-cards/456d3d7171613b13.jpg"
   },
   {
     "name": "Combat Logistics",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Combat%20Logistics.jpg",
     "hero": 18,
-    "image_file": "./images/hero-class-cards/6969556b272b3b53.jpg"
+    "image_file": "./raw-images/hero-class-cards/6969556b272b3b53.jpg"
   },
   {
     "name": "Explosive Reflexes",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Explosive%20Reflexes.jpg",
     "hero": 17,
-    "image_file": "./images/hero-class-cards/6d652f2f371b3b13.jpg"
+    "image_file": "./raw-images/hero-class-cards/6d652f2f371b3b13.jpg"
   },
   {
     "name": "Dig In",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Dig%20In.jpg",
     "hero": 18,
-    "image_file": "./images/hero-class-cards/717757372f232f33.jpg"
+    "image_file": "./raw-images/hero-class-cards/717757372f232f33.jpg"
   },
   {
     "name": "Mutual Progression",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Mutual%20Progression.jpg",
     "hero": 17,
-    "image_file": "./images/hero-class-cards/5d75332b23232b23.jpg"
+    "image_file": "./raw-images/hero-class-cards/5d75332b23232b23.jpg"
   },
   {
     "name": "Fire Support Specialist",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Fire%20Support%20Specialist.jpg",
     "hero": 18,
-    "image_file": "./images/hero-class-cards/496f77532b033713.jpg"
+    "image_file": "./raw-images/hero-class-cards/496f77532b033713.jpg"
   },
   {
     "name": "Leaping Slash",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Leaping%20Slash.jpg",
     "hero": 17,
-    "image_file": "./images/hero-class-cards/692d356527233713.jpg"
+    "image_file": "./raw-images/hero-class-cards/692d356527233713.jpg"
   },
   {
     "name": "Opportunist",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Opportunist.jpg",
     "hero": 18,
-    "image_file": "./images/hero-class-cards/6969676727232f13.jpg"
+    "image_file": "./raw-images/hero-class-cards/6969676727232f13.jpg"
   },
   {
     "name": "Mechanical Master",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Jarrod%20Kelvin/Mechanical%20Master.jpg",
     "hero": 17,
-    "image_file": "./images/hero-class-cards/6d55272d2f750d03.jpg"
+    "image_file": "./raw-images/hero-class-cards/6d55272d2f750d03.jpg"
   },
   {
     "name": "Self-sufficient",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Self-sufficient.jpg",
     "hero": 18,
-    "image_file": "./images/hero-class-cards/61616b27290b2f03.jpg"
+    "image_file": "./raw-images/hero-class-cards/61616b27290b2f03.jpg"
   },
   {
     "name": "Squad Cohesion",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Heroes/Ko-Tun%20Feralo/Squad%20Cohesion.jpg",
     "hero": 18,
-    "image_file": "./images/hero-class-cards/7969577b57555533.jpg"
+    "image_file": "./raw-images/hero-class-cards/7969577b57555533.jpg"
   }
 ]

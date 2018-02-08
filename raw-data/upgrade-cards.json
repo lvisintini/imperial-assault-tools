@@ -4,62 +4,62 @@
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Upgrades/Tier%201/Charged%20Ammo%20Pack.jpg",
     "source": 5,
     "tier": 1,
-    "image_file": "./images/upgrade-cards/0ac86597332b6737.jpg"
+    "image_file": "./raw-images/upgrade-cards/0ac86597332b6737.jpg"
   },
   {
     "name": "Charge Pistol",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Upgrades/Tier%201/Charge%20Pistol.jpg",
     "source": 5,
     "tier": 1,
-    "image_file": "./images/upgrade-cards/79ebfb0c0b337f07.jpg"
+    "image_file": "./raw-images/upgrade-cards/79ebfb0c0b337f07.jpg"
   },
   {
     "name": "Focusing Beam",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Upgrades/Tier%202/Focusing%20Beam.jpg",
     "source": 5,
     "tier": 2,
-    "image_file": "./images/upgrade-cards/79731a956f6f6737.jpg"
+    "image_file": "./raw-images/upgrade-cards/79731a956f6f6737.jpg"
   },
   {
     "name": "Responsive Armor",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Upgrades/Tier%201/Responsive%20Armor.jpg",
     "source": 5,
     "tier": 1,
-    "image_file": "./images/upgrade-cards/6561f9491f532b37.jpg"
+    "image_file": "./raw-images/upgrade-cards/6561f9491f532b37.jpg"
   },
   {
     "name": "Hunters Rifle",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Upgrades/Tier%202/Hunters%20Rifle.jpg",
     "source": 5,
     "tier": 2,
-    "image_file": "./images/upgrade-cards/69c2e0490b7b6767.jpg"
+    "image_file": "./raw-images/upgrade-cards/69c2e0490b7b6767.jpg"
   },
   {
     "name": "A-12 Sniper Rifle",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Upgrades/Tier%203/A-12%20Sniper%20Rifle.jpg",
     "source": 5,
     "tier": 3,
-    "image_file": "./images/upgrade-cards/594b6c4c0b337707.jpg"
+    "image_file": "./raw-images/upgrade-cards/594b6c4c0b337707.jpg"
   },
   {
     "name": "Polearm",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Upgrades/Tier%202/Polearm.jpg",
     "source": 5,
     "tier": 2,
-    "image_file": "./images/upgrade-cards/71f8ed0d0f737367.jpg"
+    "image_file": "./raw-images/upgrade-cards/71f8ed0d0f737367.jpg"
   },
   {
     "name": "Power Charger",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Upgrades/Tier%203/Power%20Charger.jpg",
     "source": 5,
     "tier": 3,
-    "image_file": "./images/upgrade-cards/61ff7ecb53575717.jpg"
+    "image_file": "./raw-images/upgrade-cards/61ff7ecb53575717.jpg"
   },
   {
     "name": "Supply Pack",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rebel%20Upgrades/Tier%203/Supply%20Pack.jpg",
     "source": 5,
     "tier": 3,
-    "image_file": "./images/upgrade-cards/6949694847736b17.jpg"
+    "image_file": "./raw-images/upgrade-cards/6949694847736b17.jpg"
   }
 ]

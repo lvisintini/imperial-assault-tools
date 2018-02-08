@@ -32,6 +32,7 @@ class LoadData(Task):
         for source_key in self.sources:
             with open(f'{self.root}{source_key}.{self.extension}', 'r') as file_object:
                 data[source_key] = json.load(file_object, object_pairs_hook=OrderedDict)
+            self.log.info(f'{source_key} data loaded')
         setattr(data_helper, self.attr, data)
         return data_helper
 
@@ -427,12 +428,13 @@ class SaveMemory(Task):
 class AddIds(Task):
     source = None
 
-    def __init__(self, source=None):
+    def __init__(self, source=None, initial=None):
         super(AddIds, self).__init__()
         self.source = source or self.source
+        self.initial = initial or {}
 
     def process(self, data_helper):
-        id_inc = data_helper.memory.get('initial_ids', {}).get(self.source) or -1
+        id_inc = self.initial.get(self.source, -1)
 
         if all(['id' not in model for model in data_helper.data[self.source]]):
             for i in range(len(data_helper.data[self.source])):

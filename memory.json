@@ -1,20 +1,55 @@
 {
-    "initial_ids": {
-        "sources": 37,
-        "command-cards": 163,
-        "agenda-decks": 33,
-        "agenda-cards": 101,
-        "companion-cards": 4,
-        "deployment-cards": 142,
-        "hero-class-cards": 144,
-        "heroes": 15,
-        "imperial-class-cards": 81,
-        "imperial-classes": 8,
-        "reward-cards": 39,
-        "side-mission-cards": 30,
-        "story-mission-cards": 28,
-        "supply-cards": 18,
-        "threat-mission-cards": 3,
-        "upgrade-cards": 68
-    }
+  "deployment-cards": {
+    "affiliation": {},
+    "traits": {},
+    "deployment_cost": {},
+    "deployment_group": {},
+    "reinforce_cost": {},
+    "elite": {},
+    "name": {},
+    "description": {},
+    "unique": {},
+    "modes": {}
+  },
+  "agenda-cards": {
+    "mission": {},
+    "influence": {},
+    "period_restricted": {}
+  },
+  "companion-cards": {
+    "name": {},
+    "traits": {}
+  },
+  "imperial-class-cards": {
+    "class": {},
+    "xp": {}
+  },
+  "upgrade-cards": {
+    "credits": {},
+    "traits": {},
+    "name": {},
+    "type": {}
+  },
+  "supply-cards": {
+    "traits": {},
+    "name": {}
+  },
+  "hero-class-cards": {
+    "xp": {},
+    "type": {},
+    "traits": {}
+  },
+  "command-cards": {
+    "cost": {},
+    "limit": {},
+    "template": {}
+  },
+  "side-mission-cards": {
+    "period_restricted": {}
+  },
+  "rewards-cards": {
+    "type": {},
+    "empire": {},
+    "traits": {}
+  }
 }

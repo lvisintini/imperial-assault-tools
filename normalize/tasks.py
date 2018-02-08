@@ -21,23 +21,23 @@ from normalize import contants
 
 
 class ImageAppendChoiceDataCollector(base.ShowImageMixin, base.AppendChoiceDataCollector):
-    root = './images'
+    root = './raw-images'
 
 
 class ImageChoiceDataCollector(base.ShowImageMixin, base.ChoiceDataCollector):
-    root = './images'
+    root = './raw-images'
 
 
 class ImageIntegerDataCollector(base.ShowImageMixin, base.IntegerDataCollector):
-    root = './images'
+    root = './raw-images'
 
 
 class ImageTextDataCollector(base.ShowImageMixin, base.TextDataCollector):
-    root = './images'
+    root = './raw-images'
 
 
 class ImageBooleanChoiceDataCollector(base.ShowImageMixin, base.BooleanChoiceDataCollector):
-    root = './images'
+    root = './raw-images'
 
 
 class ForeignKeyBuilder(Task):
@@ -770,7 +770,7 @@ class OpenCVSTask(Task):
         self.image_attr = image_attr or self.image_attr
         self.filter_function = filter_function or self.filter_function
         self.root = root or self.root
-        self.destination_root = destination_root or self.destination_root or self.root
+        self.destination_root = destination_root or self.root
 
     def get_read_path(self, image_path):
         abs_path = os.path.abspath(os.path.join(self.root, image_path))

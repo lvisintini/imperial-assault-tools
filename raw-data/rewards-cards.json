@@ -3,84 +3,84 @@
     "name": "Alliance Efficiency",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Alliance%20Efficiency.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/654d2f4b474f2317.jpg"
+    "image_file": "./raw-images/rewards-cards/654d2f4b474f2317.jpg"
   },
   {
     "name": "Bardottan Shard",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Bardottan%20Shard.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/7529299917474317.jpg"
+    "image_file": "./raw-images/rewards-cards/7529299917474317.jpg"
   },
   {
     "name": "Explosives Clearance",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Explosives%20Clearance.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/076d695d37174907.jpg"
+    "image_file": "./raw-images/rewards-cards/076d695d37174907.jpg"
   },
   {
     "name": "Inside Source",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Inside%20Source.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/7969473d37032317.jpg"
+    "image_file": "./raw-images/rewards-cards/7969473d37032317.jpg"
   },
   {
     "name": "Intercepted Plans",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Intercepted%20Plans.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/5155173b33232b17.jpg"
+    "image_file": "./raw-images/rewards-cards/5155173b33232b17.jpg"
   },
   {
     "name": "Lessons of History",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Lessons%20of%20History.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/694d630f23032b17.jpg"
+    "image_file": "./raw-images/rewards-cards/694d630f23032b17.jpg"
   },
   {
     "name": "Mercenary Aid",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Mercenary%20Aid.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/59616d2f23032317.jpg"
+    "image_file": "./raw-images/rewards-cards/59616d2f23032317.jpg"
   },
   {
     "name": "Populist Support",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Populist%20Support.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/696d173b23032317.jpg"
+    "image_file": "./raw-images/rewards-cards/696d173b23032317.jpg"
   },
   {
     "name": "Power of the Shard",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Power%20of%20the%20Shard.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/45451d6d61713307.jpg"
+    "image_file": "./raw-images/rewards-cards/45451d6d61713307.jpg"
   },
   {
     "name": "Scouted Enemies",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Scouted%20Enemies.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/514965250f232317.jpg"
+    "image_file": "./raw-images/rewards-cards/514965250f232317.jpg"
   },
   {
     "name": "Tracked Movements",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Tracked%20Movements.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/554d2d1703030307.jpg"
+    "image_file": "./raw-images/rewards-cards/554d2d1703030307.jpg"
   },
   {
     "name": "Vaders Legion",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Vaders%20Legion.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/6969653f67652707.jpg"
+    "image_file": "./raw-images/rewards-cards/6969653f67652707.jpg"
   },
   {
     "name": "Wookiee Roar",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/Wookiee%20Roar.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/69694d2d3b313157.jpg"
+    "image_file": "./raw-images/rewards-cards/69694d2d3b313157.jpg"
   },
   {
     "name": "X-8 Upgrade",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Rewards/X-8%20Upgrade.jpg",
     "source": 5,
-    "image_file": "./images/rewards-cards/7165331325330307.jpg"
+    "image_file": "./raw-images/rewards-cards/7165331325330307.jpg"
   }
 ]

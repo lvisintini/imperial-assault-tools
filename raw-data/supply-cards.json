@@ -3,18 +3,18 @@
     "name": "Grappler Arm",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Supply%20Deck/Grappler%20Arm.jpg",
     "source": 5,
-    "image_file": "./images/supply-cards/71c2e64913653317.jpg"
+    "image_file": "./raw-images/supply-cards/71c2e64913653317.jpg"
   },
   {
     "name": "Shield Pack",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Supply%20Deck/Shield%20Pack.jpg",
     "source": 5,
-    "image_file": "./images/supply-cards/7985a5051f632b09.jpg"
+    "image_file": "./raw-images/supply-cards/7985a5051f632b09.jpg"
   },
   {
     "name": "Supply Chest",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Supply%20Deck/Supply%20Chest.jpg",
     "source": 5,
-    "image_file": "./images/supply-cards/79f9b95917652717.jpg"
+    "image_file": "./raw-images/supply-cards/79f9b95917652717.jpg"
   }
 ]

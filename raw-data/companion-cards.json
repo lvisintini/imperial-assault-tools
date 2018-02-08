@@ -3,12 +3,12 @@
     "name": "88-z",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Companions/88-z.jpg",
     "source": 5,
-    "image_file": "./images/companion-cards/b1a726330c262b21.jpg"
+    "image_file": "./raw-images/companion-cards/b1a726330c262b21.jpg"
   },
   {
     "name": "J4X-7",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Companions/J4X-7.jpg",
     "source": 5,
-    "image_file": "./images/companion-cards/b1fbd4a58e4b2b23.jpg"
+    "image_file": "./raw-images/companion-cards/b1fbd4a58e4b2b23.jpg"
   }
 ]

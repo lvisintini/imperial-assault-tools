@@ -3,7 +3,7 @@ from normalize import tasks
 from normalize import base
 from normalize.contants import (
     SOURCES, TRUE_FALSE_CHOICES, GAME_MODES, AFFILIATION, DEPLOYMENT_TRAITS, DEPLOYMENT_CARD_PREFERRED_ATTR_ORDER,
-    UPGRADE_TRAITS, SUPPLY_TRAITS, HERO_CLASS_UPGRADE_TYPES
+    UPGRADE_TRAITS, SUPPLY_TRAITS, HERO_CLASS_UPGRADE_TYPES, INITIAL_IDS
 )
 import cv2
 
@@ -424,7 +424,6 @@ class NormalizeImperialData(PipelineHelper):
 # http://pythonhosted.org/imreg_dft/quickstart.html#quickstart
 
 
-
 class NormalizeImperialData2(PipelineHelper):
     tasks = [
         base.LoadMemory('./memory.json'),
@@ -434,20 +433,21 @@ class NormalizeImperialData2(PipelineHelper):
         tasks.ImagesToPNG,
         base.RenameField(field_name='faction', source=SOURCES.DEPLOYMENT, new_name='affiliation'),
 
-        base.AddIds(source=SOURCES.DEPLOYMENT),
-        base.AddIds(source=SOURCES.UPGRADE),
-        base.AddIds(source=SOURCES.HERO),
-        base.AddIds(source=SOURCES.HERO_CLASS),
-        base.AddIds(source=SOURCES.AGENDA),
-        base.AddIds(source=SOURCES.COMPANION),
-        base.AddIds(source=SOURCES.COMMAND),
-        base.AddIds(source=SOURCES.IMPERIAL_CLASS_CARD),
-        base.AddIds(source=SOURCES.REWARD),
-        base.AddIds(source=SOURCES.STORY_MISSION),
-        base.AddIds(source=SOURCES.SIDE_MISSION),
-        base.AddIds(source=SOURCES.THREAT_MISSION),
-        base.AddIds(source=SOURCES.SKIRMISH_MAP),
-        base.AddIds(source=SOURCES.SUPPLY),
+        base.AddIds(source=SOURCES.DEPLOYMENT, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.UPGRADE, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.HERO, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.HERO_CLASS, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.AGENDA, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.COMPANION, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.COMMAND, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.IMPERIAL_CLASS_CARD, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.REWARD, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.STORY_MISSION, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.SIDE_MISSION, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.THREAT_MISSION, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.SKIRMISH_MAP, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.SUPPLY, initial=INITIAL_IDS),
+        base.AddIds(source=SOURCES.FORM_CARDS, initial=INITIAL_IDS),
         base.SortDataByAttrs('deck', 'variant', source=SOURCES.CARD),
 
         # Data Collection
@@ -527,7 +527,6 @@ class NormalizeImperialData2(PipelineHelper):
         base.RemoveField(field_name='id', source=SOURCES.THREAT_MISSION),
         base.SortDataByAttrs('name', source=SOURCES.THREAT_MISSION),
         base.SortDataKeys(source=SOURCES.THREAT_MISSION, preferred_order=['name', ]),
-        base.AddIds(source=SOURCES.THREAT_MISSION),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.THREAT_MISSION, fk_field_path=['source', ]
         ),
@@ -555,7 +554,6 @@ class NormalizeImperialData2(PipelineHelper):
         base.RemoveField(field_name='id', source=SOURCES.COMMAND),
         base.SortDataByAttrs('name', 'cost', 'limit', source=SOURCES.COMMAND),
         base.SortDataKeys(source=SOURCES.COMMAND, preferred_order=['name', 'cost', 'limit']),
-        base.AddIds(source=SOURCES.COMMAND),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.COMMAND, fk_field_path=['source', ]
         ),
@@ -576,7 +574,6 @@ class NormalizeImperialData2(PipelineHelper):
         base.SortDataByAttrs('name', 'deployment_cost', source=SOURCES.DEPLOYMENT),
         base.SortAttrData(source=SOURCES.DEPLOYMENT, attr='traits'),
         base.SortAttrData(source=SOURCES.DEPLOYMENT, attr='modes'),
-        base.AddIds(source=SOURCES.DEPLOYMENT),
         base.SortDataKeys(source=SOURCES.DEPLOYMENT, preferred_order=DEPLOYMENT_CARD_PREFERRED_ATTR_ORDER),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.DEPLOYMENT, fk_field_path=['source', ]
@@ -588,7 +585,6 @@ class NormalizeImperialData2(PipelineHelper):
         base.RemoveField(field_name='id', source=SOURCES.IMPERIAL_CLASS_CARD),
         base.SortDataByAttrs('class_id', 'name', source=SOURCES.IMPERIAL_CLASS_CARD),
         base.SortDataKeys(source=SOURCES.IMPERIAL_CLASS_CARD, preferred_order=['class_id', 'name', 'xp']),
-        base.AddIds(source=SOURCES.IMPERIAL_CLASS_CARD),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.IMPERIAL_CLASSES, fk_field_path=['source', ],
         ),
@@ -602,7 +598,6 @@ class NormalizeImperialData2(PipelineHelper):
         base.RemoveField(field_name='id', source=SOURCES.UPGRADE),
         base.SortDataByAttrs('tier', 'name', source=SOURCES.UPGRADE),
         base.SortDataKeys(source=SOURCES.UPGRADE, preferred_order=['tier', 'name', 'credits']),
-        base.AddIds(source=SOURCES.UPGRADE),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.UPGRADE, fk_field_path=['source', ]
         ),
@@ -611,7 +606,6 @@ class NormalizeImperialData2(PipelineHelper):
         base.RemoveField(field_name='id', source=SOURCES.SUPPLY),
         base.SortDataByAttrs('name', source=SOURCES.SUPPLY),
         base.SortDataKeys(source=SOURCES.SUPPLY, preferred_order=['name', ]),
-        base.AddIds(source=SOURCES.SUPPLY),
         tasks.ForeignKeyBuilder(
             source=SOURCES.SOURCE_CONTENTS, fk_source=SOURCES.SUPPLY, fk_field_path=['source', ]
         ),

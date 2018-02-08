@@ -5,7 +5,7 @@
     "name": "Heart of the Empire",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Heart%20of%20the%20Empire.png",
     "id": 5,
-    "image_file": "./images/sources/381c4a6a288eda7d.png"
+    "image_file": "./raw-images/sources/381c4a6a288eda7d.png"
   },
   {
     "type": "Ally Pack",
@@ -13,7 +13,7 @@
     "name": "Ahsoka",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-10/Ahsoka/Ahsoka%20Pack.png",
     "id": 39,
-    "image_file": "./images/sources/9b938b1b0b0b3b0f.png"
+    "image_file": "./raw-images/sources/9b938b1b0b0b3b0f.png"
   },
   {
     "type": "Villain Pack",
@@ -21,7 +21,7 @@
     "name": "Emperor Palpatine",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-10/Emperor%20Palpatine/Emperor%20Palpatine%20Pack.png",
     "id": 40,
-    "image_file": "./images/sources/9b938b3333230b0f.png"
+    "image_file": "./raw-images/sources/9b938b3333230b0f.png"
   },
   {
     "type": "Villain Pack",
@@ -29,6 +29,6 @@
     "name": "Maul",
     "image": "http://cards.boardwars.eu/albums/Ally-and-Villain-Packs/Wave-10/Maul/Mail%20Pack.png",
     "id": 41,
-    "image_file": "./images/sources/9b938b03332b132f.png"
+    "image_file": "./raw-images/sources/9b938b03332b132f.png"
   }
 ]
