@@ -430,7 +430,6 @@ class NormalizeImperialData2(PipelineHelper):
         base.LoadData('./raw-data/', SOURCES.as_list),
 
         # Setup
-        tasks.ImagesToPNG,
         base.RenameField(field_name='faction', source=SOURCES.DEPLOYMENT, new_name='affiliation'),
 
         base.AddIds(source=SOURCES.DEPLOYMENT, initial=INITIAL_IDS),
@@ -613,6 +612,7 @@ class NormalizeImperialData2(PipelineHelper):
         base.SortDataByAttrs('id', source=SOURCES.SOURCE),
         base.SortDataKeys(source=SOURCES.SOURCE, preferred_order=['id', 'name', 'type', 'wave']),
 
+
         # Images handling
         tasks.RenameImages(root='./images', source=SOURCES.DEPLOYMENT, file_attr='image_file', attrs_for_filename=['name', 'description', 'elite', 'modes']),
         tasks.RenameImages(root='./images', source=SOURCES.CARD, file_attr='image_file', attrs_for_filename=['deck', 'variant']),
@@ -631,8 +631,8 @@ class NormalizeImperialData2(PipelineHelper):
         tasks.RenameImages(root='./images', source=SOURCES.UPGRADE, file_attr='image_file', attrs_for_filename=['name', ]),
         tasks.RenameImages(root='./images', source=SOURCES.SUPPLY, file_attr='image_file', attrs_for_filename=['name', ]),
         tasks.RenameImages(root='./images', source=SOURCES.SOURCE, file_attr='image_file', attrs_for_filename=['name', ]),
+        tasks.RenameImages(root='./images', source=SOURCES.FORM_CARDS, file_attr='image_file', attrs_for_filename=['name', ]),
         tasks.ClassHeroRenameImages(root='./images', source=SOURCES.HERO_CLASS, file_attr='image_file', attrs_for_filename=['name', ]),
-
 
         # Cleanup
         base.RemoveField(field_name='agenda', source=SOURCES.AGENDA),
@@ -647,6 +647,7 @@ class NormalizeImperialData2(PipelineHelper):
         base.RemoveField(field_name='hash', source=SOURCES.DEPLOYMENT),
         base.RemoveField(field_name='hash', source=SOURCES.IMPERIAL_CLASS_CARD),
         base.RemoveField(field_name='hash', source=SOURCES.SUPPLY),
+        base.RemoveField(field_name='hash', source=SOURCES.FORM_CARDS),
 
         base.RemoveField(field_name='image', source=SOURCES.CARD),
         base.RemoveField(field_name='image', source=SOURCES.SOURCE),
@@ -660,6 +661,7 @@ class NormalizeImperialData2(PipelineHelper):
         base.RemoveField(field_name='image', source=SOURCES.SIDE_MISSION),
         base.RemoveField(field_name='image', source=SOURCES.THREAT_MISSION),
         base.RemoveField(field_name='image', source=SOURCES.SUPPLY),
+        base.RemoveField(field_name='image', source=SOURCES.FORM_CARDS),
 
         base.RenameField(field_name='image_file', source=SOURCES.SOURCE, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.CARD, new_name='image'),
@@ -679,6 +681,7 @@ class NormalizeImperialData2(PipelineHelper):
         base.RenameField(field_name='image_file', source=SOURCES.UPGRADE, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.SUPPLY, new_name='image'),
         base.RenameField(field_name='image_file', source=SOURCES.COMPANION, new_name='image'),
+        base.RenameField(field_name='image_file', source=SOURCES.FORM_CARDS, new_name='image'),
 
         base.RenameField(field_name='hero', source=SOURCES.HERO_CLASS, new_name='hero_id'),
         base.SortDataKeys(source=SOURCES.HERO_CLASS, preferred_order=['id', 'name', 'hero_id', 'xp', 'image']),
@@ -695,6 +698,7 @@ class NormalizeImperialData2(PipelineHelper):
         base.RemoveField(field_name='source', source=SOURCES.THREAT_MISSION),
         base.RemoveField(field_name='source', source=SOURCES.SKIRMISH_MAP),
         base.RemoveField(field_name='source', source=SOURCES.UPGRADE),
+        base.RemoveField(field_name='source', source=SOURCES.FORM_CARDS),
 
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.DEPLOYMENT, ], image_attrs=['image', ]),
         # tasks.StandardImageDimension(root='./images', sources=[SOURCES.AGENDA, ], image_attrs=['image', ]),

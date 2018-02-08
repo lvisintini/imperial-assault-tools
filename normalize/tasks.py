@@ -21,23 +21,23 @@ from normalize import contants
 
 
 class ImageAppendChoiceDataCollector(base.ShowImageMixin, base.AppendChoiceDataCollector):
-    root = './raw-images'
+    pass
 
 
 class ImageChoiceDataCollector(base.ShowImageMixin, base.ChoiceDataCollector):
-    root = './raw-images'
+    pass
 
 
 class ImageIntegerDataCollector(base.ShowImageMixin, base.IntegerDataCollector):
-    root = './raw-images'
+    pass
 
 
 class ImageTextDataCollector(base.ShowImageMixin, base.TextDataCollector):
-    root = './raw-images'
+    pass
 
 
 class ImageBooleanChoiceDataCollector(base.ShowImageMixin, base.BooleanChoiceDataCollector):
-    root = './raw-images'
+    pass
 
 
 class ForeignKeyBuilder(Task):
@@ -268,8 +268,6 @@ class RenameImages(Task):
         for model in data_helper.data[self.source]:
             path_to_file = model[self.file_attr]
 
-            extension = path_to_file.split('.')[-1]
-
             new_path = os.path.join(
                 self.root,
                 self.slugify(self.source),
@@ -278,18 +276,16 @@ class RenameImages(Task):
 
             new_file_path = os.path.join(
                 new_path,
-                '-'.join(self.prefixes + self.get_additional_attrs(model) + self.suffixes) + f'.{extension}'
+                '-'.join(self.prefixes + self.get_additional_attrs(model) + self.suffixes) + '.png'
             )
 
             if not os.path.exists(new_path):
                 os.makedirs(new_path)
 
             if os.path.exists(path_to_file):  # perhaps we have done this already.
-                with open(path_to_file, 'rb') as origin:
-                    file_obj = BytesIO(origin.read())
-
-                with open(os.path.join(new_file_path), 'bw') as destination:
-                    destination.write(file_obj.read())
+                img = Image.open(path_to_file)
+                img = img.convert("RGBA")
+                img.save(new_file_path, "PNG", quality=100, optimize=True)
 
             model[self.file_attr] = new_file_path.replace(
                 self.root if self.root.endswith('/') else self.root + '/', '', 1
@@ -328,14 +324,6 @@ class RenameImages(Task):
 class ImagesToPNG(Task):
     @classmethod
     def process(cls, data_helper):
-        for source in data_helper.data:
-            for model in data_helper.data[source]:
-                if 'image_file' in model:
-                    model['image_file'] = model['image_file'].replace('.jpg', '.png')
-                if 'wounded_file' in model:
-                    model['wounded_file'] = model['wounded_file'].replace('.jpg', '.png')
-                if 'healthy_file' in model:
-                    model['healthy_file'] = model['healthy_file'].replace('.jpg', '.png')
         return data_helper
 
 
@@ -345,8 +333,6 @@ class ClassHeroRenameImages(RenameImages):
             path_to_file = model[self.file_attr]
 
             hero_name = next(m for m in data_helper.data['heroes'] if m['id'] == model['hero'])['name']
-
-            extension = path_to_file.split('.')[-1]
 
             new_path = os.path.join(
                 self.root,
@@ -358,18 +344,16 @@ class ClassHeroRenameImages(RenameImages):
                 new_path,
                 '-'.join(self.prefixes + [self.slugify(hero_name), ] + [
                     self.slugify(str(model[a])) for a in self.attrs_for_filename if model[a] is not None
-                ] + self.suffixes) + f'.{extension}'
+                ] + self.suffixes) + '.png'
             )
 
             if not os.path.exists(new_path):
                 os.makedirs(new_path)
 
             if os.path.exists(path_to_file):  # perhaps we have done this already.
-                with open(path_to_file, 'rb') as origin:
-                    file_obj = BytesIO(origin.read())
-
-                with open(os.path.join(new_file_path), 'bw') as destination:
-                    destination.write(file_obj.read())
+                img = Image.open(path_to_file)
+                img = img.convert("RGBA")
+                img.save(new_file_path, "PNG", quality=100, optimize=True)
 
             model[self.file_attr] = new_file_path.replace(
                 self.root if self.root.endswith('/') else self.root + '/', '', 1
