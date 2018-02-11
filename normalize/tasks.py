@@ -282,10 +282,9 @@ class RenameImages(Task):
             if not os.path.exists(new_path):
                 os.makedirs(new_path)
 
-            if os.path.exists(path_to_file):  # perhaps we have done this already.
-                img = Image.open(path_to_file)
-                img = img.convert("RGBA")
-                img.save(new_file_path, "PNG", quality=100, optimize=True)
+            img = Image.open(path_to_file)
+            img = img.convert("RGBA")
+            img.save(new_file_path, "PNG", quality=100, optimize=True)
 
             model[self.file_attr] = new_file_path.replace(
                 self.root if self.root.endswith('/') else self.root + '/', '', 1
@@ -350,10 +349,9 @@ class ClassHeroRenameImages(RenameImages):
             if not os.path.exists(new_path):
                 os.makedirs(new_path)
 
-            if os.path.exists(path_to_file):  # perhaps we have done this already.
-                img = Image.open(path_to_file)
-                img = img.convert("RGBA")
-                img.save(new_file_path, "PNG", quality=100, optimize=True)
+            img = Image.open(path_to_file)
+            img = img.convert("RGBA")
+            img.save(new_file_path, "PNG", quality=100, optimize=True)
 
             model[self.file_attr] = new_file_path.replace(
                 self.root if self.root.endswith('/') else self.root + '/', '', 1
@@ -473,9 +471,9 @@ class StandardImageDimension(Task):
     def pre_process(self, data_helper):
         summary = self.get_dimensions_summary(data_helper, log_results=False)
 
-        if self.min_width is None:
+        if self.min_width is None and summary:
             self.min_width = summary["min_width"]
-        if self.min_height is None:
+        if self.min_height is None and summary:
             self.min_height = summary["min_height"]
         return data_helper
 
@@ -693,7 +691,6 @@ class RoundCornersTask(RoundCornersMixin, Task):
 
     def __init__(self, source=None, image_attr=None, filter_function=None, root=None, destination_root=None, **kwargs):
         super().__init__(**kwargs)
-        self.timestamp = None
         self.source = source or self.source
         self.image_attr = image_attr or self.image_attr
         self.filter_function = filter_function or self.filter_function
@@ -717,7 +714,7 @@ class RoundCornersTask(RoundCornersMixin, Task):
                 im.save(self.get_write_path(image_path))
                 im = im.convert("RGBA")
                 if self.radius and self.opacity:
-                    self.round_image(im, radius=self.radius, opacity=self.opacity)
+                    im = self.round_image(im, radius=self.radius, opacity=self.opacity)
                 im.save(self.get_write_path(image_path))
 
             data_helper.processed_images.append(model[self.image_attr])

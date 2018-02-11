@@ -159,6 +159,7 @@ class UPGRADE_TRAITS:
     RIFLE = 'Rifle'
     SIGHTS = 'Sights'
     STAFF = 'Staff'
+    AMMUNITION = 'Ammunition'
 
     as_choices = (
         (ACCESSORY, ACCESSORY),
@@ -187,6 +188,7 @@ class UPGRADE_TRAITS:
         (RIFLE, RIFLE),
         (SIGHTS, SIGHTS),
         (STAFF, STAFF),
+        (AMMUNITION, AMMUNITION),
     )
 
 

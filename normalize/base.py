@@ -52,6 +52,7 @@ class SaveData(Task):
         self.attr = attr or self.attr
 
     def process(self, data_helper):
+
         for source_key in self.sources:
             with open(f'{self.root}{source_key}.{self.extension}', 'w') as file_object:
                 json.dump(

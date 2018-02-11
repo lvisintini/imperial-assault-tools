@@ -23,14 +23,6 @@
     "image_file": "./raw-images/deployment-cards/7b1b3363754d5155.jpg"
   },
   {
-    "name": "C-3PO",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Twin-Shadows/Deployment%20Cards/Rebel/C-3PO.jpg",
-    "faction": "Rebel",
-    "source": 1,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/638c1f4f556d5554.jpg"
-  },
-  {
     "name": "Clawdite Shapeshifter elite",
     "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Heart-of-the-Empire/Deployment%20Cards/Mercenary/Clawdite%20Shapeshifter%20elite.jpg",
     "faction": "Mercenary",
@@ -45,14 +37,6 @@
     "source": 5,
     "scope": null,
     "image_file": "./raw-images/deployment-cards/7b32125d57775915.jpg"
-  },
-  {
-    "name": "Dengar",
-    "image": "http://cards.boardwars.eu/albums/Expansion-Boxes/Return-to-Hoth/Deployment%20Cards/Mercenary/Dengar.jpg",
-    "faction": "Mercenary",
-    "source": 2,
-    "scope": null,
-    "image_file": "./raw-images/deployment-cards/67c413137d455555.jpg"
   },
   {
     "name": "Driven by Hatred",
