@@ -1,11 +1,16 @@
 import os
 from PIL import Image
 from tqdm import tqdm
+from normalize.tasks import RoundCornersMixin
 
 
 ASSETS_DIR = '/home/lvisintini/src/imperial-assault-tools/missing_round_corners'
-MIN_HEIGHT = 454
-MIN_WIDTH = 293
+MIN_WIDTH = 657
+MIN_HEIGHT = 424
+
+
+class RoundCornersAll(RoundCornersMixin):
+    pass
 
 
 def get_file_paths(root):
@@ -15,9 +20,10 @@ def get_file_paths(root):
 
 
 def main():
+    helper = RoundCornersAll()
     for abs_path in tqdm(list(get_file_paths(ASSETS_DIR))):
         img = Image.open(abs_path)
-        img.thumbnail((MIN_WIDTH, MIN_HEIGHT), Image.ANTIALIAS)
+        img = helper.round_image(img, radius=35)
         img.save(abs_path)
 
 

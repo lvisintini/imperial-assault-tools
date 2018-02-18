@@ -66,6 +66,26 @@ class SOURCES:
         FORM_CARDS,
     ]
 
+    with_ids = [
+        SOURCE,
+        AGENDA,
+        AGENDA_DECKS,
+        COMMAND,
+        DEPLOYMENT,
+        HERO,
+        HERO_CLASS,
+        IMPERIAL_CLASSES,
+        IMPERIAL_CLASS_CARD,
+        SUPPLY,
+        STORY_MISSION,
+        SIDE_MISSION,
+        REWARD,
+        COMPANION,
+        UPGRADE,
+        THREAT_MISSION,
+        FORM_CARDS,
+    ]
+
 
 class AFFILIATION:
     REBEL = 'Rebel'

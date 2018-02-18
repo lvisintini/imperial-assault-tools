@@ -398,25 +398,48 @@
         "Skirmish"
       ]
     },
+    "shapeshifter": {
+      "143": false,
+      "144": false,
+      "145": false,
+      "146": true,
+      "147": true,
+      "148": false,
+      "149": false,
+      "150": false,
+      "151": false,
+      "152": false,
+      "153": false,
+      "154": false,
+      "155": false,
+      "156": false,
+      "157": false,
+      "158": false,
+      "159": false,
+      "160": false,
+      "161": false,
+      "162": false,
+      "163": false
+    },
     "image_file": {
       "143": "./raw-images/deployment-cards/3373335d496d5554.jpg",
       "144": "./raw-images/deployment-cards/7b1b3363754d5155.jpg",
-      "147": "./raw-images/deployment-cards/7b32125d57775915.jpg",
+      "145": "./raw-images/deployment-cards/7b32125d57775915.jpg",
       "146": "./raw-images/deployment-cards/7b32125957775911.jpg",
-      "148": "./raw-images/deployment-cards/7bf1a2e3737d4d33.jpg",
-      "149": "./raw-images/deployment-cards/3b29745355655554.jpg",
-      "150": "./raw-images/deployment-cards/7b382043696d5354.jpg",
-      "152": "./raw-images/deployment-cards/7b39f25d5d4b5954.jpg",
-      "153": "./raw-images/deployment-cards/7b6b713155755754.jpg",
-      "154": "./raw-images/deployment-cards/33dc783945555555.jpg",
-      "158": "./raw-images/deployment-cards/6e34664b5d755154.jpg",
-      "159": "./raw-images/deployment-cards/6e34664b55695154.jpg",
-      "156": "./raw-images/deployment-cards/6e34664369555555.jpg",
-      "157": "./raw-images/deployment-cards/6e34e64375755554.jpg",
-      "160": "./raw-images/deployment-cards/7bd9ccdc79717d63.jpg",
-      "162": "./raw-images/deployment-cards/7e4ecf59696d5d54.jpg",
-      "161": "./raw-images/deployment-cards/7e6ecf59696d5d54.jpg",
-      "163": "./raw-images/deployment-cards/5b13634b63535d61.jpg"
+      "147": "./raw-images/deployment-cards/7bf1a2e3737d4d33.jpg",
+      "148": "./raw-images/deployment-cards/3b29745355655554.jpg",
+      "149": "./raw-images/deployment-cards/7b382043696d5354.jpg",
+      "150": "./raw-images/deployment-cards/7b39f25d5d4b5954.jpg",
+      "151": "./raw-images/deployment-cards/7b6b713155755754.jpg",
+      "152": "./raw-images/deployment-cards/33dc783945555555.jpg",
+      "153": "./raw-images/deployment-cards/6e34664b5d755154.jpg",
+      "154": "./raw-images/deployment-cards/6e34664b55695154.jpg",
+      "155": "./raw-images/deployment-cards/6e34664369555555.jpg",
+      "156": "./raw-images/deployment-cards/6e34e64375755554.jpg",
+      "157": "./raw-images/deployment-cards/7bd9ccdc79717d63.jpg",
+      "158": "./raw-images/deployment-cards/7e4ecf59696d5d54.jpg",
+      "159": "./raw-images/deployment-cards/7e6ecf59696d5d54.jpg",
+      "160": "./raw-images/deployment-cards/5b13634b63535d61.jpg"
     }
   },
   "companion-cards": {
@@ -581,7 +604,7 @@
       "146": "Feat",
       "147": "Feat",
       "148": "Feat",
-      "149": "Ranged Weapon",
+      "149": "Ranged Weapon Modification",
       "150": "Ranged Weapon",
       "151": "Feat",
       "152": "Feat",
@@ -900,6 +923,13 @@
       "37": "./raw-images/story-mission-cards/4b0f874f454d4d0f.jpg",
       "38": "./raw-images/story-mission-cards/4e644f47454d5d0f.jpg",
       "39": "./raw-images/story-mission-cards/4fc4c34f656d0d0f.jpg"
+    }
+  },
+  "form-cards": {
+    "name": {
+      "0": "Streetrat",
+      "1": "Senator",
+      "2": "Scout"
     }
   }
 }

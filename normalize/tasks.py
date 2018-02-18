@@ -361,10 +361,13 @@ class ClassHeroRenameImages(RenameImages):
 
 
 class ImperialClassCardToClass(Task):
-    @classmethod
+    def __init__(self, initial=None):
+        super(ImperialClassCardToClass, self).__init__()
+        self.initial = initial or {}
+
     def process(self, data_helper):
         done = []
-        id_inc = -1
+        id_inc = self.initial["imperial-classes"]
 
         for card in data_helper.data[contants.SOURCES.IMPERIAL_CLASS_CARD]:
             if card['class'] not in done:
@@ -388,10 +391,13 @@ class ImperialClassCardToClass(Task):
 
 
 class AgendaCardToDeck(Task):
-    @classmethod
-    def process(cls, data_helper):
+    def __init__(self, initial=None):
+        super(AgendaCardToDeck, self).__init__()
+        self.initial = initial or {}
+
+    def process(self, data_helper):
         done = []
-        id_inc = -1
+        id_inc = self.initial["agenda-decks"]
 
         for card in data_helper.data[contants.SOURCES.AGENDA]:
             if card['agenda'] not in done:
@@ -695,7 +701,7 @@ class RoundCornersTask(RoundCornersMixin, Task):
         self.image_attr = image_attr or self.image_attr
         self.filter_function = filter_function or self.filter_function
         self.root = root or self.root
-        self.destination_root = destination_root or self.destination_root
+        self.destination_root = destination_root or self.root
 
     def filter(self, model):
         if self.image_attr not in model:
@@ -711,10 +717,9 @@ class RoundCornersTask(RoundCornersMixin, Task):
             image_path = model.get(self.image_attr, None)
             if image_path is not None and self.radius and self.opacity:
                 im = Image.open(self.get_read_path(image_path))
-                im.save(self.get_write_path(image_path))
                 im = im.convert("RGBA")
                 if self.radius and self.opacity:
-                    im = self.round_image(im, radius=self.radius, opacity=self.opacity)
+                    self.round_image(im, radius=self.radius, opacity=self.opacity)
                 im.save(self.get_write_path(image_path))
 
             data_helper.processed_images.append(model[self.image_attr])

@@ -5,9 +5,9 @@ import tinify
 from tqdm import tqdm
 from colorlog import ColoredFormatter
 
-tinify.key = "place-your-key-here"
+tinify.key = "api-key-here"
 
-ASSETS_DIR = '/home/lvisintini/src/imperial-assault/FinalData/final/'
+ASSETS_DIR = '/home/lvisintini/src/imperial-assault-tools/final'
 
 
 class TqdmHandler(logging.StreamHandler):

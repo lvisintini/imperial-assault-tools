@@ -52,11 +52,48 @@ class SaveData(Task):
         self.attr = attr or self.attr
 
     def process(self, data_helper):
+        if not os.path.exists(self.root):
+            os.makedirs(self.root)
 
         for source_key in self.sources:
             with open(f'{self.root}{source_key}.{self.extension}', 'w') as file_object:
                 json.dump(
                     getattr(data_helper, self.attr)[source_key],
+                    file_object,
+                    indent=self.indent,
+                    ensure_ascii=False
+                )
+        return data_helper
+
+
+class AppendData(Task):
+    sources = []
+    extension = 'json'
+    indent = 2
+    attr = 'data'
+
+    def __init__(self, root, sources=None, extension=None, indent=None, attr=None):
+        super(AppendData, self).__init__()
+        self.root = root
+        self.sources = sources or self.sources
+        self.extension = extension or self.extension
+        self.indent = indent or self.indent
+        self.attr = attr or self.attr
+
+    def process(self, data_helper):
+        if not os.path.exists(self.root):
+            os.makedirs(self.root)
+
+        for source_key in self.sources:
+            abs_path = f'{self.root}{source_key}.{self.extension}'
+            data = []
+            if os.path.exists(abs_path):
+                with open(abs_path, 'r') as file_object:
+                    data = json.load(file_object)
+
+            with open(abs_path, 'w') as file_object:
+                json.dump(
+                    data + getattr(data_helper, self.attr)[source_key],
                     file_object,
                     indent=self.indent,
                     ensure_ascii=False
