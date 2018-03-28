@@ -237,7 +237,7 @@ class ImageProcessingPipeline(ProcessItemPipeline):
 
     def __init__(self):
         self.old = []
-        with open('/home/lvisintini/src/imperial-assault/original-images-sha512.txt', 'r') as destination:
+        with open('/home/lvisintini/src/imperial-assault/crawler/original-images-sha512.txt', 'r') as destination:
             self.old = destination.read().split()
 
     def process_item(self, item, spider):

@@ -36,7 +36,7 @@ class SOURCES:
     SUPPLY = 'supply-cards'
     STORY_MISSION = 'story-mission-cards'
     SIDE_MISSION = 'side-mission-cards'
-    REWARD = 'rewards-cards'
+    REWARD = 'reward-cards'
     COMPANION = 'companion-cards'
     UPGRADE = 'upgrade-cards'
     CARD = 'card-backs'
