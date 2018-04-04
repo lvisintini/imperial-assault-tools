@@ -48,6 +48,8 @@ class ImperialAssaultCrawler(scrapy.Spider):
             )
 
             yield response.follow(album.css('a::attr(href)').extract_first(), self.parse)
+        for next_page in response.css('.pagelist .next a::attr(href)'):
+            yield response.follow(next_page, self.parse)
 
     def parse_packs(self, response):
         section = self.get_section(response)
@@ -78,6 +80,9 @@ class ImperialAssaultCrawler(scrapy.Spider):
         for next_page in response.css('.album .albumdesc a::attr(href)'):
             yield response.follow(next_page, self.parse)
 
+        for next_page in response.css('.pagelist .next a::attr(href)'):
+            yield response.follow(next_page, self.parse)
+
     def parse_source_contents(self, response):
         for album in response.css('div.album'):
             name = album.css('a ::text').extract_first().strip()
@@ -88,6 +93,9 @@ class ImperialAssaultCrawler(scrapy.Spider):
             )
             yield response.follow(album.css('a::attr(href)').extract_first(), self.parse)
 
+        for next_page in response.css('.pagelist .next a::attr(href)'):
+            yield response.follow(next_page, self.parse)
+
     def parse_skirmish_map(self, response):
         for image in response.css('div.image'):
             yield items.SkirmishMapItem(
@@ -95,8 +103,8 @@ class ImperialAssaultCrawler(scrapy.Spider):
                 image=image.css('img ::attr(src)').extract_first().strip()
 
             )
-            for next_page in response.css('.pagelist .next a::attr(href)'):
-                yield response.follow(next_page, self.parse)
+        for next_page in response.css('.pagelist .next a::attr(href)'):
+            yield response.follow(next_page, self.parse)
 
     def parse_agenda(self, response):
         section = self.get_section(response)
@@ -112,6 +120,8 @@ class ImperialAssaultCrawler(scrapy.Spider):
                 image=image.css('img ::attr(src)').extract_first(),
                 source=source
             )
+        for next_page in response.css('.pagelist .next a::attr(href)'):
+            yield response.follow(next_page, self.parse)
 
     def parse_default_card(self, cls, response):
         breadcrumbs = self.get_breadcrumbs(response)
@@ -121,6 +131,8 @@ class ImperialAssaultCrawler(scrapy.Spider):
                 image=image.css('img ::attr(src)').extract_first(),
                 source=breadcrumbs[-1]
             )
+        for next_page in response.css('.pagelist .next a::attr(href)'):
+            yield response.follow(next_page, self.parse)
 
     def parse_command_card(self, response):
         for item in self.parse_default_card(items.CommandCardItem, response):
@@ -150,6 +162,8 @@ class ImperialAssaultCrawler(scrapy.Spider):
                 image=album.css('img ::attr(src)').extract_first().strip(),
             )
             yield response.follow(album.css('a::attr(href)').extract_first(), self.parse)
+        for next_page in response.css('.pagelist .next a::attr(href)'):
+            yield response.follow(next_page, self.parse)
 
     def parse_tier_backs(self, response):
         for item in self.parse_cards_backs('Rebel Upgrade', response):
@@ -259,6 +273,8 @@ class ImperialAssaultCrawler(scrapy.Spider):
                         variant=actual_name,
                         image=image.css('img ::attr(src)').extract_first(),
                     )
+        for next_page in response.css('.pagelist .next a::attr(href)'):
+            yield response.follow(next_page, self.parse)
 
     def parse_deployment_cards(self, response):
         section = self.get_section(response)
@@ -278,6 +294,8 @@ class ImperialAssaultCrawler(scrapy.Spider):
                     image=image.css('img ::attr(src)').extract_first(),
                     source=breadcrumbs[-1]
                 )
+        for next_page in response.css('.pagelist .next a::attr(href)'):
+            yield response.follow(next_page, self.parse)
 
     def determine_parser(self, response):
         section = self.get_section(response)

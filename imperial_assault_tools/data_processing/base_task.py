@@ -7,157 +7,25 @@ from collections import OrderedDict, defaultdict
 from assembly_line.task import Task
 
 
-class LoadDataFromSource(Task):
-    data_helper_attr = None
-
-    def __init__(self, source, data_helper_attr=None):
-        super(LoadDataFromSource, self).__init__()
-        self.source = source
-        self.data_helper_attr = data_helper_attr or self.data_helper_attr
-
-    def process(self, data_helper):
-        if self.data_helper_attr:
-            if not hasattr(data_helper, self.data_helper_attr):
-                setattr(data_helper, self.data_helper_attr, OrderedDict())
-
-            data = getattr(data_helper, self.data_helper_attr)
-            self.source.fetch_data()
-            data[self.source.attr_name] = self.source
-            setattr(data_helper, self.data_helper_attr, data)
-
-        else:
-            setattr(data_helper, self.source.attr_name, self.source.fetch_data())
-
-        self.log.info(f'{self.source.source_name} data loaded')
-        return data_helper
-
-
-class LoadDataFromSources(Task):
-    data_helper_attr = None
-
-    def __init__(self, sources, data_helper_attr=None):
-        super(LoadDataFromSources, self).__init__()
+class FetchData(Task):
+    def __init__(self, *sources):
+        super(FetchData, self).__init__()
         self.sources = sources
-        self.data_helper_attr = data_helper_attr or self.data_helper_attr
 
     def process(self, data_helper):
-        if self.data_helper_attr:
-            if not hasattr(data_helper, self.data_helper_attr):
-                setattr(data_helper, self.data_helper_attr, OrderedDict())
-
-            data = getattr(data_helper, self.data_helper_attr)
-
-            for source in self.sources:
-                source.fetch_data()
-                data[source.attr_name] = source
-                self.log.info(f'{source.source_name} data loaded')
-            setattr(data_helper, self.data_helper_attr, data)
-
-        else:
-            for source in self.sources:
-                source.fetch_data()
-                setattr(data_helper, source.attr_name, source)
-                self.log.info(f'{source.source_name} data loaded')
+        for source in self.sources:
+            source.fetch_data()
         return data_helper
 
 
-class SaveDataToSource(Task):
-    data_helper_attr = None
-
-    def __init__(self, source, data_helper_attr=None):
-        super(SaveDataToSource, self).__init__()
-        self.source = source
-        self.data_helper_attr = data_helper_attr or self.data_helper_attr
-
-    def process(self, data_helper):
-        if not os.path.exists(self.source.get_write_path()):
-            os.makedirs(self.source.get_write_path())
-
-        if self.data_helper_attr:
-            data = getattr(data_helper, self.data_helper_attr)
-            self.source.save_data(data[self.source.attr_name])
-        else:
-            self.source.save_data(getattr(data_helper, self.source.source_name))
-
-        self.log.info(f'{self.source.source_name} data saved')
-        return data_helper
-
-
-class SaveDataToSources(Task):
-    data_helper_attr = None
-
-    def __init__(self, sources, data_helper_attr=None):
-        super(SaveDataToSources, self).__init__()
+class SaveData(Task):
+    def __init__(self, *sources):
+        super(SaveData, self).__init__()
         self.sources = sources
-        self.data_helper_attr = data_helper_attr or self.data_helper_attr
 
     def process(self, data_helper):
-        if self.data_helper_attr:
-
-            data = getattr(data_helper, self.data_helper_attr)
-
-            for source in self.sources:
-                if not os.path.exists(source.get_write_path()):
-                    os.makedirs(source.get_write_path())
-                source.save_data(data[source.source_name])
-                self.log.info(f'{source.source_name} data saved')
-
-        else:
-            for source in self.sources:
-                if not os.path.exists(source.get_write_path()):
-                    os.makedirs(source.get_write_path())
-                source.save_data(getattr(data_helper, source.source_name))
-                self.log.info(f'{source.source_name} data saved')
-        return data_helper
-
-
-class AppendDataToSource(Task):
-    data_helper_attr = None
-
-    def __init__(self, source, data_helper_attr=None):
-        super(AppendDataToSource, self).__init__()
-        self.source = source
-        self.data_helper_attr = data_helper_attr or self.data_helper_attr
-
-    def process(self, data_helper):
-        if not os.path.exists(self.source.get_write_path()):
-            os.makedirs(self.source.get_write_path())
-
-        if self.data_helper_attr:
-            data = getattr(data_helper, self.data_helper_attr, OrderedDict())
-            self.source.save_data(self.source.fetch_data() + data.get(self.source.attr_name, []))
-        else:
-            self.source.save_data(self.source.fetch_data() + getattr(data_helper, self.source.source_name, []))
-
-        self.log.info(f'{self.source.source_name} data saved')
-        return data_helper
-
-
-class AppendDataToSources(Task):
-    data_helper_attr = None
-
-    def __init__(self, sources, data_helper_attr=None):
-        super(AppendDataToSources, self).__init__()
-        self.sources = sources
-        self.data_helper_attr = data_helper_attr or self.data_helper_attr
-
-    def process(self, data_helper):
-        if self.data_helper_attr:
-
-            data = getattr(data_helper, self.data_helper_attr, OrderedDict())
-
-            for source in self.sources:
-                if not os.path.exists(source.get_write_path()):
-                    os.makedirs(source.get_write_path())
-                source.save_data(source.fetch_data() + data.get(source.source_name, []))
-                self.log.info(f'{source.source_name} data saved')
-
-        else:
-            for source in self.sources:
-                if not os.path.exists(source.get_write_path()):
-                    os.makedirs(source.get_write_path())
-                source.save_data(source.fetch_data() + getattr(data_helper, source.source_name, []))
-                self.log.info(f'{source.source_name} data saved')
+        for source in self.sources:
+            source.save_data()
         return data_helper
 
 

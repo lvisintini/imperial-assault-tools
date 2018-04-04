@@ -1,17 +1,10 @@
-"""
-Classes to abstract the nuisances of loading and saving data from files. And only that.
-
-"""
-
 import errno
 import json
 import os
-import re
 import sys
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
-from assembly_line.expections import AssemblyLineError
-
+from .exceptions import SourceError, MultipleEntriesDetectedSourceError, EntryNotFoundSourceError
 
 ERROR_INVALID_NAME = 123
 
@@ -21,7 +14,7 @@ class DataSource:
     def fetch_data(self):
         raise NotImplementedError()
 
-    def save_data(self, data):
+    def save_data(self):
         raise NotImplementedError()
 
 
@@ -30,34 +23,30 @@ class FileSource(DataSource):
     path = None
     write_path = None
     source_name = None
-    attr_name = None
+    default = None
 
-    def __init__(self, path=None, root=None, write_path=None, source_name=None, attr_name=None, **kwargs):
+    def __init__(self, root=None, path=None, write_path=None, source_name=None, default=None):
         self.root = root or self.root
         self.path = path or self.path
         self.write_path = write_path or self.write_path
         self.source_name = source_name or self.source_name
-        self.attr_name = attr_name or self.attr_name
 
-        self.is_default_provided = 'default' in kwargs
-        self.default_if_file_not_found = kwargs.pop('default', None)
+        self.default = default or self.default
 
         if not self.write_path:
             self.write_path = self.path
 
-        if not self.is_default_provided and not os.path.isfile(self.get_read_path()):
-            raise AssemblyLineError(f"{self.get_read_path()} is not a file")
+        if self.default is None:
+            if os.path.isfile(self.get_read_path()):
+                raise SourceError(f"{self.get_read_path()} is not a file")
+        elif not callable(self.default):
+            raise SourceError("If 'default' is provided, it needs to be a callable")
 
         if not self.is_pathname_valid(self.get_write_path()) or os.path.isdir(self.get_write_path()):
-            raise AssemblyLineError(f"{self.get_write_path()} is not a valid file write path")
+            raise SourceError(f"{self.get_write_path()} is not a valid file write path")
 
         if not self.source_name:
             self.source_name = '.'.join(os.path.basename(self.path).split('.')[:-1])
-
-        if not self.attr_name:
-            # Clean up source_name as best as possible to get an valid identifier name
-            self.attr_name = re.sub('[^0-9a-zA-Z_]', '', self.source_name)
-            self.attr_name = re.sub('^[^a-zA-Z_]+', '', self.attr_name)
 
     def get_read_path(self):
         return os.path.abspath(os.path.join(self.root, self.path))
@@ -145,27 +134,77 @@ class JSONSource(FileSource):
         super().__init__(**kwargs)
 
     def fetch_data(self):
-        if not self.is_default_provided and not os.path.isfile(self.get_read_path()):
-            data = self.default_if_file_not_found
+        if self.default is not None and not os.path.isfile(self.get_read_path()):
+            data = self.default()
         else:
             with open(self.get_read_path(), 'r') as file_object:
                 data = json.load(file_object, object_pairs_hook=OrderedDict)
         setattr(self, 'data', data)
         return data
 
-    def save_data(self, data):
+    def set_data(self, data):
+        setattr(self, 'data', data)
+
+    def save_data(self):
+        if not os.path.exists(self.get_write_path()):
+            os.makedirs(self.get_write_path())
         with open(self.get_write_path(), 'w') as file_object:
             json.dump(
-                data,
+                getattr(self, 'data'),
                 file_object,
                 indent=self.indent,
                 ensure_ascii=self.ensure_ascii
             )
 
 
+class JSONNestedDictSource(JSONSource):
+    default = dict
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.data = self.recursive_defaultdict()
+
+    def recursive_defaultdict(self):
+        return defaultdict(self.recursive_defaultdict)
+
+    def recursive_dict_transform(self, data):
+        memory = self.recursive_defaultdict()
+        for source in data.keys():
+            for field_name in data[source].keys():
+                for pk in data[source][field_name].keys():
+                    memory[source][field_name][int(pk) if pk.isdigit() else pk] = data[source][field_name][pk]
+        return memory
+
+    def fetch_data(self):
+        data = super().fetch_data()
+        self.data = self.recursive_dict_transform(data)
+        return self.data
+
+    def set_data(self, data):
+        super().set_data(data)
+        self.data = self.recursive_dict_transform(self.data)
+
+
 class JSONCollectionSource(JSONSource):
+    default = list
+
     def filter(self, **kwargs):
         return [m for m in self.data if all([k in m and m.get(k) == v for k, v in kwargs.items()])]
 
+    def set_data(self, data=None):
+        if data is None:
+            data = self.default()
+        if not isinstance(data, list):
+            raise ValueError('Data value should be a list')
+        self.data = data
+
+    def add_entry(self, entry):
+        self.data.append(entry)
+
     def get(self, **kwargs):
-        return next(iter(self.filter(**kwargs)), None)
+        filtered = self.filter(**kwargs)
+        if len(filtered) > 1:
+            raise MultipleEntriesDetectedSourceError()
+        elif len(filtered) == 0:
+            raise EntryNotFoundSourceError()
+        return filtered[0]

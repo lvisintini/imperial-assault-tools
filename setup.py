@@ -10,8 +10,8 @@ setup(
     install_requires=requirements,
     author='Luis Visintini',
     author_email='lvisintini@gmail.com',
-    packages=['normalize', ],
-    url='https://github.com/lvisintini/xwing-data-dev-tools',
+    packages=['imperial_assault_tools', ],
+    url='https://github.com/lvisintini/imperial_assault_tools',
     license='The MIT License (MIT)',
     description='A collection of tools used to normalise and improve JSON data collections',
 )

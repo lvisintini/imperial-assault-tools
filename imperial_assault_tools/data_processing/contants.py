@@ -84,6 +84,7 @@ class SOURCES:
         UPGRADE,
         THREAT_MISSION,
         FORM_CARDS,
+        SKIRMISH_MAP,
     ]
 
 
@@ -255,22 +256,26 @@ class SUPPLY_TRAITS:
 
 
 INITIAL_IDS = {
-    "agenda-cards": 101,
-    "agenda-decks": 33,
-    "command-cards": 163,
-    "companion-cards": 4,
-    "deployment-cards": 142,
-    "hero-class-cards": 144,
-    "heroes": 15,
-    "imperial-class-cards": 81,
-    "imperial-classes": 8,
-    "rewards-cards": 39,
-    "side-mission-cards": 31,
+    "agenda-cards": 113,
+    "agenda-decks": 37,
+    "command-cards": 188,
+    "companion-cards": 6,
+    "deployment-cards": 160,
+    "form-cards": 2,
+    "hero-class-cards": 171,
+    "heroes": 18,
+    "imperial-class-cards": 99,
+    "imperial-classes": 10,
+    "reward-cards": 53,
+    "side-mission-cards": 35,
     "skirmish-maps": 38,
-    "sources": 37,
-    "story-mission-cards": 28,
-    "supply-cards": 18,
+    "sources": 41,
+    "story-mission-cards": 39,
+    "supply-cards": 21,
     "threat-mission-cards": 3,
-    "upgrade-cards": 68,
-    "form-cards": -1
+    "upgrade-cards": 77,
 }
+
+
+
+

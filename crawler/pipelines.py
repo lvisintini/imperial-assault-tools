@@ -237,7 +237,7 @@ class ImageProcessingPipeline(ProcessItemPipeline):
 
     def __init__(self):
         self.old = []
-        with open('/home/lvisintini/src/imperial-assault/crawler/original-images-sha512.txt', 'r') as destination:
+        with open('/home/lvisintini/src/imperial-assault-tools/crawler/original-images-sha512.txt', 'r') as destination:
             self.old = destination.read().split()
 
     def process_item(self, item, spider):
@@ -301,6 +301,8 @@ class JsonWriterPipeline(ProcessItemPipeline):
         self.data[items.DeploymentCardItem] = sorted(self.data[items.DeploymentCardItem], key=lambda i: i['name'])
 
         for cls, f in self.file_names.items():
+            if not os.path.exists(f'./raw-data'):
+                os.makedirs(f'./raw-data')
             with open(f'./raw-data/{f}', 'w') as file_object:
                 json.dump(self.data[cls], file_object, indent=2)
             if not self.data[cls]:
