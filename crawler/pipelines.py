@@ -216,23 +216,23 @@ class ImageProcessingPipeline(ProcessItemPipeline):
     ]
 
     roots = {
-        items.SourceItem: './images/sources/',
-        items.SkirmishMapItem: './images/skirmish-maps/',
-        items.AgendaCardItem: './images/agenda-cards/',
-        items.CommandCardItem: './images/command-cards/',
-        items.ConditionItem: './images/condition-cards/',
-        items.DeploymentCardItem: './images/deployment-cards/',
+        items.SourceItem: './raw-images/sources/',
+        items.SkirmishMapItem: './raw-images/skirmish-maps/',
+        items.AgendaCardItem: './raw-images/agenda-cards/',
+        items.CommandCardItem: './raw-images/command-cards/',
+        items.ConditionItem: './raw-images/condition-cards/',
+        items.DeploymentCardItem: './raw-images/deployment-cards/',
         items.HeroItem: './images/heroes/',
-        items.HeroClassCardItem: './images/hero-class-cards/',
-        items.ImperialClassCardItem: './images/imperial-class-cards/',
-        items.SupplyCardItem: './images/supply-cards/',
-        items.StoryMissionCardItem: './images/story-mission-cards/',
-        items.SideMissionCardItem: './images/side-mission-cards/',
-        items.RewardItem: './images/rewards-cards/',
-        items.CompanionItem: './images/companion-cards/',
-        items.UpgradeItem: './images/upgrade-cards/',
-        items.CardBackItem: './images/card-backs/',
-        items.ThreatMissionCardItem: './images/threat-mission-cards/'
+        items.HeroClassCardItem: './raw-images/hero-class-cards/',
+        items.ImperialClassCardItem: './raw-images/imperial-class-cards/',
+        items.SupplyCardItem: './raw-images/supply-cards/',
+        items.StoryMissionCardItem: './raw-images/story-mission-cards/',
+        items.SideMissionCardItem: './raw-images/side-mission-cards/',
+        items.RewardItem: './raw-images/rewards-cards/',
+        items.CompanionItem: './raw-images/companion-cards/',
+        items.UpgradeItem: './raw-images/upgrade-cards/',
+        items.CardBackItem: './raw-images/card-backs/',
+        items.ThreatMissionCardItem: './raw-images/threat-mission-cards/'
     }
 
     def __init__(self):
@@ -255,18 +255,20 @@ class ImageProcessingPipeline(ProcessItemPipeline):
 
                 file_obj = BytesIO(url.content)
 
-                item[attr + '_file'] = '{}{}.{}'.format(
+                write_path = '{}{}.{}'.format(
                     self.roots[item.__class__],
                     str(imagehash.dhash(Image.open(file_obj))),
                     item[attr].split('.')[-1]
                 )
+
+                item[attr + '_file'] = write_path.replace('./raw-images/', '', 1)
 
                 file_obj.seek(0)
 
                 if not os.path.exists(self.roots[item.__class__]):
                     os.makedirs(self.roots[item.__class__])
 
-                with open(item[attr + '_file'], 'bw') as destination:
+                with open(write_path, 'bw') as destination:
                     destination.write(file_obj.read())
         return item
 

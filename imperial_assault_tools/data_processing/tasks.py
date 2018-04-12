@@ -6,95 +6,63 @@ import struct
 import subprocess
 import time
 import uuid
-from io import BytesIO
+
+from assembly_line.task import Task
+
 from collections import Counter, OrderedDict
 
 import cv2
 import numpy
 from look_at.wmctrl import WmCtrl
-from PIL import Image, ImageDraw
+from PIL import Image
 from tqdm import tqdm
 
-from normalize import base
-from normalize.manager import Task
-from normalize import contants
+from imperial_assault_tools.data_processing import base_task
+from imperial_assault_tools.data_processing.mixins import ShowImageMixin, RoundCornersMixin
+
+from imperial_assault_tools.data_processing import contants
 
 
-class ImageAppendChoiceDataCollector(base.ShowImageMixin, base.AppendChoiceDataCollector):
+class ImageAppendChoiceDataCollector(ShowImageMixin, base_task.AppendChoiceDataCollector):
     pass
 
 
-class ImageChoiceDataCollector(base.ShowImageMixin, base.ChoiceDataCollector):
+class ImageChoiceDataCollector(ShowImageMixin, base_task.ChoiceDataCollector):
     pass
 
 
-class ImageIntegerDataCollector(base.ShowImageMixin, base.IntegerDataCollector):
+class ImageIntegerDataCollector(ShowImageMixin, base_task.IntegerDataCollector):
     pass
 
 
-class ImageTextDataCollector(base.ShowImageMixin, base.TextDataCollector):
+class ImageTextDataCollector(ShowImageMixin, base_task.TextDataCollector):
     pass
 
 
-class ImageBooleanChoiceDataCollector(base.ShowImageMixin, base.BooleanChoiceDataCollector):
+class ImageBooleanChoiceDataCollector(ShowImageMixin, base_task.BooleanChoiceDataCollector):
     pass
 
 
-class ForeignKeyBuilder(Task):
-    source = None
-    source_pk = 'id'
-    fk_source = None
-    fk_source_pk = 'id'
-    fk_field_path = None
-    id_name = 'source'
-    fk_id_name = 'content'
-
-    attrs_to_copy = []
-
-    def __init__(self, source=None, source_pk=None, fk_source=None, fk_source_pk=None, fk_field_path=None, attrs_to_copy=None, id_name=None, fk_id_name=None):
-        super(ForeignKeyBuilder, self).__init__()
-        self.source = source or self.source
-        self.source_pk = source_pk or self.source_pk
-        self.fk_source = fk_source or self.fk_source
-        self.fk_source_pk = fk_source_pk or self.fk_source_pk
-        self.fk_field_path = fk_field_path or self.fk_field_path
-        self.attrs_to_copy = attrs_to_copy or self.attrs_to_copy
-        self.id_name = id_name or self.id_name
-        self.fk_id_name = fk_id_name or self.fk_id_name
-
-    def get_model_field(self, model, field_path):
-        fk = model
-        for path in field_path:
-            fk = fk.get(path)
-            if fk is None:
-                break
-        return fk
-
-    def set_model_field(self, model, field_path, new_fk):
-        current = model
-        for path in field_path[:-1]:
-            if path not in current:
-                current[path] = {}
-            current = current[path]
-        current[field_path[-1]] = new_fk
+class SourceContentsManyToMany(Task):
+    def __init__(self, source, source_contents):
+        super(SourceContentsManyToMany, self).__init__()
+        self.source = source
+        self.source_contents = source_contents
 
     def process(self, data_helper):
-        for fk_model in data_helper.data[self.fk_source]:
-            fk = self.get_model_field(fk_model, self.fk_field_path)
-            fks = [fk, ] if not isinstance(fk, list) else fk
-            pk = fk_model[self.fk_source_pk]
+        for model in self.source.data:
+            fks = model.get('source', [])
+            fks = [fks, ] if not isinstance(fks, list) else fks
+            pk = model['id']
 
             for fk in fks:
-                data_helper.data[self.source].append(
+                self.source_contents.data.append(
                     OrderedDict([
-                        (f'{self.id_name}_id', fk),
-                        (f'{self.fk_id_name}_type', self.fk_source),
-                        (f'{self.fk_id_name}_id', pk),
-                    ] + [
-                        (a, fk_model[a]) for a in self.attrs_to_copy
+                        (f'source_id', fk),
+                        (f'content_type', self.source.source_name),
+                        (f'content_id', pk),
                     ])
                 )
-
         return data_helper
 
 
@@ -123,17 +91,21 @@ class LogTask(Task):
     def __init__(self):
         super(LogTask, self).__init__()
 
-    def setup(self, data_helper):
+    @classmethod
+    def setup(cls, data_helper):
         data_helper.processed_images = []
         return data_helper
 
-    def process(self, data_helper):
-        for source in data_helper.data:
-            for model in data_helper.data[source]:
+    @classmethod
+    def process(cls, data_helper):
+        for source in data_helper.dataset.as_list:
+            if source.source_name == 'memory':
+                continue
+            for model in source.data:
                 for image_attr in ['image', 'healthy', 'wounded']:
                     path = model.get(image_attr)
                     if path and path not in data_helper.processed_images:
-                        self.log.warning(path)
+                        cls.log.warning(path)
         return data_helper
 
 
@@ -184,7 +156,7 @@ class DeDupMerge(Task):
         return data_helper
 
 
-class ChooseOne(base.ChoiceDataCollector):
+class ChooseOne(base_task.ChoiceDataCollector):
     amend_data = True
     use_memory = True
     null_input = None
@@ -246,7 +218,6 @@ class ChooseOne(base.ChoiceDataCollector):
 
 
 class RenameImages(Task):
-    root = None
     source = None
     file_attr = None
     attrs_for_path = []
@@ -254,9 +225,10 @@ class RenameImages(Task):
     prefixes = []
     suffixes = []
 
-    def __init__(self, root=None, source=None, file_attr=None, attrs_for_path=None, attrs_for_filename=None, prefixes=None, suffixes=None):
+    def __init__(self, read_path='.', write_path=None, source=None, file_attr=None, attrs_for_path=None, attrs_for_filename=None, prefixes=None, suffixes=None):
         super(RenameImages, self).__init__()
-        self.root = root or self.root
+        self.read_path = read_path
+        self.write_path = write_path or read_path
         self.source = source or self.source
         self.file_attr = file_attr or self.file_attr
         self.attrs_for_path = attrs_for_path or self.attrs_for_path
@@ -265,12 +237,15 @@ class RenameImages(Task):
         self.suffixes = suffixes or self.suffixes
 
     def process(self, data_helper):
-        for model in data_helper.data[self.source]:
+        for model in self.source.data:
             path_to_file = model[self.file_attr]
 
+            read_root = os.path.join(data_helper.root, self.read_path)
+            write_root = os.path.join(data_helper.root, self.write_path)
+
             new_path = os.path.join(
-                self.root,
-                self.slugify(self.source),
+                write_root,
+                self.slugify(self.source.source_name),
                 *[self.slugify(str(model[a])) for a in self.attrs_for_path if model[a] is not None]
             )
 
@@ -282,12 +257,12 @@ class RenameImages(Task):
             if not os.path.exists(new_path):
                 os.makedirs(new_path)
 
-            img = Image.open(path_to_file)
+            img = Image.open(os.path.join(read_root, path_to_file))
             img = img.convert("RGBA")
             img.save(new_file_path, "PNG", quality=100, optimize=True)
 
             model[self.file_attr] = new_file_path.replace(
-                self.root if self.root.endswith('/') else self.root + '/', '', 1
+                write_root if write_root.endswith('/') else write_root + '/', '', 1
             )
 
         return data_helper
@@ -320,22 +295,18 @@ class RenameImages(Task):
         return [self.slugify(w) for w in words]
 
 
-class ImagesToPNG(Task):
-    @classmethod
-    def process(cls, data_helper):
-        return data_helper
-
-
 class ClassHeroRenameImages(RenameImages):
     def process(self, data_helper):
-        for model in data_helper.data[self.source]:
+        for model in self.source.data:
             path_to_file = model[self.file_attr]
 
             hero_name = next(m for m in data_helper.data['heroes'] if m['id'] == model['hero'])['name']
 
+            image_root = os.path.join(data_helper.root, self.path)
+
             new_path = os.path.join(
-                self.root,
-                self.slugify(self.source),
+                image_root,
+                self.slugify(self.source.source_name),
                 *[self.slugify(str(model[a])) for a in self.attrs_for_path if model[a] is not None]
             )
 
@@ -354,25 +325,27 @@ class ClassHeroRenameImages(RenameImages):
             img.save(new_file_path, "PNG", quality=100, optimize=True)
 
             model[self.file_attr] = new_file_path.replace(
-                self.root if self.root.endswith('/') else self.root + '/', '', 1
+                image_root if image_root.endswith('/') else image_root + '/', '', 1
             )
 
         return data_helper
 
 
 class ImperialClassCardToClass(Task):
-    def __init__(self, initial=None):
+    def __init__(self, initial=None, card_source=None, class_source=None):
         super(ImperialClassCardToClass, self).__init__()
         self.initial = initial or {}
+        self.class_source = class_source
+        self.card_source = card_source
 
     def process(self, data_helper):
         done = []
         id_inc = self.initial["imperial-classes"]
 
-        for card in data_helper.data[contants.SOURCES.IMPERIAL_CLASS_CARD]:
+        for card in self.card_source.data:
             if card['class'] not in done:
                 id_inc += 1
-                data_helper.data[contants.SOURCES.IMPERIAL_CLASSES].append(
+                self.class_source.data.append(
                     OrderedDict([
                         ('id', id_inc),
                         ('name', card['class']),
@@ -383,7 +356,7 @@ class ImperialClassCardToClass(Task):
 
             card['class_id'] = next(
                 iclass
-                for iclass in data_helper.data[contants.SOURCES.IMPERIAL_CLASSES]
+                for iclass in self.class_source.data
                 if iclass['name'] == card['class']
             )['id']
 
@@ -391,18 +364,20 @@ class ImperialClassCardToClass(Task):
 
 
 class AgendaCardToDeck(Task):
-    def __init__(self, initial=None):
+    def __init__(self, initial=None, agenda_source=None, deck_source=None):
         super(AgendaCardToDeck, self).__init__()
         self.initial = initial or {}
+        self.agenda_source = agenda_source
+        self.deck_source = deck_source
 
     def process(self, data_helper):
         done = []
         id_inc = self.initial["agenda-decks"]
 
-        for card in data_helper.data[contants.SOURCES.AGENDA]:
+        for card in self.agenda_source.data:
             if card['agenda'] not in done:
                 id_inc += 1
-                data_helper.data[contants.SOURCES.AGENDA_DECKS].append(
+                self.deck_source.data.append(
                     OrderedDict([
                         ('id', id_inc),
                         ('name', card['agenda']),
@@ -413,7 +388,7 @@ class AgendaCardToDeck(Task):
 
             card['agenda_id'] = next(
                 iclass
-                for iclass in data_helper.data[contants.SOURCES.AGENDA_DECKS]
+                for iclass in self.deck_source.data
                 if iclass['name'] == card['agenda']
             )['id']
 
@@ -430,14 +405,14 @@ class CollectSources(ImageChoiceDataCollector):
 
 class StandardImageDimension(Task):
     sources = None
-    root = '.'
+    path = '.'
     image_attrs = []
     filter_function = None
     canvas_to_size = False
 
-    def __init__(self, root=None, sources=None, image_attrs=None, min_width=None, min_height=None, filter_function=None, canvas_to_size=False):
+    def __init__(self, path=None, sources=None, image_attrs=None, min_width=None, min_height=None, filter_function=None, canvas_to_size=False):
         super(StandardImageDimension, self).__init__()
-        self.root = root or self.root
+        self.path = path or self.path
         self.sources = sources or self.sources
         self.image_attrs = image_attrs or self.image_attrs
 
@@ -450,12 +425,12 @@ class StandardImageDimension(Task):
         widths = []
         heights = []
         for source in self.sources:
-            for model in [m for m in data_helper.data[source] if self.filter(m)]:
+            for model in [m for m in source.data if self.filter(m)]:
                 for attr in self.image_attrs:
                     path = model.get(attr, None)
                     if path is None:
                         continue
-                    width, height = self.get_image_size(os.path.join(self.root, path))
+                    width, height = self.get_image_size(os.path.join(data_helper.root, self.path, path))
                     widths.append(width)
                     heights.append(height)
         summary = {}
@@ -496,23 +471,25 @@ class StandardImageDimension(Task):
         if self.min_width and self.min_height:
 
             for source in tqdm(self.sources):
-                for model in tqdm([m for m in data_helper.data[source] if self.filter(m)]):
+                for model in tqdm([m for m in source.data if self.filter(m)]):
                     for attr in self.image_attrs:
                         path = model.get(attr, None)
                         if path is not None:
-                            im = Image.open(os.path.join(self.root, path))
+                            read_path = os.path.join(data_helper.root, self.path, path)
+                            write_path = read_path
+                            im = Image.open(read_path)
                             im = im.convert("RGBA")
                             im.thumbnail((self.min_width, self.min_height), Image.ANTIALIAS)
-                            im.save(os.path.join(self.root, path))
+                            im.save(write_path)
                             if self.canvas_to_size:
                                 old_width, old_height = im.size
                                 x1 = int(math.floor((self.min_width - old_width) / 2))
                                 y1 = int(math.floor((self.min_height - old_height) / 2))
                                 new_image = Image.new(im.mode, (self.min_width, self.min_height))
                                 new_image.paste(im, (x1, y1, x1 + old_width, y1 + old_height))
-                                new_image.save(os.path.join(self.root, path))
+                                new_image.save(write_path)
                             else:
-                                im.save(os.path.join(self.root, path))
+                                im.save(write_path)
         else:
             self.log.error('No dimensions found for images')
         return data_helper
@@ -553,155 +530,17 @@ class StandardImageDimension(Task):
             return width, height
 
 
-class RoundCornersMixin:
-    # RoundCorners -> https://raw.githubusercontent.com/firestrand/phatch/master/phatch/actions/round.py
-    # tasks.RoundCorners(100, 255, root='./images', sources=[SOURCES.DEPLOYMENT, ], image_attrs=['image', ]),
-    CROSS = 'Cross'
-    ROUNDED = 'Rounded'
-    SQUARE = 'Square'
-
-    CORNERS = [ROUNDED, SQUARE, CROSS]
-    CROSS_POS = (CROSS, CROSS, CROSS, CROSS)
-    ROUNDED_POS = (ROUNDED, ROUNDED, ROUNDED, ROUNDED)
-
-    def __init__(self, *args, **kwargs):
-        self.radius = kwargs.pop('radius', None)
-        self.opacity = kwargs.pop('opacity', 255)
-        super(RoundCornersMixin, self).__init__(*args, **kwargs)
-
-    def round_image(self, image, round_all=True, rounding_type=ROUNDED, radius=100, opacity=255, pos=ROUNDED_POS):
-        if image.mode != 'RGBA':
-            image = image.convert('RGBA')
-
-        if round_all:
-            pos = 4 * (rounding_type, )
-
-        mask = self.create_rounded_rectangle(image.size, radius, opacity, pos)
-
-        alpha_array = numpy.asarray(self.get_alpha(image))
-        mask_array = numpy.asarray(mask)
-
-        width, height = image.size
-        new_alpha_array = numpy.zeros(shape=(height, width), dtype=numpy.uint8)
-
-        for x in range(len(alpha_array)):
-            for y in range(len(alpha_array[0])):
-                new_alpha_array[x, y] = min(alpha_array[x, y], mask_array[x, y])
-
-        # self.get_alpha(image).show('current_alpha')
-        # mask.show('rounded_alpha')
-        # Image.fromarray(new_alpha_array, 'L').show('New')
-
-        image.putalpha(Image.fromarray(new_alpha_array, 'L'))
-        return image
-
-    def create_rounded_rectangle(self, size=(600, 400), radius=100, opacity=255, pos=ROUNDED_POS):
-        # rounded_rectangle
-        im_x, im_y = size
-
-        cross = Image.new('L', size, 0)
-        draw = ImageDraw.Draw(cross)
-        draw.rectangle((radius, 0, im_x - radius, im_y), fill=opacity)
-        draw.rectangle((0, radius, im_x, im_y - radius), fill=opacity)
-
-        if pos == self.CROSS_POS:
-            return cross
-
-        corner = self.create_corner(radius, opacity)
-        # rounded rectangle
-        rectangle = Image.new('L', (radius, radius), 255)
-        rounded_rectangle = cross.copy()
-        for index, angle in enumerate(pos):
-            if angle == self.CROSS:
-                continue
-            if angle == self.ROUNDED:
-                element = corner
-            else:
-                element = rectangle
-            if index % 2:
-                x = im_x - radius
-                element = element.transpose(Image.FLIP_LEFT_RIGHT)
-            else:
-                x = 0
-            if index < 2:
-                y = 0
-            else:
-                y = im_y - radius
-                element = element.transpose(Image.FLIP_TOP_BOTTOM)
-            rounded_rectangle.paste(element, (x, y))
-        return rounded_rectangle
-
-    @staticmethod
-    def create_corner(radius=100, opacity=255, factor=2):
-        corner = Image.new('L', (factor * radius, factor * radius), 0)
-        draw = ImageDraw.Draw(corner)
-        draw.pieslice((0, 0, 2 * factor * radius, 2 * factor * radius), 180, 270, fill=opacity)
-        corner = corner.resize((radius, radius), Image.ANTIALIAS)
-        return corner
-
-    @staticmethod
-    def remove_alpha(image):
-        """Returns a copy of the image after removing the alpha band or
-        transparency
-
-        :param image: input image
-        :type image: PIL image object
-        :returns: the input image after removing the alpha band or transparency
-        :rtype: PIL image object
-        """
-        if image.mode == 'RGBA':
-            return image.convert('RGB')
-        if image.mode == 'LA':
-            return image.convert('L')
-        if image.mode == 'P' and 'transparency' in image.info:
-            img = image.convert('RGB')
-            del img.info['transparency']
-            return img
-        return image
-
-    @staticmethod
-    def has_alpha(image):
-        """Checks if the image has an alpha band.
-        i.e. the image mode is either RGBA or LA.
-        The transparency in the P mode doesn't count as an alpha band
-
-        :param image: the image to check
-        :type image: PIL image object
-        :returns: True or False
-        :rtype: boolean
-        """
-        return image.mode.endswith('A')
-
-    def get_alpha(self, image):
-        """Gets the image alpha band. Can handles P mode images with transpareny.
-        Returns a band with all values set to 255 if no alpha band exists.
-
-        :param image: input image
-        :type image: PIL image object
-        :returns: alpha as a band
-        :rtype: single band image object
-        """
-        if self.has_alpha(image):
-            return image.split()[-1]
-        if image.mode == 'P' and 'transparency' in image.info:
-            return image.convert('RGBA').split()[-1]
-        # No alpha layer, create one.
-        return Image.new('L', image.size, 255)
-
-
 class RoundCornersTask(RoundCornersMixin, Task):
     source = None
     image_attr = None
-    root = '.'
-    destination_root = '.'
 
-    def __init__(self, source=None, image_attr=None, filter_function=None, root=None, destination_root=None, **kwargs):
+    def __init__(self, source=None, image_attr=None, filter_function=None, read_path='.', write_path=None, **kwargs):
         super().__init__(**kwargs)
         self.source = source or self.source
         self.image_attr = image_attr or self.image_attr
         self.filter_function = filter_function or self.filter_function
-        self.root = root or self.root
-        self.destination_root = destination_root or self.root
+        self.read_path = read_path
+        self.write_path = write_path or self.read_path
 
     def filter(self, model):
         if self.image_attr not in model:
@@ -713,27 +552,27 @@ class RoundCornersTask(RoundCornersMixin, Task):
         return self.filter_function(model)
 
     def process(self, data_helper):
-        for model in tqdm([m for m in data_helper.data[self.source] if self.filter(m)], desc='Rounding Corner'):
+        for model in tqdm([m for m in self.source.data if self.filter(m)], desc='Rounding Corner'):
             image_path = model.get(self.image_attr, None)
             if image_path is not None and self.radius and self.opacity:
-                im = Image.open(self.get_read_path(image_path))
+                im = Image.open(self.get_read_path(data_helper.root, image_path))
                 im = im.convert("RGBA")
                 if self.radius and self.opacity:
                     self.round_image(im, radius=self.radius, opacity=self.opacity)
-                im.save(self.get_write_path(image_path))
+                im.save(self.get_write_path(data_helper.root, image_path))
 
             data_helper.processed_images.append(model[self.image_attr])
 
         return data_helper
 
-    def get_read_path(self, image_path):
-        abs_path = os.path.abspath(os.path.join(self.root, image_path))
+    def get_read_path(self, root, image_path):
+        abs_path = os.path.abspath(os.path.join(root, self.read_path, image_path))
         if not os.path.exists(abs_path):
             raise Exception(f'File path does not exists: {abs_path}')
         return abs_path
 
-    def get_write_path(self, image_path, create_path=True):
-        abs_path = os.path.abspath(os.path.join(self.destination_root, image_path))
+    def get_write_path(self, root, image_path, create_path=True):
+        abs_path = os.path.abspath(os.path.join(root, self.write_path, image_path))
 
         directory, filename = os.path.split(abs_path)
 
@@ -747,25 +586,24 @@ class RoundCornersTask(RoundCornersMixin, Task):
 class OpenCVSTask(Task):
     source = None
     image_attr = None
-    root = '.'
     filter_function = None
 
-    def __init__(self, source=None, image_attr=None, filter_function=None, root=None, destination_root=None):
+    def __init__(self, source=None, image_attr=None, filter_function=None, read_path='.', write_path=None):
         super(OpenCVSTask, self).__init__()
         self.source = source or self.source
         self.image_attr = image_attr or self.image_attr
         self.filter_function = filter_function or self.filter_function
-        self.root = root or self.root
-        self.destination_root = destination_root or self.root
+        self.read_path = read_path
+        self.write_path = write_path or self.read_path
 
-    def get_read_path(self, image_path):
-        abs_path = os.path.abspath(os.path.join(self.root, image_path))
+    def get_read_path(self, root, image_path):
+        abs_path = os.path.abspath(os.path.join(root, self.read_path, image_path))
         if not os.path.exists(abs_path):
             raise Exception(f'File path does not exists: {abs_path}')
         return abs_path
 
-    def get_write_path(self, image_path, create_path=True):
-        abs_path = os.path.abspath(os.path.join(self.destination_root, image_path))
+    def get_write_path(self, root, image_path, create_path=True):
+        abs_path = os.path.abspath(os.path.join(root, self.write_path, image_path))
 
         if not os.path.exists(os.path.split(abs_path)[0]) and create_path:
             os.makedirs(os.path.split(abs_path)[0])
@@ -789,39 +627,38 @@ class OpenCVSTask(Task):
         return data_helper
 
     def process(self, data_helper):
-        for model in tqdm([m for m in data_helper.data[self.source] if self.filter(m)], desc='OpenCV process'):
+        for model in tqdm([m for m in self.source.data if self.filter(m)], desc='OpenCV process'):
 
             data_helper = self.before_each(model, data_helper)
             self.log.info(repr(model))
-            self.opencv_processing(model[self.image_attr])
+            self.opencv_processing(data_helper.root, model[self.image_attr])
             data_helper = self.after_each(model, data_helper)
         return data_helper
 
-    def opencv_processing(self, image_path):
+    def opencv_processing(self, root, image_path):
         raise NotImplementedError
 
 
 class CopyTask(Task):
     image_attrs = []
-    root = '.'
-    destination_root = '.'
     filter_function = None
 
-    def __init__(self, image_attrs=None, filter_function=None, root=None, destination_root=None):
+    def __init__(self, dataset, image_attrs=None, filter_function=None, read_path='.', write_path=None):
         super(CopyTask, self).__init__()
+        self.dataset = dataset
         self.image_attrs = image_attrs or self.image_attrs
         self.filter_function = filter_function or self.filter_function
-        self.root = root or self.root
-        self.destination_root = destination_root or self.destination_root
+        self.read_path = read_path
+        self.write_path = write_path or self.read_path
 
-    def get_read_path(self, image_path):
-        abs_path = os.path.abspath(os.path.join(self.root, image_path))
+    def get_read_path(self, root, image_path):
+        abs_path = os.path.abspath(os.path.join(root, self.read_path, image_path))
         if not os.path.exists(abs_path):
             raise Exception(f'File path does not exists: {abs_path}')
         return abs_path
 
-    def get_write_path(self, image_path, create_path=True):
-        abs_path = os.path.abspath(os.path.join(self.destination_root, image_path))
+    def get_write_path(self, root, image_path, create_path=True):
+        abs_path = os.path.abspath(os.path.join(root, self.write_path, image_path))
 
         if not os.path.exists(os.path.split(abs_path)[0]) and create_path:
             os.makedirs(os.path.split(abs_path)[0])
@@ -838,18 +675,18 @@ class CopyTask(Task):
         return self.filter_function(model)
 
     def process(self, data_helper):
-        for source in data_helper.data.keys():
+        for source in self.dataset.as_list:
             for image_attr in self.image_attrs:
-                for model in [m for m in data_helper.data[source] if self.filter(m, image_attr)]:
-                    im = Image.open(self.get_read_path(model[image_attr]))
-                    im.save(self.get_write_path(model[image_attr]))
+                for model in [m for m in source.data if self.filter(m, image_attr)]:
+                    im = Image.open(self.get_read_path(data_helper.root, model[image_attr]))
+                    im.save(self.get_write_path(data_helper.root, model[image_attr]))
         return data_helper
 
 
 class OpenCVContours(OpenCVSTask):
-    def opencv_processing(self, image_path):
+    def opencv_processing(self, root, image_path):
         # http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contours_begin/py_contours_begin.html?highlight=canny
-        img = cv2.imread(self.get_read_path(image_path), cv2.IMREAD_UNCHANGED)
+        img = cv2.imread(self.get_read_path(root, image_path), cv2.IMREAD_UNCHANGED)
         gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
 
         # liked this 2
@@ -863,7 +700,7 @@ class OpenCVContours(OpenCVSTask):
 
         cv2.drawContours(img, contours, -1, (0, 0, 0, 255), 1)
 
-        cv2.imwrite(self.get_write_path(image_path), image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        cv2.imwrite(self.get_write_path(root, image_path), image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
     def auto_canny(self, image, sigma=0.33):
         # https://www.pyimagesearch.com/2015/04/06/zero-parameter-automatic-canny-edge-detection-with-python-and-opencv/
@@ -894,7 +731,7 @@ class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
         self.reference_image_shape = None
 
     def pre_process(self, data_helper):
-        self.reference_image = cv2.imread(self.get_read_path(self.reference_image_path), cv2.IMREAD_UNCHANGED)
+        self.reference_image = cv2.imread(os.path.join(data_helper.root, self.reference_image_path), cv2.IMREAD_UNCHANGED)
         self.reference_image_gray = cv2.cvtColor(self.reference_image, cv2.COLOR_RGBA2GRAY)
         self.reference_image_shape = self.reference_image.shape
         return data_helper
@@ -903,23 +740,23 @@ class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
         super().after_each(model, data_helper)
         image_path = model.get(self.image_attr, None)
         if image_path is not None and self.radius and self.opacity:
-            im = Image.open(self.get_write_path(image_path))
+            im = Image.open(self.get_write_path(data_helper.root, image_path))
             im = im.convert("RGBA")
             if self.radius and self.opacity:
                 self.round_image(im, radius=self.radius, opacity=self.opacity)
-            im.save(self.get_write_path(image_path))
+            im.save(self.get_write_path(data_helper.root, image_path))
 
         return data_helper
 
-    def opencv_processing(self, image_path):
+    def opencv_processing(self, root, image_path):
         # https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
         if self.reference_image_path == image_path:
-            im = cv2.imread(self.get_read_path(image_path), cv2.IMREAD_UNCHANGED)
-            cv2.imwrite(self.get_write_path(image_path), im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            im = cv2.imread(self.get_read_path(root, image_path), cv2.IMREAD_UNCHANGED)
+            cv2.imwrite(self.get_write_path(root, image_path), im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
             return
 
         # Read the images to be aligned
-        img = cv2.imread(self.get_read_path(image_path), cv2.IMREAD_UNCHANGED)
+        img = cv2.imread(self.get_read_path(root, image_path), cv2.IMREAD_UNCHANGED)
 
         # Convert images to grayscale
         img_gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
@@ -960,7 +797,7 @@ class OpenCVAlignImages(RoundCornersMixin, OpenCVSTask):
                 borderMode=cv2.BORDER_CONSTANT, borderValue=[255, 255, 255, 0]
             )
 
-        cv2.imwrite(self.get_write_path(image_path), aligned_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        cv2.imwrite(self.get_write_path(root, image_path), aligned_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
 
 class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
@@ -983,15 +820,15 @@ class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
         super().after_each(model, data_helper)
         image_path = model.get(self.image_attr, None)
         if image_path is not None and self.radius and self.opacity:
-            im = Image.open(self.get_write_path(image_path))
+            im = Image.open(self.get_write_path(data_helper.root, image_path))
             im = im.convert("RGBA")
             if self.radius and self.opacity:
                 self.round_image(im, radius=self.radius, opacity=self.opacity)
-            im.save(self.get_write_path(image_path))
+            im.save(self.get_write_path(data_helper.root, image_path))
         return data_helper
 
     def pre_process(self, data_helper):
-        self.reference_image = cv2.imread(self.get_read_path(self.reference_image_path), cv2.IMREAD_UNCHANGED)
+        self.reference_image = cv2.imread(os.path.join(data_helper.root, self.reference_image_path), cv2.IMREAD_UNCHANGED)
 
         processed_image = cv2.cvtColor(self.reference_image, cv2.COLOR_RGBA2GRAY)
         processed_image = cv2.GaussianBlur(processed_image, (5, 5), 0)
@@ -1002,16 +839,16 @@ class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
         self.reference_image_shape = processed_image.shape
         return data_helper
 
-    def opencv_processing(self, image_path):
+    def opencv_processing(self, root, image_path):
         # https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
 
         if self.reference_image_path == image_path:
-            im = cv2.imread(self.get_read_path(image_path), cv2.IMREAD_UNCHANGED)
-            cv2.imwrite(self.get_write_path(image_path), im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            im = cv2.imread(self.get_read_path(root, image_path), cv2.IMREAD_UNCHANGED)
+            cv2.imwrite(self.get_write_path(root, image_path), im, [cv2.IMWRITE_PNG_COMPRESSION, 0])
             return
 
         # Read the images to be aligned
-        img = cv2.imread(self.get_read_path(image_path), cv2.IMREAD_UNCHANGED)
+        img = cv2.imread(self.get_read_path(root, image_path), cv2.IMREAD_UNCHANGED)
 
         # Convert images to grayscale
         img_gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
@@ -1056,7 +893,7 @@ class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
                 borderMode=cv2.BORDER_CONSTANT, borderValue=[255, 255, 255, 0]
             )
 
-        cv2.imwrite(self.get_write_path(image_path), aligned_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        cv2.imwrite(self.get_write_path(root, image_path), aligned_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
     def auto_canny(self, image, sigma=0.33):
         # https://www.pyimagesearch.com/2015/04/06/zero-parameter-automatic-canny-edge-detection-with-python-and-opencv/

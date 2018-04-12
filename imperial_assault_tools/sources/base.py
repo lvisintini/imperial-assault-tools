@@ -54,6 +54,9 @@ class FileSource(DataSource):
     def get_write_path(self):
         return os.path.abspath(os.path.join(self.root, self.write_path))
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.source_name})"
+
     @staticmethod
     def is_pathname_valid(pathname):
         """
@@ -146,8 +149,10 @@ class JSONSource(FileSource):
         setattr(self, 'data', data)
 
     def save_data(self):
-        if not os.path.exists(self.get_write_path()):
-            os.makedirs(self.get_write_path())
+        path = self.get_write_path()
+
+        if not os.path.exists(os.path.dirname(path)):
+            os.makedirs(os.path.dirname(path))
         with open(self.get_write_path(), 'w') as file_object:
             json.dump(
                 getattr(self, 'data'),
@@ -187,6 +192,11 @@ class JSONNestedDictSource(JSONSource):
 
 class JSONCollectionSource(JSONSource):
     default = list
+    pk = 'id'
+
+    def __init__(self, **kwargs):
+        self.pk = kwargs.pop('pk', self.pk)
+        super().__init__(**kwargs)
 
     def filter(self, **kwargs):
         return [m for m in self.data if all([k in m and m.get(k) == v for k, v in kwargs.items()])]

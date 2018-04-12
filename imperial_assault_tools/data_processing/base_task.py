@@ -33,18 +33,17 @@ class DataCollector(Task):
     pk = 'id'
     field_name = None
     amend_data = False
-    use_memory = True
     null_input = '.'
     skip_input = ''
 
-    def __init__(self, source=None, field_name=None, pk=None, amend_data=None, use_memory=None, null_input=None,
+    def __init__(self, source=None, field_name=None, pk=None, amend_data=None, memory=None, null_input=None,
                  skip_input=None):
         super(DataCollector, self).__init__()
         self.source = source or self.source
         self.pk = pk or self.pk
         self.field_name = field_name or self.field_name
         self.amend_data = amend_data if amend_data is not None else self.amend_data
-        self.use_memory = use_memory if use_memory is not None else self.use_memory
+        self.memory = memory
 
         if null_input not in [None, False]:
             self.null_input = null_input
@@ -84,10 +83,10 @@ class DataCollector(Task):
     def validate_input(self, new_data):
         raise NotImplementedError
 
-    def load_from_memory(self, data_helper, model):
-        if hasattr(data_helper, 'memory'):
-            if self.pk in model and model[self.pk] in data_helper.memory[self.source][self.field_name]:
-                model[self.field_name] = data_helper.memory[self.source][self.field_name][model[self.pk]]
+    def load_from_memory(self, model):
+        if self.memory:
+            if self.pk in model and model[self.pk] in self.memory.data[self.source.source_name][self.field_name]:
+                model[self.field_name] = self.memory.data[self.source.source_name][self.field_name][model[self.pk]]
                 return model
         return model
 
@@ -130,16 +129,16 @@ class DataCollector(Task):
 
     def process(self, data_helper):
         try:
-            for model in data_helper.data[self.source]:
+            for model in self.source.data:
                 if not self.amend_data:
-                    if self.use_memory:
-                        self.load_from_memory(data_helper, model)
+                    if self.memory:
+                        self.load_from_memory(model)
 
                     if (self.field_name in model) and (self.validate_input(model[self.field_name])):
                         continue
                 else:
-                    if self.use_memory:
-                        self.load_from_memory(data_helper, model)
+                    if self.memory:
+                        self.load_from_memory(model)
 
                 self.before_each(model, data_helper)
 
@@ -147,15 +146,15 @@ class DataCollector(Task):
 
                 if success:
                     model[self.field_name] = new_data
-                    if self.use_memory and hasattr(data_helper, 'memory'):
-                        data_helper.memory[self.source][self.field_name][model[self.pk]] = new_data
+                    if self.memory:
+                        self.memory.data[self.source.source_name][self.field_name][model[self.pk]] = new_data
                 self.after_each(model, data_helper)
 
         except (KeyboardInterrupt, SystemExit):
             print('')
-            data_helper.log.warning('Exiting data gathering ...')
+            self.log.warning('Exiting data gathering ...')
         finally:
-            data_helper.log.info('Done collecting data for {}.{}!!'.format(self.source, self.field_name))
+            self.log.info('Done collecting data for {}.{}!!'.format(self.source.source_name, self.field_name))
         return data_helper
 
 
@@ -346,53 +345,6 @@ class AppendChoiceDataCollector(ChoiceDataCollector):
         return True, collected
 
 
-class LoadMemory(Task):
-    def __init__(self, file_path):
-        super(LoadMemory, self).__init__()
-        self.file_path = file_path
-
-    def process(self, data_helper):
-        return data_helper
-
-    def setup(self, data_helper):
-        memory_data = {}
-
-        if os.path.exists(self.file_path):
-            with open(self.file_path, 'r') as file_object:
-                memory_data = json.load(file_object)
-
-        recursive_defaultdict = lambda: defaultdict(recursive_defaultdict)
-
-        memory = recursive_defaultdict()
-        for source in memory_data.keys():
-            for field_name in memory_data[source].keys():
-                for pk in memory_data[source][field_name].keys():
-                    memory[source][field_name][int(pk) if pk.isdigit() else pk] = memory_data[source][field_name][pk]
-
-        data_helper.memory = memory
-        return data_helper
-
-
-class SaveMemory(Task):
-    def __init__(self, file_path, indent=2):
-        super(SaveMemory, self).__init__()
-        self.file_path = file_path
-        self.indent = indent
-
-    def process(self, data_helper):
-        return data_helper
-
-    def teardown(self, data_helper):
-        with open(self.file_path, 'w') as file_object:
-            json.dump(
-                data_helper.memory,
-                file_object,
-                indent=self.indent,
-                ensure_ascii=False
-            )
-        return data_helper
-
-
 class AddIds(Task):
     source = None
 
@@ -402,15 +354,15 @@ class AddIds(Task):
         self.initial = initial or {}
 
     def process(self, data_helper):
-        id_inc = self.initial.get(self.source, -1)
+        id_inc = self.initial.get(self.source.source_name, -1)
 
-        if all(['id' not in model for model in data_helper.data[self.source]]):
-            for i in range(len(data_helper.data[self.source])):
+        if all(['id' not in model for model in self.source.data]):
+            for i in range(len(self.source.data)):
                 id_inc += 1
 
-                data_helper.data[self.source][i] = OrderedDict(
+                self.source.data[i] = OrderedDict(
                     [('id', id_inc)] +
-                    [(k, v) for k, v in data_helper.data[self.source][i].items() if k != 'id']
+                    [(k, v) for k, v in self.source.data[i].items() if k != 'id']
                 )
 
         return data_helper
@@ -425,7 +377,7 @@ class RemoveField(Task):
         self.field_name = field_name or self.field_name
 
     def process(self, data_helper):
-        for model in data_helper.data[self.source]:
+        for model in self.source.data:
             model.pop(self.field_name, None)
         return data_helper
 
@@ -442,7 +394,7 @@ class RenameField(Task):
         self.new_name = new_name or self.new_name
 
     def process(self, data_helper):
-        for model in data_helper.data[self.source]:
+        for model in self.source.data:
             if self.field_name in model:
                 model[self.new_name] = model.pop(self.field_name)
         return data_helper
@@ -458,8 +410,8 @@ class SortDataByAttrs(Task):
         self.fields = fields if len(fields) else self.fields
 
     def process(self, data_helper):
-        data_helper.data[self.source] = sorted(
-            data_helper.data[self.source],
+        self.source.data = sorted(
+            self.source.data,
             key=lambda x: tuple(x.get(y) for y in self.fields)
         )
         return data_helper
@@ -478,8 +430,8 @@ class SortData(Task):
         self.sort_function = sort_function if sort_function else self.sort_function
 
     def process(self, data_helper):
-        data_helper.data[self.source] = sorted(
-            data_helper.data[self.source],
+        self.source.data = sorted(
+            self.source.data,
             key=self.sort_function
         )
         return data_helper
@@ -497,20 +449,20 @@ class SortDataKeys(Task):
     def process(self, data_helper):
         if not self.preferred_order:
             self.preferred_order = set()
-            for model in data_helper.data[self.source]:
+            for model in self.source.data:
                 self.preferred_order.update(model.keys())
             self.preferred_order = list(self.preferred_order)
             self.preferred_order.sort()
         else:
-            for model in data_helper.data[self.source]:
+            for model in self.source.data:
                 for k in model.keys():
                     if k not in self.preferred_order:
                         self.preferred_order.append(k)
 
-        for i in range(len(data_helper.data[self.source])):
-            data_helper.data[self.source][i] = OrderedDict(
+        for i in range(len(self.source.data)):
+            self.source.data[i] = OrderedDict(
                 sorted(
-                    data_helper.data[self.source][i].items(),
+                    self.source.data[i].items(),
                     key=lambda x: self.preferred_order.index(x[0])
                 )
             )
@@ -532,7 +484,7 @@ class SortAttrData(Task):
         self.sort_function = sort_function if sort_function else self.sort_function
 
     def process(self, data_helper):
-        for model in data_helper.data[self.source]:
+        for model in self.source.data:
             model[self.attr] = sorted(model[self.attr], key=self.sort_function)
         return data_helper
 
@@ -552,12 +504,12 @@ class AddHashes(Task):
 
     def process(self, data_helper):
         fields = []
-        for model in data_helper.data[self.source]:
+        for model in self.source.data:
             for k in model.keys():
                 if k not in self.exclude and (self.include == [] or k in self.include) and k not in fields:
                     fields.append(k)
 
-        for model in data_helper.data[self.source]:
+        for model in self.source.data:
             model[self.attr] = self.get_hash(model, fields)
         return data_helper
 

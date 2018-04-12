@@ -30,7 +30,6 @@ class DatasetMetaclass(type):
         required = ['source_class', 'root', 'path', 'extension']
         if all([dct.get(key) for key in required]):
             dct['root'] = os.path.abspath(dct['root'])
-            dct['path'] = os.path.abspath(os.path.join(dct['root'], dct['path']))
 
             if 'write_path' not in dct:
                 dct['write_path'] = dct['path']
@@ -39,6 +38,10 @@ class DatasetMetaclass(type):
 
             dct['as_list'] = []
             dct['as_dict'] = {}
+
+            for identifier, source in [(k, v) for k, v in dct.items() if isinstance(v, DataSource)]:
+                dct['as_list'].append(source)
+                dct['as_dict'][source.source_name] = source
 
             for identifier, source_name in [(k, v) for k, v in dct.items() if isinstance(v, SourceName)]:
                 file_name = source_name if not dct['extension'] else f"{source_name}.{dct['extension']}"
@@ -49,10 +52,6 @@ class DatasetMetaclass(type):
                 )
                 dct['as_list'].append(dct[identifier])
                 dct['as_dict'][source_name] = dct[identifier]
-
-            for identifier, source in [(k, v) for k, v in dct.items() if isinstance(v, DataSource)]:
-                dct['as_list'].append(source)
-                dct['as_dict'][source.source_name] = source
 
             bases = tuple(list(bases) + [DataSetBase])
 

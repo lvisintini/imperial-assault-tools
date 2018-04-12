@@ -12,7 +12,7 @@ class TqdmHandler(logging.StreamHandler):
         tqdm.write(msg)
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('assembly_line')
 logger.setLevel(logging.DEBUG)
 
 ch = TqdmHandler()
