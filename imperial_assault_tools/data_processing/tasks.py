@@ -9,14 +9,15 @@ import uuid
 
 from assembly_line.task import Task
 
-from collections import Counter, OrderedDict
+from collections import Counter, OrderedDict, defaultdict
+from itertools import chain
+from difflib import SequenceMatcher
 
 import cv2
 import numpy
 from look_at.wmctrl import WmCtrl
 from PIL import Image
 from tqdm import tqdm
-
 from imperial_assault_tools.data_processing import base_task
 from imperial_assault_tools.data_processing.mixins import ShowImageMixin, RoundCornersMixin
 
@@ -907,3 +908,111 @@ class OpenCVAlignImagesUsingCannyEdge(RoundCornersMixin, OpenCVSTask):
 
         # return the edged image
         return edged
+
+
+class AddCanonicalNames(Task):
+    def __init__(self, sources, *strategies):
+        self.sources = sources
+        self.strategies = strategies
+        print(self.strategies)
+        super(AddCanonicalNames, self).__init__()
+
+    def process(self, data_helper):
+
+        generated_canonical = []
+        canonical_dedup = defaultdict(list)
+
+        for model in chain(*[s.data for s in self.sources]):
+            canonical_dedup[''].append(model)
+            model['canonical'] = ''
+
+        for strategy_id in range(len(self.strategies)):
+            strategy = self.strategies[strategy_id]
+            new_canonical_dedup = defaultdict(list)
+
+            for candidate in canonical_dedup.keys():
+                if len(canonical_dedup[candidate]) > 1:
+                    for model in canonical_dedup[candidate]:
+                        new_canonical_dedup[self.make_canonical_name(model, *strategy)].append(model)
+                else:
+                    canonical_dedup[candidate][0]['canonical'] = candidate
+                    generated_canonical.append((candidate, strategy_id))
+
+            canonical_dedup = new_canonical_dedup
+
+        for candidate in canonical_dedup.keys():
+            if len(canonical_dedup[candidate]) > 1:
+                for model in canonical_dedup[candidate]:
+                    self.log.error(model)
+            else:
+                canonical_dedup[candidate][0]['canonical'] = candidate
+                generated_canonical.append((candidate, len(self.strategies) - 1))
+
+        data_helper.generated_canonical = [gc[0] for gc in generated_canonical]
+
+        for model in chain(*[s.data for s in self.sources]):
+            canonical = model.get('canonical')
+            if not canonical:
+                self.log.warning(model)
+
+        for canonical, level in generated_canonical:
+            if level > 2:
+                self.log.info(canonical)
+
+        return data_helper
+
+    def make_canonical_name(self, model, *attrs_for_name):
+        words = []
+        for attr in attrs_for_name:
+            if attr not in model:
+                continue
+            elif model[attr] is None:
+                continue
+            elif model[attr] is False:
+                continue
+            elif model[attr] is True:
+                if attr == 'elite':
+                    if not model.get('unique'):
+                        words.append(attr)
+                else:
+                    words.append(attr)
+            elif isinstance(model[attr], str):
+                words.append(model[attr])
+            elif isinstance(model[attr], int):
+                words.append(str(model[attr]))
+            elif attr == 'modes':
+                if set(model[attr]) == set(contants.GAME_MODES.as_list):
+                    continue
+                words.extend(model[attr])
+
+        canonical = re.sub(r'[\W_]+', '', ''.join(words)).strip().lower()
+
+        return canonical
+
+
+class IASkirmishCanonicalCheck(Task):
+
+    def __init__(self, dataset):
+        self.dataset = dataset
+        super(IASkirmishCanonicalCheck, self).__init__()
+
+    def process(self, data_helper):
+
+        ia_canonical = [
+            (m.get('card') or m.get('deployment'))['iaspecName']
+            for m in chain(*[s.data for s in self.dataset.as_list])
+        ]
+
+        not_found = [iac for iac in ia_canonical if iac not in data_helper.generated_canonical]
+
+        print('iaspec | proposed')
+        print('------ | --------')
+
+        for nf in not_found:
+            candidates = [
+                c for c in data_helper.generated_canonical
+                if SequenceMatcher(None, nf, c).ratio() > 0.80 or nf in c
+            ]
+            print(f"{nf} | {', '.join(candidates) or 'None'}")
+
+        return data_helper

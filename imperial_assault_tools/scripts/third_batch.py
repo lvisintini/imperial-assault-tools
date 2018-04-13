@@ -91,7 +91,7 @@ def main():
     import datetime
     NormalizeImperialData(
         timestamp=datetime.datetime.now(),
-        root=os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')),
+        root=SOURCES.root,
         dataset=SOURCES
     ).run()
 
