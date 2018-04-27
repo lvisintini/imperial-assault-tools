@@ -105,7 +105,7 @@ class DataCollector(Task):
         readline.set_pre_input_hook()
         return result
 
-    def handle_input_loop(self, model):
+    def handle_input_loop(self, model, data_helper):
         existing_data = self.field_name in model
         new_data = model.get(self.field_name, None)
 
@@ -142,7 +142,7 @@ class DataCollector(Task):
 
                 self.before_each(model, data_helper)
 
-                success, new_data = self.handle_input_loop(model)
+                success, new_data = self.handle_input_loop(model, data_helper)
 
                 if success:
                     model[self.field_name] = new_data
@@ -308,7 +308,7 @@ class AppendChoiceDataCollector(ChoiceDataCollector):
         result = input(self.input_text(model, collected))
         return result
 
-    def handle_input_loop(self, model):
+    def handle_input_loop(self, model, data_helper):
         collected = model.get(self.field_name, [])
         done_with_this_model = False
 

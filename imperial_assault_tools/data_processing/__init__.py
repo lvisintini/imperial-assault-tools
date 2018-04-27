@@ -1,6 +1,8 @@
 import logging
 from colorlog import ColoredFormatter
 from tqdm import tqdm
+import tinify
+tinify.key = "api-key-here"
 
 
 class TqdmHandler(logging.StreamHandler):

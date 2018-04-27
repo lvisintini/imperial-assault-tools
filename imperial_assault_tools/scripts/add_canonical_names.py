@@ -2,12 +2,9 @@ import os
 
 from assembly_line.manager import AssemblyLine
 
-from imperial_assault_tools.sources import DataSet, SourceName, JSONCollectionSource, JSONNestedDictSource
+from imperial_assault_tools.sources import DataSet, SourceName, JSONCollectionSource, JSONSource
 from imperial_assault_tools.data_processing import tasks
 from imperial_assault_tools.data_processing import base_task as base
-from imperial_assault_tools.data_processing.contants import INITIAL_IDS
-
-import cv2
 
 
 class SOURCES(DataSet):
@@ -41,7 +38,7 @@ class SOURCES(DataSet):
 
 
 class IASKIRMISH(DataSet):
-    source_class = JSONCollectionSource
+    source_class = JSONSource
     root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../iaskirmish-data/'))
     path = '.'
     write_path = '.'
@@ -57,13 +54,18 @@ class NormalizeImperialData(AssemblyLine):
         base.FetchData(IASKIRMISH),
         tasks.AddCanonicalNames(
             [SOURCES.DEPLOYMENT, SOURCES.COMMAND, SOURCES.COMPANION],
-            ('name', ),
+            # ('name', ),
             ('elite', 'name'),
             ('elite', 'name', 'modes'),  # Riot troopers
-            ('name', 'affiliation'),  # Boosk
-            ('name', 'description'),  # Heroes like Luke Skywalker, temporary alliance
+            ('elite', 'name', 'affiliation'),  # Boosk
+            ('elite', 'name', 'description'),  # Heroes like Luke Skywalker, temporary alliance
         ),
         tasks.IASkirmishCanonicalCheck(IASKIRMISH),
+        base.RenameField(source=SOURCES.DEPLOYMENT, field_name='canonical', new_name='iaspec'),
+        base.RenameField(source=SOURCES.COMMAND, field_name='canonical', new_name='iaspec'),
+        base.RenameField(source=SOURCES.COMPANION, field_name='canonical', new_name='iaspec'),
+
+        tasks.DownloadTTAdmiralsAssets(IASKIRMISH),
         base.SaveData(SOURCES),
     ]
 

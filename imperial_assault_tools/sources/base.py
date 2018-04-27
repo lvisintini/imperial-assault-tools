@@ -37,7 +37,7 @@ class FileSource(DataSource):
             self.write_path = self.path
 
         if self.default is None:
-            if os.path.isfile(self.get_read_path()):
+            if not os.path.isfile(self.get_read_path()):
                 raise SourceError(f"{self.get_read_path()} is not a file")
         elif not callable(self.default):
             raise SourceError("If 'default' is provided, it needs to be a callable")

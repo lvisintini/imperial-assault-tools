@@ -6,14 +6,16 @@ import struct
 import subprocess
 import time
 import uuid
+import requests
+from io import BytesIO
 
 from assembly_line.task import Task
 
-from collections import Counter, OrderedDict, defaultdict
-from itertools import chain
-from difflib import SequenceMatcher
-
 import cv2
+import tinify
+from collections import Counter, OrderedDict, defaultdict
+from itertools import chain, product
+from difflib import SequenceMatcher
 import numpy
 from look_at.wmctrl import WmCtrl
 from PIL import Image
@@ -164,6 +166,7 @@ class ChooseOne(base_task.ChoiceDataCollector):
     skip_input = ''
 
     def __init__(self, *args, **kwargs):
+        self.read_path = kwargs.pop('read_path')
         super(ChooseOne, self).__init__(*args, **kwargs)
         self.viewers = []
         self.active_window = WmCtrl().get_active_window()
@@ -174,11 +177,12 @@ class ChooseOne(base_task.ChoiceDataCollector):
         return ''
 
     def before_each(self, model, data_helper):
+        read_root = os.path.abspath(os.path.join(data_helper.root, self.read_path))
         self.choices = [(x, x) for x in model[self.field_name]]
 
         if len(model[self.field_name]) > 1 and isinstance(model[self.field_name], list):
             for image in model[self.field_name]:
-                self.viewers.append(subprocess.Popen(['eog', image]))
+                self.viewers.append(subprocess.Popen(['eog', os.path.join(read_root, image)]))
             time.sleep(0.25)
             self.active_window.activate()
 
@@ -188,7 +192,7 @@ class ChooseOne(base_task.ChoiceDataCollector):
             p.kill()
         self.viewers = []
 
-    def handle_input_loop(self, model):
+    def handle_input_loop(self, model, data_helper):
         existing_data = self.field_name in model
         new_data = model.get(self.field_name, None)
 
@@ -196,6 +200,23 @@ class ChooseOne(base_task.ChoiceDataCollector):
             if len(new_data) == 1:
                 new_data = self.clean_input('0')
                 return True, new_data
+            else:
+                read_root = os.path.join(data_helper.root, self.read_path)
+                i1 = os.path.abspath(os.path.join(read_root, model[self.field_name][0]))
+                i2 = os.path.abspath(os.path.join(read_root, model[self.field_name][1]))
+                dim1 = self.get_image_size(i1)
+                dim2 = self.get_image_size(i2)
+                if dim1[0] > dim2[0] and dim1[1] > dim2[1]:
+                    new_data = self.clean_input('0')
+                    return True, new_data
+                # elif dim2[0] > dim1[0] and dim2[1] > dim1[1]:
+                #     self.viewers.append(subprocess.Popen(['eog', os.path.join(read_root, i1)]))
+                #     self.viewers.append(subprocess.Popen(['eog', os.path.join(read_root, i2)]))
+                #     self.log.warning(os.path.abspath(os.path.join(read_root, model[self.field_name][0])))
+                #     self.log.warning(os.path.abspath(os.path.join(read_root, model[self.field_name][1])))
+                #     input('any key')
+                #     new_data = self.clean_input('1')
+                #     return True, new_data
         else:
             return False, None
 
@@ -216,6 +237,41 @@ class ChooseOne(base_task.ChoiceDataCollector):
 
         else:
             return True, new_data
+
+    @staticmethod
+    def get_image_size(fname):
+        # https://stackoverflow.com/questions/8032642/how-to-obtain-image-size-using-standard-python-class-without-using-external-lib/20380514#20380514
+        with open(fname, 'rb') as fhandle:
+            head = fhandle.read(24)
+            if len(head) != 24:
+                return
+            if imghdr.what(fname) == 'png':
+                check = struct.unpack('>i', head[4:8])[0]
+                if check != 0x0d0a1a0a:
+                    return
+                width, height = struct.unpack('>ii', head[16:24])
+            elif imghdr.what(fname) == 'gif':
+                width, height = struct.unpack('<HH', head[6:10])
+            elif imghdr.what(fname) == 'jpeg':
+                try:
+                    fhandle.seek(0)  # Read 0xff next
+                    size = 2
+                    ftype = 0
+                    while not 0xc0 <= ftype <= 0xcf:
+                        fhandle.seek(size, 1)
+                        byte = fhandle.read(1)
+                        while ord(byte) == 0xff:
+                            byte = fhandle.read(1)
+                        ftype = ord(byte)
+                        size = struct.unpack('>H', fhandle.read(2))[0] - 2
+                    # We are at a SOFn block
+                    fhandle.seek(1, 1)  # Skip `precision' byte.
+                    height, width = struct.unpack('>HH', fhandle.read(4))
+                except Exception:  #IGNORE:W0703
+                    return
+            else:
+                return
+            return width, height
 
 
 class RenameImages(Task):
@@ -257,6 +313,11 @@ class RenameImages(Task):
 
             if not os.path.exists(new_path):
                 os.makedirs(new_path)
+
+            old_file_path = os.path.join(read_root, path_to_file)
+
+            if old_file_path == new_file_path:
+                continue
 
             img = Image.open(os.path.join(read_root, path_to_file))
             img = img.convert("RGBA")
@@ -477,6 +538,9 @@ class StandardImageDimension(Task):
                         path = model.get(attr, None)
                         if path is not None:
                             read_path = os.path.join(data_helper.root, self.path, path)
+                            if (self.min_width, self.min_height) == self.get_image_size(read_path):
+                                continue
+
                             write_path = read_path
                             im = Image.open(read_path)
                             im = im.convert("RGBA")
@@ -562,8 +626,6 @@ class RoundCornersTask(RoundCornersMixin, Task):
                     self.round_image(im, radius=self.radius, opacity=self.opacity)
                 im.save(self.get_write_path(data_helper.root, image_path))
 
-            data_helper.processed_images.append(model[self.image_attr])
-
         return data_helper
 
     def get_read_path(self, root, image_path):
@@ -624,7 +686,6 @@ class OpenCVSTask(Task):
         return data_helper
 
     def after_each(self, model, data_helper):
-        data_helper.processed_images.append(model[self.image_attr])
         return data_helper
 
     def process(self, data_helper):
@@ -681,6 +742,63 @@ class CopyTask(Task):
                 for model in [m for m in source.data if self.filter(m, image_attr)]:
                     im = Image.open(self.get_read_path(data_helper.root, model[image_attr]))
                     im.save(self.get_write_path(data_helper.root, model[image_attr]))
+        return data_helper
+
+
+class TinyImages(Task):
+    image_attrs = []
+    filter_function = None
+
+    def __init__(self, dataset, image_attrs=None, filter_function=None, read_path='.', write_path=None, dry_run=False):
+        super(TinyImages, self).__init__()
+        self.dry_run = dry_run
+        self.client = tinify
+        self.dataset = dataset
+        self.image_attrs = image_attrs or self.image_attrs
+        self.filter_function = filter_function or self.filter_function
+        self.read_path = read_path
+        self.write_path = write_path or self.read_path
+
+    def get_read_path(self, root, image_path):
+        abs_path = os.path.abspath(os.path.join(root, self.read_path, image_path))
+        if not os.path.exists(abs_path):
+            raise Exception(f'File path does not exists: {abs_path}')
+        return abs_path
+
+    def get_write_path(self, root, image_path, create_path=True):
+        abs_path = os.path.abspath(os.path.join(root, self.write_path, image_path))
+
+        if not os.path.exists(os.path.split(abs_path)[0]) and create_path:
+            os.makedirs(os.path.split(abs_path)[0])
+
+        return abs_path
+
+    def filter(self, model, image_attr):
+        if image_attr not in model:
+            return False
+
+        if self.filter_function is None:
+            return True
+
+        return self.filter_function(model)
+
+    def process(self, data_helper):
+        images = [
+            (self.get_read_path(data_helper.root, m[image_attr]), self.get_write_path(data_helper.root, m[image_attr]))
+            for source in self.dataset.as_list
+            for image_attr in self.image_attrs
+            for m in source.data if self.filter(m, image_attr)
+        ]
+
+        for read, write in tqdm(images):
+            self.log.debug(read)
+            if self.dry_run:
+                continue
+            try:
+                source = tinify.from_file(read)
+                source.to_file(write)
+            except Exception:
+                self.log.debug(f'Failed to tinify {source}')
         return data_helper
 
 
@@ -956,7 +1074,7 @@ class AddCanonicalNames(Task):
                 self.log.warning(model)
 
         for canonical, level in generated_canonical:
-            if level > 2:
+            if level > 1:
                 self.log.info(canonical)
 
         return data_helper
@@ -1000,19 +1118,87 @@ class IASkirmishCanonicalCheck(Task):
 
         ia_canonical = [
             (m.get('card') or m.get('deployment'))['iaspecName']
-            for m in chain(*[s.data for s in self.dataset.as_list])
+            for m in chain(*[
+                s.data.get('commandCards', []) or s.data.get('deployments', [])
+                for s in self.dataset.as_list
+            ])
         ]
 
         not_found = [iac for iac in ia_canonical if iac not in data_helper.generated_canonical]
+        percent = round(((len(ia_canonical) - len(not_found)) / len(ia_canonical)) * 100, 2)
 
-        print('iaspec | proposed')
-        print('------ | --------')
+        self.log.info(f'Acceptance: {percent}%')
+        self.log.info(f'iaspec count: {len(ia_canonical)}')
 
         for nf in not_found:
             candidates = [
                 c for c in data_helper.generated_canonical
                 if SequenceMatcher(None, nf, c).ratio() > 0.80 or nf in c
             ]
-            print(f"{nf} | {', '.join(candidates) or 'None'}")
+            self.log.info(f"{nf} -> {', '.join(candidates) or 'None'}")
 
+        return data_helper
+
+
+class DownloadTTAdmiralsAssets(Task):
+
+    def __init__(self, dataset):
+        self.dataset = dataset
+        super(DownloadTTAdmiralsAssets, self).__init__()
+
+    def process(self, data_helper):
+        image_urls = [
+            (
+                source_name,
+                (m.get('card') or m.get('deployment'))['imageurl'],
+                (m.get('card') or m.get('deployment'))['iaspecName']
+            )
+            for source_name, m in chain(*[
+                product((s.source_name, ), s.data.get('commandCards', []) or s.data.get('deployments', []))
+                for s in self.dataset.as_list
+            ])
+        ]
+
+        for source_name, url, iaspec in tqdm(image_urls):
+            if 'cards.boardwars' in url:
+                continue
+
+            response = requests.get(url)
+            if response.status_code == 200:
+                img = Image.open(BytesIO(response.content))
+                img = img.convert("RGBA")
+
+                image_url = os.path.join(
+                    data_helper.root,
+                    f'raw-images/{source_name}/{iaspec}.png'
+                )
+
+                img.save(image_url, "PNG", quality=100, optimize=True)
+            else:
+                self.log.error(url)
+        return data_helper
+
+
+class AddBetterImages(Task):
+    def __init__(self, dataset, iaspec_mapping):
+        self.dataset = dataset
+        self.iaspec_mapping = iaspec_mapping
+        super(AddBetterImages, self).__init__()
+
+    def process(self, data_helper):
+        ia_canonical = dict([(m['iaspec'], m) for m in chain(*[s.data for s in self.dataset.as_list]) if 'iaspec' in m])
+
+        image_root = os.path.abspath(os.path.join(data_helper.root, '../imperial-assault-tools/raw-images'))
+        self.log.info(image_root)
+        for dir_path, _, file_names in os.walk(image_root):
+            for f in file_names:
+                mapped_name = self.iaspec_mapping.get(f.split('.')[0], f.split('.')[0])
+                image_path = os.path.join(dir_path.replace(image_root, '../../../imperial-assault-tools/raw-images'), f)
+
+                self.log.info(os.path.abspath(os.path.join(self.dataset.root, 'images/large', image_path)))
+                self.log.info(os.path.abspath(os.path.join(self.dataset.root, 'images/large', ia_canonical[mapped_name]['image'])))
+                if isinstance(ia_canonical[mapped_name]['image'], list):
+                    ia_canonical[mapped_name]['image'].append(image_path)
+                else:
+                    ia_canonical[mapped_name]['image'] = [ia_canonical[mapped_name]['image'], image_path]
         return data_helper
