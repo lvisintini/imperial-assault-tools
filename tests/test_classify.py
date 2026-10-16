@@ -51,8 +51,9 @@ def test_normalise(a, b):
 
 
 @pytest.mark.parametrize('content_type, gallery_name, dataset_name', [
-    ('deployment-cards', 'Regular Stormtroopers', 'Stormtroopers'),
-    ('deployment-cards', 'Elite Royal Guards', 'Royal Guards'),
+    ('deployment-cards', 'Regular Stormtroopers', 'Stormtrooper'),
+    ('deployment-cards', 'Elite Royal Guards', 'Royal Guard'),
+    ('deployment-cards', 'Elite Hired Guns', 'Hired Gun'),
     ('condition-cards', 'Bleeding Condition', 'Bleeding'),
     ('heroes', 'Biv Bodhrik Hero Healthy', 'Biv Bodhrik'),
     ('heroes', 'Diala Hero Wounded', 'Diala Passil'),

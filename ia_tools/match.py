@@ -43,6 +43,9 @@ class NameIndex:
             name = NAME_NOISE[content_type].sub('', name)
         key = normalise(name)
         found = self.by_name.get((content_type, key), [])
+        if not found and content_type == 'deployment-cards' and key.endswith('s'):
+            # boardwars pluralises units ("Elite Royal Guards"); the dataset doesn't ("Royal Guard").
+            found = self.by_name.get((content_type, key[:-1]), [])
         if not found and content_type == 'heroes' and key:
             # boardwars often uses just the first name ("Diala Hero Healthy" for Diala Passil).
             found = [r for (t, k), records in self.by_name.items() if t == 'heroes' and k.startswith(key) for r in records]
