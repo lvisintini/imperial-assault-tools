@@ -138,3 +138,11 @@ def test_existing_image_names_follow_the_slug_rules(real_dataset):
     records = real_dataset.records('deployment-cards')
     same = sum(importer.image_slug('deployment-cards', r, 'image') + '.png' == r['image'].split('/', 1)[1] for r in records)
     assert same / len(records) > 0.9
+
+
+def test_hash_lists_ignore_comments(tmp_path):
+    from ia_tools.audit import load_hashes
+
+    path = tmp_path / 'hashes.txt'
+    path.write_text('# a comment about abc\nabc\n\n# another\ndef\n')
+    assert load_hashes(path) == {'abc', 'def'}

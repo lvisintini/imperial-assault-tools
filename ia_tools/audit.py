@@ -18,7 +18,10 @@ STATUSES = ['unseen', 'unseen-known', 'seen-no-record', 'seen', 'skipped']
 
 
 def load_hashes(path):
-    return set(path.read_text().split()) if path.exists() else set()
+    """One hash per line; lines starting with # are comments."""
+    if not path.exists():
+        return set()
+    return {line.strip() for line in path.read_text().splitlines() if line.strip() and not line.startswith('#')}
 
 
 def status_of(sha512, guess, image, index, seen, skipped):

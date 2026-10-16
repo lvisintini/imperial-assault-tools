@@ -1,0 +1,27 @@
+# SHA-512s of boardwars originals deliberately not imported, so ia audit stops flagging them.
+# One hash per line; a comment line before each group says what it is.
+# 2026-10-17: "Alternate Art" deployment cards (the dataset keeps one image per card).
+# Core Box / Deployment Cards / Imperial / AT-ST Alternate Art
+c281a470691f3889e704cd391f85adde55823c122094b5d060b70d85703322c9581a0941ef2c9a832485c956886d4e5ab44623ebacbff80522403007736c9d5f
+# Villain and Ally Packs / Wave 4 / Bantha Rider / Deployment Cards / Bantha Rider Alternate Art
+a1e3b343cebd0f6f7cb949e8a9dfa28ec51f7ab5866a067869eee0ab2f1e921c099696abf4fe0c19d4310af3d8d4a9741ee6374182ffc5dd0d67c9d0929fef2b
+# Core Box / Deployment Cards / Rebel / Chewbacca Alternate Art
+99be60455c5f496f58551cc46816549919df321c2e1cccac307ba26d99dc55faac83d256a97a34a53c0e542d83c2de0f4189828f454162891a8bb7816e8c6b46
+# Core Box / Deployment Cards / Imperial / Darth Vader Alternate Art
+b22bb95a55baff2f4ec87b838cb2a3810ad7db8c6303b0f6aa3236206895f8a254367190e4b6660e9427fcc2d5570e9f069d0beb6e45ec65bf5052022dad2218
+# Expansion Boxes / Return to Hoth / Deployment Cards / Mercenary / Dengar Alternate Art
+579e065273716e7c49841d7f58b0b03ddc60e00484d4b0110831596aefe7cf348081e15f9776ad093c2def5384ab4a81d1c4f4023f431a51ffe2658b84f81bd2
+# Core Box / Deployment Cards / Rebel / Elite Rebel Troopers Alternate Art
+7e4a84094bbff39319fd20395042cf46ad5d9adba5113950bb7a511cec8b7c133a3e87598c252f3affd2e5cc4ce5a69706838a27dc95869c8803398a561db439
+# Core Box / Deployment Cards / Imperial / Elite Royal Guards Alternate Art
+b1bff1ec3ac0334afe110b51458357155d6fa69fc65d7c13a318e16c98c3dc643381e125c809b83d857171d34262a093fbf90dbcadc05daa404bb2025d417cf3
+# Core Box / Deployment Cards / Imperial / Elite Stormtroopers Alternate Art
+8008c12af1cee028b345ccfc69c86f7cef2c399bf93eece68c75cfc5ed5323a349315f5d2fdf9f0e8bbedeb0f2a4db3937804280a8a4b45d841b5b04f2a3a32c
+# Core Box / Deployment Cards / Mercenary / Elite Trandoshan Hunter Alternate Art
+2528045506cc05538ea517ae269015d894928431db00e21ca56442cba5a15947e3f68c6c69b330ea0bb5d1233809eb2e590812386d5e1e62e6bb72c18450f970
+# Core Box / Deployment Cards / Mercenary / IG88 Alternate Art
+03febe96be8005ccc049ea330a04e712a1151d5fa311c05959a2f38eaccf3e7e9c3116847b2ff24176e32f18136b065e10e5a9a6d5e16f6f95cb339324dd1503
+# Core Box / Deployment Cards / Rebel / Luke Skywalker Alternate Art
+613e8755f5f693edc7d53a65c906e0bb02ebc33596bcf84599f11e1e5615b8b97d7db91b422c41f2feaed59b7e9b01b52d6f5b2508886cc22c66056aa8853cd9
+# Core Box / Deployment Cards / Imperial / Regular Royal Guards Alternate Art
+7794d9edb533551f36e9a0fbac96df1cc1d00a0cc79791365c36368fbc76c96045027af7d2de07bee00cebfcbf4962af62b88fbc412b4c95658ca304bf788d9a
