@@ -179,10 +179,6 @@ dependencies = [
     { name = "parsel" },
     { name = "pillow" },
     { name = "requests" },
-]
-
-[package.optional-dependencies]
-tinify = [
     { name = "tinify" },
 ]
 
@@ -198,9 +194,8 @@ requires-dist = [
     { name = "parsel", specifier = ">=1.9" },
     { name = "pillow", specifier = ">=11" },
     { name = "requests", specifier = ">=2.32" },
-    { name = "tinify", marker = "extra == 'tinify'", specifier = ">=1.6" },
+    { name = "tinify", specifier = ">=1.6" },
 ]
-provides-extras = ["tinify"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=8" }]

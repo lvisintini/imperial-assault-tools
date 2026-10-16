@@ -12,10 +12,8 @@ dependencies = [
     "parsel>=1.9",
     "pillow>=11",
     "requests>=2.32",
+    "tinify>=1.6",
 ]
-
-[project.optional-dependencies]
-tinify = ["tinify>=1.6"]
 
 [project.scripts]
 ia = "ia_tools.cli:main"
