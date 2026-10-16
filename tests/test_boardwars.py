@@ -65,3 +65,9 @@ def test_crawl_follows_albums_and_pages_once():
     images = list(boardwars.crawl(FakeClient(), f'{BASE}/a/'))
     assert sorted((i.path, i.name) for i in images) == [(('A',), 'Two'), (('A', 'B'), 'One')]
     assert len(fetched) == len(set(fetched)) == 3
+
+
+def test_later_pages_drop_zenphotos_page_number_from_the_title():
+    assert boardwars.clean_title('  Skirmish   Maps (2) ') == 'Skirmish Maps'
+    assert boardwars.clean_title('Wave (11)') == 'Wave'
+    assert boardwars.clean_title('Command Cards') == 'Command Cards'

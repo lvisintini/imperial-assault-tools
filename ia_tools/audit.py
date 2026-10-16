@@ -24,7 +24,10 @@ def load_hashes(path):
 def status_of(sha512, guess, image, index, seen, skipped):
     if sha512 in skipped:
         return 'skipped'
-    named = guess.content_type not in (None, 'card-backs') and bool(index.find(guess.content_type, image.name))
+    if guess.content_type == 'sources':  # box images are called "Box", "Pack", ...: match by product
+        named = bool(index.find('sources', guess.product))
+    else:
+        named = guess.content_type not in (None, 'card-backs') and bool(index.find(guess.content_type, image.name))
     if sha512 in seen:
         return 'seen' if named or guess.content_type == 'card-backs' else 'seen-no-record'
     return 'unseen-known' if named else 'unseen'
@@ -51,16 +54,37 @@ def run(client, dataset, out_dir, start_url=boardwars.BASE_URL, log=print):
                 hashed = {'url': image.url, 'sha512': hashlib.sha512(content).hexdigest(), 'bytes': len(content)}
                 cache_file.write(json.dumps(hashed) + '\n')
                 cache_file.flush()
-            guess = classify(image)
-            entries.append({
-                'path': list(image.path), 'name': image.name, 'url': image.url, 'sha512': hashed['sha512'],
-                'bytes': hashed['bytes'], 'product': guess.product, 'content_type': guess.content_type,
-                'back_of': guess.back_of, 'hints': guess.hints,
-                'status': status_of(hashed['sha512'], guess, image, index, seen, skipped),
-            })
+            entries.append(entry(image, hashed, index, seen, skipped))
             if n % 50 == 0:
-                log(f'{n} images audited')
+                log(f'{n} images audited', flush=True)
+    return write_report(entries, index, seen, start_url, out_dir)
 
+
+def entry(image, hashed, index, seen, skipped):
+    guess = classify(image)
+    return {
+        'path': list(image.path), 'name': image.name, 'url': image.url, 'sha512': hashed['sha512'],
+        'bytes': hashed['bytes'], 'product': guess.product, 'content_type': guess.content_type,
+        'back_of': guess.back_of, 'hints': guess.hints,
+        'status': status_of(hashed['sha512'], guess, image, index, seen, skipped),
+    }
+
+
+def rescore(dataset, out_dir):
+    """Rebuild the report from the last run's entries, with today's classification, matching and hash lists, without
+    crawling again."""
+    previous = json.loads((out_dir / 'report.json').read_text(encoding='utf-8'))
+    seen, skipped = load_hashes(settings.SEEN_HASHES), load_hashes(settings.SKIPPED_HASHES)
+    index = NameIndex(dataset, [t for t in CONTENT_TYPES if t not in ('source-contents', 'card-backs')])
+    entries = [
+        entry(boardwars.ImageRef(path=tuple(boardwars.clean_title(p) for p in e['path']), name=e['name'], url=e['url']),
+              e, index, seen, skipped)
+        for e in previous['entries']
+    ]
+    return write_report(entries, index, seen, previous['start_url'], out_dir)
+
+
+def write_report(entries, index, seen, start_url, out_dir):
     products = sorted({e['product'] for e in entries if e['product']})
     report = {
         'generated': datetime.now(timezone.utc).isoformat(timespec='seconds'),

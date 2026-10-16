@@ -36,6 +36,11 @@ class AlbumPage:
     next_page: str | None
 
 
+def clean_title(title):
+    """Album title without the " (2)" Zenphoto appends on later pages."""
+    return re.sub(r'\s+\(\d+\)$', '', ' '.join(title.split()))
+
+
 def original_url(thumbnail_src):
     path = urlsplit(thumbnail_src).path
     if not path.startswith('/cache/'):
@@ -48,7 +53,7 @@ def parse_album_page(html, url):
     heading = page.css('#gallerytitle h2')
     # The breadcrumb: links after the gallery index link, then the current album's name as trailing text.
     crumbs = heading.xpath('.//a[contains(@class, "galleryindexurl")]/following-sibling::a/@title').getall()
-    current = ' '.join(''.join(heading.xpath('./text()').getall()).split())
+    current = clean_title(''.join(heading.xpath('./text()').getall()))
     path = tuple(crumbs) + ((current,) if current else ())
 
     albums = [

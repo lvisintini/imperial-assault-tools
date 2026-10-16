@@ -48,3 +48,19 @@ def test_backs_say_what_they_are_the_back_of():
 ])
 def test_normalise(a, b):
     assert normalise(a) == normalise(b)
+
+
+@pytest.mark.parametrize('content_type, gallery_name, dataset_name', [
+    ('deployment-cards', 'Regular Stormtroopers', 'Stormtroopers'),
+    ('deployment-cards', 'Elite Royal Guards', 'Royal Guards'),
+    ('condition-cards', 'Bleeding Condition', 'Bleeding'),
+    ('heroes', 'Biv Bodhrik Hero Healthy', 'Biv Bodhrik'),
+    ('heroes', 'Diala Hero Wounded', 'Diala Passil'),
+    ('sources', 'Core Box', 'Imperial Assault'),
+    ('sources', 'Ahsoka Tano', 'Ahsoka'),
+])
+def test_gallery_names_find_dataset_records(real_dataset, content_type, gallery_name, dataset_name):
+    from ia_tools.match import NameIndex
+
+    found = NameIndex(real_dataset, [content_type]).find(content_type, gallery_name)
+    assert dataset_name in [r['name'] for r in found]

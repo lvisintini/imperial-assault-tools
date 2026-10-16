@@ -16,7 +16,11 @@ def cmd_audit(args):
     from ia_tools import audit, boardwars
     from ia_tools.dataset import Dataset
 
-    report = audit.run(boardwars.Client(), Dataset(), settings.STAGING / 'audit', start_url=args.url)
+    out_dir = settings.STAGING / 'audit'
+    if args.rescore:
+        report = audit.rescore(Dataset(), out_dir)
+    else:
+        report = audit.run(boardwars.Client(), Dataset(), out_dir, start_url=args.url)
     print(f"Done: {report['counts']}. Report: {settings.STAGING / 'audit' / 'report.md'}")
 
 
@@ -62,6 +66,8 @@ def main(argv=None):
 
     audit = commands.add_parser('audit', help='crawl boardwars and report images the dataset may be missing')
     audit.add_argument('url', nargs='?', default='https://cards.boardwars.eu/', help='album to start from')
+    audit.add_argument('--rescore', action='store_true',
+                       help='rebuild the report from the last run without crawling (after changing hash lists or rules)')
     audit.set_defaults(func=cmd_audit)
 
     scrape = commands.add_parser('scrape', help='download one album into staging')
