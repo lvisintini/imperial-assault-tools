@@ -27,3 +27,6 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+# ia_tools work in progress (downloads, audit reports, entries)
+staging/
+.venv/

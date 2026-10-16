@@ -1,0 +1,216 @@
+"""ia import: turn a product's entries.json into records, images and source-contents rows in the data repo.
+
+Everything is checked first (schemas, ids, foreign keys, image paths, iaspec uniqueness); nothing is written unless the
+whole product passes. Existing files are never overwritten."""
+import json
+from dataclasses import dataclass, field
+
+import jsonschema
+
+from ia_tools import images, settings
+from ia_tools.dataset import FOREIGN_KEYS, WITHOUT_IDS
+from ia_tools.staging import slugify
+
+# Types source-contents links to products (child cards come with their parent; see docs/data-model.md).
+LINKED_TYPES = {
+    'agenda-decks', 'command-cards', 'companion-cards', 'deployment-cards', 'heroes', 'imperial-classes',
+    'reward-cards', 'side-mission-cards', 'skirmish-maps', 'story-mission-cards', 'supply-cards',
+    'threat-mission-cards', 'upgrade-cards',
+}
+IASPEC_TYPES = ('deployment-cards', 'command-cards', 'companion-cards')
+
+
+class ImportProblems(Exception):
+    def __init__(self, problems):
+        super().__init__('\n'.join(problems))
+        self.problems = problems
+
+
+@dataclass
+class Pending:
+    key: str                    # item or extra key
+    content_type: str
+    record: dict
+    images: dict = field(default_factory=dict)  # field → item key of the original
+    file_overrides: dict = field(default_factory=dict)  # field → slug chosen in the app
+
+
+def image_fields(dataset, content_type):
+    pattern = dataset.schema('definitions')['definitions']['image-file-path']['pattern']
+    return [name for name, prop in dataset.schema(content_type)['properties'].items() if prop.get('pattern') == pattern]
+
+
+def image_slug(content_type, record, image_field, parent_name=None):
+    name = record.get('name')
+    if content_type == 'deployment-cards':
+        parts = [name, record.get('description')]
+        if record.get('elite') and not record.get('unique'):
+            parts.append('elite')
+        if len(record.get('modes', [])) == 1:
+            parts.append(record['modes'][0])
+    elif content_type in ('hero-class-cards', 'imperial-class-cards', 'agenda-cards'):
+        parts = [parent_name, name]
+    elif content_type == 'heroes':
+        parts = [name, image_field]
+    elif content_type == 'card-backs':
+        parts = [record.get('deck'), record.get('variant')]
+    else:
+        parts = [name]
+    return slugify(' '.join(str(p) for p in parts if p))
+
+
+def plan(staging, dataset):
+    """Check entries.json and work out every change. Returns the plan; raises ImportProblems with all problems found."""
+    problems = []
+    entries, items = staging.entries(), staging.items()
+
+    pending = []
+    for key, entry in sorted(entries.get('items', {}).items()):
+        if entry.get('action') == 'new':
+            fields = image_fields(dataset, entry['content_type'])
+            first = entry.get('field') or (fields[0] if fields else None)
+            p = Pending(key, entry['content_type'], dict(entry['record']), {first: key} if first else {})
+            if first and entry.get('file'):
+                p.file_overrides[first] = entry['file']
+            pending.append(p)
+    for key, extra in sorted(entries.get('extra', {}).items()):
+        pending.append(Pending(key, extra['content_type'], dict(extra['record'])))
+    by_key = {p.key: p for p in pending}
+    for key, entry in entries.get('items', {}).items():
+        if entry.get('action') == 'attach':
+            target = by_key.get(entry.get('to'))
+            if not target:
+                problems.append(f'{key}: attached to {entry.get("to")!r}, which is not a new record')
+            else:
+                target.images[entry['field']] = key
+                if entry.get('file'):
+                    target.file_overrides[entry['field']] = entry['file']
+
+    # The product itself.
+    product = entries.get('product')
+    source_id = None
+    if not product:
+        problems.append('No product chosen')
+    elif product['action'] == 'existing':
+        source_id = product['id']
+        if not any(s['id'] == source_id for s in dataset.records('sources')):
+            problems.append(f'Product id {source_id} is not in sources.json')
+    else:
+        p = Pending('product', 'sources', dict(product['record']), {'image': product['item']} if product.get('item') else {})
+        pending.insert(0, p)
+        by_key['product'] = p
+
+    # Ids, per type, after the existing ones.
+    next_ids = {}
+    for p in pending:
+        if p.content_type not in WITHOUT_IDS:
+            next_ids.setdefault(p.content_type, dataset.next_id(p.content_type))
+            p.record['id'] = next_ids[p.content_type]
+            next_ids[p.content_type] += 1
+    if source_id is None and 'product' in by_key:
+        source_id = by_key['product'].record['id']
+
+    # Foreign keys to staged records.
+    for p in pending:
+        for (child, fk), parent in FOREIGN_KEYS.items():
+            value = p.record.get(fk) if p.content_type == child else None
+            if isinstance(value, str) and value.startswith('@'):
+                target = by_key.get(value[1:])
+                if not target or target.content_type != parent:
+                    problems.append(f'{p.key}: {fk} points at {value}, which is not a staged {parent} record')
+                else:
+                    p.record[fk] = target.record['id']
+
+    # Image paths.
+    planned_paths = set()
+    for p in pending:
+        parent_name = None
+        for (child, fk), parent in FOREIGN_KEYS.items():
+            if p.content_type == child and isinstance(p.record.get(fk), int):
+                parent_name = next((r['name'] for r in dataset.records(parent) if r['id'] == p.record[fk]), None)
+                parent_name = parent_name or next((q.record['name'] for q in pending
+                                                   if q.content_type == parent and q.record.get('id') == p.record[fk]), None)
+        for image_field in image_fields(dataset, p.content_type):
+            if image_field not in p.images:
+                problems.append(f'{p.key}: no image for {p.content_type}.{image_field}')
+                continue
+            slug = p.file_overrides.get(image_field) or image_slug(p.content_type, p.record, image_field, parent_name)
+            relative = f'{p.content_type}/{slug}.png'
+            if relative in planned_paths or any(dataset.image_path(s, relative).exists() for s in ('large', 'small')):
+                problems.append(f'{p.key}: image {relative} already exists; choose another file name')
+            planned_paths.add(relative)
+            p.record[image_field] = relative
+
+    # Schemas, plus the iaspec rule the data repo's tests enforce.
+    iaspecs = {r['iaspec'] for t in IASPEC_TYPES for r in dataset.records(t)}
+    for p in pending:
+        p.record = {k: p.record[k] for k in dataset.key_order(p.content_type) if k in p.record} | p.record
+        for error in jsonschema.Draft4Validator(dataset.schema(p.content_type)).iter_errors(p.record):
+            where = '.'.join(str(x) for x in error.absolute_path) or '(record)'
+            problems.append(f'{p.key} ({p.content_type}) {where}: {error.message}')
+        if p.content_type in IASPEC_TYPES and p.record.get('iaspec'):
+            if p.record['iaspec'] in iaspecs:
+                problems.append(f'{p.key}: iaspec {p.record["iaspec"]!r} is already used')
+            iaspecs.add(p.record['iaspec'])
+
+    # source-contents rows: new records and "same as existing" links.
+    rows = []
+    if source_id is not None:
+        for p in pending:
+            if p.content_type in LINKED_TYPES:
+                rows.append({'source_id': source_id, 'content_type': p.content_type, 'content_id': p.record['id']})
+        for key, entry in sorted(entries.get('items', {}).items()):
+            if entry.get('action') == 'link' and entry.get('content_type') in LINKED_TYPES:
+                rows.append({'source_id': source_id, 'content_type': entry['content_type'], 'content_id': entry['id']})
+        existing = {(r['source_id'], r['content_type'], r['content_id']) for r in dataset.records('source-contents')}
+        rows = [r for r in rows if (r['source_id'], r['content_type'], r['content_id']) not in existing]
+
+    if problems:
+        raise ImportProblems(problems)
+
+    handled = [k for k, e in entries.get('items', {}).items() if e.get('action') in ('new', 'attach', 'link')]
+    if entries.get('product', {}).get('item'):
+        handled.append(entries['product']['item'])
+    return {
+        'pending': pending, 'rows': rows, 'items': items,
+        'seen_hashes': sorted({items[k]['sha512'] for k in handled if k in items}),
+        'skipped_hashes': sorted({items[k]['sha512'] for k, e in entries.get('items', {}).items()
+                                  if e.get('action') == 'known-skip' and k in items}),
+    }
+
+
+def summary(plan_):
+    counts = {}
+    for p in plan_['pending']:
+        counts[p.content_type] = counts.get(p.content_type, 0) + 1
+    return {'new_records': counts, 'source_contents_rows': len(plan_['rows'])}
+
+
+def apply(plan_, staging, dataset):
+    items, upscaled = plan_["items"], {}
+    for p in plan_['pending']:
+        for image_field, item_key in p.images.items():
+            back_type = p.record.get('content_type') if p.content_type == 'card-backs' else None
+            out = images.process(staging.dir / items[item_key]['file'], p.content_type, back_type)
+            for size in ('large', 'small'):
+                path = dataset.image_path(size, p.record[image_field])
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(out[size])
+            upscaled[p.key] = out['upscaled']
+        dataset.records(p.content_type).append(p.record)
+    dataset.records('source-contents').extend(plan_['rows'])
+    for content_type in {p.content_type for p in plan_['pending']} | ({'source-contents'} if plan_['rows'] else set()):
+        dataset.save(content_type)
+
+    for path, hashes in ((settings.SEEN_HASHES, plan_['seen_hashes']), (settings.SKIPPED_HASHES, plan_['skipped_hashes'])):
+        known = set(path.read_text().split()) if path.exists() else set()
+        new = [h for h in hashes if h not in known]
+        if new:
+            text = path.read_text() if path.exists() else ''
+            path.write_text(text + ('' if not text or text.endswith('\n') else '\n') + '\n'.join(new) + '\n')
+
+    log = {'summary': summary(plan_), 'upscaled': [k for k, up in upscaled.items() if up],
+           'records': [{'key': p.key, 'content_type': p.content_type, 'record': p.record} for p in plan_['pending']],
+           'source_contents': plan_['rows']}
+    (staging.dir / 'import-log.json').write_text(json.dumps(log, indent=2), encoding='utf-8')
+    return log
