@@ -1,0 +1,29 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.14"]
+    env:
+      IA_DATA_ROOT: ${{ github.workspace }}/imperial-assault-data
+    steps:
+      - uses: actions/checkout@v5
+      # The dataset without its ~500MB of images: the tests only need data/, schemas/ and tests/.
+      - uses: actions/checkout@v5
+        with:
+          repository: lvisintini/imperial-assault-data
+          path: imperial-assault-data
+          sparse-checkout: |
+            data
+            schemas
+            tests
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: uv run pytest
