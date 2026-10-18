@@ -30,7 +30,7 @@ def status_of(sha512, guess, image, index, seen, skipped):
     if guess.content_type == 'sources':  # box images are called "Box", "Pack", ...: match by product
         named = bool(index.find('sources', guess.product))
     else:
-        named = guess.content_type not in (None, 'card-backs') and bool(index.find(guess.content_type, image.name))
+        named = guess.content_type not in (None, 'card-backs') and bool(index.find(guess.content_type, image.name, guess.hints))
     if sha512 in seen:
         return 'seen' if named or guess.content_type == 'card-backs' else 'seen-no-record'
     return 'unseen-known' if named else 'unseen'

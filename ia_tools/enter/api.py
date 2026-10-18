@@ -7,7 +7,7 @@ import jsonschema
 
 from ia_tools import importer
 from ia_tools.dataset import CONTENT_TYPES, FOREIGN_KEYS, WITHOUT_IDS
-from ia_tools.match import normalise
+from ia_tools.match import normalise, parse_deployment_name
 
 # Types a staged image can become (source-contents is never entered by hand; sources is the product panel).
 ENTRY_TYPES = [t for t in CONTENT_TYPES if t not in ('source-contents', 'sources')]
@@ -64,23 +64,10 @@ def existing_back(dataset, content_type):
     return next((b for b in dataset.records('card-backs') if b['content_type'] == content_type), None)
 
 
-# Words boardwars puts in deployment card image names; the dataset keeps them in `elite` and `modes` instead.
-DEPLOYMENT_MARKERS = re.compile(r'\b(elite|regular|campaign|skirmish)\b', re.I)
 # How iaspec values were built (data repo commit 3bb85ed): elite + name, then, only while another card would get the
 # same value, name plus one of mode, affiliation or description.
 IASPEC_STRATEGIES = [('elite', 'name'), ('elite', 'name', 'modes'), ('elite', 'name', 'affiliation'),
                      ('elite', 'name', 'description')]
-
-
-def parse_deployment_name(raw):
-    """boardwars image name → (name, 'elite' | 'regular' | None, modes): 'Elite Death Troopers campaign' →
-    ('Death Troopers', 'elite', ['Campaign'])."""
-    text = raw.replace('-', ' ') if '_' in raw else raw  # 'Elite-Royal-Guard_errata'
-    text = re.sub(r'\b(errata|deployment card)\b', ' ', text.replace('_', ' '), flags=re.I)
-    marks = [m.lower() for m in DEPLOYMENT_MARKERS.findall(text)]
-    name = ' '.join(DEPLOYMENT_MARKERS.sub(' ', text).split()).strip(' -')
-    grade = 'elite' if 'elite' in marks else 'regular' if 'regular' in marks else None
-    return name, grade, [m.title() for m in marks if m in ('campaign', 'skirmish')]
 
 
 def deployment_fields(item, manifest):
@@ -157,7 +144,7 @@ def suggest(item, manifest, dataset, entries):
     hints = guess.get('hints', {})
     name_lower = item['name'].lower()
 
-    if item['matches']:
+    if len(item['matches']) == 1:  # several: the app lists them and the user picks, rather than a guess
         match = item['matches'][0]
         return {'action': 'link', 'content_type': match['content_type'], 'id': match['id']}
     if content_type == 'sources':

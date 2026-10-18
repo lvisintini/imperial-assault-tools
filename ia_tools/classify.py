@@ -78,6 +78,8 @@ def classify(image):
     if content_type == 'side-mission-cards' and sub and 'threat' in sub.lower():
         content_type = 'threat-mission-cards'
         hints.pop('color', None)
-    if name == 'back' or name.startswith('back '):
+    if content_type == 'deployment-cards' and name.startswith('clawdite form'):
+        content_type = 'form-cards'  # boardwars keeps the shapeshifter's forms with the deployment cards
+    if name == 'back' or name.startswith('back ') or name.endswith((' card back', ' form back')):  # "Neutral Card Back"
         return Guess(product=product, content_type='card-backs', back_of=content_type, hints=hints)
     return Guess(product=product, content_type=content_type, hints=hints)

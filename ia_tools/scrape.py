@@ -43,7 +43,8 @@ def run(client, dataset, url, product=None, root=None, log=print):
             'guess': {'content_type': guess.content_type, 'back_content_type': back_type, 'hints': guess.hints},
             'matches': [
                 {'content_type': guess.content_type, 'id': r['id'], 'name': r['name']}
-                for r in (index.find(guess.content_type, image.name) if guess.content_type not in (None, 'card-backs') else [])
+                for r in (index.find(guess.content_type, image.name, guess.hints)
+                          if guess.content_type not in (None, 'card-backs') else [])
                 if 'id' in r
             ],
         })

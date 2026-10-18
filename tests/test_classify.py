@@ -40,6 +40,16 @@ def test_backs_say_what_they_are_the_back_of():
                                                                    {'class': 'Overwhelming Force'})
 
 
+@pytest.mark.parametrize('name, content_type, back_of', [
+    ('Clawdite Form Scout', 'form-cards', None),
+    ('Clawdite Form Back', 'card-backs', 'form-cards'),
+    ('Neutral Card Back', 'card-backs', 'deployment-cards'),
+])
+def test_forms_and_backs_in_deployment_albums(name, content_type, back_of):
+    result = guess('Expansion Boxes', 'Heart of the Empire', 'Deployment Cards', 'Mercenary', name=name)
+    assert (result.content_type, result.back_of) == (content_type, back_of)
+
+
 @pytest.mark.parametrize('a, b', [
     ("Jabba's Realm", 'Jabbas-Realm'),
     ('The Bespin Gambit', 'Bespin Gambit'),
@@ -59,9 +69,34 @@ def test_normalise(a, b):
     ('heroes', 'Diala Hero Wounded', 'Diala Passil'),
     ('sources', 'Core Box', 'Imperial Assault'),
     ('sources', 'Ahsoka Tano', 'Ahsoka'),
+    ('command-cards', 'Arcing Shot command card', 'Arcing Shot'),
+    ('companion-cards', 'Cam Droid Companion', 'Cam Droid'),
+    ('form-cards', 'Clawdite Form Scout', 'Scout'),
+    ('supply-cards', 'Emergency Medpack', 'Emergency Medpac'),
 ])
 def test_gallery_names_find_dataset_records(real_dataset, content_type, gallery_name, dataset_name):
     from ia_tools.match import NameIndex
 
     found = NameIndex(real_dataset, [content_type]).find(content_type, gallery_name)
     assert dataset_name in [r['name'] for r in found]
+
+
+@pytest.mark.parametrize('gallery_name, affiliation, ids', [
+    ('Stormtrooper', 'Imperial', [114]),            # unmarked is the regular card, not the elite one
+    ('Riot Trooper elite skirmish', 'Imperial', [156]),  # (#155, campaign, is wrongly Mercenary: data#31)
+    ('Agent Blaise skirmish', 'Imperial', [4]),
+    ('Temporary Alliance', 'Imperial', [119]),      # the album's affiliation tells the two apart
+    ('Temporary Alliance', 'Mercenary', [118]),
+    ('Luke Skywalker Jedi Knight', 'Rebel', [79]),  # subtitle in the name
+    ('Elite Wookie Warrior', None, [141]),          # boardwars misspelling
+    ('Regular Wookie Warriors', None, [140]),       # ... and plural
+    ('Echo Base Troopers', 'Rebel', [33]),
+    ('Elite-Royal-Guard_errata', 'Imperial', [104]),
+    ('Luke Skywalker', 'Rebel', [78, 79]),          # ambiguous: the user picks
+])
+def test_deployment_names_find_the_right_card(real_dataset, gallery_name, affiliation, ids):
+    from ia_tools.match import NameIndex
+
+    found = NameIndex(real_dataset, ['deployment-cards']).find('deployment-cards', gallery_name,
+                                                               {'affiliation': affiliation} if affiliation else {})
+    assert sorted(r['id'] for r in found) == ids
