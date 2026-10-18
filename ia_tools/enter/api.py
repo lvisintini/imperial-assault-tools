@@ -1,5 +1,8 @@
 """What the data-entry app needs, independent of HTTP: form specs from the data repo's schemas, suggested entries for
 each staged image, and validation of one entry at a time."""
+import re
+import unicodedata
+
 import jsonschema
 
 from ia_tools import importer
@@ -61,6 +64,92 @@ def existing_back(dataset, content_type):
     return next((b for b in dataset.records('card-backs') if b['content_type'] == content_type), None)
 
 
+# Words boardwars puts in deployment card image names; the dataset keeps them in `elite` and `modes` instead.
+DEPLOYMENT_MARKERS = re.compile(r'\b(elite|regular|campaign|skirmish)\b', re.I)
+# How iaspec values were built (data repo commit 3bb85ed): elite + name, then, only while another card would get the
+# same value, name plus one of mode, affiliation or description.
+IASPEC_STRATEGIES = [('elite', 'name'), ('elite', 'name', 'modes'), ('elite', 'name', 'affiliation'),
+                     ('elite', 'name', 'description')]
+
+
+def parse_deployment_name(raw):
+    """boardwars image name → (name, 'elite' | 'regular' | None, modes): 'Elite Death Troopers campaign' →
+    ('Death Troopers', 'elite', ['Campaign'])."""
+    text = raw.replace('-', ' ') if '_' in raw else raw  # 'Elite-Royal-Guard_errata'
+    text = re.sub(r'\b(errata|deployment card)\b', ' ', text.replace('_', ' '), flags=re.I)
+    marks = [m.lower() for m in DEPLOYMENT_MARKERS.findall(text)]
+    name = ' '.join(DEPLOYMENT_MARKERS.sub(' ', text).split()).strip(' -')
+    grade = 'elite' if 'elite' in marks else 'regular' if 'regular' in marks else None
+    return name, grade, [m.title() for m in marks if m in ('campaign', 'skirmish')]
+
+
+def deployment_fields(item, manifest):
+    """name, elite, unique and modes for a staged deployment card, from its image name and the rest of its album."""
+    name, grade, modes = parse_deployment_name(item['name'])
+    siblings = [parse_deployment_name(i['name']) for i in manifest['items']
+                if i['path'] == item['path'] and i['key'] != item['key']]
+    graded = bool(grade) or any(g and normalise(n) == normalise(name) for n, g, _ in siblings)
+    if graded and name.endswith('s'):
+        name = name[:-1]  # boardwars pluralises units that come in regular and elite ("Elite Snowtroopers")
+    heroes = {normalise(i['guess'].get('hints', {}).get('hero', '')) for i in manifest['items']
+              if i['guess']['content_type'] == 'heroes'}
+    fields = {'name': name}
+    if normalise(name) in heroes:
+        fields |= {'elite': False, 'unique': True, 'modes': ['Skirmish']}  # a hero's skirmish card
+    elif graded:
+        fields |= {'elite': grade == 'elite', 'unique': False}
+    elif modes:
+        fields |= {'elite': True, 'unique': True}  # a named figure printed twice, for campaign and skirmish
+    if modes:
+        fields['modes'] = modes
+    return fields
+
+
+def iaspec_part(record, attr):
+    value = record.get(attr)
+    if attr == 'elite':
+        return 'elite' if value and not record.get('unique') else ''
+    if attr == 'modes':
+        return value[0] if value and len(value) == 1 else ''
+    return value or ''
+
+
+def iaspec_for(record, others):
+    """record's iaspec by the dataset's rule, given the other deployment, command and companion records."""
+    def key(r, strategy):
+        text = unicodedata.normalize('NFKD', ''.join(iaspec_part(r, a) for a in strategy))
+        return re.sub(r'[\W_]+', '', text.encode('ascii', 'ignore').decode()).lower()
+    clashing = list(others)
+    for strategy in IASPEC_STRATEGIES:
+        clashing = [o for o in clashing if key(o, strategy) == key(record, strategy)]
+        if not clashing:
+            break
+    return key(record, strategy)
+
+
+def staged_iaspec_records(item, manifest, dataset, entries):
+    """Every record an iaspec must not clash with: the dataset's, the saved entries' and the other suggestions'."""
+    records = [r for t in importer.IASPEC_TYPES for r in dataset.records(t)]
+    for key, entry in entries.get('items', {}).items():
+        if key != item['key'] and entry.get('action') == 'new' and entry.get('content_type') in importer.IASPEC_TYPES:
+            records.append(entry.get('record', {}))
+    for other in manifest['items']:
+        if other['key'] != item['key'] and other['key'] not in entries.get('items', {}) and not other['matches']:
+            if other['guess']['content_type'] == 'deployment-cards':
+                records.append(deployment_fields(other, manifest) | affiliation_hint(other, dataset))
+            elif other['guess']['content_type'] in importer.IASPEC_TYPES:
+                records.append({'name': other['name']})
+    return records
+
+
+def affiliation_hint(item, dataset):
+    hint = item['guess'].get('hints', {}).get('affiliation')
+    if not hint:
+        return {}
+    options = dataset.schema('definitions')['definitions']['affiliation']['enum']
+    return {'affiliation': next((a for a in options if hint.lower().startswith(a.lower()[:5])), None)}
+
+
 def suggest(item, manifest, dataset, entries):
     """A starting entry for a staged image, from the scrape's guess and the dataset."""
     guess = item['guess']
@@ -84,15 +173,14 @@ def suggest(item, manifest, dataset, entries):
         record['name'] = item['name']
     if content_type == 'heroes':
         record['name'] = item['name'].rsplit(' ', 1)[0] if name_lower.endswith(('healthy', 'wounded')) else item['name']
-    if content_type == 'deployment-cards' and hints.get('affiliation'):
-        options = dataset.schema('definitions')['definitions']['affiliation']['enum']
-        record['affiliation'] = next((a for a in options if hints['affiliation'].lower().startswith(a.lower()[:5])), None)
+    if content_type == 'deployment-cards':
+        record |= deployment_fields(item, manifest) | affiliation_hint(item, dataset)
     if content_type == 'upgrade-cards' and 'tier' in hints:
         record['tier'] = hints['tier']
     if content_type == 'side-mission-cards' and hints.get('color'):
         record['color'] = hints['color']
     if content_type in importer.IASPEC_TYPES:
-        record['iaspec'] = normalise(item['name'])
+        record['iaspec'] = iaspec_for(record, staged_iaspec_records(item, manifest, dataset, entries))
     if content_type == 'card-backs':
         back_type = guess.get('back_content_type')
         sample = existing_back(dataset, back_type) if back_type else None

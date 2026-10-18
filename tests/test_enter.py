@@ -55,6 +55,53 @@ def test_suggestions(real_dataset):
     assert suggest(unit)['record']['iaspec'] == 'unit'
 
 
+def test_iaspec_rule_reproduces_the_dataset(real_dataset):
+    records = [r for t in ('deployment-cards', 'command-cards', 'companion-cards') for r in real_dataset.records(t)]
+    for record in records:
+        assert api.iaspec_for(record, [r for r in records if r is not record]) == record['iaspec']
+
+
+@pytest.mark.parametrize('raw, parsed', [
+    ('Elite Death Troopers campaign', ('Death Troopers', 'elite', ['Campaign'])),
+    ('Riot Trooper regular skirmish', ('Riot Trooper', 'regular', ['Skirmish'])),
+    ('Elite-Royal-Guard_errata', ('Royal Guard', 'elite', [])),
+    ('Royal Guard Champion Deployment Card', ('Royal Guard Champion', None, [])),
+    ('Loth-cats', ('Loth-cats', None, [])),
+])
+def test_parse_deployment_name(raw, parsed):
+    assert api.parse_deployment_name(raw) == parsed
+
+
+def test_deployment_suggestions(real_dataset):
+    album = ('X', 'Deployment Cards', 'Imperial')
+    items = [item('0001', 'deployment-cards', 'Grand Admiral skirmish', album, {'affiliation': 'Imperial'}),
+             item('0002', 'deployment-cards', 'Grand Admiral campaign', album, {'affiliation': 'Imperial'}),
+             item('0003', 'deployment-cards', 'Elite Space Cats', album, {'affiliation': 'Imperial'}),
+             item('0004', 'deployment-cards', 'Space Cats', album, {'affiliation': 'Imperial'}),
+             item('0005', 'deployment-cards', 'Hero Person', album, {'affiliation': 'Imperial'}),
+             item('0006', 'heroes', 'Hero Person Hero Healthy', ('X', 'Rebel Heroes'), {'hero': 'Hero Person'}),
+             item('0007', 'command-cards', 'The Last Word')]
+    manifest = {'items': items}
+
+    def record(key, entries=None):
+        i = next(i for i in items if i['key'] == key)
+        return api.suggest(i, manifest, real_dataset, entries or {'items': {}, 'extra': {}})['record']
+
+    assert record('0001') == {'name': 'Grand Admiral', 'elite': True, 'unique': True, 'modes': ['Skirmish'],
+                                   'affiliation': 'Imperial', 'iaspec': 'grandadmiralskirmish'}
+    assert record('0002')['iaspec'] == 'grandadmiralcampaign'
+    assert {k: record('0003')[k] for k in ('name', 'elite', 'unique', 'iaspec')} == \
+        {'name': 'Space Cat', 'elite': True, 'unique': False, 'iaspec': 'elitespacecat'}
+    assert {k: record('0004')[k] for k in ('name', 'elite', 'iaspec')} == \
+        {'name': 'Space Cat', 'elite': False, 'iaspec': 'spacecat'}
+    assert {k: record('0005')[k] for k in ('elite', 'unique', 'modes')} == \
+        {'elite': False, 'unique': True, 'modes': ['Skirmish']}
+    assert record('0007')['iaspec'] == 'thelastword'  # iaspec keeps a leading "the" (thegrandinquisitor)
+    # A saved entry counts too: once the skirmish card is saved, the campaign one still needs its mode.
+    saved = {'items': {'0001': {'action': 'new', 'content_type': 'deployment-cards', 'record': record('0001')}}}
+    assert record('0002', saved | {'extra': {}})['iaspec'] == 'grandadmiralcampaign'
+
+
 def test_check_entry(real_dataset):
     good = {'action': 'new', 'content_type': 'agenda-decks', 'record': {'name': 'Deck'}}
     assert api.check_entry(good, real_dataset) == []
