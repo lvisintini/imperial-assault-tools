@@ -96,7 +96,8 @@ function fieldInput(field, id, record) {
     record[field.name] = null;
   }
   const value = record[field.name];
-  const set = v => { record[field.name] = v; };
+  // Nullable arrays need at least one item (e.g. traits), so an empty one is null.
+  const set = v => { record[field.name] = Array.isArray(v) && !v.length && field.nullable ? null : v; };
   let input;
   switch (field.kind) {
     case 'boolean':
@@ -116,8 +117,8 @@ function fieldInput(field, id, record) {
     case 'multi': {
       if (!Array.isArray(value)) set([]);
       input = h('div', {class: 'multi', id}, field.options.map(o => h('label', {},
-        h('input', {type: 'checkbox', checked: record[field.name].includes(o), onchange: e => {
-          const list = record[field.name].filter(x => x !== o);
+        h('input', {type: 'checkbox', checked: (record[field.name] || []).includes(o), onchange: e => {
+          const list = (record[field.name] || []).filter(x => x !== o);
           if (e.target.checked) list.push(o);
           set(field.options.filter(x => list.includes(x)));
         }}), ' ', o)));
