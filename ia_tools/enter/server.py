@@ -172,6 +172,8 @@ class Handler(BaseHTTPRequestHandler):
         return self.send_png(original.convert('RGBA') if sizes is None else images.fit(original, sizes['large']))
 
     def update(self, staging, change, entry):
+        if entry:
+            api.normalise_entry(entry, self.dataset)  # in place, so `change` stores the normalised entry
         with lock:
             entries = staging.entries()
             change(entries)

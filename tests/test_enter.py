@@ -63,6 +63,13 @@ def test_check_entry(real_dataset):
     assert api.check_entry({'action': 'skip'}, real_dataset) == []
 
 
+def test_normalise_entry_nulls_empty_nullable_lists(real_dataset):
+    entry = {'action': 'new', 'content_type': 'reward-cards', 'record': {'name': 'R', 'type': 'Feat', 'traits': []}}
+    assert api.check_entry(entry, real_dataset)
+    assert api.normalise_entry(entry, real_dataset)['record']['traits'] is None
+    assert api.check_entry(entry, real_dataset) == []
+
+
 @pytest.fixture
 def running_server(tmp_path, dataset_copy, monkeypatch):
     staging = stage(tmp_path, {'0000': CARD, '0001': HERO}, {'product': None, 'items': {}, 'extra': {}})

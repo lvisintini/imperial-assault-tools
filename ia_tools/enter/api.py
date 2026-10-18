@@ -117,6 +117,19 @@ def find_parent(parent_type, name, dataset, entries, manifest):
     return None
 
 
+def normalise_entry(entry, dataset):
+    """Empty lists in nullable list fields become null, since those lists need at least one item (e.g. traits)."""
+    if entry.get('action') != 'new' or entry.get('content_type') not in ENTRY_TYPES + ['sources']:
+        return entry
+    properties = dataset.schema(entry['content_type']).get('properties', {})
+    record = entry.get('record', {})
+    for name, value in record.items():
+        options = properties.get(name, {}).get('oneOf', [])
+        if value == [] and any(o.get('type') == 'null' for o in options):
+            record[name] = None
+    return entry
+
+
 def check_entry(entry, dataset):
     """Problems with one entry's record, judged against its schema (ids, images and staged keys filled in)."""
     if entry.get('action') != 'new':
