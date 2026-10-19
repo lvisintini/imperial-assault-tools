@@ -193,14 +193,17 @@ def find_parent(parent_type, name, dataset, entries, manifest):
 
 
 def normalise_entry(entry, dataset):
-    """Empty lists in nullable list fields become null, since those lists need at least one item (e.g. traits)."""
+    """Text loses leading and trailing spaces ("Piece By Piece "); empty lists in nullable list fields become null,
+    since those lists need at least one item (e.g. traits)."""
     if entry.get('action') != 'new' or entry.get('content_type') not in ENTRY_TYPES + ['sources']:
         return entry
     properties = dataset.schema(entry['content_type']).get('properties', {})
     record = entry.get('record', {})
     for name, value in record.items():
         options = properties.get(name, {}).get('oneOf', [])
-        if value == [] and any(o.get('type') == 'null' for o in options):
+        if isinstance(value, str):
+            record[name] = value.strip()
+        elif value == [] and any(o.get('type') == 'null' for o in options):
             record[name] = None
     return entry
 

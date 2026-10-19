@@ -117,6 +117,11 @@ def test_normalise_entry_nulls_empty_nullable_lists(real_dataset):
     assert api.check_entry(entry, real_dataset) == []
 
 
+def test_normalise_entry_strips_text(real_dataset):
+    entry = {'action': 'new', 'content_type': 'command-cards', 'record': {'name': 'Piece By Piece ', 'cost': 1}}
+    assert api.normalise_entry(entry, real_dataset)['record'] == {'name': 'Piece By Piece', 'cost': 1}
+
+
 @pytest.fixture
 def running_server(tmp_path, dataset_copy, monkeypatch):
     staging = stage(tmp_path, {'0000': CARD, '0001': HERO}, {'product': None, 'items': {}, 'extra': {}})
