@@ -1,7 +1,7 @@
 """Fill gaps in imperial-assault-data from cards.boardwars.eu.
 
   ia audit               crawl the whole gallery and report images the dataset may be missing
-  ia scrape <album url>  download one album (a product, or the skirmish maps) into staging/<product>/
+  ia scrape <album url>  download albums (a product, or the skirmish maps) into staging/<product>/
   ia enter               open the data-entry app in the browser
   ia import <product>    write a product's entries into the data repo (--check to only validate)
   ia reprocess <product> re-make an imported product's images with the current pipeline (--check to only list them)
@@ -29,7 +29,8 @@ def cmd_scrape(args):
     from ia_tools import boardwars, scrape
     from ia_tools.dataset import Dataset
 
-    staging, manifest = scrape.run(boardwars.Client(), Dataset(), args.url, product=args.product)
+    staging, manifest = scrape.run(boardwars.Client(), Dataset(), args.url, product=args.product,
+                                   folder=args.folder)
     print(f"Staged {len(manifest['items'])} images for {manifest['product']} in {staging.dir}")
 
 
@@ -93,9 +94,12 @@ def main(argv=None):
                        help='rebuild the report from the last run without crawling (after changing hash lists or rules)')
     audit.set_defaults(func=cmd_audit)
 
-    scrape = commands.add_parser('scrape', help='download one album into staging')
-    scrape.add_argument('url', help='album URL, e.g. https://cards.boardwars.eu/Expansion-Boxes/Tyrants-of-Lothal/')
+    scrape = commands.add_parser('scrape', help='download albums into staging')
+    scrape.add_argument('url', nargs='+',
+                        help='album URL, e.g. https://cards.boardwars.eu/Expansion-Boxes/Tyrants-of-Lothal/')
     scrape.add_argument('--product', help="product name, when the album doesn't tell (e.g. skirmish maps)")
+    scrape.add_argument('--folder', help="staging folder name (default: the product's slug); a new one stages more "
+                                         'of an already imported product without replacing its staging')
     scrape.set_defaults(func=cmd_scrape)
 
     enter = commands.add_parser('enter', help='open the data-entry app')

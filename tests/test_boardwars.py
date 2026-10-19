@@ -67,6 +67,30 @@ def test_crawl_follows_albums_and_pages_once():
     assert len(fetched) == len(set(fetched)) == 3
 
 
+def test_crawl_adds_covers_no_album_lists():
+    thumb = '/cache/a/{}_275_thumb_ffflogog_whatermark_cc.jpg?cached=1'
+    pages = {
+        f'{BASE}/a/': f'''<div id="gallerytitle"><h2><span><a class="galleryindexurl" href="/">DB</a> | </span> A</h2></div>
+            <div class="album"><h3><a href="/a/b%20c/">B C</a></h3><img src="{thumb.format('b%20c/back')}"></div>
+            <div class="album"><h3><a href="/a/d/">D</a></h3><img src="{thumb.format('d/One')}"></div>
+            <div class="album"><h3><a href="/elsewhere/">E</a></h3><img src="/cache/uncrawled/back_275_thumb_ffflogog_whatermark_cc.jpg"></div>''',
+        f'{BASE}/a/b%20c/': '''<div id="gallerytitle"><h2><span><a class="galleryindexurl" href="/">DB</a> |
+            <a href="/a/" title="A">A</a> | </span> B C</h2></div>''',
+        f'{BASE}/a/d/': '''<div id="gallerytitle"><h2><span><a class="galleryindexurl" href="/">DB</a> |
+            <a href="/a/" title="A">A</a> | </span> D</h2></div>
+            <div class="image"><img alt="One" src="/cache/a/d/One_275_thumb_ffflogog_whatermark_cc.jpg"></div>''',
+        f'{BASE}/elsewhere/': '''<div id="gallerytitle"><h2><span><a class="galleryindexurl" href="/">DB</a> | </span> E</h2></div>''',
+    }
+    client = SimpleNamespace(get=lambda url: SimpleNamespace(text=pages[url]))
+    images = list(boardwars.crawl(client, f'{BASE}/a/'))
+    # d's cover is one of its images, so it comes once; the hidden back gets its album's path; a cover from an album
+    # the crawl didn't reach has no path to give it.
+    assert images == [
+        boardwars.ImageRef(path=('A', 'D'), name='One', url=f'{BASE}/albums/a/d/One.jpg'),
+        boardwars.ImageRef(path=('A', 'B C'), name='back', url=f'{BASE}/albums/a/b%20c/back.jpg'),
+    ]
+
+
 def test_later_pages_drop_zenphotos_page_number_from_the_title():
     assert boardwars.clean_title('  Skirmish   Maps (2) ') == 'Skirmish Maps'
     assert boardwars.clean_title('Wave (11)') == 'Wave'

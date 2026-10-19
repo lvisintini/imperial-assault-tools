@@ -172,6 +172,10 @@ def suggest(item, manifest, dataset, entries):
         back_type = guess.get('back_content_type')
         sample = existing_back(dataset, back_type) if back_type else None
         record = {'deck': sample['deck'] if sample else '', 'content_type': back_type, 'variant': None}
+        hint = hints.get({'heroes': 'hero', 'imperial-classes': 'class'}.get(back_type))
+        if hint:  # these backs' variant is the hero's or class's name
+            parent = next((r for r in dataset.records(back_type) if normalise(r['name']) == normalise(hint)), None)
+            record['variant'] = parent['name'] if parent else hint
     for (child, fk), parent in FOREIGN_KEYS.items():
         hint = {'heroes': 'hero', 'imperial-classes': 'class', 'agenda-decks': 'deck'}[parent]
         if content_type == child and hints.get(hint):

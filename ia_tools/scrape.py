@@ -1,4 +1,4 @@
-"""ia scrape: download one boardwars album (a product, or the skirmish maps) into a staging folder."""
+"""ia scrape: download boardwars albums (a product, part of one, or the skirmish maps) into a staging folder."""
 import hashlib
 import io
 import json
@@ -32,18 +32,20 @@ def cover_image(client, url, images):
     return boardwars.ImageRef(path=images[0].path[:start], name=name, url=cover)
 
 
-def run(client, dataset, url, product=None, root=None, log=print):
-    images = list(boardwars.crawl(client, url))
+def run(client, dataset, urls, product=None, root=None, log=print, folder=None):
+    """Stage every image in the albums at urls into staging/<folder or the product's slug>/."""
+    urls = [urls] if isinstance(urls, str) else list(urls)
+    images = list(dict.fromkeys(image for url in urls for image in boardwars.crawl(client, url)))
     guesses = [classify(image) for image in images]
     if not any(g.content_type == 'sources' for g in guesses):
-        cover = cover_image(client, url, images)
+        cover = cover_image(client, urls[0], images)
         if cover:
             images.insert(0, cover)
             guesses.insert(0, classify(cover))
     product = product or next((g.product for g in guesses if g.product), None)
     if not product:
         raise SystemExit('Could not tell the product from the album; pass --product')
-    staging = Staging(slugify(product), root)
+    staging = Staging(folder or slugify(product), root)
     (staging.dir / 'originals').mkdir(parents=True, exist_ok=True)
     index = NameIndex(dataset, [t for t in CONTENT_TYPES if t not in ('source-contents', 'card-backs')])
 
@@ -73,7 +75,7 @@ def run(client, dataset, url, product=None, root=None, log=print):
         log(f'{key} {guess.content_type or "?":22} {image.name}')
 
     manifest = {
-        'product': product, 'url': url, 'scraped': datetime.now(timezone.utc).isoformat(timespec='seconds'),
+        'product': product, 'urls': urls, 'scraped': datetime.now(timezone.utc).isoformat(timespec='seconds'),
         'existing_product': [{'id': r['id'], 'name': r['name']} for r in index.find('sources', product)],
         'items': items,
     }

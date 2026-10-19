@@ -42,9 +42,11 @@ says which commit of this repo produced it.
   - **skipped**: listed in `known-skipped-sha512.txt`.
 
   An interrupted audit resumes from `staging/audit/hashes.jsonl`.
-- **`ia scrape <album>`** downloads one album into `staging/<product>/`. It writes `originals/` plus a `manifest.json`
-  with each image's album path, guessed content type, hints (affiliation, tier, hero, ...), size and hash, and any
-  dataset records with the same name.
+- **`ia scrape <album>...`** downloads one or more albums into `staging/<product>/`. It writes `originals/` plus a
+  `manifest.json` with each image's album path, guessed content type, hints (affiliation, tier, hero, ...), size and
+  hash, and any dataset records with the same name. Album covers no album lists are staged too: boardwars keeps some
+  card backs only as a cover. To stage more of a product that's already imported, scrape just the albums you need into
+  a new folder with `--folder <name>`, so the product's staging (and its import log) stays as it was.
 - **`ia enter`** is a local web app. For each image it shows the original, a preview of how it will be imported, and an
   existing card of the same type. You decide what each image is:
   - a new record, using a form built from the dataset's JSON Schemas;

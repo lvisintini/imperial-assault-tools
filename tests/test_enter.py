@@ -38,9 +38,10 @@ def test_suggestions(real_dataset):
     wounded = item('0002', 'heroes', 'Test Hero Wounded', path=('X', 'Rebel Heroes', 'Test Hero'))
     known = item('0003', 'command-cards', 'Known', matches=[{'content_type': 'command-cards', 'id': 5, 'name': 'Known'}])
     feat = item('0004', 'hero-class-cards', 'Feat', hints={'hero': hero['name']})
-    back = item('0005', 'card-backs', 'back', back='heroes')
+    back = item('0005', 'card-backs', 'back', back='heroes', hints={'hero': hero['name'].upper()})
+    class_back = item('0007', 'card-backs', 'back', back='imperial-classes', hints={'class': 'New Class'})
     unit = item('0006', 'deployment-cards', 'Unit', hints={'affiliation': 'Mercenaries'})
-    manifest = {'items': [healthy, wounded, known, feat, back, unit]}
+    manifest = {'items': [healthy, wounded, known, feat, back, unit, class_back]}
     entries = {'items': {}, 'extra': {}}
 
     def suggest(i):
@@ -50,7 +51,8 @@ def test_suggestions(real_dataset):
     assert suggest(wounded) == {'action': 'attach', 'to': '0001', 'field': 'wounded'}
     assert suggest(known) == {'action': 'link', 'content_type': 'command-cards', 'id': 5}
     assert suggest(feat)['record']['hero_id'] == hero['id']
-    assert suggest(back)['record']['deck'] == 'Rebel Hero'
+    assert suggest(back)['record'] == {'deck': 'Rebel Hero', 'content_type': 'heroes', 'variant': hero['name']}
+    assert suggest(class_back)['record']['variant'] == 'New Class'
     assert suggest(unit)['record']['affiliation'] == 'Mercenary'
     assert suggest(unit)['record']['iaspec'] == 'unit'
 

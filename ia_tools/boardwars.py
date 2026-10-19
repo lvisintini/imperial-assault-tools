@@ -4,7 +4,7 @@ import re
 import time
 import urllib.robotparser
 from dataclasses import dataclass, field
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import unquote, urljoin, urlsplit
 
 import requests
 from parsel import Selector
@@ -113,9 +113,20 @@ class Client:
                 self.last_request = time.monotonic()
 
 
+def album_dir(url):
+    """An album page's or an original file's album, as an unquoted path: '/Core-Box/Command Cards'."""
+    path = unquote(urlsplit(url).path)
+    if path.startswith('/albums/'):
+        return path.removeprefix('/albums').rsplit('/', 1)[0]
+    return re.sub(r'/page/\d+$', '', path.rstrip('/'))
+
+
 def crawl(client, start_url, on_page=None):
-    """Yield every image in the album at start_url and all its sub-albums, following pagination."""
+    """Yield every image in the album at start_url and all its sub-albums, following pagination; then the albums'
+    covers that aren't listed in any album: boardwars keeps some card backs only as a cover ("back.jpg" of Tyrants of
+    Lothal's class deck and heroes)."""
     queue, seen = [start_url], set()
+    listed, paths, covers = set(), {}, []
     while queue:
         url = queue.pop(0)
         if url in seen:
@@ -125,6 +136,13 @@ def crawl(client, start_url, on_page=None):
         if on_page:
             on_page(page)
         yield from page.images
+        listed.update(image.url for image in page.images)
+        paths.setdefault(album_dir(url), page.path)
+        covers.extend(page.covers.values())
         queue.extend(album_url for album_url, _ in page.albums)
         if page.next_page:
             queue.append(page.next_page)
+    for cover in dict.fromkeys(covers):
+        if cover not in listed and album_dir(cover) in paths:
+            name = unquote(urlsplit(cover).path).rsplit('/', 1)[1].rsplit('.', 1)[0]
+            yield ImageRef(path=paths[album_dir(cover)], name=name, url=cover)
