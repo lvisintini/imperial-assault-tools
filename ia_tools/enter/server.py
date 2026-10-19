@@ -171,8 +171,9 @@ class Handler(BaseHTTPRequestHandler):
             original.load()
         if sizes is None:
             return self.send_png(original.convert('RGBA'))
-        large, _ = images.prepare(original, query.get('type'), query.get('field') or 'image', query.get('back') or None)
-        return self.send_png(large)
+        content_type, back = query.get('type'), query.get('back') or None
+        large, _ = images.prepare(original, content_type, query.get('field') or 'image', back)
+        return self.send_png(images.round_corners(large, images.radius_for(content_type, back, 'large')))
 
     def update(self, staging, change, entry):
         if entry:

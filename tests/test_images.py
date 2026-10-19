@@ -40,6 +40,40 @@ def test_skirmish_maps_keep_their_size_in_both_trees(tmp_path):
         assert im.size == (800, 1200)
 
 
+def test_round_corners_cuts_transparent_corners_on_the_card():
+    card = Image.new('RGBA', (476, 740), (200, 30, 30, 255))
+    rounded = images.round_corners(card, 32)
+    alpha = rounded.getchannel('A')
+    assert alpha.getpixel((0, 0)) == 0 and alpha.getpixel((475, 739)) == 0
+    assert alpha.getpixel((5, 5)) == 0 and alpha.getpixel((16, 16)) == 255   # inside the curve
+    assert alpha.getpixel((238, 0)) == 255 and alpha.getpixel((238, 370)) == 255
+    assert rounded.getpixel((238, 370))[:3] == (200, 30, 30)
+
+
+def test_round_corners_follows_the_card_not_the_canvas():
+    canvas = Image.new('RGBA', (476, 740))
+    canvas.paste(Image.new('RGBA', (400, 700), (0, 0, 0, 255)), (38, 20))
+    alpha = images.round_corners(canvas, 32).getchannel('A')
+    assert alpha.getpixel((38, 20)) == 0 and alpha.getpixel((238, 20)) == 255
+
+
+def test_corner_radius_scales_with_the_small_size():
+    assert images.radius_for('deployment-cards', None, 'large') == 32
+    assert images.radius_for('deployment-cards', None, 'small') == round(32 * 301 / 476)
+    assert images.radius_for('heroes', None, 'large') is None  # hero sheets keep square corners
+
+
+def test_process_rounds_cards_but_not_hero_sheets(tmp_path):
+    original = tmp_path / 'card.png'
+    original.write_bytes(png_bytes((600, 930)))
+    for content_type, rounded in (('deployment-cards', True), ('heroes', False)):
+        out = images.process(original, content_type, image_field='healthy' if content_type == 'heroes' else 'image')
+        with Image.open(io.BytesIO(out['large'])) as im:
+            alpha = im.convert('RGBA').getchannel('A')
+            box = alpha.getbbox()
+            assert (alpha.getpixel(box[:2]) == 0) is rounded, content_type
+
+
 def test_card_backs_size_by_what_they_are_the_back_of():
     assert images.sizes_for('card-backs', 'heroes') == images.MINI
     assert images.sizes_for('card-backs', 'deployment-cards') == images.STANDARD
