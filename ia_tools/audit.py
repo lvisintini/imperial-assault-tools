@@ -43,8 +43,8 @@ def run(client, dataset, out_dir, start_url=boardwars.BASE_URL, log=print):
     cache = {}
     if cache_path.exists():
         for line in cache_path.read_text().splitlines():
-            entry = json.loads(line)
-            cache[entry['url']] = entry
+            hashed = json.loads(line)
+            cache[hashed['url']] = hashed
     seen, skipped = load_hashes(settings.SEEN_HASHES), load_hashes(settings.SKIPPED_HASHES)
     index = NameIndex(dataset, [t for t in CONTENT_TYPES if t not in ('source-contents', 'card-backs')])
 
