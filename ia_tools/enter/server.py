@@ -169,7 +169,10 @@ class Handler(BaseHTTPRequestHandler):
         from PIL import Image
         with Image.open(staging.dir / item['file']) as original:
             original.load()
-        return self.send_png(original.convert('RGBA') if sizes is None else images.fit(original, sizes['large']))
+        if sizes is None:
+            return self.send_png(original.convert('RGBA'))
+        large, _ = images.prepare(original, query.get('type'), query.get('field') or 'image', query.get('back') or None)
+        return self.send_png(large)
 
     def update(self, staging, change, entry):
         if entry:

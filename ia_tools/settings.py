@@ -14,5 +14,8 @@ SEEN_HASHES = TOOLS_ROOT / 'crawler' / 'original-images-sha512.txt'
 # Originals deliberately not kept (rule sheets, duplicate backs, ...), so audits stop flagging them.
 SKIPPED_HASHES = TOOLS_ROOT / 'known-skipped-sha512.txt'
 
+# Cards from the 2018 dataset that new cards are aligned to (ia_tools/align.py).
+TEMPLATES = TOOLS_ROOT / 'assets' / 'templates'
+
 TINIFY_KEY = os.environ.get('TINIFY_KEY')
 PORT = int(os.environ.get('IA_PORT', '8001'))

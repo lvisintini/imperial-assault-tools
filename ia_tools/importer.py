@@ -187,16 +187,17 @@ def summary(plan_):
 
 
 def apply(plan_, staging, dataset):
-    items, upscaled = plan_["items"], {}
+    items, upscaled, alignments = plan_["items"], {}, {}
     for p in plan_['pending']:
         for image_field, item_key in p.images.items():
             back_type = p.record.get('content_type') if p.content_type == 'card-backs' else None
-            out = images.process(staging.dir / items[item_key]['file'], p.content_type, back_type)
+            out = images.process(staging.dir / items[item_key]['file'], p.content_type, back_type, image_field)
             for size in ('large', 'small'):
                 path = dataset.image_path(size, p.record[image_field])
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(out[size])
             upscaled[p.key] = out['upscaled']
+            alignments[item_key] = out['alignment']
         dataset.records(p.content_type).append(p.record)
     dataset.records('source-contents').extend(plan_['rows'])
     for content_type in {p.content_type for p in plan_['pending']} | ({'source-contents'} if plan_['rows'] else set()):
@@ -210,6 +211,8 @@ def apply(plan_, staging, dataset):
             path.write_text(text + ('' if not text or text.endswith('\n') else '\n') + '\n'.join(new) + '\n')
 
     log = {'summary': summary(plan_), 'upscaled': [k for k, up in upscaled.items() if up],
+           # staged item → the template it was aligned to; None: left unaligned (check it by eye).
+           'alignment': alignments,
            'records': [{'key': p.key, 'content_type': p.content_type, 'record': p.record} for p in plan_['pending']],
            'source_contents': plan_['rows']}
     (staging.dir / 'import-log.json').write_text(json.dumps(log, indent=2), encoding='utf-8')

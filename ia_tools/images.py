@@ -1,12 +1,13 @@
 """Turn a boardwars original into the dataset's large and small PNGs.
 
-Same steps as the 2017–18 StandardImageDimension task: RGBA, scaled to fit the type's size, centred on a transparent
-canvas of exactly that size. Sizes mirror the data repo's README table (tests/test_images.py ImageTestHelper)."""
+Same steps as the 2017–18 pipeline: RGBA, scaled to fit the type's size and centred on a transparent canvas of exactly
+that size, then aligned to the 2018 templates (align.py). The small image is made from the aligned large one. Sizes
+mirror the data repo's README table (tests/test_images.py ImageTestHelper)."""
 import io
 
 from PIL import Image, ImageOps
 
-from ia_tools import settings
+from ia_tools import align, settings
 
 SOURCE = {'large': (300, 300), 'small': (300, 300)}
 STANDARD = {'large': (476, 740), 'small': (301, 470)}
@@ -58,17 +59,25 @@ def encode(image):
     return buffer.getvalue()
 
 
-def process(original_path, content_type, back_content_type=None):
-    """{'large': bytes, 'small': bytes, 'upscaled': bool} for one original."""
+def prepare(original, content_type, image_field='image', back_content_type=None):
+    """(large RGBA image, alignment) before encoding: what the import writes, and what the entry app previews."""
+    large = fit(original, sizes_for(content_type, back_content_type)['large'])
+    return align.align(large, content_type, image_field, back_content_type)
+
+
+def process(original_path, content_type, back_content_type=None, image_field='image'):
+    """{'large': bytes, 'small': bytes, 'upscaled': bool, 'alignment': {'template', 'cc'} | None} for one original."""
     sizes = sizes_for(content_type, back_content_type)
     with Image.open(original_path) as original:
         original.load()
     if sizes is ANY:
         data = encode(original.convert('RGBA'))
-        return {'large': data, 'small': data, 'upscaled': False}
+        return {'large': data, 'small': data, 'upscaled': False, 'alignment': None}
     upscaled = original.width < sizes['large'][0] and original.height < sizes['large'][1]
+    large, alignment = prepare(original, content_type, image_field, back_content_type)
     return {
-        'large': encode(fit(original, sizes['large'])),
-        'small': encode(fit(original, sizes['small'])),
+        'large': encode(large),
+        'small': encode(fit(large, sizes['small'])),
         'upscaled': upscaled,
+        'alignment': alignment,
     }
