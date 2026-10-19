@@ -28,22 +28,23 @@ def test_a_shifted_and_rotated_card_is_put_back():
     card = template(LEIA, size)
     moved = cv2.warpAffine(numpy.asarray(card), cv2.getRotationMatrix2D((238, 370), 1.5, 1.0) + [[0, 0, 7], [0, 0, -5]],
                            size, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
-    aligned, result = align.align(Image.fromarray(moved, 'RGBA'), 'deployment-cards')
+    aligned, result = align.align(Image.fromarray(moved, 'RGBA'), size, 'deployment-cards')
     assert result['template'] == LEIA and result['cc'] > 0.95
-    assert grey_difference(aligned, card) < grey_difference(moved, card) / 3
+    assert aligned.size == size and grey_difference(aligned, card) < grey_difference(moved, card) / 3
+    # In the template's own frame (474x740), centred: as in 2018, a pixel of margin either side.
+    assert aligned.getchannel('A').getbbox() == (1, 0, 475, 740)
 
 
 def test_cards_that_match_no_template_are_left_alone():
     noise = numpy.random.default_rng(1).integers(0, 255, (740, 476, 4), dtype=numpy.uint8)
     noise[:, :, 3] = 255
     image = Image.fromarray(noise, 'RGBA')
-    aligned, result = align.align(image, 'deployment-cards')
-    assert result is None and aligned is image
+    assert align.align(image, (476, 740), 'deployment-cards') == (None, None)
 
 
 def test_types_without_templates_are_left_alone():
     image = Image.new('RGBA', (300, 300), (10, 20, 30, 255))
-    assert align.align(image, 'sources') == (image, None)
+    assert align.align(image, (300, 300), 'sources') == (None, None)
 
 
 def test_hero_sides():

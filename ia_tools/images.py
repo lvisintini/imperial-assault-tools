@@ -80,7 +80,7 @@ def round_corners(image, radius):
     ImageDraw.Draw(mask).rounded_rectangle((0, 0, mask.width - 1, mask.height - 1), radius=radius * SUPERSAMPLE,
                                            fill=255)
     corners = Image.new('L', image.size, 0)
-    corners.paste(mask.resize((width, height), Image.Resampling.LANCZOS), box[:2])
+    corners.paste(mask.resize((width, height), Image.Resampling.BOX), box[:2])  # BOX: exact coverage, edges stay 255
     rounded = image.copy()
     rounded.putalpha(ImageChops.multiply(image.getchannel('A'), corners))
     return rounded
@@ -100,9 +100,11 @@ def encode(image):
 
 
 def prepare(original, content_type, image_field='image', back_content_type=None):
-    """(large RGBA image, alignment): fitted and aligned, corners still square."""
-    large = fit(original, sizes_for(content_type, back_content_type)['large'])
-    return align.align(large, content_type, image_field, back_content_type)
+    """(large RGBA image, alignment), corners still square: aligned to a template when one matches (align.py),
+    otherwise fitted (centred, aspect kept)."""
+    size = sizes_for(content_type, back_content_type)['large']
+    aligned, alignment = align.align(original, size, content_type, image_field, back_content_type)
+    return (aligned, alignment) if alignment else (fit(original, size), None)
 
 
 def process(original_path, content_type, back_content_type=None, image_field='image'):
@@ -115,7 +117,8 @@ def process(original_path, content_type, back_content_type=None, image_field='im
         return {'large': data, 'small': data, 'upscaled': False, 'alignment': None}
     upscaled = original.width < sizes['large'][0] and original.height < sizes['large'][1]
     large, alignment = prepare(original, content_type, image_field, back_content_type)
-    small = fit(large, sizes['small'])
+    # Stretched (by under 0.5%), not fitted: the small sizes' aspect differs slightly, and fitting would pad an edge.
+    small = large.resize(sizes['small'], Image.Resampling.LANCZOS)
     return {
         'large': encode(round_corners(large, radius_for(content_type, back_content_type, 'large'))),
         'small': encode(round_corners(small, radius_for(content_type, back_content_type, 'small'))),

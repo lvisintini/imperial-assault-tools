@@ -76,9 +76,10 @@ def grey(rgba):
 
 
 @cache
-def template_grey(name, size):
+def template_grey(name):
+    """A template's grey levels at its own size: the frame a card aligned to it ends up in."""
     with Image.open(settings.TEMPLATES / name) as template:
-        return cv2.resize(grey(numpy.asarray(template.convert('RGBA'))), size)
+        return grey(numpy.asarray(template.convert('RGBA')))
 
 
 def ecc(reference, image):
@@ -114,21 +115,29 @@ def correlation(a, b):
     return float((a * b).sum() / numpy.sqrt((a * a).sum() * (b * b).sum()))
 
 
-def align(image, content_type, image_field='image', back_content_type=None):
-    """(image, {'template', 'cc'} | None) for an RGBA image already fitted to its type's large size."""
-    rgba = numpy.asarray(image.convert('RGBA'))
-    card = grey(rgba)
+def align(original, size, content_type, image_field='image', back_content_type=None):
+    """(RGBA image of exactly size, {'template', 'cc'}) with the card aligned to the best-matching template, or
+    (None, None) when none matches well enough.
+
+    As in 2018, the card is warped into the template's own frame (a few pixels smaller than the canvas, e.g. 474x740)
+    and centred on a transparent canvas. The warp's uncovered edges repeat the card's edge pixels, not transparency."""
+    original = original.convert('RGBA')
     best = None
     for name in templates_for(content_type, image_field, back_content_type):
-        reference = template_grey(name, image.size)
+        reference = template_grey(name)
+        frame = (reference.shape[1], reference.shape[0])
+        rgba = numpy.asarray(original.resize(frame, Image.Resampling.LANCZOS))  # alignment corrects the stretch
+        card = grey(rgba)
         found = ecc(reference, card)
-        if not found or not plausible(found[1], image.size):
+        if not found or not plausible(found[1], frame):
             continue
         if found[0] - correlation(reference, card) > MIN_GAIN and (best is None or found[0] > best[0]):
-            best = (found[0], found[1], name)
+            best = (found[0], found[1], name, rgba, frame)
     if best is None:
-        return image, None
-    cc, warp, name = best
-    aligned = cv2.warpAffine(rgba, warp, image.size, flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
-                             borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
-    return Image.fromarray(aligned, 'RGBA'), {'template': name, 'cc': round(float(cc), 3)}
+        return None, None
+    cc, warp, name, rgba, frame = best
+    aligned = cv2.warpAffine(rgba, warp, frame, flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
+                             borderMode=cv2.BORDER_REPLICATE)
+    canvas = Image.new('RGBA', size)
+    canvas.paste(Image.fromarray(aligned, 'RGBA'), ((size[0] - frame[0]) // 2, (size[1] - frame[1]) // 2))
+    return canvas, {'template': name, 'cc': round(float(cc), 3)}
