@@ -9,15 +9,37 @@ from urllib.parse import unquote, urlsplit
 from PIL import Image
 
 from ia_tools import boardwars
-from ia_tools.classify import BACK_KEYS, classify
+from ia_tools.classify import BACK_KEYS, classify, product_of
 from ia_tools.dataset import CONTENT_TYPES
 from ia_tools.match import NameIndex
 from ia_tools.staging import Staging, slugify
 
 
+def album_key(url):
+    return unquote(urlsplit(url).path).rstrip('/')
+
+
+def cover_image(client, url, images):
+    """The album's cover as an image, when it isn't one of the album's own images: ally and villain packs keep their
+    box image there ("Thrawn Pack.png"), shown on the wave's page but not listed in the pack's album."""
+    parent = url.rstrip('/').rsplit('/', 1)[0] + '/'
+    page = boardwars.parse_album_page(client.get(parent).text, parent)
+    cover = next((c for album, c in page.covers.items() if album_key(album) == album_key(url)), None)
+    if not cover or not images or album_key(cover) in {album_key(i.url) for i in images}:
+        return None
+    _, start = product_of(images[0].path)
+    name = PurePosixPath(unquote(urlsplit(cover).path)).stem
+    return boardwars.ImageRef(path=images[0].path[:start], name=name, url=cover)
+
+
 def run(client, dataset, url, product=None, root=None, log=print):
     images = list(boardwars.crawl(client, url))
     guesses = [classify(image) for image in images]
+    if not any(g.content_type == 'sources' for g in guesses):
+        cover = cover_image(client, url, images)
+        if cover:
+            images.insert(0, cover)
+            guesses.insert(0, classify(cover))
     product = product or next((g.product for g in guesses if g.product), None)
     if not product:
         raise SystemExit('Could not tell the product from the album; pass --product')

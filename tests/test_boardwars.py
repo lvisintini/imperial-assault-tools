@@ -71,3 +71,29 @@ def test_later_pages_drop_zenphotos_page_number_from_the_title():
     assert boardwars.clean_title('  Skirmish   Maps (2) ') == 'Skirmish Maps'
     assert boardwars.clean_title('Wave (11)') == 'Wave'
     assert boardwars.clean_title('Command Cards') == 'Command Cards'
+
+
+def test_album_covers_point_at_their_original_files():
+    page = boardwars.parse_album_page(fixture_html('product-album.html'), f'{BASE}/Expansion-Boxes/Tyrants-of-Lothal/')
+    assert len(page.covers) == 9
+    album, cover = next(iter(page.covers.items()))
+    assert album.startswith(f'{BASE}/Expansion-Boxes/Tyrants-of-Lothal/') and cover.startswith(f'{BASE}/albums/')
+    assert '_thumb_' not in cover
+
+
+def test_a_packs_cover_becomes_its_product_image():
+    from ia_tools import scrape
+
+    wave = f'{BASE}/Ally-and-Villain-Packs/Wave-11/'
+    pages = {wave: '''<div id="gallerytitle"><h2><span><a class="galleryindexurl" href="/">DB</a> | </span> Wave 11</h2></div>
+        <div class="album"><h3><a href="/Ally-and-Villain-Packs/Wave-11/Thrawn/">Thrawn</a></h3>
+        <img src="/cache/Ally-and-Villain-Packs/Wave-11/Thrawn/Thrawn%20Pack_275_thumb_ffflogog_whatermark_cc.png?cached=1"></div>'''}
+    client = SimpleNamespace(get=lambda url: SimpleNamespace(text=pages[url]))
+    card = boardwars.ImageRef(path=('Villain and Ally Packs', 'Wave 11', 'Thrawn', 'Command Cards'), name='Foresee',
+                              url=f'{BASE}/albums/Ally-and-Villain-Packs/Wave-11/Thrawn/Command%20Cards/Foresee.jpg')
+    cover = scrape.cover_image(client, f'{wave}Thrawn/', [card])
+    assert cover == boardwars.ImageRef(path=('Villain and Ally Packs', 'Wave 11', 'Thrawn'), name='Thrawn Pack',
+                                       url=f'{BASE}/albums/Ally-and-Villain-Packs/Wave-11/Thrawn/Thrawn%20Pack.png')
+    # A cover that is one of the album's own images isn't a product image.
+    pages[wave] = pages[wave].replace('Thrawn/Thrawn%20Pack', 'Thrawn/Command%20Cards/Foresee').replace('.png?', '.jpg?')
+    assert scrape.cover_image(client, f'{wave}Thrawn/', [card]) is None

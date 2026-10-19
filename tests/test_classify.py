@@ -26,6 +26,8 @@ def guess(*path, name='Card'):
      'side-mission-cards', {'color': 'Red'}),
     (('Villain and Ally Packs', 'Wave-11', 'Thrawn', 'Agenda Deck'), 'Card', 'Thrawn', 'agenda-cards',
      {'wave': 'Wave-11'}),
+    (('Villain and Ally Packs', 'Wave 11', 'Hondo Ohnaka', 'Deplyoyment Cards'), 'Lie in Ambush', 'Hondo Ohnaka',
+     'deployment-cards', {'wave': 'Wave 11'}),  # boardwars' typo
     (('Skirmish Maps',), 'Geonosis Foundry', None, 'skirmish-maps', {}),
     (('Somewhere Else',), 'Thing', None, None, {}),
 ])

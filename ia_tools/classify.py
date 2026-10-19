@@ -8,6 +8,7 @@ SECTIONS = [
     ('agenda', 'agenda-cards', 'deck'),
     ('command', 'command-cards', None),
     ('deployment', 'deployment-cards', 'affiliation'),
+    ('deplyoyment', 'deployment-cards', 'affiliation'),  # boardwars' Hondo Ohnaka pack
     ('imperial class', 'imperial-class-cards', 'class'),
     ('rebel hero', 'hero-class-cards', 'hero'),
     ('rebel upgrade', 'upgrade-cards', 'tier'),

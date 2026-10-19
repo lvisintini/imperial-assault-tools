@@ -3,7 +3,7 @@ image's original file."""
 import re
 import time
 import urllib.robotparser
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from urllib.parse import urljoin, urlsplit
 
 import requests
@@ -34,6 +34,7 @@ class AlbumPage:
     albums: list[tuple[str, str]]  # (url, name) of each sub-album
     images: list[ImageRef]
     next_page: str | None
+    covers: dict[str, str] = field(default_factory=dict)  # sub-album url → its cover's original file
 
 
 def clean_title(title):
@@ -65,9 +66,14 @@ def parse_album_page(html, url):
                  url=original_url(image.css('img::attr(src)').get()))
         for image in page.css('div.image')
     ]
+    covers = {}
+    for album in page.css('div.album'):
+        href, src = album.css('h3 a::attr(href)').get(), album.css('img::attr(src)').get()
+        if href and src and src.startswith('/cache/'):
+            covers[urljoin(url, href)] = original_url(src)
     next_page = page.css('ul.pagelist li.next a::attr(href)').get()
     return AlbumPage(url=url, path=path, albums=albums, images=images,
-                     next_page=urljoin(url, next_page) if next_page else None)
+                     next_page=urljoin(url, next_page) if next_page else None, covers=covers)
 
 
 class Client:
