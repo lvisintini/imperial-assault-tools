@@ -4,6 +4,7 @@
   ia scrape <album url>  download one album (a product, or the skirmish maps) into staging/<product>/
   ia enter               open the data-entry app in the browser
   ia import <product>    write a product's entries into the data repo (--check to only validate)
+  ia reprocess <product> re-make an imported product's images with the current pipeline (--check to only list them)
 """
 import argparse
 import json
@@ -60,6 +61,28 @@ def cmd_import(args):
         print('Upscaled (original smaller than the target size):', ', '.join(log['upscaled']))
 
 
+def cmd_reprocess(args):
+    from ia_tools import reprocess
+    from ia_tools.dataset import Dataset
+    from ia_tools.staging import Staging
+
+    staging, dataset = Staging(args.product), Dataset()
+    try:
+        todo, log = reprocess.plan(staging, dataset)
+    except reprocess.ReprocessProblems as problems:
+        print(f'{len(problems.problems)} problems:', *problems.problems, sep='\n  ')
+        sys.exit(1)
+    cost = f', {2 * len(todo)} TinyPNG compressions' if settings.TINIFY_KEY else ''
+    print(f'{len(todo)} images to re-make in {dataset.root} (large and small{cost})')
+    if args.check:
+        return
+    alignments = reprocess.apply(todo, log, staging, dataset, progress=lambda job: print(' ', job[4]))
+    unaligned = [key for key, alignment in alignments.items() if alignment is None]
+    print(f'Done. Log: {staging.dir / "import-log.json"}')
+    if unaligned:
+        print('Left unaligned (no template matched well enough; check by eye):', ', '.join(unaligned))
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog='ia', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     commands = parser.add_subparsers(dest='command', required=True)
@@ -84,6 +107,11 @@ def main(argv=None):
     import_.add_argument('product', help='staging folder name, e.g. tyrants-of-lothal')
     import_.add_argument('--check', action='store_true', help='only validate and show what would change')
     import_.set_defaults(func=cmd_import)
+
+    reprocess = commands.add_parser('reprocess', help="re-make an imported product's images with the current pipeline")
+    reprocess.add_argument('product', help='staging folder name, e.g. tyrants-of-lothal')
+    reprocess.add_argument('--check', action='store_true', help='only list the images and what it would cost')
+    reprocess.set_defaults(func=cmd_reprocess)
 
     args = parser.parse_args(argv)
     args.func(args)

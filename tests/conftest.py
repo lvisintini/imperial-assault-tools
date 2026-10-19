@@ -22,6 +22,12 @@ def png_bytes(size, color=(200, 30, 30, 255)):
     return buffer.getvalue()
 
 
+@pytest.fixture(autouse=True)
+def no_tinypng(monkeypatch):
+    """Tests encode locally: a TINIFY_KEY in the environment would spend the account's monthly compressions."""
+    monkeypatch.setattr(settings, 'TINIFY_KEY', None)
+
+
 @pytest.fixture(scope='session')
 def real_dataset():
     if not (settings.DATA_ROOT / 'data' / 'sources.json').is_file():
