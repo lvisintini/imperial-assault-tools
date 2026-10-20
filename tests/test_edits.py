@@ -22,8 +22,8 @@ def touch_images(dataset, relative):
 def test_a_rename_moves_the_images(tmp_path, dataset_copy, hash_files):
     source = next(s for s in dataset_copy.records('sources') if s['id'] == 5)
     touch_images(dataset_copy, source['image'])
-    staging = staging_with(tmp_path, dataset_copy, 'sources', 5, {'name': 'IG-88'},
-                           {'action': 'apply', 'changes': {'name': 'IG-88'}, 'rename_images': True})
+    staging = staging_with(tmp_path, dataset_copy, 'sources', 5, {'name': 'IG88'},
+                           {'action': 'apply', 'changes': {'name': 'IG88'}, 'rename_images': True})
 
     plan = importer.plan(staging, dataset_copy)
     assert importer.summary(plan)['edits'] == 1
@@ -31,9 +31,9 @@ def test_a_rename_moves_the_images(tmp_path, dataset_copy, hash_files):
     importer.apply(plan, staging, dataset_copy)
 
     on_disk = next(s for s in dataset_copy.records('sources') if s['id'] == 5)
-    assert on_disk['name'] == 'IG-88' and on_disk['image'] == 'sources/ig-88.png'
-    assert dataset_copy.path('sources').read_text().count('"IG-88"') == 1
-    assert dataset_copy.image_path('small', 'sources/ig-88.png').read_bytes() == b'small'
+    assert on_disk['name'] == 'IG88' and on_disk['image'] == 'sources/ig88.png'
+    assert dataset_copy.path('sources').read_text().count('"IG88"') == 1
+    assert dataset_copy.image_path('small', 'sources/ig88.png').read_bytes() == b'small'
     assert not dataset_copy.image_path('large', old).exists()
 
 

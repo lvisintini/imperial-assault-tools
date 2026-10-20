@@ -61,6 +61,13 @@ def image_slug(content_type, record, image_field, parent_name=None):
     return slugify(' '.join(str(p) for p in parts if p))
 
 
+def missing_nullables(schema, record):
+    """Required fields that may be null and are missing from a staged record, as null: what the entry form fills in
+    for blank ones, for entries staged before the schema gained the field (sources.product_code)."""
+    return {name: None for name in schema.get('required', [])
+            if name not in record and any(o.get('type') == 'null' for o in schema['properties'][name].get('oneOf', []))}
+
+
 def plan(staging, dataset):
     """Check entries.json and work out every change. Returns the plan; raises ImportProblems with all problems found."""
     problems = []
@@ -155,6 +162,7 @@ def plan(staging, dataset):
     iaspec_records = [r for t in IASPEC_TYPES for r in dataset.records(t)]
     iaspec_records += [p.record for p in pending if p.content_type in IASPEC_TYPES]
     for p in pending:
+        p.record = missing_nullables(dataset.schema(p.content_type), p.record) | p.record
         p.record = {k: p.record[k] for k in dataset.key_order(p.content_type) if k in p.record} | p.record
         for error in jsonschema.Draft4Validator(dataset.schema(p.content_type)).iter_errors(p.record):
             where = '.'.join(str(x) for x in error.absolute_path) or '(record)'

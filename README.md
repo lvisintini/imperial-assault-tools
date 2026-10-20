@@ -27,6 +27,7 @@ uv run ia audit                  # crawl all of boardwars; report in staging/aud
 uv run ia scrape https://cards.boardwars.eu/Expansion-Boxes/Tyrants-of-Lothal/
 uv run ia scrape --gaps          # or: everything the audit found missing, from any product, into staging/gaps/
 uv run ia wiki                   # cache every product's components and copies from the wiki
+uv run ia wiki --propose         # stage edits to every source's code, dates, wave and type, from that cache
 uv run ia enter                  # opens http://localhost:8001: go through the cards
 uv run ia import tyrants-of-lothal --check   # validate only
 uv run ia import tyrants-of-lothal           # write records, images and source-contents rows
@@ -58,7 +59,12 @@ says which commit of this repo produced it.
   lists, through the MediaWiki API, into `staging/wiki/` (`pages/` holds the raw answers, `products.json` the parsed
   components with their headings, counts and notes, plus each product's code, wave, dates and dataset source id).
   Fetched pages are reused; `--refresh` fetches them again. The pages are written by hand, so the parse keeps every
-  component's raw line and leaves matching components to records to whoever reads it.
+  component's raw line and leaves matching components to records to whoever reads it. Packs that ship inside another
+  product (Luke and Vader in the Core Set) get no source id until the dataset has `sources.included_in`.
+  `ia wiki --propose [FOLDER]` reads the cache instead (no network) and stages an `ia propose` edit (folder
+  `wiki-sources` by default) for every source whose `product_code`, `announced_date`, `release_date`, `wave` or
+  `type` differs from the wiki's. The dates and wave come from the main page, and the type from the product page's
+  infobox. Sources that already have a proposal in the folder are left alone, so it can be run again.
 - **`ia propose <type> <id> field=value...`** proposes a change to an existing record (a rename, a corrected field)
   into a staging folder (`edits` unless `--folder` says otherwise), with an optional `--note`. Values are JSON when
   they parse as JSON (`wave=2`) and text otherwise (`name=IG-88`).

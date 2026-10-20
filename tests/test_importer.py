@@ -62,8 +62,10 @@ def test_full_import(tmp_path, dataset_copy, hash_files):
     importer.apply(plan, staging, dataset_copy)
 
     source = dataset_copy.records('sources')[-1]
-    assert source == {'id': next_ids['sources'], 'name': 'Test Product', 'type': 'Expansion', 'wave': None,
-                      'image': 'sources/test-product.png'}
+    staged = {'id': next_ids['sources'], 'name': 'Test Product', 'type': 'Expansion', 'wave': None,
+              'image': 'sources/test-product.png'}
+    # Fields the schema gained after the product was staged are null (product_code and the dates).
+    assert source == importer.missing_nullables(dataset_copy.schema('sources'), staged) | staged
     hero = dataset_copy.records('heroes')[-1]
     assert hero['healthy'] == 'heroes/test-hero-healthy.png' and hero['wounded'] == 'heroes/test-hero-wounded.png'
     feat = dataset_copy.records('hero-class-cards')[-1]

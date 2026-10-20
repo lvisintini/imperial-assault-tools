@@ -16,11 +16,12 @@ and the other bracketed notes ("Skirmish Upgrade", a figure's name). Pages are w
 nothing here guesses a content type: matching components to records is up to whoever reads the cache."""
 import json
 import re
+from collections import Counter
 from datetime import datetime, timezone
 
 from ia_tools import settings
 from ia_tools.match import NameIndex, normalise
-from ia_tools.staging import slugify
+from ia_tools.staging import Staging, slugify
 
 API_URL = 'https://imperial-assault.fandom.com/api.php'
 MAIN_PAGE = 'Imperial Assault'
@@ -39,8 +40,14 @@ LEADING_COUNT = re.compile(r'^(\d+)\s+(?=\D)')
 # "SWI19 [[Return to Hoth]] (Big Box Expansion)" on the main page.
 PRODUCT_LINE = re.compile(r'^(SWI\d+)\s+(.*)$')
 DATES = re.compile(r'Announced\s+([^/]+?)\s*/\s*(?:Release[sd]?\s+)?(.+?)\)', re.I)
-# The wiki's product names that differ from the dataset's beyond the "Ally Pack" / "Villain Pack" suffix.
-PRODUCT_ALIASES = {'coreset': 'Imperial Assault'}
+# The wiki's product names that differ from the dataset's beyond the "Ally Pack" / "Villain Pack" suffix, tried
+# when the name itself finds nothing.
+PRODUCT_ALIASES = {'coreset': 'Imperial Assault', 'lukeskywalkerjediknight': 'Luke Skywalker'}
+ORDINAL = re.compile(r'(\d+)(?:st|nd|rd|th)\b')
+INFOBOX_FIELD = re.compile(r'^\|\s*(\w+)\s*=\s*(.*?)\s*$', re.M)
+# A product page's infobox type → the dataset's source type. The Core Set's infobox has none.
+SOURCE_TYPES = {'Big Box': 'Expansion', 'Ally Pack': 'Ally Pack', 'Villain Pack': 'Villain Pack',
+                'Villian Pack': 'Villain Pack'}  # Captain Terro's page
 
 
 def clean(text):
@@ -136,8 +143,7 @@ def parse_products(wikitext):
 def source_for(index, label):
     """The dataset's source id for a wiki product name, or None."""
     name = re.sub(r'\s+(Ally|Villain)\s+Pack$', '', label.replace(',', ''))
-    name = PRODUCT_ALIASES.get(normalise(name), name)
-    found = index.find('sources', name)
+    found = index.find('sources', name) or index.find('sources', PRODUCT_ALIASES.get(normalise(name), name))
     return found[0]['id'] if len(found) == 1 else None
 
 
@@ -164,6 +170,9 @@ def run(client, dataset, root=None, refresh=False, log=print):
         return json.loads(path.read_text(encoding='utf-8'))['parse']
 
     index = NameIndex(dataset, ['sources'])
+    # Packs that ship inside another product (Luke and Vader in the Core Set) are sources only once the dataset models
+    # them (sources.included_in); until then their names would find the stand-alone packs ("Luke Skywalker").
+    bundled_packs = 'included_in' in dataset.schema('sources')['properties']
     main = page(MAIN_PAGE)
     products = []
     for product in parse_products(main['wikitext']):
@@ -174,7 +183,8 @@ def run(client, dataset, root=None, refresh=False, log=print):
             continue
         products.append(product | {
             'page': parsed['title'], 'revid': parsed.get('revid'),
-            'source_id': source_for(index, product['title']) if source_for(index, product['title']) is not None
+            'source_id': None if product['included_in'] and not bundled_packs
+            else source_for(index, product['title']) if source_for(index, product['title']) is not None
             else source_for(index, product['label']),
             'components': parse_contents(parsed['wikitext']),
         })
@@ -188,3 +198,77 @@ def run(client, dataset, root=None, refresh=False, log=print):
 
 def load(root=None):
     return json.loads(((root or settings.STAGING) / 'wiki' / 'products.json').read_text(encoding='utf-8'))
+
+
+def parse_date(text):
+    """A main-page date ("Aug 15th, 2014", "August 20th 2015") as YYYY-MM-DD, or None."""
+    text = ' '.join(ORDINAL.sub(r'\1', (text or '').replace(',', ' ')).split())
+    for pattern in ('%B %d %Y', '%b %d %Y'):
+        try:
+            return datetime.strptime(text, pattern).date().isoformat()
+        except ValueError:
+            pass
+    return None
+
+
+def infobox(wikitext):
+    """A product page's infobox fields ("| sku = SWI30"), by lower-cased name; the first of each wins."""
+    fields = {}
+    for name, value in INFOBOX_FIELD.findall(wikitext):
+        fields.setdefault(name.lower(), value)
+    return fields
+
+
+def source_values(product, wikitext):
+    """A cached product's values for the dataset's sources fields, and notes on anything the wiki leaves unclear.
+    Dates and wave come from the main page (announced dates are only there, once per wave), the type from the
+    product page's infobox. Big boxes take the wave they were announced with; the Core Set has none."""
+    box = infobox(wikitext)
+    wave = re.fullmatch(r'Wave (\d+)', product['wave'] or '')
+    values = {
+        'product_code': product['code'],
+        'announced_date': parse_date(product['announced']),
+        'release_date': parse_date(product['released']),
+        'wave': int(wave.group(1)) if wave else None,
+    }
+    notes = [f'unreadable {field} date {product[field]!r}'
+             for field, value in (('announced', values['announced_date']), ('released', values['release_date']))
+             if product[field] and not value]
+    if box.get('release_date') and box['release_date'] != values['release_date']:
+        notes.append(f"the product page says released {box['release_date']}")
+    kind = 'Core Game' if product['code'] == 'SWI01' else SOURCE_TYPES.get(box.get('type'))
+    if kind:
+        values['type'] = kind
+    elif box.get('type'):
+        notes.append(f"unknown infobox type {box['type']!r}")
+    return values, notes
+
+
+def propose_sources(dataset, folder, root=None):
+    """Stage an ia propose edit for every source whose fields differ from the wiki cache's values, to decide in
+    ia enter. Sources that already have a proposal in the folder are left alone, so this can be run again.
+    Returns the new proposals' keys."""
+    from ia_tools import edits  # edits imports the importer; keep ia wiki's own imports light
+
+    pages = (root or settings.STAGING) / 'wiki' / 'pages'
+    staging = Staging(folder, root)
+    staged = {e['id'] for e in staging.manifest().get('edits', []) if e['content_type'] == 'sources'} \
+        if staging.manifest_path.exists() else set()
+    products = load(root)['products']
+    shared = [i for i, n in Counter(p['source_id'] for p in products if p['source_id'] is not None).items() if n > 1]
+    if shared:
+        raise ValueError(f'Several wiki products match source {", ".join(map(str, shared))}; fix the cache first')
+    keys = []
+    for product in products:
+        source_id = product['source_id']
+        if source_id is None or source_id in staged:
+            continue
+        page = json.loads((pages / f"{slugify(product['title'])}.json").read_text(encoding='utf-8'))['parse']
+        values, notes = source_values(product, page['wikitext'])
+        record = edits.find(dataset, 'sources', source_id)
+        changes = {field: value for field, value in values.items() if record.get(field) != value}
+        if changes:
+            note = '; '.join([f"From the wiki: {product['page']} (revision {product['revid']})"] + notes)
+            keys.append(edits.propose(dataset, folder, 'sources', source_id, changes, note=note, root=root))
+            staged.add(source_id)
+    return keys

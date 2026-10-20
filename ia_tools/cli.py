@@ -95,6 +95,14 @@ def cmd_wiki(args):
     from ia_tools import boardwars, wiki
     from ia_tools.dataset import Dataset
 
+    if args.propose:
+        try:
+            keys = wiki.propose_sources(Dataset(), args.propose)
+        except ValueError as error:  # several products on one source, or a dataset without the fields
+            sys.exit(str(error))
+        print(f'Proposed {len(keys)} source edits from the wiki cache in {settings.STAGING / args.propose}; '
+              'decide them in ia enter')
+        return
     cache = wiki.run(boardwars.Client(check_robots=False), Dataset(), refresh=args.refresh)
     unmatched = [p['label'] for p in cache['products'] if p['source_id'] is None]
     print(f"{len(cache['products'])} products, {sum(len(p['components']) for p in cache['products'])} components: "
@@ -164,6 +172,9 @@ def main(argv=None):
 
     wiki_ = commands.add_parser('wiki', help="cache every product's components and copies from the wiki")
     wiki_.add_argument('--refresh', action='store_true', help='fetch the pages again instead of reusing the cache')
+    wiki_.add_argument('--propose', nargs='?', const='wiki-sources', metavar='FOLDER',
+                       help="instead, stage edits to every source's code, dates, wave and type from the cache, "
+                            'decided in ia enter (default folder: wiki-sources)')
     wiki_.set_defaults(func=cmd_wiki)
 
     reprocess = commands.add_parser('reprocess', help="re-make an imported product's images with the current pipeline")
