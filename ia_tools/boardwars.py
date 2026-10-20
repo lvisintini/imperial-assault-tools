@@ -77,9 +77,10 @@ def parse_album_page(html, url):
 
 
 class Client:
-    """A polite HTTP client: one request at a time, at most one per REQUEST_INTERVAL, honouring robots.txt."""
+    """A polite HTTP client: one request at a time, at most one per REQUEST_INTERVAL, honouring boardwars' robots.txt.
+    check_robots=False is for APIs meant for tools (the wiki's MediaWiki API), on sites whose robots.txt is for crawlers."""
 
-    def __init__(self, session=None, interval=REQUEST_INTERVAL):
+    def __init__(self, session=None, interval=REQUEST_INTERVAL, check_robots=True):
         self.session = session or requests.Session()
         self.session.headers['User-Agent'] = USER_AGENT
         retries = Retry(total=4, backoff_factor=5, status_forcelist=[429, 500, 502, 503, 504])
@@ -87,25 +88,26 @@ class Client:
         self.interval = interval
         self.last_request = 0.0
         self.robots = None
+        self.check_robots = check_robots
 
-    def get(self, url):
-        if self.robots is None:
+    def get(self, url, params=None):
+        if self.check_robots and self.robots is None:
             self.robots = urllib.robotparser.RobotFileParser()
             self.robots.parse(self._get(urljoin(BASE_URL, '/robots.txt')).text.splitlines())
-        if not self.robots.can_fetch(USER_AGENT, url):
+        if self.check_robots and not self.robots.can_fetch(USER_AGENT, url):
             raise PermissionError(f'robots.txt disallows {url}')
-        response = self._get(url)
+        response = self._get(url, params)
         response.raise_for_status()
         return response
 
-    def _get(self, url, attempts=4):
+    def _get(self, url, params=None, attempts=4):
         # The adapter retries failed connections; this also covers a connection dropped while reading the body.
         for attempt in range(attempts):
             wait = self.last_request + self.interval * (1 + 4 * attempt) - time.monotonic()
             if wait > 0:
                 time.sleep(wait)
             try:
-                return self.session.get(url, timeout=60)
+                return self.session.get(url, params=params, timeout=60)
             except (requests.ConnectionError, requests.exceptions.ChunkedEncodingError, requests.Timeout):
                 if attempt == attempts - 1:
                     raise

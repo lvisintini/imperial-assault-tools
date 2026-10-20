@@ -26,6 +26,7 @@ uv run pytest
 uv run ia audit                  # crawl all of boardwars; report in staging/audit/report.md
 uv run ia scrape https://cards.boardwars.eu/Expansion-Boxes/Tyrants-of-Lothal/
 uv run ia scrape --gaps          # or: everything the audit found missing, from any product, into staging/gaps/
+uv run ia wiki                   # cache every product's components and copies from the wiki
 uv run ia enter                  # opens http://localhost:8001: go through the cards
 uv run ia import tyrants-of-lothal --check   # validate only
 uv run ia import tyrants-of-lothal           # write records, images and source-contents rows
@@ -52,6 +53,12 @@ says which commit of this repo produced it.
   comes from. Each staged image records the existing product it belongs to: its album's, or for the skirmish maps
   (whose album doesn't say) the one `SKIRMISH_MAP_PRODUCTS` in `ia_tools/classify.py` names. The folder has no product of
   its own, so in `ia enter` each image's page has a **product** field, pre-filled from the scrape.
+- **`ia wiki`** caches what every product contains, and how many copies, from the
+  [Imperial Assault wiki](https://imperial-assault.fandom.com/wiki/Imperial_Assault): each product page the main page
+  lists, through the MediaWiki API, into `staging/wiki/` (`pages/` holds the raw answers, `products.json` the parsed
+  components with their headings, counts and notes, plus each product's code, wave, dates and dataset source id).
+  Fetched pages are reused; `--refresh` fetches them again. The pages are written by hand, so the parse keeps every
+  component's raw line and leaves matching components to records to whoever reads it.
 - **`ia enter`** is a local web app. For each image it shows the original, a preview of how it will be imported, and an
   existing card of the same type. You decide what each image is:
   - a new record, using a form built from the dataset's JSON Schemas;

@@ -5,6 +5,7 @@
   ia scrape --gaps       download every image the last audit found unseen into staging/gaps/
   ia enter               open the data-entry app in the browser
   ia import <product>    write a product's entries into the data repo (--check to only validate)
+  ia wiki                cache every product's components and copies from the Imperial Assault wiki in staging/wiki/
   ia reprocess <product> re-make an imported product's images with the current pipeline (--check to only list them)
 """
 import argparse
@@ -69,6 +70,17 @@ def cmd_import(args):
         print('Upscaled (original smaller than the target size):', ', '.join(log['upscaled']))
 
 
+def cmd_wiki(args):
+    from ia_tools import boardwars, wiki
+    from ia_tools.dataset import Dataset
+
+    cache = wiki.run(boardwars.Client(check_robots=False), Dataset(), refresh=args.refresh)
+    unmatched = [p['label'] for p in cache['products'] if p['source_id'] is None]
+    print(f"{len(cache['products'])} products, {sum(len(p['components']) for p in cache['products'])} components: "
+          f"{settings.STAGING / 'wiki' / 'products.json'}")
+    print('Not in the dataset\'s sources:', ', '.join(unmatched) or 'none')
+
+
 def cmd_reprocess(args):
     from ia_tools import reprocess
     from ia_tools.dataset import Dataset
@@ -120,6 +132,10 @@ def main(argv=None):
     import_.add_argument('product', help='staging folder name, e.g. tyrants-of-lothal')
     import_.add_argument('--check', action='store_true', help='only validate and show what would change')
     import_.set_defaults(func=cmd_import)
+
+    wiki_ = commands.add_parser('wiki', help="cache every product's components and copies from the wiki")
+    wiki_.add_argument('--refresh', action='store_true', help='fetch the pages again instead of reusing the cache')
+    wiki_.set_defaults(func=cmd_wiki)
 
     reprocess = commands.add_parser('reprocess', help="re-make an imported product's images with the current pipeline")
     reprocess.add_argument('product', help='staging folder name, e.g. tyrants-of-lothal')
