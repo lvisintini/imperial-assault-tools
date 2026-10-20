@@ -12,7 +12,6 @@ CONTENT_TYPES = [
     'supply-cards', 'story-mission-cards', 'side-mission-cards', 'reward-cards', 'companion-cards', 'upgrade-cards',
     'card-backs', 'threat-mission-cards', 'form-cards',
 ]
-WITHOUT_IDS = {'source-contents', 'condition-cards', 'card-backs'}
 
 # Child → parent foreign keys (see docs/data-model.md in the data repo).
 FOREIGN_KEYS = {
@@ -44,6 +43,11 @@ class Dataset:
 
     def save(self, content_type):
         self.path(content_type).write_text(dumps(self.records(content_type)), encoding='utf-8')
+
+    def has_ids(self, content_type):
+        """Whether the type's records have an id (source-contents and card-backs don't; condition-cards gained one in
+        data 1.4.0)."""
+        return 'id' in self.schema(content_type)['properties']
 
     def next_id(self, content_type):
         return max((r['id'] for r in self.records(content_type)), default=-1) + 1

@@ -4,7 +4,7 @@ each staged image, and validation of one entry at a time."""
 import jsonschema
 
 from ia_tools import importer
-from ia_tools.dataset import CONTENT_TYPES, FOREIGN_KEYS, WITHOUT_IDS
+from ia_tools.dataset import CONTENT_TYPES, FOREIGN_KEYS
 from ia_tools.iaspec import iaspec_for
 from ia_tools.match import normalise, parse_deployment_name
 
@@ -54,7 +54,7 @@ def records_index(dataset):
     return {
         t: [{'id': r['id'], 'name': r['name'] + (f" ({r['description']})" if r.get('description') else '')}
             for r in dataset.records(t)]
-        for t in ENTRY_TYPES + ['sources'] if t not in WITHOUT_IDS
+        for t in ENTRY_TYPES + ['sources'] if dataset.has_ids(t)
     }
 
 
@@ -200,7 +200,7 @@ def check_entry(entry, dataset):
     if content_type not in ENTRY_TYPES + ['sources']:
         return [f'Unknown content type {content_type!r}']
     record = dict(entry.get('record', {}))
-    if content_type not in WITHOUT_IDS:
+    if dataset.has_ids(content_type):
         record['id'] = 0
     for image_field in importer.image_fields(dataset, content_type):
         record[image_field] = f'{content_type}/placeholder.png'

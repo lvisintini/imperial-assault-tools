@@ -17,3 +17,8 @@ def test_next_id_follows_the_highest(dataset_copy):
 def test_schema_refs_are_resolved(real_dataset):
     affiliation = real_dataset.schema('deployment-cards')['properties']['affiliation']
     assert 'Rebel' in affiliation['enum']
+
+
+def test_has_ids_follows_the_schemas(real_dataset):
+    assert real_dataset.has_ids('command-cards') and real_dataset.has_ids('form-cards')
+    assert not real_dataset.has_ids('card-backs') and not real_dataset.has_ids('source-contents')

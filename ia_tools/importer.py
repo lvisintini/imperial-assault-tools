@@ -9,13 +9,13 @@ import jsonschema
 
 from ia_tools import images, settings
 from ia_tools.iaspec import iaspec_for
-from ia_tools.dataset import FOREIGN_KEYS, WITHOUT_IDS
+from ia_tools.dataset import FOREIGN_KEYS
 from ia_tools.staging import slugify
 
 # Types source-contents links to products (child cards come with their parent; see docs/data-model.md).
 LINKED_TYPES = {
-    'agenda-decks', 'command-cards', 'companion-cards', 'deployment-cards', 'heroes', 'imperial-classes',
-    'reward-cards', 'side-mission-cards', 'skirmish-maps', 'story-mission-cards', 'supply-cards',
+    'agenda-decks', 'command-cards', 'companion-cards', 'condition-cards', 'deployment-cards', 'form-cards', 'heroes',
+    'imperial-classes', 'reward-cards', 'side-mission-cards', 'skirmish-maps', 'story-mission-cards', 'supply-cards',
     'threat-mission-cards', 'upgrade-cards',
 }
 IASPEC_TYPES = ('deployment-cards', 'command-cards', 'companion-cards')
@@ -112,7 +112,7 @@ def plan(staging, dataset):
     # Ids, per type, after the existing ones.
     next_ids = {}
     for p in pending:
-        if p.content_type not in WITHOUT_IDS:
+        if dataset.has_ids(p.content_type):
             next_ids.setdefault(p.content_type, dataset.next_id(p.content_type))
             p.record['id'] = next_ids[p.content_type]
             next_ids[p.content_type] += 1
