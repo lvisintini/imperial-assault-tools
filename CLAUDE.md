@@ -27,6 +27,8 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
 - `ia_tools/importer.py` (`ia import`): plan (all checks; raises `ImportProblems`) then apply. It writes the
   dataset's exact JSON format (`dataset.dumps`: indent 2, no trailing newline) and the image sizes in `images.py`
   (mirrors the data repo's `ImageTestHelper`; `tests/test_images.py` cross-checks them).
+- `ia_tools/iaspec.py`: the dataset's iaspec rule, used for the entry app's suggestions and checked on import. The data
+  repo's `TestCanonicalNames` checks the same rule; keep the two in step.
 
 ## Commands
 

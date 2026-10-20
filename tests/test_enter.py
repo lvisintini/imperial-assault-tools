@@ -5,7 +5,7 @@ from http.server import ThreadingHTTPServer
 
 import pytest
 
-from ia_tools import settings
+from ia_tools import iaspec, settings
 from ia_tools.enter import api, server
 from tests.test_importer import CARD, HERO, stage
 
@@ -60,7 +60,7 @@ def test_suggestions(real_dataset):
 def test_iaspec_rule_reproduces_the_dataset(real_dataset):
     records = [r for t in ('deployment-cards', 'command-cards', 'companion-cards') for r in real_dataset.records(t)]
     for record in records:
-        assert api.iaspec_for(record, [r for r in records if r is not record]) == record['iaspec']
+        assert iaspec.iaspec_for(record, [r for r in records if r is not record]) == record['iaspec']
 
 
 @pytest.mark.parametrize('raw, parsed', [

@@ -1,12 +1,11 @@
 """What the data-entry app needs, independent of HTTP: form specs from the data repo's schemas, suggested entries for
 each staged image, and validation of one entry at a time."""
-import re
-import unicodedata
 
 import jsonschema
 
 from ia_tools import importer
 from ia_tools.dataset import CONTENT_TYPES, FOREIGN_KEYS, WITHOUT_IDS
+from ia_tools.iaspec import iaspec_for
 from ia_tools.match import normalise, parse_deployment_name
 
 # Types a staged image can become (source-contents is never entered by hand; sources is the product panel).
@@ -64,12 +63,6 @@ def existing_back(dataset, content_type):
     return next((b for b in dataset.records('card-backs') if b['content_type'] == content_type), None)
 
 
-# How iaspec values were built (data repo commit 3bb85ed): elite + name, then, only while another card would get the
-# same value, name plus one of mode, affiliation or description.
-IASPEC_STRATEGIES = [('elite', 'name'), ('elite', 'name', 'modes'), ('elite', 'name', 'affiliation'),
-                     ('elite', 'name', 'description')]
-
-
 def deployment_fields(item, manifest):
     """name, elite, unique and modes for a staged deployment card, from its image name and the rest of its album."""
     name, grade, modes = parse_deployment_name(item['name'])
@@ -90,28 +83,6 @@ def deployment_fields(item, manifest):
     if modes:
         fields['modes'] = modes
     return fields
-
-
-def iaspec_part(record, attr):
-    value = record.get(attr)
-    if attr == 'elite':
-        return 'elite' if value and not record.get('unique') else ''
-    if attr == 'modes':
-        return value[0] if value and len(value) == 1 else ''
-    return value or ''
-
-
-def iaspec_for(record, others):
-    """record's iaspec by the dataset's rule, given the other deployment, command and companion records."""
-    def key(r, strategy):
-        text = unicodedata.normalize('NFKD', ''.join(iaspec_part(r, a) for a in strategy))
-        return re.sub(r'[\W_]+', '', text.encode('ascii', 'ignore').decode()).lower()
-    clashing = list(others)
-    for strategy in IASPEC_STRATEGIES:
-        clashing = [o for o in clashing if key(o, strategy) == key(record, strategy)]
-        if not clashing:
-            break
-    return key(record, strategy)
 
 
 def staged_iaspec_records(item, manifest, dataset, entries):

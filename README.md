@@ -56,8 +56,9 @@ says which commit of this repo produced it.
 
   Agenda decks and imperial classes, which have no image, are added under "Records without an image". Decisions are
   saved as you go to `staging/<product>/entries.json`.
-- **`ia import <product>`** checks everything first: schemas, ids, foreign keys, image paths and iaspec uniqueness. If
-  anything fails it reports every problem and writes nothing. Otherwise it:
+- **`ia import <product>`** checks everything first: schemas, ids, foreign keys, image paths, and that each iaspec is
+  unique and follows the dataset's rule (`elite` for elite non-unique cards, then the name; see `ia_tools/iaspec.py`).
+  If anything fails it reports every problem and writes nothing. Otherwise it:
   - assigns the next ids;
   - writes the records in the dataset's exact JSON format;
   - adds the `source-contents` rows;

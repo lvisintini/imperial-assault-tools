@@ -1,13 +1,14 @@
 """ia import: turn a product's entries.json into records, images and source-contents rows in the data repo.
 
-Everything is checked first (schemas, ids, foreign keys, image paths, iaspec uniqueness); nothing is written unless the
-whole product passes. Existing files are never overwritten."""
+Everything is checked first (schemas, ids, foreign keys, image paths, iaspecs unique and built by the rule); nothing is
+written unless the whole product passes. Existing files are never overwritten."""
 import json
 from dataclasses import dataclass, field
 
 import jsonschema
 
 from ia_tools import images, settings
+from ia_tools.iaspec import iaspec_for
 from ia_tools.dataset import FOREIGN_KEYS, WITHOUT_IDS
 from ia_tools.staging import slugify
 
@@ -141,8 +142,10 @@ def plan(staging, dataset):
             planned_paths.add(relative)
             p.record[image_field] = relative
 
-    # Schemas, plus the iaspec rule the data repo's tests enforce.
+    # Schemas, plus the iaspec checks the data repo's tests enforce: unique, and built by the rule.
     iaspecs = {r['iaspec'] for t in IASPEC_TYPES for r in dataset.records(t)}
+    iaspec_records = [r for t in IASPEC_TYPES for r in dataset.records(t)]
+    iaspec_records += [p.record for p in pending if p.content_type in IASPEC_TYPES]
     for p in pending:
         p.record = {k: p.record[k] for k in dataset.key_order(p.content_type) if k in p.record} | p.record
         for error in jsonschema.Draft4Validator(dataset.schema(p.content_type)).iter_errors(p.record):
@@ -152,6 +155,9 @@ def plan(staging, dataset):
             if p.record['iaspec'] in iaspecs:
                 problems.append(f'{p.key}: iaspec {p.record["iaspec"]!r} is already used')
             iaspecs.add(p.record['iaspec'])
+            expected = iaspec_for(p.record, [r for r in iaspec_records if r is not p.record])
+            if p.record['iaspec'] != expected:
+                problems.append(f'{p.key}: iaspec {p.record["iaspec"]!r} doesn\'t follow the rule; expected {expected!r}')
 
     # source-contents rows: new records and "same as existing" links.
     rows = []

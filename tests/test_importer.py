@@ -107,6 +107,18 @@ def test_problems_are_all_reported_and_nothing_is_written(tmp_path, dataset_copy
     assert dataset_copy.path('sources').read_text() == sources_before
 
 
+def test_an_iaspec_that_breaks_the_rule_is_a_problem(tmp_path, dataset_copy, hash_files):
+    entries = full_entries(dataset_copy)
+    entries['items']['up'] = {'action': 'new', 'content_type': 'deployment-cards', 'record': {
+        'name': 'Brand New Upgrade', 'elite': True, 'unique': False, 'iaspec': 'brandnewupgrade'}}
+    staging = stage(tmp_path, {'box': BOX, 'cmd': CARD, 'hero': HERO, 'hero-w': HERO, 'feat': CARD, 'agenda': CARD,
+                               'up': CARD}, entries)
+
+    with pytest.raises(importer.ImportProblems) as raised:
+        importer.plan(staging, dataset_copy)
+    assert "up: iaspec 'brandnewupgrade' doesn't follow the rule; expected 'elitebrandnewupgrade'" in raised.value.problems
+
+
 def test_existing_image_paths_are_never_overwritten(tmp_path, dataset_copy, hash_files):
     entries = full_entries(dataset_copy)
     staging = stage(tmp_path, {'box': BOX, 'cmd': CARD, 'hero': HERO, 'hero-w': HERO, 'feat': CARD, 'agenda': CARD},
