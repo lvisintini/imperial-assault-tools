@@ -109,7 +109,7 @@ def test_source_values():
         'type': 'Expansion'}, [])
     core = BIG_BOX | {'code': 'SWI01', 'wave': 'Core Set', 'released': 'Someday'}
     values, notes = wiki.source_values(core, '| release_date = 2014-12-15')
-    assert (values['wave'], values['type'], values['release_date']) == (None, 'Core Game', None)
+    assert (values['wave'], values['type'], values['release_date']) == (0, 'Core Game', None)
     assert notes == ["unreadable released date 'Someday'", 'the product page says released 2014-12-15']
 
 

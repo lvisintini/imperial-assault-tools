@@ -222,21 +222,22 @@ def infobox(wikitext):
 def source_values(product, wikitext):
     """A cached product's values for the dataset's sources fields, and notes on anything the wiki leaves unclear.
     Dates and wave come from the main page (announced dates are only there, once per wave), the type from the
-    product page's infobox. Big boxes take the wave they were announced with; the Core Set has none."""
+    product page's infobox. Big boxes take the wave they were announced with; the Core Set is wave 0."""
     box = infobox(wikitext)
+    core = product['code'] == 'SWI01'
     wave = re.fullmatch(r'Wave (\d+)', product['wave'] or '')
     values = {
         'product_code': product['code'],
         'announced_date': parse_date(product['announced']),
         'release_date': parse_date(product['released']),
-        'wave': int(wave.group(1)) if wave else None,
+        'wave': 0 if core else int(wave.group(1)) if wave else None,
     }
     notes = [f'unreadable {field} date {product[field]!r}'
              for field, value in (('announced', values['announced_date']), ('released', values['release_date']))
              if product[field] and not value]
     if box.get('release_date') and box['release_date'] != values['release_date']:
         notes.append(f"the product page says released {box['release_date']}")
-    kind = 'Core Game' if product['code'] == 'SWI01' else SOURCE_TYPES.get(box.get('type'))
+    kind = 'Core Game' if core else SOURCE_TYPES.get(box.get('type'))
     if kind:
         values['type'] = kind
     elif box.get('type'):
