@@ -82,7 +82,7 @@ says which commit of this repo produced it.
 - **`ia import <product>`** checks everything first: schemas, ids, foreign keys, image paths, and that each iaspec is
   unique and follows the dataset's rule (`elite` for elite non-unique cards, then the name; see `ia_tools/iaspec.py`).
   If anything fails it reports every problem and writes nothing. Otherwise it:
-  - assigns the next ids;
+  - assigns ids (the next numbers in data 1.x, new UUIDs from 2.0.0);
   - writes the records in the dataset's exact JSON format;
   - adds the `source-contents` rows;
   - writes the large and small PNGs at the sizes the dataset's tests expect;

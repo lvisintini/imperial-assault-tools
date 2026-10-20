@@ -14,6 +14,9 @@ const ACTIONS = [
 ];
 
 let products = [];
+
+// Ids are numbers in 1.x data and UUID strings from 2.0.0; <select> values are always strings.
+const idValue = v => /^\d+$/.test(v) ? Number(v) : v;
 let data = null;      // GET /api/products/<slug>
 let current = null;   // item key, or 'product' / 'extras' / 'check'
 let filter = 'all';
@@ -137,7 +140,7 @@ function fieldInput(field, id, record) {
       ];
       input = h('select', {id, onchange: e => {
         const v = e.target.value;
-        set(v === '' ? undefined : v.startsWith('@') ? v : Number(v));
+        set(v === '' ? undefined : v.startsWith('@') ? v : idValue(v));
       }}, h('option', {value: ''}, '— choose —'),
       options.map(o => h('option', {value: o.value, selected: String(value) === o.value}, o.label)));
       break;
@@ -225,7 +228,7 @@ function productField(draft) {
   // The image's own product, when it isn't the folder's.
   return h('div', {class: 'form'}, h('label', {for: 'source_id'}, 'product'),
     h('select', {id: 'source_id', onchange: e => {
-      if (e.target.value) draft.source_id = Number(e.target.value); else delete draft.source_id;
+      if (e.target.value) draft.source_id = idValue(e.target.value); else delete draft.source_id;
     }},
       h('option', {value: ''}, data.manifest.product ? `this folder's (${data.manifest.product})` : '— choose —'),
       data.records.sources.map(s => h('option', {value: s.id, selected: s.id === draft.source_id}, `${s.name} (#${s.id})`))));
@@ -269,7 +272,7 @@ function renderItem(key) {
         h('select', {id: 'type', onchange: e => { draft.content_type = e.target.value; delete draft.id; renderBody(); }},
           Object.keys(data.records).map(t => h('option', {value: t, selected: t === draft.content_type}, t))),
         h('label', {for: 'record'}, 'record'),
-        h('select', {id: 'record', onchange: e => { draft.id = Number(e.target.value); }},
+        h('select', {id: 'record', onchange: e => { draft.id = idValue(e.target.value); }},
           h('option', {value: ''}, '— choose —'),
           records.map(r => h('option', {value: r.id, selected: r.id === draft.id}, `${r.name} (#${r.id})`)))),
         productField(draft),
@@ -353,7 +356,7 @@ function renderProduct() {
   function renderBody() {
     if (draft.action === 'existing') {
       fill(body, h('div', {class: 'form'}, h('label', {for: 'source'}, 'product'),
-        h('select', {id: 'source', onchange: e => { draft.id = Number(e.target.value); }},
+        h('select', {id: 'source', onchange: e => { draft.id = idValue(e.target.value); }},
           data.records.sources.map(s => h('option', {value: s.id, selected: s.id === draft.id}, `${s.name} (#${s.id})`)))));
     } else {
       fill(body, 

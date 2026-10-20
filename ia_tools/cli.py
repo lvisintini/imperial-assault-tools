@@ -56,8 +56,10 @@ def cmd_propose(args):
             changes[field] = json.loads(value)  # numbers, null, true, lists
         except json.JSONDecodeError:
             changes[field] = value  # plain text
+    dataset = Dataset()
     try:
-        key = edits.propose(Dataset(), args.folder, args.content_type, args.id, changes, note=args.note)
+        record_id = dataset.parse_id(args.content_type, args.id)
+        key = edits.propose(dataset, args.folder, args.content_type, record_id, changes, note=args.note)
     except ValueError as error:
         sys.exit(str(error))
     print(f'Proposed {key} in {settings.STAGING / args.folder}; decide it in ia enter')
@@ -154,7 +156,7 @@ def main(argv=None):
 
     propose = commands.add_parser('propose', help='propose a change to an existing record, decided in ia enter')
     propose.add_argument('content_type', help='e.g. sources')
-    propose.add_argument('id', type=int)
+    propose.add_argument('id', help='the record id (a number in 1.x data, a UUID from 2.0.0)')
     propose.add_argument('changes', nargs='+', metavar='field=value', help='e.g. name=IG-88 (JSON values: wave=2)')
     propose.add_argument('--folder', default='edits', help='staging folder (default: edits)')
     propose.add_argument('--note', help='why, shown in ia enter')

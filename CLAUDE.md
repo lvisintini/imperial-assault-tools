@@ -11,7 +11,9 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
   and makes one request per second; don't bypass it.
 - `crawler/` and `imperial_assault_tools/` are legacy 2017–18 code, kept as reference. Don't modernise them; port the
   logic you need into `ia_tools/`.
-- Ids in the dataset stay numeric and contiguous: the next id is the highest id + 1.
+- Dataset ids are numbers in data 1.x (the next id is the highest + 1) and UUIDs from data 2.0.0 (new records get a
+  uuid4). The tools read which from the schema (`Dataset.uses_uuids`), so they work with either checkout; tests
+  translate 1.x ids with `tests.conftest.legacy_id`.
 
 ## Layout
 

@@ -9,9 +9,18 @@ def test_saving_unchanged_data_is_byte_identical(real_dataset, content_type):
     assert dumps(real_dataset.records(content_type)) == path.read_text(encoding='utf-8')
 
 
-def test_next_id_follows_the_highest(dataset_copy):
+def test_new_ids_follow_the_schema(dataset_copy):
+    """UUIDs from data 2.0.0 on; before that, the numbers after the highest id."""
+    ids = dataset_copy.new_ids('heroes')
+    first, second = next(ids), next(ids)
     heroes = dataset_copy.records('heroes')
-    assert dataset_copy.next_id('heroes') == max(h['id'] for h in heroes) + 1
+    if dataset_copy.uses_uuids('heroes'):
+        assert isinstance(first, str) and len(first) == 36 and first != second
+        assert first not in {h['id'] for h in heroes}
+        assert dataset_copy.parse_id('heroes', first) == first
+    else:
+        assert (first, second) == (max(h['id'] for h in heroes) + 1, max(h['id'] for h in heroes) + 2)
+        assert dataset_copy.parse_id('heroes', '3') == 3
 
 
 def test_schema_refs_are_resolved(real_dataset):
@@ -21,4 +30,5 @@ def test_schema_refs_are_resolved(real_dataset):
 
 def test_has_ids_follows_the_schemas(real_dataset):
     assert real_dataset.has_ids('command-cards') and real_dataset.has_ids('form-cards')
-    assert not real_dataset.has_ids('card-backs') and not real_dataset.has_ids('source-contents')
+    assert not real_dataset.has_ids('source-contents')
+    assert real_dataset.has_ids('card-backs') == real_dataset.uses_uuids('sources')  # card backs got ids in 2.0.0

@@ -3,6 +3,7 @@ import pytest
 from ia_tools.boardwars import ImageRef
 from ia_tools.classify import classify
 from ia_tools.match import normalise
+from tests.conftest import legacy_id
 
 
 def guess(*path, name='Card'):
@@ -100,7 +101,7 @@ def test_deployment_names_find_the_right_card(real_dataset, gallery_name, affili
 
     found = NameIndex(real_dataset, ['deployment-cards']).find('deployment-cards', gallery_name,
                                                                {'affiliation': affiliation} if affiliation else {})
-    assert sorted(r['id'] for r in found) == ids
+    assert sorted(r['id'] for r in found) == sorted(legacy_id(real_dataset, 'deployment-cards', i) for i in ids)
 
 
 @pytest.mark.parametrize('gallery_name, source_id', [
@@ -110,7 +111,8 @@ def test_deployment_names_find_the_right_card(real_dataset, gallery_name, affili
 def test_products_match_before_and_after_a_rename(real_dataset, gallery_name, source_id):
     from ia_tools.match import NameIndex
 
-    assert [r['id'] for r in NameIndex(real_dataset, ['sources']).find('sources', gallery_name)] == [source_id]
+    found = NameIndex(real_dataset, ['sources']).find('sources', gallery_name)
+    assert [r['id'] for r in found] == [legacy_id(real_dataset, 'sources', source_id)]
 
 
 @pytest.mark.parametrize('path, name, source_id', [
@@ -127,7 +129,7 @@ def test_staged_images_name_their_own_product(real_dataset, path, name, source_i
 
     image = ImageRef(path=path, name=name, url='')
     source = item_source(NameIndex(real_dataset, CONTENT_TYPES), image, classify(image), None)
-    assert (source or {}).get('id') == source_id
+    assert (source or {}).get('id') == (legacy_id(real_dataset, 'sources', source_id) if source_id is not None else None)
 
 
 def test_every_skirmish_map_product_is_in_the_dataset(real_dataset):

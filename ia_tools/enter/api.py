@@ -49,11 +49,17 @@ def forms(dataset):
     return result
 
 
+def record_label(record):
+    """How a picker shows a record: its name (and subtitle), or for card backs, which have none, deck and variant."""
+    if 'name' not in record:
+        return ': '.join(str(v) for v in (record.get('deck'), record.get('variant')) if v)
+    return record['name'] + (f" ({record['description']})" if record.get('description') else '')
+
+
 def records_index(dataset):
     """content type → [{'id', 'name'}] for link and foreign-key pickers."""
     return {
-        t: [{'id': r['id'], 'name': r['name'] + (f" ({r['description']})" if r.get('description') else '')}
-            for r in dataset.records(t)]
+        t: [{'id': r['id'], 'name': record_label(r)} for r in dataset.records(t)]
         for t in ENTRY_TYPES + ['sources'] if dataset.has_ids(t)
     }
 
@@ -201,12 +207,12 @@ def check_entry(entry, dataset):
         return [f'Unknown content type {content_type!r}']
     record = dict(entry.get('record', {}))
     if dataset.has_ids(content_type):
-        record['id'] = 0
+        record['id'] = dataset.placeholder_id(content_type)
     for image_field in importer.image_fields(dataset, content_type):
         record[image_field] = f'{content_type}/placeholder.png'
-    for (child, fk), _ in FOREIGN_KEYS.items():
+    for (child, fk), parent in FOREIGN_KEYS.items():
         if content_type == child and isinstance(record.get(fk), str) and record[fk].startswith('@'):
-            record[fk] = 0
+            record[fk] = dataset.placeholder_id(parent)
     problems = []
     for error in jsonschema.Draft4Validator(dataset.schema(content_type)).iter_errors(record):
         where = '.'.join(str(x) for x in error.absolute_path) or 'record'

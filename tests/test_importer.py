@@ -6,7 +6,7 @@ from PIL import Image
 
 from ia_tools import importer
 from ia_tools.staging import Staging
-from tests.conftest import png_bytes
+from tests.conftest import png_bytes, legacy_id
 
 
 def stage(tmp_path, items, entries):
@@ -54,15 +54,20 @@ def test_full_import(tmp_path, dataset_copy, hash_files):
     staging = stage(tmp_path, {'box': BOX, 'cmd': CARD, 'dep': CARD, 'hero': HERO, 'hero-w': HERO, 'feat': CARD,
                                'agenda': CARD, 'rules': CARD}, full_entries(dataset_copy))
     before = {t: len(dataset_copy.records(t)) for t in ('sources', 'command-cards', 'heroes', 'source-contents')}
-    next_ids = {t: dataset_copy.next_id(t) for t in ('sources', 'command-cards', 'heroes', 'agenda-decks')}
+    ids_before = {t: {r['id'] for r in dataset_copy.records(t)} for t in ('sources', 'command-cards', 'heroes', 'agenda-decks')}
 
     plan = importer.plan(staging, dataset_copy)
     assert importer.summary(plan)['new_records'] == {
         'sources': 1, 'command-cards': 1, 'heroes': 1, 'hero-class-cards': 1, 'agenda-cards': 1, 'agenda-decks': 1}
     importer.apply(plan, staging, dataset_copy)
 
+    new_ids = {t: dataset_copy.records(t)[-1]['id'] for t in ids_before}
+    for content_type, before_import in ids_before.items():  # fresh UUIDs, or (1.x data) the next number
+        assert new_ids[content_type] not in before_import
+        assert dataset_copy.uses_uuids(content_type) or new_ids[content_type] == max(before_import) + 1
+
     source = dataset_copy.records('sources')[-1]
-    staged = {'id': next_ids['sources'], 'name': 'Test Product', 'type': 'Expansion', 'wave': None,
+    staged = {'id': new_ids['sources'], 'name': 'Test Product', 'type': 'Expansion', 'wave': None,
               'image': 'sources/test-product.png'}
     # Fields the schema gained after the product was staged are null (product_code and the dates).
     assert source == importer.missing_nullables(dataset_copy.schema('sources'), staged) | staged
@@ -71,12 +76,12 @@ def test_full_import(tmp_path, dataset_copy, hash_files):
     feat = dataset_copy.records('hero-class-cards')[-1]
     assert feat['hero_id'] == hero['id'] and feat['image'] == 'hero-class-cards/test-hero-test-feat.png'
     agenda = dataset_copy.records('agenda-cards')[-1]
-    assert agenda['agenda_id'] == next_ids['agenda-decks'] and agenda['image'] == 'agenda-cards/test-deck-test-agenda.png'
+    assert agenda['agenda_id'] == new_ids['agenda-decks'] and agenda['image'] == 'agenda-cards/test-deck-test-agenda.png'
 
     # source-contents: new top-level records plus the linked deployment card; child cards come with their parent.
     rows = dataset_copy.records('source-contents')[before['source-contents']:]
     assert {(r['content_type'], r['content_id']) for r in rows} == {
-        ('command-cards', next_ids['command-cards']), ('heroes', hero['id']), ('agenda-decks', next_ids['agenda-decks']),
+        ('command-cards', new_ids['command-cards']), ('heroes', hero['id']), ('agenda-decks', new_ids['agenda-decks']),
         ('deployment-cards', dataset_copy.records('deployment-cards')[0]['id'])}
     assert all(r['source_id'] == source['id'] for r in rows)
 
@@ -165,15 +170,16 @@ def test_hash_lists_ignore_comments(tmp_path):
 def test_items_can_name_their_own_product(tmp_path, dataset_copy, hash_files):
     """A folder of gaps from many products has no product of its own: each item names one."""
     reward, side = (dataset_copy.records(t)[0] for t in ('reward-cards', 'side-mission-cards'))
+    hoth, bespin, jabba = (legacy_id(dataset_copy, 'sources', n) for n in (2, 3, 4))
     entries = {'product': None, 'extra': {}, 'items': {
-        'cmd': {'action': 'new', 'content_type': 'command-cards', 'source_id': 2, 'record': {
+        'cmd': {'action': 'new', 'content_type': 'command-cards', 'source_id': hoth, 'record': {
             'name': 'Brand New Command', 'iaspec': 'brandnewcommand', 'cost': 1, 'limit': 2}},
-        'rew': {'action': 'link', 'content_type': 'reward-cards', 'id': reward['id'], 'source_id': 3},
-        'side': {'action': 'skip', 'source_id': 4},
+        'rew': {'action': 'link', 'content_type': 'reward-cards', 'id': reward['id'], 'source_id': bespin},
+        'side': {'action': 'skip', 'source_id': jabba},
     }}
     staging = stage(tmp_path, {'cmd': CARD, 'rew': CARD, 'side': CARD}, entries)
     plan = importer.plan(staging, dataset_copy)
-    assert {(r['source_id'], r['content_type']) for r in plan['rows']} == {(2, 'command-cards'), (3, 'reward-cards')}
+    assert {(r['source_id'], r['content_type']) for r in plan['rows']} == {(hoth, 'command-cards'), (bespin, 'reward-cards')}
 
     entries['items']['side'] = {'action': 'link', 'content_type': 'side-mission-cards', 'id': side['id']}
     entries['items']['rew']['source_id'] = 999

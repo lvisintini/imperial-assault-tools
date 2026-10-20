@@ -116,13 +116,11 @@ def plan(staging, dataset):
         if entry.get('source_id') is not None and entry['source_id'] not in source_ids:
             problems.append(f'{key}: product id {entry["source_id"]} is not in sources.json')
 
-    # Ids, per type, after the existing ones.
-    next_ids = {}
+    # Ids: new UUIDs, or (1.x data) the numbers after the existing ones.
+    new_ids = {}
     for p in pending:
         if dataset.has_ids(p.content_type):
-            next_ids.setdefault(p.content_type, dataset.next_id(p.content_type))
-            p.record['id'] = next_ids[p.content_type]
-            next_ids[p.content_type] += 1
+            p.record['id'] = next(new_ids.setdefault(p.content_type, dataset.new_ids(p.content_type)))
     if source_id is None and 'product' in by_key:
         source_id = by_key['product'].record['id']
 
@@ -142,7 +140,7 @@ def plan(staging, dataset):
     for p in pending:
         parent_name = None
         for (child, fk), parent in FOREIGN_KEYS.items():
-            if p.content_type == child and isinstance(p.record.get(fk), int):
+            if p.content_type == child and p.record.get(fk) is not None:
                 parent_name = next((r['name'] for r in dataset.records(parent) if r['id'] == p.record[fk]), None)
                 parent_name = parent_name or next((q.record['name'] for q in pending
                                                    if q.content_type == parent and q.record.get('id') == p.record[fk]), None)

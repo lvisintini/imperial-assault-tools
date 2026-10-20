@@ -3,6 +3,7 @@ import json
 import pytest
 
 from ia_tools import wiki
+from tests.conftest import legacy_id
 
 
 @pytest.mark.parametrize('text, name, link, copies, notes', [
@@ -82,7 +83,7 @@ def test_parse_products():
 def test_source_for(real_dataset, label, source_id):
     from ia_tools.match import NameIndex
 
-    assert wiki.source_for(NameIndex(real_dataset, ['sources']), label) == source_id
+    assert wiki.source_for(NameIndex(real_dataset, ['sources']), label) == legacy_id(real_dataset, 'sources', source_id)
 
 
 @pytest.mark.parametrize('text, date', [
@@ -115,15 +116,19 @@ def test_source_values():
 def test_propose_sources(tmp_path, dataset_copy):
     if 'product_code' not in dataset_copy.schema('sources')['properties']:
         pytest.skip('the data checkout has no sources.product_code yet')
+    twin_shadows_id = legacy_id(dataset_copy, 'sources', 1)
+    twin_shadows = next(s for s in dataset_copy.records('sources') if s['id'] == twin_shadows_id)
+    twin_shadows.update(product_code=None, announced_date=None, release_date=None, wave=None)  # as before data 1.5.0
     (tmp_path / 'wiki' / 'pages').mkdir(parents=True)
-    dice = BIG_BOX | {'code': 'SWI02', 'title': 'Dice', 'source_id': None}
-    (tmp_path / 'wiki' / 'products.json').write_text(json.dumps({'products': [BIG_BOX, dice]}), encoding='utf-8')
+    big_box = BIG_BOX | {'source_id': twin_shadows_id}
+    dice = big_box | {'code': 'SWI02', 'title': 'Dice', 'source_id': None}
+    (tmp_path / 'wiki' / 'products.json').write_text(json.dumps({'products': [big_box, dice]}), encoding='utf-8')
     (tmp_path / 'wiki' / 'pages' / 'twin-shadows.json').write_text(
         json.dumps({'parse': {'title': 'Twin Shadows', 'wikitext': BIG_BOX_PAGE}}), encoding='utf-8')
 
     assert wiki.propose_sources(dataset_copy, 'wiki-sources', root=tmp_path) == ['e1']
     [proposal] = json.loads((tmp_path / 'wiki-sources' / 'manifest.json').read_text(encoding='utf-8'))['edits']
-    assert (proposal['id'], proposal['note']) == (1, 'From the wiki: Twin Shadows (revision 7)')
+    assert (proposal['id'], proposal['note']) == (twin_shadows_id, 'From the wiki: Twin Shadows (revision 7)')
     assert proposal['changes']['product_code'] == 'SWI10' and proposal['changes']['wave'] == 2
     assert 'type' not in proposal['changes']  # already Expansion
     assert wiki.propose_sources(dataset_copy, 'wiki-sources', root=tmp_path) == []  # already proposed

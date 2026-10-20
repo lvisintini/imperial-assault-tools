@@ -1,5 +1,6 @@
 import io
 import shutil
+import uuid
 from pathlib import Path
 
 import pytest
@@ -26,6 +27,18 @@ def png_bytes(size, color=(200, 30, 30, 255)):
 def no_tinypng(monkeypatch):
     """Tests encode locally: a TINIFY_KEY in the environment would spend the account's monthly compressions."""
     monkeypatch.setattr(settings, 'TINIFY_KEY', None)
+
+
+# How data 2.0.0 derived its UUIDs from 1.x ids (migrations/2.0.0/01_uuid_ids.py in the data repo).
+UUID_NAMESPACE = uuid.uuid5(uuid.NAMESPACE_URL, 'https://github.com/lvisintini/imperial-assault-data')
+
+
+def legacy_id(dataset, content_type, old_id):
+    """A record's id given its 1.x number: the number itself in 1.x data, its derived UUID from 2.0.0 on.
+    None stays None."""
+    if old_id is None or not dataset.uses_uuids(content_type):
+        return old_id
+    return str(uuid.uuid5(UUID_NAMESPACE, f'{content_type}:{old_id}'))
 
 
 @pytest.fixture(scope='session')

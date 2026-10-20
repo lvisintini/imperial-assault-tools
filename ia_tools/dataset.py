@@ -1,5 +1,7 @@
 """Reading and writing the imperial-assault-data checkout, in its exact JSON formatting."""
 import json
+import uuid
+from itertools import count
 from pathlib import Path
 
 import jsonref
@@ -49,8 +51,28 @@ class Dataset:
         data 1.4.0)."""
         return 'id' in self.schema(content_type)['properties']
 
+    def uses_uuids(self, content_type):
+        """Whether the type's ids are UUID strings (data 2.0.0 on) rather than numbers (1.x). Read from the schema, so
+        the tools work with either checkout."""
+        return self.schema(content_type)['properties'].get('id', {}).get('type') == 'string'
+
     def next_id(self, content_type):
+        """The next numeric id (1.x data): the highest one plus one."""
         return max((r['id'] for r in self.records(content_type)), default=-1) + 1
+
+    def new_ids(self, content_type):
+        """Ids for new records of a type, one per next(): random UUIDs, or the numbers after the highest one."""
+        if self.uses_uuids(content_type):
+            return (str(uuid.uuid4()) for _ in count())
+        return count(self.next_id(content_type))
+
+    def placeholder_id(self, content_type):
+        """A schema-valid id for checking records that don't have their real one yet."""
+        return '00000000-0000-4000-8000-000000000000' if self.uses_uuids(content_type) else 0
+
+    def parse_id(self, content_type, text):
+        """An id typed on the command line, as the type stores it."""
+        return text if self.uses_uuids(content_type) else int(text)
 
     def key_order(self, content_type):
         """Field order of the file's first record, so new records serialise like the existing ones."""

@@ -8,6 +8,7 @@ import pytest
 from ia_tools import iaspec, settings
 from ia_tools.enter import api, server
 from tests.test_importer import CARD, HERO, stage
+from tests.conftest import legacy_id
 
 
 def fields_by_name(forms, content_type):
@@ -185,7 +186,8 @@ def test_server_edits(running_server, dataset_copy, tmp_path):
     from ia_tools import edits
 
     base, staging = running_server
-    edits.propose(dataset_copy, 'edits', 'sources', 5, {'name': 'IG88'}, root=staging.dir.parent)
+    edits.propose(dataset_copy, 'edits', 'sources', legacy_id(dataset_copy, 'sources', 5), {'name': 'IG88'},
+                  root=staging.dir.parent)
     summary = next(p for p in json.loads(call('GET', f'{base}/api/products')[2]) if p['slug'] == 'edits')
     assert (summary['product'], summary['items'], summary['decided']) == (None, 1, 0)
     product = json.loads(call('GET', f'{base}/api/products/edits')[2])
