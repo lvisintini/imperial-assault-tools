@@ -20,6 +20,7 @@ FOREIGN_KEYS = {
     ('agenda-cards', 'agenda_id'): 'agenda-decks',
     ('hero-class-cards', 'hero_id'): 'heroes',
     ('imperial-class-cards', 'class_id'): 'imperial-classes',
+    ('sources', 'included_in'): 'sources',  # data 2.0.0: packs that ship inside the Core Set
 }
 
 

@@ -155,8 +155,8 @@ def suggest(item, manifest, dataset, entries):
             parent = next((r for r in dataset.records(back_type) if normalise(r['name']) == normalise(hint)), None)
             record['variant'] = parent['name'] if parent else hint
     for (child, fk), parent in FOREIGN_KEYS.items():
-        hint = {'heroes': 'hero', 'imperial-classes': 'class', 'agenda-decks': 'deck'}[parent]
-        if content_type == child and hints.get(hint):
+        hint = {'heroes': 'hero', 'imperial-classes': 'class', 'agenda-decks': 'deck'}.get(parent)  # album hints
+        if content_type == child and hint and hints.get(hint):
             record[fk] = find_parent(parent, hints[hint], dataset, entries, manifest)
     return {'action': 'new', 'content_type': content_type, 'record': record} | source
 
