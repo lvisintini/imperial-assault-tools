@@ -10,7 +10,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
-from ia_tools import images, importer
+from ia_tools import edits, images, importer
 from ia_tools.dataset import Dataset
 from ia_tools.enter import api
 from ia_tools.staging import Staging
@@ -103,6 +103,13 @@ class Handler(BaseHTTPRequestHandler):
                 return self.update(Staging(slug), lambda e: e['items'].__setitem__(key, body), body)
             case ['api', 'products', slug, 'extra', key]:
                 return self.update(Staging(slug), lambda e: e.setdefault('extra', {}).__setitem__(key, body), body)
+            case ['api', 'products', slug, 'edits', key]:
+                staging = Staging(slug)
+                with lock:
+                    entries = staging.entries()
+                    entries.setdefault('edits', {})[key] = body
+                    staging.save_entries(entries)
+                return self.send_json({'saved': True} | self.edit_preview(staging, key, body))
         self.send_error(HTTPStatus.NOT_FOUND)
 
     def do_DELETE(self):
@@ -115,6 +122,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         parts = [unquote(p) for p in urlsplit(self.path).path.strip('/').split('/') if p]
         match parts:
+            case ['api', 'products', slug, 'edits', key, 'preview']:
+                return self.send_json(self.edit_preview(Staging(slug), key, self.read_json()))
             case ['api', 'products', slug, 'check']:
                 try:
                     plan = importer.plan(Staging(slug), self.dataset)
@@ -122,15 +131,19 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send_json({'ok': False, 'problems': problems.problems})
                 return self.send_json({'ok': True, 'summary': importer.summary(plan),
                                        'records': [{'key': p.key, 'content_type': p.content_type, 'record': p.record}
-                                                   for p in plan['pending']]})
+                                                   for p in plan['pending']]
+                                       + [{'key': p['key'], 'content_type': p['content_type'], 'record': after}
+                                          for p, after, _ in plan['edits']]})
         self.send_error(HTTPStatus.NOT_FOUND)
 
     # Handlers
 
     def product_summary(self, staging):
         manifest, entries = staging.manifest(), staging.entries()
-        return {'slug': staging.slug, 'product': manifest['product'], 'items': len(manifest['items']),
-                'decided': sum(1 for i in manifest['items'] if i['key'] in entries['items'])}
+        proposals = manifest.get('edits', [])
+        return {'slug': staging.slug, 'product': manifest['product'], 'items': len(manifest['items']) + len(proposals),
+                'decided': sum(1 for i in manifest['items'] if i['key'] in entries['items'])
+                + sum(1 for e in proposals if e['key'] in entries.get('edits', {}))}
 
     def product(self, staging):
         manifest, entries = staging.manifest(), staging.entries()
@@ -144,7 +157,19 @@ class Handler(BaseHTTPRequestHandler):
             'references': self.references(),
             'entry_types': api.ENTRY_TYPES,
             'extra_types': api.EXTRA_TYPES,
+            'edit_records': {e['key']: edits.find(self.dataset, e['content_type'], e['id'])
+                             for e in manifest.get('edits', [])},
         }
+
+    def edit_preview(self, staging, key, decision):
+        """What applying a proposed edit would do: image moves and problems."""
+        proposal = next((e for e in staging.manifest().get('edits', []) if e['key'] == key), None)
+        if proposal is None:
+            return {'problems': [f'No proposed edit {key}'], 'images': {}}
+        if decision.get('action') != 'apply':
+            return {'problems': [], 'images': {}}
+        _, moves, problems = edits.preview(self.dataset, proposal, decision)
+        return {'problems': problems, 'images': {field: list(move) for field, move in moves.items()}}
 
     def references(self):
         """content type → an existing image path, to compare new cards against."""

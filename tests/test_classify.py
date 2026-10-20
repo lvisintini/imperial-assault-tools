@@ -70,7 +70,6 @@ def test_normalise(a, b):
     ('heroes', 'Biv Bodhrik Hero Healthy', 'Biv Bodhrik'),
     ('heroes', 'Diala Hero Wounded', 'Diala Passil'),
     ('sources', 'Core Box', 'Imperial Assault'),
-    ('sources', 'Ahsoka Tano', 'Ahsoka'),
     ('command-cards', 'Arcing Shot command card', 'Arcing Shot'),
     ('companion-cards', 'Cam Droid Companion', 'Cam Droid'),
     ('form-cards', 'Clawdite Form Scout', 'Scout'),
@@ -104,27 +103,31 @@ def test_deployment_names_find_the_right_card(real_dataset, gallery_name, affili
     assert sorted(r['id'] for r in found) == ids
 
 
-def test_the_wookiee_warriors_pack_matches_before_and_after_its_rename(real_dataset):
+@pytest.mark.parametrize('gallery_name, source_id', [
+    ('Wookie Warriors', 14),  # before and after the dataset's "Wookiee" fix
+    ('Ahsoka Tano', 39),      # the dataset's "Ahsoka", before and after a rename
+])
+def test_products_match_before_and_after_a_rename(real_dataset, gallery_name, source_id):
     from ia_tools.match import NameIndex
 
-    assert [r['id'] for r in NameIndex(real_dataset, ['sources']).find('sources', 'Wookie Warriors')] == [14]
+    assert [r['id'] for r in NameIndex(real_dataset, ['sources']).find('sources', gallery_name)] == [source_id]
 
 
-@pytest.mark.parametrize('path, name, product', [
-    (('Skirmish Maps',), 'Lothal Wastes', 'Tyrants of Lothal'),
-    (('Skirmish Maps',), 'Uscru Entertainment District', 'Ahsoka'),
-    (('Villain and Ally Packs', 'Wave 1', 'Chewbacca', 'Side Mission'), 'Celebration', 'Chewbacca'),
-    (('Expansion Boxes', 'Return to Hoth', 'Rewards', 'Boons and Banes'), 'Resurgence', 'Return to Hoth'),
+@pytest.mark.parametrize('path, name, source_id', [
+    (('Skirmish Maps',), 'Lothal Wastes', 42),
+    (('Skirmish Maps',), 'Uscru Entertainment District', 39),
+    (('Villain and Ally Packs', 'Wave 1', 'Chewbacca', 'Side Mission'), 'Celebration', 35),
+    (('Expansion Boxes', 'Return to Hoth', 'Rewards', 'Boons and Banes'), 'Resurgence', 2),
     (('Skirmish Maps',), 'A Map Nobody Knows', None),
 ])
-def test_staged_images_name_their_own_product(real_dataset, path, name, product):
+def test_staged_images_name_their_own_product(real_dataset, path, name, source_id):
     from ia_tools.dataset import CONTENT_TYPES
     from ia_tools.match import NameIndex
     from ia_tools.scrape import item_source
 
     image = ImageRef(path=path, name=name, url='')
     source = item_source(NameIndex(real_dataset, CONTENT_TYPES), image, classify(image), None)
-    assert (source or {}).get('name') == product
+    assert (source or {}).get('id') == source_id
 
 
 def test_every_skirmish_map_product_is_in_the_dataset(real_dataset):

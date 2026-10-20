@@ -58,6 +58,7 @@ async function request(method, url, body) {
 
 const items = () => data.manifest.items;
 const productName = () => data.manifest.product ?? 'Several products';  // a folder of gaps has no product of its own
+const proposals = () => data.manifest.edits || [];  // changes to existing records (ia propose)
 const itemByKey = key => items().find(i => i.key === key);
 const entryOf = key => data.entries.items[key];
 const typeOf = key => (entryOf(key) || data.suggestions[key] || {}).content_type || itemByKey(key).guess.content_type;
@@ -175,6 +176,7 @@ function renderSidebar() {
     h('h3', {}, 'Product'),
     link('product', data.entries.product ? `${productName()} ✓` : productName()),
     link('extras', `Records without an image (${Object.keys(data.entries.extra || {}).length})`),
+    proposals().length ? link('edits', `Edits to existing records (${proposals().filter(e => data.entries.edits?.[e.key]).length}/${proposals().length})`) : null,
     [...groups].map(([type, list]) => [
       h('h3', {}, `${type} (${list.length})`),
       list.map(item => {
@@ -183,10 +185,11 @@ function renderSidebar() {
       }),
     ]),
   );
-  const decided = items().filter(i => entryOf(i.key)).length;
-  $('#progress').textContent = `${decided} of ${items().length} decided`;
+  const decided = items().filter(i => entryOf(i.key)).length + proposals().filter(e => data.entries.edits?.[e.key]).length;
+  const total = items().length + proposals().length;
+  $('#progress').textContent = `${decided} of ${total} decided`;
   const option = [...$('#product-select').options].find(o => o.value === data.slug);
-  if (option) option.textContent = `${data.manifest.product ?? data.slug} (${decided}/${items().length})`;
+  if (option) option.textContent = `${data.manifest.product ?? data.slug} (${decided}/${total})`;
 }
 
 // Views
@@ -196,6 +199,7 @@ function show(key) {
   renderSidebar();
   if (key === 'product') return renderProduct();
   if (key === 'extras') return renderExtras();
+  if (key === 'edits') return renderEdits();
   if (key === 'check') return renderCheck();
   if (itemByKey(key)) return renderItem(key);
   fill(main, h('p', {class: 'muted'}, 'Pick an image on the left.'));
@@ -332,8 +336,10 @@ function renderItem(key) {
 
 function renderProduct() {
   if (!data.manifest.product) {
-    fill(main, h('h1', {}, productName()),
-      h('p', {class: 'meta'}, 'These images come from different products: each image\'s page has its own product field.'));
+    fill(main, h('h1', {}, items().length ? productName() : data.slug),
+      h('p', {class: 'meta'}, items().length
+        ? 'These images come from different products: each image\'s page has its own product field.'
+        : 'This folder only changes existing records: see Edits to existing records.'));
     return;
   }
   const existing = data.manifest.existing_product[0];
@@ -431,6 +437,80 @@ function renderExtras() {
     list);
 }
 
+function renderEdits() {
+  fill(main,
+    h('h1', {}, 'Edits to existing records'),
+    h('p', {class: 'meta'}, 'Proposed with ia propose. Change the values if you want, then apply or skip each one. ',
+      'ia import writes the applied ones.'),
+    proposals().map(editPanel));
+}
+
+function editPanel(proposal) {
+  const decisions = data.entries.edits ||= {};
+  const record = data.edit_records[proposal.key];
+  const draft = clone(decisions[proposal.key]) || {action: 'apply', changes: clone(proposal.changes), rename_images: true};
+  draft.changes ??= clone(proposal.changes);
+  const result = h('div');
+  const body = h('div');
+
+  function showResult(answer, saved) {
+    const moves = Object.entries(answer.images || {});
+    fill(result,
+      answer.problems.length ? h('ul', {class: 'problems'}, answer.problems.map(p => h('li', {}, p))) : null,
+      draft.action === 'apply' ? h('p', {class: 'muted'}, moves.length
+        ? moves.map(([field, [from, to]]) => `${field}: ${from} → ${to}`).join('; ')
+        : 'Image files keep their names.') : null,
+      saved ? h('span', {class: 'ok'}, 'Saved.') : null);
+  }
+  let timer;
+  const refresh = () => {
+    clearTimeout(timer);
+    timer = setTimeout(async () => showResult(
+      await request('POST', `/api/products/${data.slug}/edits/${proposal.key}/preview`, draft), false), 250);
+  };
+
+  function renderBody() {
+    fill(body,
+      draft.action === 'apply' ? [
+        Object.keys(proposal.changes).map(field => {
+          const id = `edit-${proposal.key}-${field}`;
+          const text = typeof proposal.changes[field] === 'string';
+          return h('div', {class: 'form'},
+            h('label', {for: id}, field),
+            h('input', {type: 'text', id, value: text ? draft.changes[field] : JSON.stringify(draft.changes[field]),
+              oninput: e => {
+                try { draft.changes[field] = text ? e.target.value.trim() : JSON.parse(e.target.value); } catch { return; }
+                refresh();
+              }}),
+            h('div', {class: 'help'}, `Now: ${JSON.stringify(record?.[field])}`));
+        }),
+        h('label', {}, h('input', {type: 'checkbox', checked: draft.rename_images,
+          onchange: e => { draft.rename_images = e.target.checked; refresh(); }}),
+          ' Rename the image files to match'),
+      ] : h('p', {class: 'muted'}, 'Left as it is.'));
+  }
+
+  renderBody();
+  refresh();
+  return h('div', {class: 'panel'},
+    h('h2', {}, `${proposal.content_type} #${proposal.id} · ${record?.name ?? 'missing record'}`),
+    proposal.note ? h('p', {class: 'meta'}, proposal.note) : null,
+    record?.image ? h('div', {class: 'images'}, h('figure', {},
+      h('img', {src: `/data-images/large/${record.image}`, alt: ''}), h('figcaption', {}, record.image))) : null,
+    h('div', {class: 'actions'}, [['apply', 'Apply'], ['skip', 'Skip']].map(([value, label]) => h('label', {},
+      h('input', {type: 'radio', name: `eaction-${proposal.key}`, checked: draft.action === value,
+        onchange: () => { draft.action = value; renderBody(); refresh(); }}), label))),
+    body,
+    h('div', {class: 'bar'}, h('button', {type: 'button', class: 'primary', onclick: async () => {
+      const entry = draft.action === 'apply' ? clone(draft) : {action: 'skip'};
+      const answer = await request('PUT', `/api/products/${data.slug}/edits/${proposal.key}`, entry);
+      decisions[proposal.key] = entry;
+      renderSidebar();
+      showResult(answer, true);
+    }}, 'Save')),
+    result);
+}
+
 async function renderCheck() {
   fill(main, h('h1', {}, 'Check import'), h('p', {class: 'muted'}, 'Checking…'));
   const result = await request('POST', `/api/products/${data.slug}/check`);
@@ -457,7 +537,7 @@ async function route() {
     data = await request('GET', `/api/products/${encodeURIComponent(target)}`);
     $('#product-select').value = target;
   }
-  show(key || 'product');
+  show(key || (!items().length && proposals().length ? 'edits' : 'product'));
 }
 
 async function start() {

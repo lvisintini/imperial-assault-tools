@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 
 import jsonschema
 
-from ia_tools import images, settings
+from ia_tools import edits, images, settings
 from ia_tools.iaspec import iaspec_for
 from ia_tools.dataset import FOREIGN_KEYS
 from ia_tools.staging import slugify
@@ -180,6 +180,10 @@ def plan(staging, dataset):
     existing = {(r['source_id'], r['content_type'], r['content_id']) for r in dataset.records('source-contents')}
     rows = [r for r in rows if (r['source_id'], r['content_type'], r['content_id']) not in existing]
 
+    # Changes to existing records (ia propose).
+    planned_edits, edit_problems = edits.plan(staging, dataset, set(planned_paths))
+    problems += edit_problems
+
     if problems:
         raise ImportProblems(problems)
 
@@ -187,7 +191,7 @@ def plan(staging, dataset):
     if (entries.get('product') or {}).get('item'):
         handled.append(entries['product']['item'])
     return {
-        'pending': pending, 'rows': rows, 'items': items,
+        'pending': pending, 'rows': rows, 'items': items, 'edits': planned_edits,
         'seen_hashes': sorted({items[k]['sha512'] for k in handled if k in items}),
         'skipped_hashes': sorted({items[k]['sha512'] for k, e in entries.get('items', {}).items()
                                   if e.get('action') == 'known-skip' and k in items}),
@@ -198,7 +202,7 @@ def summary(plan_):
     counts = {}
     for p in plan_['pending']:
         counts[p.content_type] = counts.get(p.content_type, 0) + 1
-    return {'new_records': counts, 'source_contents_rows': len(plan_['rows'])}
+    return {'new_records': counts, 'source_contents_rows': len(plan_['rows']), 'edits': len(plan_.get('edits', []))}
 
 
 def apply(plan_, staging, dataset):
@@ -215,7 +219,9 @@ def apply(plan_, staging, dataset):
             alignments[item_key] = out['alignment']
         dataset.records(p.content_type).append(p.record)
     dataset.records('source-contents').extend(plan_['rows'])
-    for content_type in {p.content_type for p in plan_['pending']} | ({'source-contents'} if plan_['rows'] else set()):
+    edited = edits.apply(plan_['edits'], dataset)
+    for content_type in ({p.content_type for p in plan_['pending']} | ({'source-contents'} if plan_['rows'] else set())
+                         | edited):
         dataset.save(content_type)
 
     for path, hashes in ((settings.SEEN_HASHES, plan_['seen_hashes']), (settings.SKIPPED_HASHES, plan_['skipped_hashes'])):
@@ -229,6 +235,8 @@ def apply(plan_, staging, dataset):
            # staged item → the template it was aligned to; None: left unaligned (check it by eye).
            'alignment': alignments,
            'records': [{'key': p.key, 'content_type': p.content_type, 'record': p.record} for p in plan_['pending']],
-           'source_contents': plan_['rows']}
+           'source_contents': plan_['rows'],
+           'edits': [{'key': p['key'], 'content_type': p['content_type'], 'id': p['id'], 'record': after,
+                      'images': {f: list(m) for f, m in moves.items()}} for p, after, moves in plan_['edits']]}
     (staging.dir / 'import-log.json').write_text(json.dumps(log, indent=2), encoding='utf-8')
     return log

@@ -59,6 +59,9 @@ says which commit of this repo produced it.
   components with their headings, counts and notes, plus each product's code, wave, dates and dataset source id).
   Fetched pages are reused; `--refresh` fetches them again. The pages are written by hand, so the parse keeps every
   component's raw line and leaves matching components to records to whoever reads it.
+- **`ia propose <type> <id> field=value...`** proposes a change to an existing record (a rename, a corrected field)
+  into a staging folder (`edits` unless `--folder` says otherwise), with an optional `--note`. Values are JSON when
+  they parse as JSON (`wave=2`) and text otherwise (`name=IG-88`).
 - **`ia enter`** is a local web app. For each image it shows the original, a preview of how it will be imported, and an
   existing card of the same type. You decide what each image is:
   - a new record, using a form built from the dataset's JSON Schemas;
@@ -66,8 +69,10 @@ says which commit of this repo produced it.
   - an extra image for another card (a hero's wounded side);
   - skip for now, or never import.
 
-  Agenda decks and imperial classes, which have no image, are added under "Records without an image". Decisions are
-  saved as you go to `staging/<product>/entries.json`.
+  Agenda decks and imperial classes, which have no image, are added under "Records without an image". Proposed changes
+  to existing records are under "Edits to existing records": change the values if you want, choose whether the image
+  files are renamed to match, and apply or skip each one. Decisions are saved as you go to
+  `staging/<product>/entries.json`.
 - **`ia import <product>`** checks everything first: schemas, ids, foreign keys, image paths, and that each iaspec is
   unique and follows the dataset's rule (`elite` for elite non-unique cards, then the name; see `ia_tools/iaspec.py`).
   If anything fails it reports every problem and writes nothing. Otherwise it:
@@ -75,7 +80,9 @@ says which commit of this repo produced it.
   - writes the records in the dataset's exact JSON format;
   - adds the `source-contents` rows;
   - writes the large and small PNGs at the sizes the dataset's tests expect;
-  - appends the imported originals' hashes to the register.
+  - appends the imported originals' hashes to the register;
+  - applies the edits you chose, moving image files when they're renamed. A rename is refused while a card back's
+    `variant` still holds the old name.
 
   It never overwrites an existing image.
 

@@ -69,16 +69,14 @@ def test_parse_products():
         'Wave 8', 'August 5th, 2016', 'December 29th, 2016')
 
 
-@pytest.mark.parametrize('label, source', [
-    ('Core Set', 'Imperial Assault'),
-    ('IG-88 Villain Pack', 'IG88'),
-    ('Luke Skywalker, Jedi Knight Ally Pack', 'Luke Skywalker Jedi Knight'),
-    ('Ahsoka Tano Ally Pack', 'Ahsoka'),
+@pytest.mark.parametrize('label, source_id', [
+    ('Core Set', 0),
+    ('IG-88 Villain Pack', 5),
+    ('Luke Skywalker, Jedi Knight Ally Pack', 31),
+    ('Ahsoka Tano Ally Pack', 39),
     ('Dice', None),
 ])
-def test_source_for(real_dataset, label, source):
+def test_source_for(real_dataset, label, source_id):
     from ia_tools.match import NameIndex
 
-    index = NameIndex(real_dataset, ['sources'])
-    names = {r['id']: r['name'] for r in real_dataset.records('sources')}
-    assert names.get(wiki.source_for(index, label)) == source
+    assert wiki.source_for(NameIndex(real_dataset, ['sources']), label) == source_id

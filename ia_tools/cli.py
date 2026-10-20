@@ -3,6 +3,7 @@
   ia audit               crawl the whole gallery and report images the dataset may be missing
   ia scrape <album url>  download albums (a product, or the skirmish maps) into staging/<product>/
   ia scrape --gaps       download every image the last audit found unseen into staging/gaps/
+  ia propose <type> <id> field=value...   propose a change to an existing record, decided in ia enter
   ia enter               open the data-entry app in the browser
   ia import <product>    write a product's entries into the data repo (--check to only validate)
   ia wiki                cache every product's components and copies from the Imperial Assault wiki in staging/wiki/
@@ -40,6 +41,26 @@ def cmd_scrape(args):
         staging, manifest = scrape.run(boardwars.Client(), Dataset(), args.url, product=args.product,
                                        folder=args.folder)
     print(f"Staged {len(manifest['items'])} images for {manifest['product'] or 'several products'} in {staging.dir}")
+
+
+def cmd_propose(args):
+    from ia_tools import edits
+    from ia_tools.dataset import Dataset
+
+    changes = {}
+    for change in args.changes:
+        field, sep, value = change.partition('=')
+        if not sep:
+            sys.exit(f'Expected field=value, got {change!r}')
+        try:
+            changes[field] = json.loads(value)  # numbers, null, true, lists
+        except json.JSONDecodeError:
+            changes[field] = value  # plain text
+    try:
+        key = edits.propose(Dataset(), args.folder, args.content_type, args.id, changes, note=args.note)
+    except ValueError as error:
+        sys.exit(str(error))
+    print(f'Proposed {key} in {settings.STAGING / args.folder}; decide it in ia enter')
 
 
 def cmd_enter(args):
@@ -122,6 +143,14 @@ def main(argv=None):
     scrape.add_argument('--gaps', action='store_true',
                         help="instead of albums, every image the last audit found unseen; each names its own product")
     scrape.set_defaults(func=cmd_scrape)
+
+    propose = commands.add_parser('propose', help='propose a change to an existing record, decided in ia enter')
+    propose.add_argument('content_type', help='e.g. sources')
+    propose.add_argument('id', type=int)
+    propose.add_argument('changes', nargs='+', metavar='field=value', help='e.g. name=IG-88 (JSON values: wave=2)')
+    propose.add_argument('--folder', default='edits', help='staging folder (default: edits)')
+    propose.add_argument('--note', help='why, shown in ia enter')
+    propose.set_defaults(func=cmd_propose)
 
     enter = commands.add_parser('enter', help='open the data-entry app')
     enter.add_argument('--port', type=int, default=settings.PORT)

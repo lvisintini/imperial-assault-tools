@@ -179,3 +179,22 @@ def test_server_refuses_paths_outside_its_folders(running_server):
     with pytest.raises(urllib.error.HTTPError) as raised:
         call('GET', f'{base}/originals/test-product/..%2F..%2Fseen.txt')
     assert raised.value.code in (403, 404)
+
+
+def test_server_edits(running_server, dataset_copy, tmp_path):
+    from ia_tools import edits
+
+    base, staging = running_server
+    edits.propose(dataset_copy, 'edits', 'sources', 5, {'name': 'IG-88'}, root=staging.dir.parent)
+    summary = next(p for p in json.loads(call('GET', f'{base}/api/products')[2]) if p['slug'] == 'edits')
+    assert (summary['product'], summary['items'], summary['decided']) == (None, 1, 0)
+    product = json.loads(call('GET', f'{base}/api/products/edits')[2])
+    assert product['edit_records']['e1']['name'] == 'IG88'
+
+    decision = {'action': 'apply', 'changes': {'name': 'IG-88'}, 'rename_images': True}
+    preview = json.loads(call('POST', f'{base}/api/products/edits/edits/e1/preview', decision)[2])
+    assert preview == {'problems': [], 'images': {'image': ['sources/ig88.png', 'sources/ig-88.png']}}
+    saved = json.loads(call('PUT', f'{base}/api/products/edits/edits/e1', decision)[2])
+    assert saved['saved'] and staging.__class__('edits', staging.dir.parent).entries()['edits']['e1'] == decision
+    check = json.loads(call('POST', f'{base}/api/products/edits/check')[2])
+    assert check['ok'] and check['summary']['edits'] == 1

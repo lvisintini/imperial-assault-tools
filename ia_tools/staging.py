@@ -12,7 +12,8 @@ entries.json:
         "0010": {"action": "skip"},                                                 # ignore for now
         "0011": {"action": "known-skip"}                                            # never import; audits stop flagging it
       },
-      "extra": {"x1": {"content_type": "agenda-decks", "record": {"name": "..."}}}  # records without an image
+      "extra": {"x1": {"content_type": "agenda-decks", "record": {"name": "..."}}}, # records without an image
+      "edits": {"e1": {"action": "apply", "changes": {...}, "rename_images": true}}  # see ia_tools/edits.py
     }
 
 A "new" or "link" item with a source_id goes into that product instead of the folder's. A folder staged with
