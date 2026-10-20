@@ -115,9 +115,10 @@ def suggest(item, manifest, dataset, entries):
     hints = guess.get('hints', {})
     name_lower = item['name'].lower()
 
+    source = own_source(item, manifest)
     if len(item['matches']) == 1:  # several: the app lists them and the user picks, rather than a guess
         match = item['matches'][0]
-        return {'action': 'link', 'content_type': match['content_type'], 'id': match['id']}
+        return {'action': 'link', 'content_type': match['content_type'], 'id': match['id']} | source
     if content_type == 'sources':
         return {'action': 'skip', 'note': 'product image: use it in the product panel'}
     if content_type == 'heroes' and name_lower.endswith('wounded'):
@@ -151,7 +152,15 @@ def suggest(item, manifest, dataset, entries):
         hint = {'heroes': 'hero', 'imperial-classes': 'class', 'agenda-decks': 'deck'}[parent]
         if content_type == child and hints.get(hint):
             record[fk] = find_parent(parent, hints[hint], dataset, entries, manifest)
-    return {'action': 'new', 'content_type': content_type, 'record': record}
+    return {'action': 'new', 'content_type': content_type, 'record': record} | source
+
+
+def own_source(item, manifest):
+    """{'source_id': ...} when the scrape placed the image in an existing product other than the folder's."""
+    source = item.get('source')
+    if not source or any(p['id'] == source['id'] for p in manifest.get('existing_product', [])):
+        return {}
+    return {'source_id': source['id']}
 
 
 def find_parent(parent_type, name, dataset, entries, manifest):

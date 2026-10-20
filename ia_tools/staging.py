@@ -7,12 +7,16 @@ entries.json:
       "items": {
         "0007": {"action": "new", "content_type": "command-cards", "record": {...}},
         "0008": {"action": "link", "content_type": "command-cards", "id": 12},     # same card already in the data
+        "0012": {"action": "link", ..., "source_id": 2},                          # an item's own product (below)
         "0009": {"action": "attach", "to": "0007", "field": "wounded"},            # extra image for another item
         "0010": {"action": "skip"},                                                 # ignore for now
         "0011": {"action": "known-skip"}                                            # never import; audits stop flagging it
       },
       "extra": {"x1": {"content_type": "agenda-decks", "record": {"name": "..."}}}  # records without an image
     }
+
+A "new" or "link" item with a source_id goes into that product instead of the folder's. A folder staged with
+ia scrape --gaps has no product of its own ("product": null), so its items each need one.
 
 Records leave out id and image fields (the importer assigns them). A foreign key to a record staged in the same product
 is written "@<item or extra key>" and resolved on import."""

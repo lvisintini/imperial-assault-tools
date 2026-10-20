@@ -57,6 +57,15 @@ def test_suggestions(real_dataset):
     assert suggest(unit)['record']['iaspec'] == 'unit'
 
 
+def test_suggestions_keep_an_items_own_product(real_dataset):
+    elsewhere = item('0001', 'reward-cards', 'Resurgence') | {'source': {'id': 2, 'name': 'Return to Hoth'}}
+    here = item('0002', 'reward-cards', 'Other') | {'source': {'id': 3, 'name': 'The Bespin Gambit'}}
+    manifest = {'items': [elsewhere, here], 'existing_product': [{'id': 3, 'name': 'The Bespin Gambit'}]}
+    entries = {'items': {}, 'extra': {}}
+    assert api.suggest(elsewhere, manifest, real_dataset, entries)['source_id'] == 2
+    assert 'source_id' not in api.suggest(here, manifest, real_dataset, entries)  # the folder's own product
+
+
 def test_iaspec_rule_reproduces_the_dataset(real_dataset):
     records = [r for t in ('deployment-cards', 'command-cards', 'companion-cards') for r in real_dataset.records(t)]
     for record in records:

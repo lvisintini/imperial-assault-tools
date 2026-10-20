@@ -1,4 +1,5 @@
-"""ia scrape: download boardwars albums (a product, part of one, or the skirmish maps) into a staging folder."""
+"""ia scrape: download boardwars albums (a product, part of one, or the skirmish maps), or every gap the last audit
+found, into a staging folder."""
 import hashlib
 import io
 import json
@@ -9,7 +10,7 @@ from urllib.parse import unquote, urlsplit
 from PIL import Image
 
 from ia_tools import boardwars
-from ia_tools.classify import BACK_KEYS, classify, product_of
+from ia_tools.classify import BACK_KEYS, SKIRMISH_MAP_PRODUCTS, classify, product_of
 from ia_tools.dataset import CONTENT_TYPES
 from ia_tools.match import NameIndex
 from ia_tools.staging import Staging, slugify
@@ -45,7 +46,29 @@ def run(client, dataset, urls, product=None, root=None, log=print, folder=None):
     product = product or next((g.product for g in guesses if g.product), None)
     if not product:
         raise SystemExit('Could not tell the product from the album; pass --product')
-    staging = Staging(folder or slugify(product), root)
+    return stage(client, dataset, images, guesses, Staging(folder or slugify(product), root), product, urls, log)
+
+
+def gaps(client, dataset, report, root=None, log=print, folder='gaps'):
+    """Stage every image the last audit found unseen into one folder. They come from many products, so each staged
+    image names its own (see item_source); the folder has none."""
+    entries = [e for e in report['entries'] if e['status'] == 'unseen']
+    if not entries:
+        raise SystemExit('The last audit found no unseen images')
+    images = [boardwars.ImageRef(path=tuple(e['path']), name=e['name'], url=e['url']) for e in entries]
+    return stage(client, dataset, images, [classify(image) for image in images], Staging(folder, root), None,
+                 [report['start_url']], log)
+
+
+def item_source(index, image, guess, product):
+    """The existing product an image belongs to, when the dataset has it: the album's, or for a skirmish map the one
+    SKIRMISH_MAP_PRODUCTS names, or else the folder's."""
+    name = guess.product or (SKIRMISH_MAP_PRODUCTS.get(image.name) if guess.content_type == 'skirmish-maps' else None)
+    found = index.find('sources', name or product) if (name or product) else []
+    return {'id': found[0]['id'], 'name': found[0]['name']} if len(found) == 1 else None
+
+
+def stage(client, dataset, images, guesses, staging, product, urls, log):
     (staging.dir / 'originals').mkdir(parents=True, exist_ok=True)
     index = NameIndex(dataset, [t for t in CONTENT_TYPES if t not in ('source-contents', 'card-backs')])
 
@@ -65,6 +88,7 @@ def run(client, dataset, urls, product=None, root=None, log=print, folder=None):
             'sha512': hashlib.sha512(content).hexdigest(), 'bytes': len(content),
             'width': width, 'height': height, 'format': fmt,
             'guess': {'content_type': guess.content_type, 'back_content_type': back_type, 'hints': guess.hints},
+            'source': item_source(index, image, guess, product),
             'matches': [
                 {'content_type': guess.content_type, 'id': r['id'], 'name': r['name']}
                 for r in (index.find(guess.content_type, image.name, guess.hints)
@@ -76,7 +100,7 @@ def run(client, dataset, urls, product=None, root=None, log=print, folder=None):
 
     manifest = {
         'product': product, 'urls': urls, 'scraped': datetime.now(timezone.utc).isoformat(timespec='seconds'),
-        'existing_product': [{'id': r['id'], 'name': r['name']} for r in index.find('sources', product)],
+        'existing_product': [{'id': r['id'], 'name': r['name']} for r in index.find('sources', product)] if product else [],
         'items': items,
     }
     staging.manifest_path.write_text(json.dumps(manifest, indent=2), encoding='utf-8')

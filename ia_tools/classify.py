@@ -23,6 +23,21 @@ SECTIONS = [
 ]
 
 
+# boardwars keeps every skirmish map in one album that doesn't say which product it comes from. These are the maps it
+# added after the 2017–18 batches; the products' wiki pages name them (imperial-assault-data#29).
+SKIRMISH_MAP_PRODUCTS = {
+    '30th Floor Plazza': 'Heart of the Empire',  # sic
+    'Coruscant Back Alleys': 'Maul',
+    'Coruscant Senate Office': 'Emperor Palpatine',
+    'Devaron Garrison': 'Sabine Wren and Zeb Orrelios',
+    'Imperial Tower': 'Thrawn',
+    'Lothal Battlefront': 'Ezra Bridger and Kanan Jarrus',
+    'Lothal Spaceport': 'Hondo Ohnaka',
+    'Lothal Wastes': 'Tyrants of Lothal',
+    'Uscru Entertainment District': 'Ahsoka Tano',
+}
+
+
 # card-backs are keyed on the parent for child cards (see the data repo's docs/data-model.md).
 BACK_KEYS = {
     'hero-class-cards': 'heroes',

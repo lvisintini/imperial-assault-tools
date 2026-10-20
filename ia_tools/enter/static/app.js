@@ -57,6 +57,7 @@ async function request(method, url, body) {
 // Data helpers
 
 const items = () => data.manifest.items;
+const productName = () => data.manifest.product ?? 'Several products';  // a folder of gaps has no product of its own
 const itemByKey = key => items().find(i => i.key === key);
 const entryOf = key => data.entries.items[key];
 const typeOf = key => (entryOf(key) || data.suggestions[key] || {}).content_type || itemByKey(key).guess.content_type;
@@ -172,7 +173,7 @@ function renderSidebar() {
     h('div', {class: 'filters'}, FILTERS.map(([value, label]) => h('button', {type: 'button',
       'aria-pressed': String(filter === value), onclick: () => { filter = value; renderSidebar(); }}, label))),
     h('h3', {}, 'Product'),
-    link('product', data.entries.product ? `${data.manifest.product} ✓` : data.manifest.product),
+    link('product', data.entries.product ? `${productName()} ✓` : productName()),
     link('extras', `Records without an image (${Object.keys(data.entries.extra || {}).length})`),
     [...groups].map(([type, list]) => [
       h('h3', {}, `${type} (${list.length})`),
@@ -185,7 +186,7 @@ function renderSidebar() {
   const decided = items().filter(i => entryOf(i.key)).length;
   $('#progress').textContent = `${decided} of ${items().length} decided`;
   const option = [...$('#product-select').options].find(o => o.value === data.slug);
-  if (option) option.textContent = `${data.manifest.product} (${decided}/${items().length})`;
+  if (option) option.textContent = `${data.manifest.product ?? data.slug} (${decided}/${items().length})`;
 }
 
 // Views
@@ -214,6 +215,16 @@ function imageFigures(item, draft) {
     ref && h('figure', {}, h('img', {src: `/data-images/large/${ref}`, alt: ''}),
       h('figcaption', {}, `Existing ${refKey} for comparison`)),
   );
+}
+
+function productField(draft) {
+  // The image's own product, when it isn't the folder's.
+  return h('div', {class: 'form'}, h('label', {for: 'source_id'}, 'product'),
+    h('select', {id: 'source_id', onchange: e => {
+      if (e.target.value) draft.source_id = Number(e.target.value); else delete draft.source_id;
+    }},
+      h('option', {value: ''}, data.manifest.product ? `this folder's (${data.manifest.product})` : '— choose —'),
+      data.records.sources.map(s => h('option', {value: s.id, selected: s.id === draft.source_id}, `${s.name} (#${s.id})`))));
 }
 
 function renderItem(key) {
@@ -245,7 +256,7 @@ function renderItem(key) {
         h('input', {type: 'text', id: 'file', value: draft.file || '', placeholder: 'automatic, from the name',
           oninput: e => { draft.file = e.target.value.trim() || undefined; }}),
         h('div', {class: 'help'}, 'Only needed when the automatic name would be wrong (e.g. form cards).')));
-      parts.push(h('hr'), buildForm(draft.content_type, draft.record));
+      parts.push(productField(draft), h('hr'), buildForm(draft.content_type, draft.record));
     } else if (draft.action === 'link') {
       draft.content_type ??= item.guess.content_type;
       const records = data.records[draft.content_type] || [];
@@ -257,7 +268,8 @@ function renderItem(key) {
         h('select', {id: 'record', onchange: e => { draft.id = Number(e.target.value); }},
           h('option', {value: ''}, '— choose —'),
           records.map(r => h('option', {value: r.id, selected: r.id === draft.id}, `${r.name} (#${r.id})`)))),
-        h('p', {class: 'muted'}, 'Adds a source-contents row linking this product to the record. Nothing else changes.'));
+        productField(draft),
+        h('p', {class: 'muted'}, 'Adds a source-contents row linking the product to the record. Nothing else changes.'));
     } else if (draft.action === 'attach') {
       const targets = Object.entries(data.entries.items).filter(([k, e]) => e.action === 'new' && k !== key);
       const targetType = data.entries.items[draft.to]?.content_type;
@@ -319,6 +331,11 @@ function renderItem(key) {
 }
 
 function renderProduct() {
+  if (!data.manifest.product) {
+    fill(main, h('h1', {}, productName()),
+      h('p', {class: 'meta'}, 'These images come from different products: each image\'s page has its own product field.'));
+    return;
+  }
   const existing = data.manifest.existing_product[0];
   const draft = clone(data.entries.product) || (existing
     ? {action: 'existing', id: existing.id}
@@ -445,7 +462,7 @@ async function route() {
 
 async function start() {
   products = await request('GET', '/api/products');
-  fill($('#product-select'), ...products.map(p => h('option', {value: p.slug}, `${p.product} (${p.decided}/${p.items})`)));
+  fill($('#product-select'), ...products.map(p => h('option', {value: p.slug}, `${p.product ?? p.slug} (${p.decided}/${p.items})`)));
   $('#product-select').onchange = e => { location.hash = e.target.value; };
   $('#check').onclick = () => { location.hash = `${data.slug}/check`; };
   window.addEventListener('hashchange', route);

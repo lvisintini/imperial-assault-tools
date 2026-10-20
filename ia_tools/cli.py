@@ -2,6 +2,7 @@
 
   ia audit               crawl the whole gallery and report images the dataset may be missing
   ia scrape <album url>  download albums (a product, or the skirmish maps) into staging/<product>/
+  ia scrape --gaps       download every image the last audit found unseen into staging/gaps/
   ia enter               open the data-entry app in the browser
   ia import <product>    write a product's entries into the data repo (--check to only validate)
   ia reprocess <product> re-make an imported product's images with the current pipeline (--check to only list them)
@@ -29,9 +30,15 @@ def cmd_scrape(args):
     from ia_tools import boardwars, scrape
     from ia_tools.dataset import Dataset
 
-    staging, manifest = scrape.run(boardwars.Client(), Dataset(), args.url, product=args.product,
-                                   folder=args.folder)
-    print(f"Staged {len(manifest['items'])} images for {manifest['product']} in {staging.dir}")
+    if args.gaps == bool(args.url):
+        sys.exit('Pass album URLs or --gaps')
+    if args.gaps:
+        report = json.loads((settings.STAGING / 'audit' / 'report.json').read_text(encoding='utf-8'))
+        staging, manifest = scrape.gaps(boardwars.Client(), Dataset(), report, folder=args.folder or 'gaps')
+    else:
+        staging, manifest = scrape.run(boardwars.Client(), Dataset(), args.url, product=args.product,
+                                       folder=args.folder)
+    print(f"Staged {len(manifest['items'])} images for {manifest['product'] or 'several products'} in {staging.dir}")
 
 
 def cmd_enter(args):
@@ -95,11 +102,13 @@ def main(argv=None):
     audit.set_defaults(func=cmd_audit)
 
     scrape = commands.add_parser('scrape', help='download albums into staging')
-    scrape.add_argument('url', nargs='+',
+    scrape.add_argument('url', nargs='*',
                         help='album URL, e.g. https://cards.boardwars.eu/Expansion-Boxes/Tyrants-of-Lothal/')
     scrape.add_argument('--product', help="product name, when the album doesn't tell (e.g. skirmish maps)")
     scrape.add_argument('--folder', help="staging folder name (default: the product's slug); a new one stages more "
                                          'of an already imported product without replacing its staging')
+    scrape.add_argument('--gaps', action='store_true',
+                        help="instead of albums, every image the last audit found unseen; each names its own product")
     scrape.set_defaults(func=cmd_scrape)
 
     enter = commands.add_parser('enter', help='open the data-entry app')

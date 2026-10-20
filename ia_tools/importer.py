@@ -34,6 +34,7 @@ class Pending:
     record: dict
     images: dict = field(default_factory=dict)  # field → item key of the original
     file_overrides: dict = field(default_factory=dict)  # field → slug chosen in the app
+    source_id: int | None = None  # the item's own product, when it isn't the folder's
 
 
 def image_fields(dataset, content_type):
@@ -70,7 +71,8 @@ def plan(staging, dataset):
         if entry.get('action') == 'new':
             fields = image_fields(dataset, entry['content_type'])
             first = entry.get('field') or (fields[0] if fields else None)
-            p = Pending(key, entry['content_type'], dict(entry['record']), {first: key} if first else {})
+            p = Pending(key, entry['content_type'], dict(entry['record']), {first: key} if first else {},
+                        source_id=entry.get('source_id'))
             if first and entry.get('file'):
                 p.file_overrides[first] = entry['file']
             pending.append(p)
@@ -87,19 +89,25 @@ def plan(staging, dataset):
                 if entry.get('file'):
                     target.file_overrides[entry['field']] = entry['file']
 
-    # The product itself.
+    # The product itself. Items can name their own (a folder of gaps from many products has none).
     product = entries.get('product')
     source_id = None
+    source_ids = {s['id'] for s in dataset.records('sources')}
     if not product:
-        problems.append('No product chosen')
+        if any(entry.get('action') in ('new', 'link') and entry.get('content_type') in LINKED_TYPES
+               and entry.get('source_id') is None for entry in entries.get('items', {}).values()):
+            problems.append('No product chosen')
     elif product['action'] == 'existing':
         source_id = product['id']
-        if not any(s['id'] == source_id for s in dataset.records('sources')):
+        if source_id not in source_ids:
             problems.append(f'Product id {source_id} is not in sources.json')
     else:
         p = Pending('product', 'sources', dict(product['record']), {'image': product['item']} if product.get('item') else {})
         pending.insert(0, p)
         by_key['product'] = p
+    for key, entry in entries.get('items', {}).items():
+        if entry.get('source_id') is not None and entry['source_id'] not in source_ids:
+            problems.append(f'{key}: product id {entry["source_id"]} is not in sources.json')
 
     # Ids, per type, after the existing ones.
     next_ids = {}
@@ -160,22 +168,23 @@ def plan(staging, dataset):
                 problems.append(f'{p.key}: iaspec {p.record["iaspec"]!r} doesn\'t follow the rule; expected {expected!r}')
 
     # source-contents rows: new records and "same as existing" links.
-    rows = []
-    if source_id is not None:
-        for p in pending:
-            if p.content_type in LINKED_TYPES:
-                rows.append({'source_id': source_id, 'content_type': p.content_type, 'content_id': p.record['id']})
-        for key, entry in sorted(entries.get('items', {}).items()):
-            if entry.get('action') == 'link' and entry.get('content_type') in LINKED_TYPES:
-                rows.append({'source_id': source_id, 'content_type': entry['content_type'], 'content_id': entry['id']})
-        existing = {(r['source_id'], r['content_type'], r['content_id']) for r in dataset.records('source-contents')}
-        rows = [r for r in rows if (r['source_id'], r['content_type'], r['content_id']) not in existing]
+    def row(own_source, content_type, content_id):
+        return {'source_id': source_id if own_source is None else own_source, 'content_type': content_type,
+                'content_id': content_id}
+
+    rows = [row(p.source_id, p.content_type, p.record['id']) for p in pending if p.content_type in LINKED_TYPES]
+    rows += [row(entry.get('source_id'), entry['content_type'], entry['id'])
+             for key, entry in sorted(entries.get('items', {}).items())
+             if entry.get('action') == 'link' and entry.get('content_type') in LINKED_TYPES]
+    rows = [r for r in rows if r['source_id'] is not None]  # only with problems: no product chosen
+    existing = {(r['source_id'], r['content_type'], r['content_id']) for r in dataset.records('source-contents')}
+    rows = [r for r in rows if (r['source_id'], r['content_type'], r['content_id']) not in existing]
 
     if problems:
         raise ImportProblems(problems)
 
     handled = [k for k, e in entries.get('items', {}).items() if e.get('action') in ('new', 'attach', 'link')]
-    if entries.get('product', {}).get('item'):
+    if (entries.get('product') or {}).get('item'):
         handled.append(entries['product']['item'])
     return {
         'pending': pending, 'rows': rows, 'items': items,

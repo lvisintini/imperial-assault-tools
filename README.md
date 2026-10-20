@@ -25,6 +25,7 @@ uv run pytest
 ```bash
 uv run ia audit                  # crawl all of boardwars; report in staging/audit/report.md
 uv run ia scrape https://cards.boardwars.eu/Expansion-Boxes/Tyrants-of-Lothal/
+uv run ia scrape --gaps          # or: everything the audit found missing, from any product, into staging/gaps/
 uv run ia enter                  # opens http://localhost:8001: go through the cards
 uv run ia import tyrants-of-lothal --check   # validate only
 uv run ia import tyrants-of-lothal           # write records, images and source-contents rows
@@ -47,6 +48,10 @@ says which commit of this repo produced it.
   hash, and any dataset records with the same name. Album covers no album lists are staged too: boardwars keeps some
   card backs only as a cover. To stage more of a product that's already imported, scrape just the albums you need into
   a new folder with `--folder <name>`, so the product's staging (and its import log) stays as it was.
+- **`ia scrape --gaps`** stages every image the last audit found **unseen** into `staging/gaps/`, whatever product it
+  comes from. Each staged image records the existing product it belongs to: its album's, or for the skirmish maps
+  (whose album doesn't say) the one `SKIRMISH_MAP_PRODUCTS` in `ia_tools/classify.py` names. The folder has no product of
+  its own, so in `ia enter` each image's page has a **product** field, pre-filled from the scrape.
 - **`ia enter`** is a local web app. For each image it shows the original, a preview of how it will be imported, and an
   existing card of the same type. You decide what each image is:
   - a new record, using a form built from the dataset's JSON Schemas;

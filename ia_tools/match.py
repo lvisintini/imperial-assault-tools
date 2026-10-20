@@ -8,6 +8,7 @@ PRODUCT_ALIASES = {
     'corebox': 'imperialassault',
     'stormtrooper': 'stormtroopers',
     'ahsokatano': 'ahsoka',
+    'wookiewarriors': 'wookieewarriors',
 }
 
 # boardwars card names that differ from the dataset's (misspellings, a plural with no elite version beside it).
@@ -75,7 +76,9 @@ class NameIndex:
     def find(self, content_type, name, hints=None):
         if content_type == 'sources':
             key = normalise(name)
-            return self.by_name.get((content_type, PRODUCT_ALIASES.get(key, key.removesuffix('box'))), [])
+            # The plain name too: a dataset from before a rename ("Wookie Warriors", fixed in data 1.3.2).
+            return (self.by_name.get((content_type, PRODUCT_ALIASES.get(key, key.removesuffix('box'))), [])
+                    or self.by_name.get((content_type, key), []))
         if content_type == 'deployment-cards':
             return self.find_deployment(name, (hints or {}).get('affiliation'))
         if content_type in NAME_NOISE:

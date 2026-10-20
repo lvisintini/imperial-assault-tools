@@ -158,3 +158,24 @@ def test_hash_lists_ignore_comments(tmp_path):
     path = tmp_path / 'hashes.txt'
     path.write_text('# a comment about abc\nabc\n\n# another\ndef\n')
     assert load_hashes(path) == {'abc', 'def'}
+
+
+def test_items_can_name_their_own_product(tmp_path, dataset_copy, hash_files):
+    """A folder of gaps from many products has no product of its own: each item names one."""
+    reward, side = (dataset_copy.records(t)[0] for t in ('reward-cards', 'side-mission-cards'))
+    entries = {'product': None, 'extra': {}, 'items': {
+        'cmd': {'action': 'new', 'content_type': 'command-cards', 'source_id': 2, 'record': {
+            'name': 'Brand New Command', 'iaspec': 'brandnewcommand', 'cost': 1, 'limit': 2}},
+        'rew': {'action': 'link', 'content_type': 'reward-cards', 'id': reward['id'], 'source_id': 3},
+        'side': {'action': 'skip', 'source_id': 4},
+    }}
+    staging = stage(tmp_path, {'cmd': CARD, 'rew': CARD, 'side': CARD}, entries)
+    plan = importer.plan(staging, dataset_copy)
+    assert {(r['source_id'], r['content_type']) for r in plan['rows']} == {(2, 'command-cards'), (3, 'reward-cards')}
+
+    entries['items']['side'] = {'action': 'link', 'content_type': 'side-mission-cards', 'id': side['id']}
+    entries['items']['rew']['source_id'] = 999
+    staging.save_entries(entries)
+    with pytest.raises(importer.ImportProblems) as raised:
+        importer.plan(staging, dataset_copy)
+    assert set(raised.value.problems) == {'No product chosen', 'rew: product id 999 is not in sources.json'}
