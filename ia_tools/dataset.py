@@ -14,13 +14,14 @@ CONTENT_TYPES = [
     'condition-cards', 'deployment-cards', 'heroes', 'hero-class-cards', 'imperial-classes', 'imperial-class-cards',
     'supply-cards', 'campaign-story-mission-cards', 'campaign-hero-side-mission-cards',
     'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards', 'reward-cards', 'companion-cards',
-    'upgrade-cards', 'card-backs', 'campaign-threat-mission-cards', 'form-cards', 'skirmish-mission-cards', 'missions',
-    'mission-rewards',
+    'upgrade-cards', 'card-backs', 'campaign-threat-mission-cards', 'form-cards', 'skirmish-mission-cards',
+    'raid-missions', 'missions', 'mission-rewards',
 ]
 # The mission card collections missions.json indexes (data 2.0.0; also agenda cards that are missions).
 MISSION_TYPES = [
     'campaign-story-mission-cards', 'campaign-threat-mission-cards', 'campaign-hero-side-mission-cards',
     'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards', 'skirmish-mission-cards',
+    'raid-missions',
 ]
 # Indexes and join tables: never entered, imported or matched by name.
 INDEX_TYPES = ['source-contents', 'missions', 'mission-rewards']
