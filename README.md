@@ -28,6 +28,7 @@ uv run ia scrape https://cards.boardwars.eu/Expansion-Boxes/Tyrants-of-Lothal/
 uv run ia scrape --gaps          # or: everything the audit found missing, from any product, into staging/gaps/
 uv run ia wiki                   # cache every product's components and copies from the wiki
 uv run ia wiki --propose         # stage edits to every source's code, dates, wave and type, from that cache
+uv run ia wiki --missions        # cache each campaign mission's hero and rewards (staging/wiki/missions.json)
 uv run ia enter                  # opens http://localhost:8001: go through the cards
 uv run ia import tyrants-of-lothal --check   # validate only
 uv run ia import tyrants-of-lothal           # write records, images and source-contents rows
@@ -65,6 +66,12 @@ says which commit of this repo produced it.
   `wiki-sources` by default) for every source whose `product_code`, `announced_date`, `release_date`, `wave` or
   `type` differs from the wiki's. The dates and wave come from the main page, and the type from the product page's
   infobox. Sources that already have a proposal in the folder are left alone, so it can be run again.
+  `ia wiki --missions` fetches every mission record's page (story, threat and side mission cards, agenda cards that are
+  missions) and every hero's page, and writes `staging/wiki/missions.json`, keyed by record id: each mission's hero
+  (from its infobox, else from the hero page that names it) and its rewards (`reward`, `imperial_reward`,
+  `threat_reward`) matched to reward and deployment cards, credits, and "Any 1 <category> ally" as a choice of the
+  category's cards. A group ally is its regular card. Anything it can't place is listed as a problem, not guessed.
+  Data 2.0.0's missions migration reads this file.
 - **`ia propose <type> <id> field=value...`** proposes a change to an existing record (a rename, a corrected field)
   into a staging folder (`edits` unless `--folder` says otherwise), with an optional `--note`. Values are JSON when
   they parse as JSON (`wave=2`) and text otherwise (`name=IG-88`).

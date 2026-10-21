@@ -7,6 +7,7 @@
   ia enter               open the data-entry app in the browser
   ia import <product>    write a product's entries into the data repo (--check to only validate)
   ia wiki                cache every product's components and copies from the Imperial Assault wiki in staging/wiki/
+                         (--missions: each campaign mission's hero and rewards)
   ia reprocess <product> re-make an imported product's images with the current pipeline (--check to only list them)
 """
 import argparse
@@ -97,6 +98,16 @@ def cmd_wiki(args):
     from ia_tools import boardwars, wiki
     from ia_tools.dataset import Dataset
 
+    if args.missions:
+        from ia_tools import wiki_missions
+        cache = wiki_missions.run(boardwars.Client(check_robots=False), Dataset(), refresh=args.refresh)
+        missions = cache['missions'].values()
+        print(f"{len(cache['missions'])} missions, {sum(len(m['rewards']) for m in missions)} reward rows: "
+              f"{settings.STAGING / 'wiki' / 'missions.json'}")
+        for mission in missions:
+            for problem in mission['problems']:
+                print(f"  {mission['content_type']} {mission['name']}: {problem}")
+        return
     if args.propose:
         try:
             keys = wiki.propose_sources(Dataset(), args.propose)
@@ -177,6 +188,8 @@ def main(argv=None):
     wiki_.add_argument('--propose', nargs='?', const='wiki-sources', metavar='FOLDER',
                        help="instead, stage edits to every source's code, dates, wave and type from the cache, "
                             'decided in ia enter (default folder: wiki-sources)')
+    wiki_.add_argument('--missions', action='store_true',
+                       help="cache each campaign mission's hero and rewards (staging/wiki/missions.json) instead")
     wiki_.set_defaults(func=cmd_wiki)
 
     reprocess = commands.add_parser('reprocess', help="re-make an imported product's images with the current pipeline")
