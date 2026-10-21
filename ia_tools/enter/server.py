@@ -153,6 +153,7 @@ class Handler(BaseHTTPRequestHandler):
             'entries': entries,
             'suggestions': {i['key']: api.suggest(i, manifest, self.dataset, entries) for i in manifest['items']},
             'forms': api.forms(self.dataset),
+            'quantities': self.dataset.has_quantities(),
             'records': api.records_index(self.dataset),
             'references': self.references(),
             'entry_types': api.entry_types(self.dataset),

@@ -228,3 +228,26 @@ def test_missions_link_through_their_index_row(tmp_path, dataset_copy, hash_file
                                   'content_id': new['id'], 'map_id': None}
     assert {(r['content_type'], r['content_id']) for r in plan['rows']} == {
         ('missions', row['id']), ('missions', existing['id'])}
+
+
+def test_rows_say_how_many_copies(tmp_path, dataset_copy, hash_files):
+    """Data 2.0.0: an entry's quantity (copies in the product) goes on its source-contents row, 1 when unset."""
+    if not dataset_copy.has_quantities():
+        pytest.skip('1.x data has no quantities')
+    reward = dataset_copy.records('reward-cards')[0]
+    hoth = legacy_id(dataset_copy, 'sources', 2)
+    entries = {'product': {'action': 'existing', 'id': hoth}, 'extra': {}, 'items': {
+        'cmd': {'action': 'new', 'content_type': 'command-cards', 'quantity': 2, 'record': {
+            'name': 'Brand New Command', 'iaspec': 'brandnewcommand', 'cost': 1, 'limit': 2}
+            | backs(dataset_copy, 'command-cards')},
+        'rew': {'action': 'link', 'content_type': 'reward-cards', 'id': reward['id']},
+    }}
+    staging = stage(tmp_path, {'cmd': CARD, 'rew': CARD}, entries)
+    plan = importer.plan(staging, dataset_copy)
+    assert {r['content_type']: r['quantity'] for r in plan['rows']} == {'command-cards': 2, 'reward-cards': 1}
+
+    entries['items']['rew']['quantity'] = 0
+    staging.save_entries(entries)
+    with pytest.raises(importer.ImportProblems) as raised:
+        importer.plan(staging, dataset_copy)
+    assert raised.value.problems == ['rew: quantity 0 is not a whole number of copies (1 or more)']

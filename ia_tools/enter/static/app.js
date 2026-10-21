@@ -225,13 +225,18 @@ function imageFigures(item, draft) {
 }
 
 function productField(draft) {
-  // The image's own product, when it isn't the folder's.
+  // The image's own product, when it isn't the folder's, and (data 2.0.0) how many copies of the card it has.
   return h('div', {class: 'form'}, h('label', {for: 'source_id'}, 'product'),
     h('select', {id: 'source_id', onchange: e => {
       if (e.target.value) draft.source_id = idValue(e.target.value); else delete draft.source_id;
     }},
       h('option', {value: ''}, data.manifest.product ? `this folder's (${data.manifest.product})` : '— choose —'),
-      data.records.sources.map(s => h('option', {value: s.id, selected: s.id === draft.source_id}, `${s.name} (#${s.id})`))));
+      data.records.sources.map(s => h('option', {value: s.id, selected: s.id === draft.source_id}, `${s.name} (#${s.id})`))),
+    data.quantities && h('label', {for: 'quantity'}, 'copies'),
+    data.quantities && h('input', {id: 'quantity', type: 'number', min: 1, value: draft.quantity ?? 1, onchange: e => {
+      const n = Number(e.target.value);
+      if (Number.isInteger(n) && n > 1) draft.quantity = n; else delete draft.quantity;
+    }}));
 }
 
 function renderItem(key) {

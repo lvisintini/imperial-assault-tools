@@ -36,6 +36,7 @@ class Pending:
     file_overrides: dict = field(default_factory=dict)  # field → slug chosen in the app
     source_id: int | None = None  # the item's own product, when it isn't the folder's
     back_of: str | None = None  # card backs: the type the image is sized and aligned for (Dataset.back_type)
+    quantity: int | None = None  # copies in the product (data 2.0.0's source-contents.quantity; 1 when unset)
 
 
 def image_fields(dataset, content_type):
@@ -80,7 +81,7 @@ def plan(staging, dataset):
             fields = image_fields(dataset, entry['content_type'])
             first = entry.get('field') or (fields[0] if fields else None)
             p = Pending(key, entry['content_type'], dict(entry['record']), {first: key} if first else {},
-                        source_id=entry.get('source_id'))
+                        source_id=entry.get('source_id'), quantity=entry.get('quantity'))
             if first and entry.get('file'):
                 p.file_overrides[first] = entry['file']
             pending.append(p)
@@ -116,6 +117,9 @@ def plan(staging, dataset):
     for key, entry in entries.get('items', {}).items():
         if entry.get('source_id') is not None and entry['source_id'] not in source_ids:
             problems.append(f'{key}: product id {entry["source_id"]} is not in sources.json')
+        quantity = entry.get('quantity')
+        if quantity is not None and (not isinstance(quantity, int) or isinstance(quantity, bool) or quantity < 1):
+            problems.append(f'{key}: quantity {quantity!r} is not a whole number of copies (1 or more)')
 
     # Ids: new UUIDs, or (1.x data) the numbers after the existing ones.
     new_ids = {}
@@ -199,7 +203,7 @@ def plan(staging, dataset):
     index = {m['content_id']: m['id'] for m in dataset.records('missions')} if indexed else {}
     index_ids, missions = dataset.new_ids('missions') if indexed else None, []
 
-    def row(own_source, content_type, content_id):
+    def row(own_source, content_type, content_id, quantity=None):
         if indexed and content_type in MISSION_TYPES + ['agenda-cards']:
             if content_id not in index:
                 missions.append({'id': next(index_ids), 'content_type': content_type, 'content_id': content_id,
@@ -207,11 +211,12 @@ def plan(staging, dataset):
                 index[content_id] = missions[-1]['id']
             content_type, content_id = 'missions', index[content_id]
         return {'source_id': source_id if own_source is None else own_source,
-                'content_type': dataset.stored(content_type), 'content_id': content_id}
+                'content_type': dataset.stored(content_type), 'content_id': content_id} | (
+            {'quantity': quantity or 1} if dataset.has_quantities() else {})
 
-    rows = [row(p.source_id, p.content_type, p.record['id']) for p in pending if p.content_type in LINKED_TYPES
-            or (indexed and p.content_type == 'agenda-cards' and p.record.get('mission'))]
-    rows += [row(entry.get('source_id'), entry['content_type'], entry['id'])
+    rows = [row(p.source_id, p.content_type, p.record['id'], p.quantity) for p in pending
+            if p.content_type in LINKED_TYPES or (indexed and p.content_type == 'agenda-cards' and p.record.get('mission'))]
+    rows += [row(entry.get('source_id'), entry['content_type'], entry['id'], entry.get('quantity'))
              for key, entry in sorted(entries.get('items', {}).items())
              if entry.get('action') == 'link' and entry.get('content_type') in LINKED_TYPES]
     rows = [r for r in rows if r['source_id'] is not None]  # only with problems: no product chosen

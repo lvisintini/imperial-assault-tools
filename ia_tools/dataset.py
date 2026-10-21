@@ -94,6 +94,10 @@ class Dataset:
         data 1.4.0)."""
         return 'id' in self.schema(content_type)['properties']
 
+    def has_quantities(self):
+        """Whether source-contents rows say how many copies a product has (quantity, data 2.0.0)."""
+        return 'quantity' in self.schema('source-contents')['properties']
+
     def has_backs(self, content_type):
         """Whether the type's records point at their card back (back_id, data 2.0.0)."""
         return BACK_ID in self.schema(content_type)['properties']

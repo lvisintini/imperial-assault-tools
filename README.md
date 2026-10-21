@@ -88,6 +88,9 @@ says which commit of this repo produced it.
     (the same hero, class or deck; deployment cards of its affiliation; upgrades of its tier; or every card of its
     type), else the back staged for it. A new back is named `<deck>: <variant>` ("Rebel Hero: Biv Bodhrik");
   - the same card as an existing record, which only adds a `source-contents` row;
+
+  With data 2.0.0, a new or linked card also has a **copies** field: how many of it the product has
+  (`source-contents.quantity`, 1 unless you change it).
   - an extra image for another card (a hero's wounded side);
   - skip for now, or never import.
 
