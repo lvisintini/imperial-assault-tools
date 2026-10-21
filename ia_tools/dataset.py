@@ -15,7 +15,7 @@ CONTENT_TYPES = [
     'supply-cards', 'campaign-story-mission-cards', 'campaign-hero-side-mission-cards',
     'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards', 'reward-cards', 'companion-cards',
     'upgrade-cards', 'card-backs', 'campaign-threat-mission-cards', 'form-cards', 'skirmish-mission-cards',
-    'raid-missions', 'missions', 'mission-rewards',
+    'raid-missions', 'missions', 'mission-rewards', 'requirements',
 ]
 # The mission card collections missions.json indexes (data 2.0.0; also agenda cards that are missions).
 MISSION_TYPES = [
@@ -24,7 +24,7 @@ MISSION_TYPES = [
     'raid-missions',
 ]
 # Indexes and join tables: never entered, imported or matched by name.
-INDEX_TYPES = ['source-contents', 'missions', 'mission-rewards']
+INDEX_TYPES = ['source-contents', 'missions', 'mission-rewards', 'requirements']
 
 # Types renamed in data 2.0.0. The tools use the new names; a 1.x checkout still stores the old ones, and Dataset
 # translates wherever a name meets the files (file names, image folders, source-contents' content_type). 1.x's
@@ -43,7 +43,6 @@ FOREIGN_KEYS = {
     ('agenda-cards', 'agenda_id'): 'agenda-decks',
     ('hero-class-cards', 'hero_id'): 'heroes',
     ('imperial-class-cards', 'class_id'): 'imperial-classes',
-    ('sources', 'included_in'): 'sources',  # data 2.0.0: packs that ship inside the Core Set
     ('campaign-hero-side-mission-cards', 'hero_id'): 'heroes',  # data 2.0.0: the hero a red side mission is for
 }
 

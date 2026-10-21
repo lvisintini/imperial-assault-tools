@@ -170,9 +170,9 @@ def run(client, dataset, root=None, refresh=False, log=print):
         return json.loads(path.read_text(encoding='utf-8'))['parse']
 
     index = NameIndex(dataset, ['sources'])
-    # Packs that ship inside another product (Luke and Vader in the Core Set) are sources only once the dataset models
-    # them (sources.included_in); until then their names would find the stand-alone packs ("Luke Skywalker").
-    bundled_packs = 'included_in' in dataset.schema('sources')['properties']
+    # Packs that ship inside another product (Luke and Vader in the Core Set) are sources from data 2.0.0 on (listed in
+    # the Core Set's source-contents); in 1.x their names would find the stand-alone packs ("Luke Skywalker").
+    bundled_packs = dataset.uses_uuids('sources')
     main = page(MAIN_PAGE)
     products = []
     for product in parse_products(main['wikitext']):
