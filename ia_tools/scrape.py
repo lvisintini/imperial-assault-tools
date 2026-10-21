@@ -63,7 +63,7 @@ def gaps(client, dataset, report, root=None, log=print, folder='gaps'):
 def item_source(index, image, guess, product):
     """The existing product an image belongs to, when the dataset has it: the album's, or for a skirmish map the one
     SKIRMISH_MAP_PRODUCTS names, or else the folder's."""
-    name = guess.product or (SKIRMISH_MAP_PRODUCTS.get(image.name) if guess.content_type == 'skirmish-maps' else None)
+    name = guess.product or (SKIRMISH_MAP_PRODUCTS.get(image.name) if guess.content_type == 'maps' else None)
     found = index.find('sources', name or product) if (name or product) else []
     return {'id': found[0]['id'], 'name': found[0]['name']} if len(found) == 1 else None
 

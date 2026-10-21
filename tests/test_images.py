@@ -34,7 +34,7 @@ def test_process_flags_upscaling(tmp_path):
 def test_skirmish_maps_keep_their_size_in_both_trees(tmp_path):
     original = tmp_path / 'map.png'
     original.write_bytes(png_bytes((800, 1200)))
-    out = images.process(original, 'skirmish-maps')
+    out = images.process(original, 'maps')
     assert out['large'] == out['small']
     with Image.open(io.BytesIO(out['large'])) as im:
         assert im.size == (800, 1200)

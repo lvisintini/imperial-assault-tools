@@ -19,7 +19,7 @@ SECTIONS = [
     ('companion', 'companion-cards', None),
     ('condition', 'condition-cards', None),
     ('form', 'form-cards', None),
-    ('skirmish map', 'skirmish-maps', None),
+    ('skirmish map', 'maps', None),
 ]
 
 
@@ -68,7 +68,7 @@ def product_of(path):
 def classify(image):
     path = image.path
     if path[:1] == ('Skirmish Maps',):
-        return Guess(product=None, content_type='skirmish-maps')
+        return Guess(product=None, content_type='maps')
 
     product, start = product_of(path)
     if product is None:

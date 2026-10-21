@@ -8,6 +8,7 @@ import io
 from PIL import Image, ImageChops, ImageDraw, ImageOps
 
 from ia_tools import align, settings
+from ia_tools.dataset import canonical
 
 SOURCE = {'large': (300, 300), 'small': (300, 300)}
 STANDARD = {'large': (476, 740), 'small': (301, 470)}
@@ -17,7 +18,7 @@ HERO = {'large': (1490, 1186), 'small': (650, 515)}
 ANY = None  # skirmish maps keep their size, and the small copy is the same file
 
 SIZES = {
-    'sources': SOURCE, 'skirmish-maps': ANY, 'agenda-cards': STANDARD, 'command-cards': MINI,
+    'sources': SOURCE, 'maps': ANY, 'agenda-cards': STANDARD, 'command-cards': MINI,
     'condition-cards': MINI, 'deployment-cards': STANDARD, 'heroes': HERO, 'hero-class-cards': MINI,
     'imperial-class-cards': MINI, 'supply-cards': MINI, 'story-mission-cards': STANDARD,
     'side-mission-cards': STANDARD, 'reward-cards': MINI, 'companion-cards': STANDARD, 'upgrade-cards': MINI,
@@ -47,9 +48,10 @@ SUPERSAMPLE = 4  # the mask is drawn this much bigger and scaled down, for smoot
 
 
 def sizes_for(content_type, back_content_type=None):
+    """Sizes by type; 1.x names (skirmish-maps) work too."""
     if content_type == 'card-backs':
-        return BACK_SIZES[back_content_type]
-    return SIZES[content_type]
+        return BACK_SIZES[canonical(back_content_type)]
+    return SIZES[canonical(content_type)]
 
 
 def fit(image, size):

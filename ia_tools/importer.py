@@ -15,7 +15,7 @@ from ia_tools.staging import slugify
 # Types source-contents links to products (child cards come with their parent; see docs/data-model.md).
 LINKED_TYPES = {
     'agenda-decks', 'command-cards', 'companion-cards', 'condition-cards', 'deployment-cards', 'form-cards', 'heroes',
-    'imperial-classes', 'reward-cards', 'side-mission-cards', 'skirmish-maps', 'story-mission-cards', 'supply-cards',
+    'imperial-classes', 'reward-cards', 'side-mission-cards', 'maps', 'story-mission-cards', 'supply-cards',
     'threat-mission-cards', 'upgrade-cards',
 }
 IASPEC_TYPES = ('deployment-cards', 'command-cards', 'companion-cards')
@@ -149,7 +149,7 @@ def plan(staging, dataset):
                 problems.append(f'{p.key}: no image for {p.content_type}.{image_field}')
                 continue
             slug = p.file_overrides.get(image_field) or image_slug(p.content_type, p.record, image_field, parent_name)
-            relative = f'{p.content_type}/{slug}.png'
+            relative = f'{dataset.stored(p.content_type)}/{slug}.png'
             if relative in planned_paths or any(dataset.image_path(s, relative).exists() for s in ('large', 'small')):
                 problems.append(f'{p.key}: image {relative} already exists; choose another file name')
             planned_paths.add(relative)
@@ -175,8 +175,8 @@ def plan(staging, dataset):
 
     # source-contents rows: new records and "same as existing" links.
     def row(own_source, content_type, content_id):
-        return {'source_id': source_id if own_source is None else own_source, 'content_type': content_type,
-                'content_id': content_id}
+        return {'source_id': source_id if own_source is None else own_source,
+                'content_type': dataset.stored(content_type), 'content_id': content_id}
 
     rows = [row(p.source_id, p.content_type, p.record['id']) for p in pending if p.content_type in LINKED_TYPES]
     rows += [row(entry.get('source_id'), entry['content_type'], entry['id'])

@@ -65,7 +65,7 @@ def preview(dataset, proposal, decision, taken=()):
             if not record.get(field):
                 continue
             slug = importer.image_slug(content_type, after, field, parent_name(dataset, content_type, after))
-            new = f'{content_type}/{slug}.png'
+            new = f'{dataset.stored(content_type)}/{slug}.png'
             if new == record[field]:
                 continue
             if new in taken or any(dataset.image_path(size, new).exists() for size in ('large', 'small')):

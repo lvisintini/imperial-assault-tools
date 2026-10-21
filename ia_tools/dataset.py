@@ -9,11 +9,21 @@ import jsonref
 from ia_tools import settings
 
 CONTENT_TYPES = [
-    'sources', 'source-contents', 'skirmish-maps', 'agenda-decks', 'agenda-cards', 'command-cards',
+    'sources', 'source-contents', 'maps', 'agenda-decks', 'agenda-cards', 'command-cards',
     'condition-cards', 'deployment-cards', 'heroes', 'hero-class-cards', 'imperial-classes', 'imperial-class-cards',
     'supply-cards', 'story-mission-cards', 'side-mission-cards', 'reward-cards', 'companion-cards', 'upgrade-cards',
     'card-backs', 'threat-mission-cards', 'form-cards',
 ]
+
+# Types renamed in data 2.0.0. The tools use the new names; a 1.x checkout still stores the old ones, and Dataset
+# translates wherever a name meets the files (file names, image folders, source-contents' content_type).
+RENAMED = {'maps': 'skirmish-maps'}
+
+
+def canonical(content_type):
+    """The tools' name for a type, given either its 1.x or its 2.0.0 name."""
+    return next((new for new, old in RENAMED.items() if old == content_type), content_type)
+
 
 # Child → parent foreign keys (see docs/data-model.md in the data repo).
 FOREIGN_KEYS = {
@@ -36,8 +46,13 @@ class Dataset:
             raise FileNotFoundError(f'{self.root} is not an imperial-assault-data checkout (set IA_DATA_ROOT)')
         self._data = {}
 
+    def stored(self, content_type):
+        """The type's name in this checkout: its 1.x name if the checkout predates the rename."""
+        old = RENAMED.get(content_type)
+        return old if old and not (self.root / 'schemas' / f'{content_type}.json').exists() else content_type
+
     def path(self, content_type):
-        return self.root / 'data' / f'{content_type}.json'
+        return self.root / 'data' / f'{self.stored(content_type)}.json'
 
     def records(self, content_type):
         if content_type not in self._data:
@@ -81,7 +96,7 @@ class Dataset:
         return list(records[0]) if records else list(self.schema(content_type)['properties'])
 
     def schema(self, content_type):
-        path = (self.root / 'schemas' / f'{content_type}.json').resolve()
+        path = (self.root / 'schemas' / f'{self.stored(content_type)}.json').resolve()
         with open(path, encoding='utf-8') as f:
             return jsonref.load(f, base_uri=path.as_uri(), jsonschema=True, proxies=False)
 
