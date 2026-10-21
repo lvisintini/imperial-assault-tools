@@ -5,8 +5,10 @@ from tests.test_importer import BOX, CARD, HERO, full_entries, stage
 
 
 def imported(tmp_path, dataset):
+    entries = full_entries(dataset)
     staging = stage(tmp_path, {'box': BOX, 'cmd': CARD, 'dep': CARD, 'hero': HERO, 'hero-w': HERO, 'feat': CARD,
-                               'agenda': CARD, 'rules': CARD}, full_entries(dataset))
+                               'agenda': CARD, 'rules': CARD} | ({'back': CARD} if 'back' in entries['items'] else {}),
+                    entries)
     importer.apply(importer.plan(staging, dataset), staging, dataset)
     return staging
 
@@ -18,7 +20,10 @@ def test_reprocess_remakes_every_image_but_the_product_one(tmp_path, dataset_cop
     hero = dataset_copy.records('heroes')[-1]
     assert paths[hero['healthy']] == ('healthy', 'hero') and paths[hero['wounded']] == ('wounded', 'hero-w')
     assert dataset_copy.records('sources')[-1]['image'] not in paths  # no template, no corners: nothing would change
-    assert len(todo) == 5  # command card, hero healthy + wounded, hero class card, agenda card
+    # command card, hero healthy + wounded, hero class card, agenda card, and (2.0.0) the hero's back, as a hero's
+    backs = [job for job in todo if job[0] == 'card-backs']
+    assert len(todo) == 5 + len(backs) and [back for _, back, *_ in backs] == (
+        ['heroes'] if dataset_copy.has_backs('hero-class-cards') else [])
 
     command = dataset_copy.records('command-cards')[-1]['image']
     dataset_copy.image_path('large', command).write_bytes(b'stale')

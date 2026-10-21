@@ -57,11 +57,13 @@ def test_skipped_and_undecided_edits_change_nothing(tmp_path, dataset_copy, hash
 def test_edit_problems(tmp_path, dataset_copy, hash_files):
     hero = dataset_copy.records('heroes')[0]
     touch_images(dataset_copy, 'sources/imperial-assault.png')
-    for n, (content_type, record_id, changes) in enumerate([
+    cases = [
         ('sources', legacy_id(dataset_copy, 'sources', 5), {'name': 'Imperial Assault'}),  # its image name is taken
         ('sources', legacy_id(dataset_copy, 'sources', 5), {'wave': 'one'}),                # breaks the schema
-        ('heroes', hero['id'], {'name': 'Someone'}),    # a card back's variant is the hero's name
-    ]):
+    ]
+    if not dataset_copy.has_backs('hero-class-cards'):  # 1.x: a card back's variant is the hero's name
+        cases.append(('heroes', hero['id'], {'name': 'Someone'}))
+    for n, (content_type, record_id, changes) in enumerate(cases):
         staging = staging_with(tmp_path / str(n), dataset_copy, content_type, record_id, changes,
                                {'action': 'apply', 'changes': changes, 'rename_images': True})
         with pytest.raises(importer.ImportProblems):

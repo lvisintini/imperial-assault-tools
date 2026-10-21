@@ -52,10 +52,23 @@ def test_suggestions(real_dataset):
     assert suggest(wounded) == {'action': 'attach', 'to': '0001', 'field': 'wounded'}
     assert suggest(known) == {'action': 'link', 'content_type': 'command-cards', 'id': 5}
     assert suggest(feat)['record']['hero_id'] == hero['id']
-    assert suggest(back)['record'] == {'deck': 'Rebel Hero', 'content_type': 'heroes', 'variant': hero['name']}
-    assert suggest(class_back)['record']['variant'] == 'New Class'
     assert suggest(unit)['record']['affiliation'] == 'Mercenary'
     assert suggest(unit)['record']['iaspec'] == 'unit'
+    if not real_dataset.has_backs('hero-class-cards'):  # 1.x
+        assert suggest(back)['record'] == {'deck': 'Rebel Hero', 'content_type': 'heroes', 'variant': hero['name']}
+        assert suggest(class_back)['record']['variant'] == 'New Class'
+        return
+    # 2.0.0: backs are named "<deck>: <variant>", and new cards get the back their siblings share.
+    backs = {b['id']: b['name'] for b in real_dataset.records('card-backs')}
+    assert suggest(back)['record'] == {'name': f"Rebel Hero: {hero['name']}"}
+    assert suggest(class_back)['record'] == {'name': 'Imperial Class: New Class'}
+    assert backs[suggest(feat)['record']['back_id']] == f"Rebel Hero: {hero['name']}"
+    assert backs[suggest(unit)['record']['back_id']] == 'Deployment: Mercenary'
+    # A new hero's card gets the back staged with the same hero hint.
+    new_feat = item('0008', 'hero-class-cards', 'Feat', hints={'hero': 'Test Hero'})
+    new_back = item('0009', 'card-backs', 'back', back='heroes', hints={'hero': 'Test Hero'})
+    manifest['items'] += [new_feat, new_back]
+    assert suggest(new_feat)['record']['back_id'] == '@0009'
 
 
 def test_suggestions_keep_an_items_own_product(real_dataset):
@@ -99,8 +112,10 @@ def test_deployment_suggestions(real_dataset):
         i = next(i for i in items if i['key'] == key)
         return api.suggest(i, manifest, real_dataset, entries or {'items': {}, 'extra': {}})['record']
 
+    imperial = next((b['id'] for b in real_dataset.records('card-backs') if b.get('name') == 'Deployment: Imperial'), None)
     assert record('0001') == {'name': 'Grand Admiral', 'elite': True, 'unique': True, 'modes': ['Skirmish'],
-                                   'affiliation': 'Imperial', 'iaspec': 'grandadmiralskirmish'}
+                              'affiliation': 'Imperial', 'iaspec': 'grandadmiralskirmish'} | (
+        {'back_id': imperial} if imperial else {})
     assert record('0002')['iaspec'] == 'grandadmiralcampaign'
     assert {k: record('0003')[k] for k in ('name', 'elite', 'unique', 'iaspec')} == \
         {'name': 'Space Cat', 'elite': True, 'unique': False, 'iaspec': 'elitespacecat'}
@@ -126,6 +141,8 @@ def test_normalise_entry_nulls_empty_nullable_lists(real_dataset):
     entry = {'action': 'new', 'content_type': 'reward-cards', 'record': {'name': 'R', 'type': 'Feat', 'traits': []}}
     if 'class' in real_dataset.schema('reward-cards')['properties']:  # 2.0.0 (#51)
         entry['record'] |= {'class': 'Regular', 'for': 'Rebel players'}
+    if real_dataset.has_backs('reward-cards'):  # 2.0.0 (#52)
+        entry['record']['back_id'] = real_dataset.records('reward-cards')[0]['back_id']
     assert api.check_entry(entry, real_dataset)
     assert api.normalise_entry(entry, real_dataset)['record']['traits'] is None
     assert api.check_entry(entry, real_dataset) == []

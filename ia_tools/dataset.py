@@ -46,6 +46,15 @@ FOREIGN_KEYS = {
     ('campaign-hero-side-mission-cards', 'hero_id'): 'heroes',  # data 2.0.0: the hero a red side mission is for
     ('epilogue-cards', 'mission_id'): 'missions',  # data 2.0.0: the mission an epilogue ends
 }
+# Data 2.0.0: every card's back (card-backs). Not in FOREIGN_KEYS, which are parents (a hero class card's parent names
+# its image); a card has a parent and a back.
+BACK_ID = 'back_id'
+# The type a back is sized and aligned for (1.x's card-backs.content_type): a child card's back is its parent's.
+BACK_KEYS = {
+    'hero-class-cards': 'heroes',
+    'imperial-class-cards': 'imperial-classes',
+    'agenda-cards': 'agenda-decks',
+}
 
 
 def dumps(records):
@@ -84,6 +93,20 @@ class Dataset:
         """Whether the type's records have an id (source-contents and card-backs don't; condition-cards gained one in
         data 1.4.0)."""
         return 'id' in self.schema(content_type)['properties']
+
+    def has_backs(self, content_type):
+        """Whether the type's records point at their card back (back_id, data 2.0.0)."""
+        return BACK_ID in self.schema(content_type)['properties']
+
+    def back_type(self, back):
+        """What a card back is sized and aligned for: its content_type (1.x), or the type of the cards using it, by
+        BACK_KEYS (2.0.0). None for a back no card uses."""
+        if 'content_type' in back:
+            return back['content_type']
+        for content_type in self.content_types(exclude=INDEX_TYPES):
+            if self.has_backs(content_type) and any(r[BACK_ID] == back['id'] for r in self.records(content_type)):
+                return BACK_KEYS.get(content_type, content_type)
+        return None
 
     def uses_uuids(self, content_type):
         """Whether the type's ids are UUID strings (data 2.0.0 on) rather than numbers (1.x). Read from the schema, so

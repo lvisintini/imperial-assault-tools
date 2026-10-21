@@ -73,8 +73,9 @@ def preview(dataset, proposal, decision, taken=()):
             moves[field] = (record[field], new)
             after[field] = new
     old_name, new_name = record.get('name'), after.get('name')
-    if old_name != new_name and any(b['variant'] == old_name for b in dataset.records('card-backs')):
-        # Some backs match on a record's name, or (story and threat missions) its product's name: docs/data-model.md.
+    if old_name != new_name and any(b.get('variant') == old_name for b in dataset.records('card-backs')):
+        # 1.x: some backs match on a record's name, or (story and threat missions) its product's name. 2.0.0's cards
+        # point at their back (back_id), so a rename can't lose one.
         problems.append(f"{proposal['key']}: a card back's variant is {old_name!r}; rename it in card-backs.json too")
     for error in jsonschema.Draft4Validator(dataset.schema(content_type)).iter_errors(after):
         where = '.'.join(str(x) for x in error.absolute_path) or '(record)'

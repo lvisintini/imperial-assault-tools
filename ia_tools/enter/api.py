@@ -4,7 +4,7 @@ each staged image, and validation of one entry at a time."""
 import jsonschema
 
 from ia_tools import importer
-from ia_tools.dataset import FOREIGN_KEYS, INDEX_TYPES
+from ia_tools.dataset import BACK_ID, BACK_KEYS, FOREIGN_KEYS, INDEX_TYPES
 from ia_tools.iaspec import iaspec_for
 from ia_tools.match import normalise, parse_deployment_name
 
@@ -16,6 +16,12 @@ def entry_types(dataset):
 
 # Types entered without an image of their own.
 EXTRA_TYPES = ['agenda-decks', 'imperial-classes']
+# Data 2.0.0: cards that agree on this field share a back (other types: all their cards share one), for suggesting a
+# new card's back_id.
+SAME_BACK = {'deployment-cards': 'affiliation', 'upgrade-cards': 'tier'} | {
+    child: fk for (child, fk) in FOREIGN_KEYS if child in BACK_KEYS}
+# The album hint naming a back's parent ("Rebel Hero: <hero>").
+PARENT_HINTS = {'heroes': 'hero', 'imperial-classes': 'class', 'agenda-decks': 'deck'}
 
 
 def field_spec(content_type, name, prop, required):
@@ -26,6 +32,8 @@ def field_spec(content_type, name, prop, required):
         prop = options[0]
     if (content_type, name) in FOREIGN_KEYS:
         return spec | {'kind': 'fk', 'parent': FOREIGN_KEYS[content_type, name]}
+    if name == BACK_ID:
+        return spec | {'kind': 'fk', 'parent': 'card-backs'}
     if 'enum' in prop:
         return spec | {'kind': 'select', 'options': prop['enum']}
     kind = prop.get('type')
@@ -76,9 +84,33 @@ def records_index(dataset):
     return index
 
 
-def existing_back(dataset, content_type):
-    """A sample existing card back for a type: deck name to reuse, variant style to follow."""
-    return next((b for b in dataset.records('card-backs') if b['content_type'] == content_type), None)
+def existing_back(dataset, back_type):
+    """A sample existing card back for a back type (Dataset.back_type): deck name to reuse, variant style to follow."""
+    backs = dataset.records('card-backs')
+    if backs and 'content_type' in backs[0]:  # 1.x
+        return next((b for b in backs if b['content_type'] == back_type), None)
+    for content_type in [t for t, key in BACK_KEYS.items() if key == back_type] or [back_type]:
+        card = next(iter(dataset.records(content_type)), None) if dataset.path(content_type).exists() else None
+        if card:
+            return next((b for b in backs if b['id'] == card[BACK_ID]), None)
+    return None
+
+
+def suggest_back(content_type, record, item, manifest, dataset):
+    """Data 2.0.0: the back a new card most likely has. The one its existing siblings share (SAME_BACK), or else the
+    one back staged for its type (for a new hero or class, the one with the same album hint)."""
+    field = SAME_BACK.get(content_type)
+    if field is None or record.get(field) is not None:
+        same = {r[BACK_ID] for r in dataset.records(content_type) if field is None or r.get(field) == record.get(field)}
+        if len(same) == 1:
+            return same.pop()
+    back_type = BACK_KEYS.get(content_type, content_type)
+    hint = PARENT_HINTS.get(back_type)
+    own = normalise(item['guess'].get('hints', {}).get(hint) or '') if hint else ''
+    staged = [i for i in manifest['items'] if i['guess'].get('content_type') == 'card-backs'
+              and i['guess'].get('back_content_type') == back_type
+              and (not hint or normalise(i['guess'].get('hints', {}).get(hint) or '') == own)]
+    return f"@{staged[0]['key']}" if len(staged) == 1 else None
 
 
 def deployment_fields(item, manifest):
@@ -159,15 +191,23 @@ def suggest(item, manifest, dataset, entries):
     if content_type == 'card-backs':
         back_type = guess.get('back_content_type')
         sample = existing_back(dataset, back_type) if back_type else None
-        record = {'deck': sample['deck'] if sample else '', 'content_type': back_type, 'variant': None}
         hint = hints.get({'heroes': 'hero', 'imperial-classes': 'class'}.get(back_type))
-        if hint:  # these backs' variant is the hero's or class's name
+        if hint:  # these backs are named after the hero or class
             parent = next((r for r in dataset.records(back_type) if normalise(r['name']) == normalise(hint)), None)
-            record['variant'] = parent['name'] if parent else hint
+            hint = parent['name'] if parent else hint
+        if 'name' in dataset.schema('card-backs')['properties']:  # 2.0.0: "Rebel Hero: <hero>"
+            deck = sample['name'].split(': ')[0] if sample else ''
+            record = {'name': f'{deck}: {hint}' if deck and hint else deck or hint or ''}
+        else:
+            record = {'deck': sample['deck'] if sample else '', 'content_type': back_type, 'variant': hint}
     for (child, fk), parent in FOREIGN_KEYS.items():
-        hint = {'heroes': 'hero', 'imperial-classes': 'class', 'agenda-decks': 'deck'}.get(parent)  # album hints
+        hint = PARENT_HINTS.get(parent)  # album hints
         if content_type == child and hint and hints.get(hint):
             record[fk] = find_parent(parent, hints[hint], dataset, entries, manifest)
+    if content_type and dataset.has_backs(content_type):
+        back = suggest_back(content_type, record, item, manifest, dataset)
+        if back:
+            record[BACK_ID] = back
     return {'action': 'new', 'content_type': content_type, 'record': record} | source
 
 
@@ -223,6 +263,8 @@ def check_entry(entry, dataset):
     for (child, fk), parent in FOREIGN_KEYS.items():
         if content_type == child and isinstance(record.get(fk), str) and record[fk].startswith('@'):
             record[fk] = dataset.placeholder_id(parent)
+    if isinstance(record.get(BACK_ID), str) and record[BACK_ID].startswith('@'):
+        record[BACK_ID] = dataset.placeholder_id('card-backs')
     problems = []
     for error in jsonschema.Draft4Validator(dataset.schema(content_type)).iter_errors(record):
         where = '.'.join(str(x) for x in error.absolute_path) or 'record'

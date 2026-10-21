@@ -41,7 +41,7 @@ def jobs(staging, dataset):
             originals = {fields[0]: (entries.get('product') or {}).get('item')}
         else:
             originals = {entries['items'].get(key, {}).get('field') or fields[0]: key} | attached.get(key, {})
-        back = record.get('content_type') if content_type == 'card-backs' else None
+        back = dataset.back_type(record) if content_type == 'card-backs' else None
         for field, item_key in originals.items():
             if item_key and record.get(field):
                 found.append((content_type, back, field, item_key, record[field]))

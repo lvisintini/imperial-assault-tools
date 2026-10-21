@@ -41,14 +41,6 @@ SKIRMISH_MAP_PRODUCTS = {
 }
 
 
-# card-backs are keyed on the parent for child cards (see the data repo's docs/data-model.md).
-BACK_KEYS = {
-    'hero-class-cards': 'heroes',
-    'imperial-class-cards': 'imperial-classes',
-    'agenda-cards': 'agenda-decks',
-}
-
-
 @dataclass
 class Guess:
     product: str | None         # boardwars' product name, e.g. 'Tyrants of Lothal'

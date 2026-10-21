@@ -28,11 +28,12 @@ SIZES = {
     'upgrade-cards': MINI, 'form-cards': MINI_FLIPPED, 'skirmish-mission-cards': STANDARD_FLIPPED,
     'epilogue-cards': STANDARD,
 } | dict.fromkeys(MISSIONS, STANDARD)
-# card-backs, by the content type they're keyed on (card-backs.content_type).
+# card-backs, by the content type they're the back of (Dataset.back_type): their cards' size.
 BACK_SIZES = {
     'agenda-decks': STANDARD, 'command-cards': MINI, 'companion-cards': STANDARD, 'condition-cards': MINI,
     'deployment-cards': STANDARD, 'imperial-classes': MINI, 'heroes': MINI, 'upgrade-cards': MINI,
     'reward-cards': MINI, 'supply-cards': MINI, 'form-cards': MINI_FLIPPED, 'epilogue-cards': STANDARD,
+    'skirmish-mission-cards': STANDARD_FLIPPED,
 } | dict.fromkeys(MISSIONS, STANDARD)
 
 

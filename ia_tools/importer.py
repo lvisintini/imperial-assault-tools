@@ -9,7 +9,7 @@ import jsonschema
 
 from ia_tools import edits, images, settings
 from ia_tools.iaspec import iaspec_for
-from ia_tools.dataset import FOREIGN_KEYS, MISSION_TYPES
+from ia_tools.dataset import BACK_ID, BACK_KEYS, FOREIGN_KEYS, MISSION_TYPES
 from ia_tools.staging import slugify
 
 # Types source-contents links to products (child cards come with their parent; see docs/data-model.md). Mission
@@ -35,6 +35,7 @@ class Pending:
     images: dict = field(default_factory=dict)  # field → item key of the original
     file_overrides: dict = field(default_factory=dict)  # field → slug chosen in the app
     source_id: int | None = None  # the item's own product, when it isn't the folder's
+    back_of: str | None = None  # card backs: the type the image is sized and aligned for (Dataset.back_type)
 
 
 def image_fields(dataset, content_type):
@@ -54,7 +55,7 @@ def image_slug(content_type, record, image_field, parent_name=None):
         parts = [parent_name, name]
     elif content_type == 'heroes':
         parts = [name, image_field]
-    elif content_type == 'card-backs':
+    elif content_type == 'card-backs' and 'deck' in record:  # 1.x; 2.0.0's backs have a name
         parts = [record.get('deck'), record.get('variant')]
     else:
         parts = [name]
@@ -124,8 +125,27 @@ def plan(staging, dataset):
     if source_id is None and 'product' in by_key:
         source_id = by_key['product'].record['id']
 
+    # What each new card back is sized for: 1.x names it; in 2.0.0 it's the type of the staged cards whose back_id is
+    # this back, or else the scrape's guess.
+    for p in pending:
+        if p.content_type == 'card-backs':
+            users = {BACK_KEYS.get(q.content_type, q.content_type) for q in pending if q.record.get(BACK_ID) == f'@{p.key}'}
+            guessed = items.get(p.key, {}).get('guess', {}).get('back_content_type')
+            p.back_of = p.record.get('content_type') or (users.pop() if len(users) == 1 else None) or guessed
+            if len(users) > 1:
+                problems.append(f'{p.key}: cards of several types use this back ({", ".join(sorted(users))})')
+            elif p.back_of is None:
+                problems.append(f"{p.key}: no staged card's back_id is this back, so its size is unknown")
+
     # Foreign keys to staged records.
     for p in pending:
+        value = p.record.get(BACK_ID)
+        if isinstance(value, str) and value.startswith('@'):
+            target = by_key.get(value[1:])
+            if not target or target.content_type != 'card-backs':
+                problems.append(f'{p.key}: {BACK_ID} points at {value}, which is not a staged card back')
+            else:
+                p.record[BACK_ID] = target.record['id']
         for (child, fk), parent in FOREIGN_KEYS.items():
             value = p.record.get(fk) if p.content_type == child else None
             if isinstance(value, str) and value.startswith('@'):
@@ -228,8 +248,7 @@ def apply(plan_, staging, dataset):
     items, upscaled, alignments = plan_["items"], {}, {}
     for p in plan_['pending']:
         for image_field, item_key in p.images.items():
-            back_type = p.record.get('content_type') if p.content_type == 'card-backs' else None
-            out = images.process(staging.dir / items[item_key]['file'], p.content_type, back_type, image_field)
+            out = images.process(staging.dir / items[item_key]['file'], p.content_type, p.back_of, image_field)
             for size in ('large', 'small'):
                 path = dataset.image_path(size, p.record[image_field])
                 path.parent.mkdir(parents=True, exist_ok=True)

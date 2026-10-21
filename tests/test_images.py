@@ -5,6 +5,7 @@ import pytest
 from PIL import Image
 
 from ia_tools import images
+from ia_tools.dataset import BACK_KEYS
 from tests.conftest import png_bytes
 
 
@@ -77,8 +78,12 @@ def test_process_rounds_cards_but_not_hero_sheets(tmp_path):
 def test_card_backs_size_by_what_they_are_the_back_of():
     assert images.sizes_for('card-backs', 'heroes') == images.MINI
     assert images.sizes_for('card-backs', 'deployment-cards') == images.STANDARD
+    assert images.sizes_for('card-backs', 'skirmish-mission-cards') == images.STANDARD_FLIPPED
     with pytest.raises(KeyError):
         images.sizes_for('card-backs', 'sources')
+    for back_of, sizes in images.BACK_SIZES.items():  # a back has its cards' size
+        cards = [t for t, key in BACK_KEYS.items() if key == back_of] or [back_of]
+        assert all(images.SIZES[t] == sizes for t in cards), back_of
 
 
 def test_sizes_match_the_data_repo_tests(real_dataset):
@@ -89,10 +94,13 @@ def test_sizes_match_the_data_repo_tests(real_dataset):
     source = (tests_dir / 'test_images.py').read_text()
     dims = {name: (int(w), int(h)) for name, w, h in re.findall(r'^\s+(\w+) = \((\d+), (\d+)\)$', source, re.M)}
     dims['ANY'] = None
+    dims['CARDS_USING_IT'] = 'skip'  # 2.0.0: a back is checked at its cards' size (the test above)
     definitions = re.findall(
         r"ImageDefinition\('(large|small)', CONTENT_TYPES\.(\w+), '\w+', dims=(\w+)(?:, content_type=CONTENT_TYPES\.(\w+))?\)",
         source)
-    assert len(definitions) > 50
+    assert len(definitions) > 40
     for size, content_type, dim_name, back_of in definitions:
+        if dims[dim_name] == 'skip':
+            continue
         sizes = images.sizes_for(constants[content_type], constants[back_of] if back_of else None)
         assert (None if sizes is None else sizes[size]) == dims[dim_name], (size, content_type, back_of)

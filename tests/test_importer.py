@@ -29,36 +29,50 @@ def stage(tmp_path, items, entries):
 CARD, HERO, BOX = (600, 930), (1490, 1186), (300, 300)
 
 
+def backs(dataset, content_type):
+    """Data 2.0.0: {'back_id': the back of the type's first card}; {} for 1.x data, whose cards have none."""
+    return {'back_id': dataset.records(content_type)[0]['back_id']} if dataset.has_backs(content_type) else {}
+
+
 def full_entries(dataset):
     deployment = dataset.records('deployment-cards')[0]
-    return {
+    entries = {
         'product': {'action': 'new', 'item': 'box', 'record': {'name': 'Test Product', 'type': 'Expansion', 'wave': None}},
         'items': {
             'box': {'action': 'skip'},
             'cmd': {'action': 'new', 'content_type': 'command-cards', 'record': {
-                'name': 'Brand New Command', 'iaspec': 'brandnewcommand', 'cost': 1, 'limit': 2}},
+                'name': 'Brand New Command', 'iaspec': 'brandnewcommand', 'cost': 1, 'limit': 2}
+                | backs(dataset, 'command-cards')},
             'dep': {'action': 'link', 'content_type': 'deployment-cards', 'id': deployment['id']},
             'hero': {'action': 'new', 'content_type': 'heroes', 'field': 'healthy', 'record': {'name': 'Test Hero'}},
             'hero-w': {'action': 'attach', 'to': 'hero', 'field': 'wounded'},
             'feat': {'action': 'new', 'content_type': 'hero-class-cards', 'record': {
                 'name': 'Test Feat', 'hero_id': '@hero', 'xp': None, 'type': 'Feat', 'traits': None}},
             'agenda': {'action': 'new', 'content_type': 'agenda-cards', 'record': {
-                'name': 'Test Agenda', 'agenda_id': '@x1', 'influence': 1, 'mission': False}},
+                'name': 'Test Agenda', 'agenda_id': '@x1', 'influence': 1, 'mission': False}
+                | backs(dataset, 'agenda-cards')},
             'rules': {'action': 'known-skip'},
         },
         'extra': {'x1': {'content_type': 'agenda-decks', 'record': {'name': 'Test Deck'}}},
     }
+    if dataset.has_backs('hero-class-cards'):  # 2.0.0: the new hero's back is staged too, and its card points at it
+        entries['items']['back'] = {'action': 'new', 'content_type': 'card-backs', 'record': {'name': 'Rebel Hero: Test Hero'}}
+        entries['items']['feat']['record']['back_id'] = '@back'
+    return entries
 
 
 def test_full_import(tmp_path, dataset_copy, hash_files):
+    entries = full_entries(dataset_copy)
     staging = stage(tmp_path, {'box': BOX, 'cmd': CARD, 'dep': CARD, 'hero': HERO, 'hero-w': HERO, 'feat': CARD,
-                               'agenda': CARD, 'rules': CARD}, full_entries(dataset_copy))
+                               'agenda': CARD, 'rules': CARD} | ({'back': CARD} if 'back' in entries['items'] else {}),
+                    entries)
     before = {t: len(dataset_copy.records(t)) for t in ('sources', 'command-cards', 'heroes', 'source-contents')}
     ids_before = {t: {r['id'] for r in dataset_copy.records(t)} for t in ('sources', 'command-cards', 'heroes', 'agenda-decks')}
 
     plan = importer.plan(staging, dataset_copy)
     assert importer.summary(plan)['new_records'] == {
-        'sources': 1, 'command-cards': 1, 'heroes': 1, 'hero-class-cards': 1, 'agenda-cards': 1, 'agenda-decks': 1}
+        'sources': 1, 'command-cards': 1, 'heroes': 1, 'hero-class-cards': 1, 'agenda-cards': 1, 'agenda-decks': 1} | (
+        {'card-backs': 1} if 'back' in entries['items'] else {})
     importer.apply(plan, staging, dataset_copy)
 
     new_ids = {t: dataset_copy.records(t)[-1]['id'] for t in ids_before}
@@ -77,6 +91,11 @@ def test_full_import(tmp_path, dataset_copy, hash_files):
     assert feat['hero_id'] == hero['id'] and feat['image'] == 'hero-class-cards/test-hero-test-feat.png'
     agenda = dataset_copy.records('agenda-cards')[-1]
     assert agenda['agenda_id'] == new_ids['agenda-decks'] and agenda['image'] == 'agenda-cards/test-deck-test-agenda.png'
+    if 'back' in entries['items']:  # sized as its card's, a hero class card back
+        back = dataset_copy.records('card-backs')[-1]
+        assert feat['back_id'] == back['id'] and back['image'] == 'card-backs/rebel-hero-test-hero.png'
+        with Image.open(dataset_copy.image_path('large', back['image'])) as im:
+            assert im.size == (424, 657)
 
     # source-contents: new top-level records plus the linked deployment card; child cards come with their parent.
     rows = dataset_copy.records('source-contents')[before['source-contents']:]
@@ -173,7 +192,8 @@ def test_items_can_name_their_own_product(tmp_path, dataset_copy, hash_files):
     hoth, bespin, jabba = (legacy_id(dataset_copy, 'sources', n) for n in (2, 3, 4))
     entries = {'product': None, 'extra': {}, 'items': {
         'cmd': {'action': 'new', 'content_type': 'command-cards', 'source_id': hoth, 'record': {
-            'name': 'Brand New Command', 'iaspec': 'brandnewcommand', 'cost': 1, 'limit': 2}},
+            'name': 'Brand New Command', 'iaspec': 'brandnewcommand', 'cost': 1, 'limit': 2}
+            | backs(dataset_copy, 'command-cards')},
         'rew': {'action': 'link', 'content_type': 'reward-cards', 'id': reward['id'], 'source_id': bespin},
         'side': {'action': 'skip', 'source_id': jabba},
     }}
@@ -198,7 +218,7 @@ def test_missions_link_through_their_index_row(tmp_path, dataset_copy, hash_file
     bespin = legacy_id(dataset_copy, 'sources', 3)  # the first mission (Disaster) is Return to Hoth's
     entries = {'product': {'action': 'existing', 'id': bespin}, 'extra': {}, 'items': {
         'new': {'action': 'new', 'content_type': 'campaign-regular-side-mission-cards',
-                'record': {'name': 'A Brand New Mission'}},
+                'record': {'name': 'A Brand New Mission'} | backs(dataset_copy, 'campaign-regular-side-mission-cards')},
         'old': {'action': 'link', 'content_type': existing['content_type'], 'id': existing['content_id']},
     }}
     plan = importer.plan(stage(tmp_path, {'new': CARD, 'old': CARD}, entries), dataset_copy)

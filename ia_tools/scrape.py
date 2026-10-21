@@ -10,8 +10,8 @@ from urllib.parse import unquote, urlsplit
 from PIL import Image
 
 from ia_tools import boardwars
-from ia_tools.classify import BACK_KEYS, SKIRMISH_MAP_PRODUCTS, classify, product_of
-from ia_tools.dataset import INDEX_TYPES
+from ia_tools.classify import SKIRMISH_MAP_PRODUCTS, classify, product_of
+from ia_tools.dataset import BACK_KEYS, INDEX_TYPES
 from ia_tools.match import NameIndex
 from ia_tools.staging import Staging, slugify
 

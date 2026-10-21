@@ -83,7 +83,10 @@ says which commit of this repo produced it.
   they parse as JSON (`wave=2`) and text otherwise (`name=IG-88`).
 - **`ia enter`** is a local web app. For each image it shows the original, a preview of how it will be imported, and an
   existing card of the same type. You decide what each image is:
-  - a new record, using a form built from the dataset's JSON Schemas;
+  - a new record, using a form built from the dataset's JSON Schemas. In data 2.0.0 a card's `back_id` is picked
+    from the existing backs or a back staged with it, and is pre-filled with the back its existing siblings share
+    (the same hero, class or deck; deployment cards of its affiliation; upgrades of its tier; or every card of its
+    type), else the back staged for it. A new back is named `<deck>: <variant>` ("Rebel Hero: Biv Bodhrik");
   - the same card as an existing record, which only adds a `source-contents` row;
   - an extra image for another card (a hero's wounded side);
   - skip for now, or never import.
@@ -99,10 +102,11 @@ says which commit of this repo produced it.
   - writes the records in the dataset's exact JSON format;
   - adds the `source-contents` rows. In data 2.0.0 a mission card (and an agenda card that is a mission) gets a
     `missions` index row, and its product row points at that row instead of the card;
-  - writes the large and small PNGs at the sizes the dataset's tests expect;
+  - writes the large and small PNGs at the sizes the dataset's tests expect. A data 2.0.0 card back is sized as the
+    cards whose `back_id` it is, or (when no staged card uses it) as the scrape guessed;
   - appends the imported originals' hashes to the register;
-  - applies the edits you chose, moving image files when they're renamed. A rename is refused while a card back's
-    `variant` still holds the old name.
+  - applies the edits you chose, moving image files when they're renamed. In data 1.x a rename is refused while a card
+    back's `variant` still holds the old name.
 
   It never overwrites an existing image.
 

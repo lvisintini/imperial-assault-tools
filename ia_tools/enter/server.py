@@ -180,7 +180,7 @@ class Handler(BaseHTTPRequestHandler):
             if record:
                 refs[content_type] = record[fields[0]]
         for back in self.dataset.records('card-backs'):
-            refs.setdefault(f"card-backs:{back['content_type']}", back['image'])
+            refs.setdefault(f"card-backs:{self.dataset.back_type(back)}", back['image'])
         return refs
 
     def preview(self, staging, key, query):

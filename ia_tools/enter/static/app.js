@@ -210,7 +210,7 @@ function show(key) {
 
 function imageFigures(item, draft) {
   const type = draft.content_type;
-  const back = type === 'card-backs' ? draft.record?.content_type : null;
+  const back = type === 'card-backs' ? draft.record?.content_type ?? item.guess.back_content_type : null;
   const sized = type && (type !== 'card-backs' || back);
   const refKey = type === 'card-backs' ? `card-backs:${back}` : type;
   const ref = data.references[refKey];
