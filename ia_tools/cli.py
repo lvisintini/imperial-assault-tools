@@ -7,7 +7,7 @@
   ia enter               open the data-entry app in the browser
   ia import <product>    write a product's entries into the data repo (--check to only validate)
   ia wiki                cache every product's components and copies from the Imperial Assault wiki in staging/wiki/
-                         (--missions: each campaign mission's hero and rewards)
+                         (--missions: each campaign mission's hero and rewards; --skirmish: skirmish mission cards)
   ia reprocess <product> re-make an imported product's images with the current pipeline (--check to only list them)
 """
 import argparse
@@ -98,6 +98,14 @@ def cmd_wiki(args):
     from ia_tools import boardwars, wiki
     from ia_tools.dataset import Dataset
 
+    if args.skirmish:
+        from ia_tools import wiki_skirmish
+        cache = wiki_skirmish.run(boardwars.Client(check_robots=False), Dataset(), refresh=args.refresh)
+        print(f"{len(cache['missions'])} skirmish missions: {settings.STAGING / 'wiki' / 'skirmish.json'}")
+        for mission in cache['missions']:
+            for problem in mission['problems']:
+                print(f"  {mission['name']}: {problem}")
+        return
     if args.missions:
         from ia_tools import wiki_missions
         cache = wiki_missions.run(boardwars.Client(check_robots=False), Dataset(), refresh=args.refresh)
@@ -190,6 +198,9 @@ def main(argv=None):
                             'decided in ia enter (default folder: wiki-sources)')
     wiki_.add_argument('--missions', action='store_true',
                        help="cache each campaign mission's hero and rewards (staging/wiki/missions.json) instead")
+    wiki_.add_argument('--skirmish', action='store_true',
+                       help='cache every skirmish mission card, its map and format, and its image '
+                            '(staging/wiki/skirmish.json) instead')
     wiki_.set_defaults(func=cmd_wiki)
 
     reprocess = commands.add_parser('reprocess', help="re-make an imported product's images with the current pipeline")

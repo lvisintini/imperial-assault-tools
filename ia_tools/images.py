@@ -14,6 +14,7 @@ SOURCE = {'large': (300, 300), 'small': (300, 300)}
 STANDARD = {'large': (476, 740), 'small': (301, 470)}
 MINI = {'large': (424, 657), 'small': (293, 454)}
 MINI_FLIPPED = {'large': (657, 424), 'small': (454, 293)}
+STANDARD_FLIPPED = {'large': (740, 476), 'small': (470, 301)}  # skirmish mission cards (landscape)
 HERO = {'large': (1490, 1186), 'small': (650, 515)}
 ANY = None  # skirmish maps keep their size, and the small copy is the same file
 
@@ -24,7 +25,7 @@ SIZES = {
     'sources': SOURCE, 'maps': ANY, 'agenda-cards': STANDARD, 'command-cards': MINI,
     'condition-cards': MINI, 'deployment-cards': STANDARD, 'heroes': HERO, 'hero-class-cards': MINI,
     'imperial-class-cards': MINI, 'supply-cards': MINI, 'reward-cards': MINI, 'companion-cards': STANDARD,
-    'upgrade-cards': MINI, 'form-cards': MINI_FLIPPED,
+    'upgrade-cards': MINI, 'form-cards': MINI_FLIPPED, 'skirmish-mission-cards': STANDARD_FLIPPED,
 } | dict.fromkeys(MISSIONS, STANDARD)
 # card-backs, by the content type they're keyed on (card-backs.content_type).
 BACK_SIZES = {
@@ -42,7 +43,7 @@ RADII = {
     'agenda-cards': CARD_RADIUS, 'deployment-cards': CARD_RADIUS, 'hero-class-cards': CARD_RADIUS,
     'imperial-class-cards': CARD_RADIUS, 'reward-cards': CARD_RADIUS, 'upgrade-cards': CARD_RADIUS,
     'form-cards': CARD_RADIUS, 'command-cards': 35, 'companion-cards': 35, 'supply-cards': 27, 'condition-cards': 24,
-    'card-backs': 22,
+    'card-backs': 22, 'skirmish-mission-cards': CARD_RADIUS,
 } | dict.fromkeys(MISSIONS, CARD_RADIUS)
 SUPERSAMPLE = 4  # the mask is drawn this much bigger and scaled down, for smooth (anti-aliased) corners
 
