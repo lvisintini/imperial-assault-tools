@@ -124,6 +124,8 @@ def test_check_entry(real_dataset):
 
 def test_normalise_entry_nulls_empty_nullable_lists(real_dataset):
     entry = {'action': 'new', 'content_type': 'reward-cards', 'record': {'name': 'R', 'type': 'Feat', 'traits': []}}
+    if 'class' in real_dataset.schema('reward-cards')['properties']:  # 2.0.0 (#51)
+        entry['record'] |= {'class': 'Regular', 'for': 'Rebel players'}
     assert api.check_entry(entry, real_dataset)
     assert api.normalise_entry(entry, real_dataset)['record']['traits'] is None
     assert api.check_entry(entry, real_dataset) == []
