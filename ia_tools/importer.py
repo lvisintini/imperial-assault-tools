@@ -141,7 +141,7 @@ def plan(staging, dataset):
         parent_name = None
         for (child, fk), parent in FOREIGN_KEYS.items():
             if p.content_type == child and p.record.get(fk) is not None:
-                parent_name = next((r['name'] for r in dataset.records(parent) if r['id'] == p.record[fk]), None)
+                parent_name = next((r.get('name') for r in dataset.records(parent) if r['id'] == p.record[fk]), None)
                 parent_name = parent_name or next((q.record['name'] for q in pending
                                                    if q.content_type == parent and q.record.get('id') == p.record[fk]), None)
         for image_field in image_fields(dataset, p.content_type):

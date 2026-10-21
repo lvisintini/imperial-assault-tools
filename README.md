@@ -29,6 +29,7 @@ uv run ia scrape --gaps          # or: everything the audit found missing, from 
 uv run ia wiki                   # cache every product's components and copies from the wiki
 uv run ia wiki --propose         # stage edits to every source's code, dates, wave and type, from that cache
 uv run ia wiki --missions        # cache each campaign mission's hero and rewards (staging/wiki/missions.json)
+uv run ia stage epilogues --type epilogue-cards --tts save.zip   # stage images that aren't on boardwars
 uv run ia enter                  # opens http://localhost:8001: go through the cards
 uv run ia import tyrants-of-lothal --check   # validate only
 uv run ia import tyrants-of-lothal           # write records, images and source-contents rows
@@ -72,6 +73,11 @@ says which commit of this repo produced it.
   `threat_reward`) matched to reward and deployment cards, credits, and "Any 1 <category> ally" as a choice of the
   category's cards. A group ally is its regular card. Anything it can't place is listed as a problem, not guessed.
   Data 2.0.0's missions migration reads this file.
+- **`ia stage <slug> --type <type> [files] [--tts SAVE] [--product NAME]`** stages images that aren't on boardwars
+  into `staging/<slug>/`, in the scraper's format, for `ia enter` and `ia import`: image files, or a Tabletop
+  Simulator saved object (`--tts`, a .zip with its `Mods/Images`). From a save, every card's face is an item of
+  `--type` and every distinct back a card back of it, named by position ("Card 3", "Back B, of cards 3 and 4").
+  Single-card images only (no sheets).
 - **`ia propose <type> <id> field=value...`** proposes a change to an existing record (a rename, a corrected field)
   into a staging folder (`edits` unless `--folder` says otherwise), with an optional `--note`. Values are JSON when
   they parse as JSON (`wave=2`) and text otherwise (`name=IG-88`).

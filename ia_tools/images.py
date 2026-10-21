@@ -26,12 +26,13 @@ SIZES = {
     'condition-cards': MINI, 'deployment-cards': STANDARD, 'heroes': HERO, 'hero-class-cards': MINI,
     'imperial-class-cards': MINI, 'supply-cards': MINI, 'reward-cards': MINI, 'companion-cards': STANDARD,
     'upgrade-cards': MINI, 'form-cards': MINI_FLIPPED, 'skirmish-mission-cards': STANDARD_FLIPPED,
+    'epilogue-cards': STANDARD,
 } | dict.fromkeys(MISSIONS, STANDARD)
 # card-backs, by the content type they're keyed on (card-backs.content_type).
 BACK_SIZES = {
     'agenda-decks': STANDARD, 'command-cards': MINI, 'companion-cards': STANDARD, 'condition-cards': MINI,
     'deployment-cards': STANDARD, 'imperial-classes': MINI, 'heroes': MINI, 'upgrade-cards': MINI,
-    'reward-cards': MINI, 'supply-cards': MINI, 'form-cards': MINI_FLIPPED,
+    'reward-cards': MINI, 'supply-cards': MINI, 'form-cards': MINI_FLIPPED, 'epilogue-cards': STANDARD,
 } | dict.fromkeys(MISSIONS, STANDARD)
 
 
@@ -43,7 +44,7 @@ RADII = {
     'agenda-cards': CARD_RADIUS, 'deployment-cards': CARD_RADIUS, 'hero-class-cards': CARD_RADIUS,
     'imperial-class-cards': CARD_RADIUS, 'reward-cards': CARD_RADIUS, 'upgrade-cards': CARD_RADIUS,
     'form-cards': CARD_RADIUS, 'command-cards': 35, 'companion-cards': 35, 'supply-cards': 27, 'condition-cards': 24,
-    'card-backs': 22, 'skirmish-mission-cards': CARD_RADIUS,
+    'card-backs': 22, 'skirmish-mission-cards': CARD_RADIUS, 'epilogue-cards': CARD_RADIUS,
 } | dict.fromkeys(MISSIONS, CARD_RADIUS)
 SUPERSAMPLE = 4  # the mask is drawn this much bigger and scaled down, for smooth (anti-aliased) corners
 

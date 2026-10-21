@@ -61,11 +61,19 @@ def record_label(record):
 
 
 def records_index(dataset):
-    """content type → [{'id', 'name'}] for link and foreign-key pickers."""
-    return {
+    """content type → [{'id', 'name'}] for link and foreign-key pickers. Missions (data 2.0.0's index, a foreign key
+    of epilogue cards) are named by their mission cards."""
+    index = {
         t: [{'id': r['id'], 'name': record_label(r)} for r in dataset.records(t)]
         for t in entry_types(dataset) + ['sources'] if dataset.has_ids(t)
     }
+    if dataset.path('missions').exists():
+        cards = {(t, r['id']): r for t in {m['content_type'] for m in dataset.records('missions')}
+                 for r in dataset.records(t)}
+        index['missions'] = [{'id': m['id'], 'name': f"{cards[m['content_type'], m['content_id']]['name']} "
+                                                     f"({m['content_type'].removesuffix('-cards')})"}
+                             for m in dataset.records('missions')]
+    return index
 
 
 def existing_back(dataset, content_type):

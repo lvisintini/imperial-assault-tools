@@ -3,6 +3,7 @@
   ia audit               crawl the whole gallery and report images the dataset may be missing
   ia scrape <album url>  download albums (a product, or the skirmish maps) into staging/<product>/
   ia scrape --gaps       download every image the last audit found unseen into staging/gaps/
+  ia stage <slug> --type <type> [files] [--tts save.zip]   stage images that aren't on boardwars
   ia propose <type> <id> field=value...   propose a change to an existing record, decided in ia enter
   ia enter               open the data-entry app in the browser
   ia import <product>    write a product's entries into the data repo (--check to only validate)
@@ -42,6 +43,17 @@ def cmd_scrape(args):
         staging, manifest = scrape.run(boardwars.Client(), Dataset(), args.url, product=args.product,
                                        folder=args.folder)
     print(f"Staged {len(manifest['items'])} images for {manifest['product'] or 'several products'} in {staging.dir}")
+
+
+def cmd_stage(args):
+    from ia_tools import stage_local
+    from ia_tools.dataset import Dataset
+
+    try:
+        staging, manifest = stage_local.run(Dataset(), args.slug, args.type, args.files, args.tts, args.product)
+    except ValueError as error:
+        sys.exit(str(error))
+    print(f"Staged {len(manifest['items'])} images in {staging.dir}; name them in ia enter")
 
 
 def cmd_propose(args):
@@ -172,6 +184,14 @@ def main(argv=None):
     scrape.add_argument('--gaps', action='store_true',
                         help="instead of albums, every image the last audit found unseen; each names its own product")
     scrape.set_defaults(func=cmd_scrape)
+
+    stage = commands.add_parser('stage', help="stage images that aren't on boardwars (files, a TTS save)")
+    stage.add_argument('slug', help='staging folder name')
+    stage.add_argument('files', nargs='*', help='image files')
+    stage.add_argument('--type', required=True, help='the content type the images are (backs: its card backs)')
+    stage.add_argument('--tts', metavar='SAVE', help='a Tabletop Simulator saved object (.zip with its images)')
+    stage.add_argument('--product', help='the existing product the images belong to, if any')
+    stage.set_defaults(func=cmd_stage)
 
     propose = commands.add_parser('propose', help='propose a change to an existing record, decided in ia enter')
     propose.add_argument('content_type', help='e.g. sources')

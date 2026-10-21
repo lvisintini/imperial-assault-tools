@@ -15,7 +15,7 @@ CONTENT_TYPES = [
     'supply-cards', 'campaign-story-mission-cards', 'campaign-hero-side-mission-cards',
     'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards', 'reward-cards', 'companion-cards',
     'upgrade-cards', 'card-backs', 'campaign-threat-mission-cards', 'form-cards', 'skirmish-mission-cards',
-    'raid-missions', 'missions', 'mission-rewards', 'requirements',
+    'raid-missions', 'epilogue-cards', 'missions', 'mission-rewards', 'requirements',
 ]
 # The mission card collections missions.json indexes (data 2.0.0; also agenda cards that are missions).
 MISSION_TYPES = [
@@ -44,6 +44,7 @@ FOREIGN_KEYS = {
     ('hero-class-cards', 'hero_id'): 'heroes',
     ('imperial-class-cards', 'class_id'): 'imperial-classes',
     ('campaign-hero-side-mission-cards', 'hero_id'): 'heroes',  # data 2.0.0: the hero a red side mission is for
+    ('epilogue-cards', 'mission_id'): 'missions',  # data 2.0.0: the mission an epilogue ends
 }
 
 
