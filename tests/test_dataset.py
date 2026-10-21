@@ -6,6 +6,8 @@ from ia_tools.dataset import CONTENT_TYPES, dumps
 @pytest.mark.parametrize('content_type', CONTENT_TYPES)
 def test_saving_unchanged_data_is_byte_identical(real_dataset, content_type):
     path = real_dataset.path(content_type)
+    if not path.exists():
+        pytest.skip(f'{content_type} is new in data 2.0.0')
     assert dumps(real_dataset.records(content_type)) == path.read_text(encoding='utf-8')
 
 

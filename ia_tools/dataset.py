@@ -8,16 +8,27 @@ import jsonref
 
 from ia_tools import settings
 
+# Data 2.0.0's types. A 1.x checkout lacks some (Dataset.content_types() lists the ones it has).
 CONTENT_TYPES = [
     'sources', 'source-contents', 'maps', 'agenda-decks', 'agenda-cards', 'command-cards',
     'condition-cards', 'deployment-cards', 'heroes', 'hero-class-cards', 'imperial-classes', 'imperial-class-cards',
-    'supply-cards', 'story-mission-cards', 'side-mission-cards', 'reward-cards', 'companion-cards', 'upgrade-cards',
-    'card-backs', 'threat-mission-cards', 'form-cards',
+    'supply-cards', 'campaign-story-mission-cards', 'campaign-hero-side-mission-cards',
+    'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards', 'reward-cards', 'companion-cards',
+    'upgrade-cards', 'card-backs', 'campaign-threat-mission-cards', 'form-cards', 'missions', 'mission-rewards',
 ]
+# The mission card collections missions.json indexes (data 2.0.0), plus agenda cards that are missions.
+MISSION_TYPES = [
+    'campaign-story-mission-cards', 'campaign-threat-mission-cards', 'campaign-hero-side-mission-cards',
+    'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards',
+]
+# Indexes and join tables: never entered, imported or matched by name.
+INDEX_TYPES = ['source-contents', 'missions', 'mission-rewards']
 
 # Types renamed in data 2.0.0. The tools use the new names; a 1.x checkout still stores the old ones, and Dataset
-# translates wherever a name meets the files (file names, image folders, source-contents' content_type).
-RENAMED = {'maps': 'skirmish-maps'}
+# translates wherever a name meets the files (file names, image folders, source-contents' content_type). 1.x's
+# side-mission-cards was split in three; the tools don't import side missions into 1.x data.
+RENAMED = {'maps': 'skirmish-maps', 'campaign-story-mission-cards': 'story-mission-cards',
+           'campaign-threat-mission-cards': 'threat-mission-cards'}
 
 
 def canonical(content_type):
@@ -31,6 +42,7 @@ FOREIGN_KEYS = {
     ('hero-class-cards', 'hero_id'): 'heroes',
     ('imperial-class-cards', 'class_id'): 'imperial-classes',
     ('sources', 'included_in'): 'sources',  # data 2.0.0: packs that ship inside the Core Set
+    ('campaign-hero-side-mission-cards', 'hero_id'): 'heroes',  # data 2.0.0: the hero a red side mission is for
 }
 
 
@@ -50,6 +62,10 @@ class Dataset:
         """The type's name in this checkout: its 1.x name if the checkout predates the rename."""
         old = RENAMED.get(content_type)
         return old if old and not (self.root / 'schemas' / f'{content_type}.json').exists() else content_type
+
+    def content_types(self, exclude=()):
+        """CONTENT_TYPES this checkout has, in order, without those in exclude."""
+        return [t for t in CONTENT_TYPES if t not in exclude and self.path(t).exists()]
 
     def path(self, content_type):
         return self.root / 'data' / f'{self.stored(content_type)}.json'

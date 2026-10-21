@@ -11,7 +11,7 @@ from PIL import Image
 
 from ia_tools import boardwars
 from ia_tools.classify import BACK_KEYS, SKIRMISH_MAP_PRODUCTS, classify, product_of
-from ia_tools.dataset import CONTENT_TYPES
+from ia_tools.dataset import INDEX_TYPES
 from ia_tools.match import NameIndex
 from ia_tools.staging import Staging, slugify
 
@@ -70,7 +70,7 @@ def item_source(index, image, guess, product):
 
 def stage(client, dataset, images, guesses, staging, product, urls, log):
     (staging.dir / 'originals').mkdir(parents=True, exist_ok=True)
-    index = NameIndex(dataset, [t for t in CONTENT_TYPES if t not in ('source-contents', 'card-backs')])
+    index = NameIndex(dataset, dataset.content_types(exclude=INDEX_TYPES + ['card-backs']))
 
     items = []
     for n, (image, guess) in enumerate(zip(images, guesses)):

@@ -169,7 +169,7 @@ def test_hash_lists_ignore_comments(tmp_path):
 
 def test_items_can_name_their_own_product(tmp_path, dataset_copy, hash_files):
     """A folder of gaps from many products has no product of its own: each item names one."""
-    reward, side = (dataset_copy.records(t)[0] for t in ('reward-cards', 'side-mission-cards'))
+    reward, deployment = (dataset_copy.records(t)[0] for t in ('reward-cards', 'deployment-cards'))
     hoth, bespin, jabba = (legacy_id(dataset_copy, 'sources', n) for n in (2, 3, 4))
     entries = {'product': None, 'extra': {}, 'items': {
         'cmd': {'action': 'new', 'content_type': 'command-cards', 'source_id': hoth, 'record': {
@@ -181,9 +181,30 @@ def test_items_can_name_their_own_product(tmp_path, dataset_copy, hash_files):
     plan = importer.plan(staging, dataset_copy)
     assert {(r['source_id'], r['content_type']) for r in plan['rows']} == {(hoth, 'command-cards'), (bespin, 'reward-cards')}
 
-    entries['items']['side'] = {'action': 'link', 'content_type': 'side-mission-cards', 'id': side['id']}
+    entries['items']['side'] = {'action': 'link', 'content_type': 'deployment-cards', 'id': deployment['id']}
     entries['items']['rew']['source_id'] = 999
     staging.save_entries(entries)
     with pytest.raises(importer.ImportProblems) as raised:
         importer.plan(staging, dataset_copy)
     assert set(raised.value.problems) == {'No product chosen', 'rew: product id 999 is not in sources.json'}
+
+
+def test_missions_link_through_their_index_row(tmp_path, dataset_copy, hash_files):
+    """Data 2.0.0: a new mission card gets a missions row, and the product links to the row, not the card. So does an
+    existing mission linked to another product."""
+    if not dataset_copy.path('missions').exists():
+        pytest.skip('1.x data has no missions index')
+    existing = dataset_copy.records('missions')[0]
+    bespin = legacy_id(dataset_copy, 'sources', 3)  # the first mission (Disaster) is Return to Hoth's
+    entries = {'product': {'action': 'existing', 'id': bespin}, 'extra': {}, 'items': {
+        'new': {'action': 'new', 'content_type': 'campaign-regular-side-mission-cards',
+                'record': {'name': 'A Brand New Mission'}},
+        'old': {'action': 'link', 'content_type': existing['content_type'], 'id': existing['content_id']},
+    }}
+    plan = importer.plan(stage(tmp_path, {'new': CARD, 'old': CARD}, entries), dataset_copy)
+    new = next(p.record for p in plan['pending'] if p.key == 'new')
+    [row] = plan['missions']
+    assert row | {'id': None} == {'id': None, 'content_type': 'campaign-regular-side-mission-cards',
+                                  'content_id': new['id'], 'map_id': None}
+    assert {(r['content_type'], r['content_id']) for r in plan['rows']} == {
+        ('missions', row['id']), ('missions', existing['id'])}

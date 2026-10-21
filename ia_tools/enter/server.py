@@ -155,7 +155,7 @@ class Handler(BaseHTTPRequestHandler):
             'forms': api.forms(self.dataset),
             'records': api.records_index(self.dataset),
             'references': self.references(),
-            'entry_types': api.ENTRY_TYPES,
+            'entry_types': api.entry_types(self.dataset),
             'extra_types': api.EXTRA_TYPES,
             'edit_records': {e['key']: edits.find(self.dataset, e['content_type'], e['id'])
                              for e in manifest.get('edits', [])},
@@ -174,7 +174,7 @@ class Handler(BaseHTTPRequestHandler):
     def references(self):
         """content type → an existing image path, to compare new cards against."""
         refs = {}
-        for content_type in api.ENTRY_TYPES + ['sources']:
+        for content_type in api.entry_types(self.dataset) + ['sources']:
             fields = importer.image_fields(self.dataset, content_type)
             record = next((r for r in self.dataset.records(content_type) if fields and r.get(fields[0])), None)
             if record:

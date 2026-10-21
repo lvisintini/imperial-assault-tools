@@ -17,20 +17,21 @@ MINI_FLIPPED = {'large': (657, 424), 'small': (454, 293)}
 HERO = {'large': (1490, 1186), 'small': (650, 515)}
 ANY = None  # skirmish maps keep their size, and the small copy is the same file
 
+# Mission cards: data 2.0.0's collections, and 1.x's side-mission-cards (split in 2.0.0; still sized for 1.x checkouts).
+MISSIONS = ['campaign-story-mission-cards', 'campaign-threat-mission-cards', 'campaign-hero-side-mission-cards',
+            'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards', 'side-mission-cards']
 SIZES = {
     'sources': SOURCE, 'maps': ANY, 'agenda-cards': STANDARD, 'command-cards': MINI,
     'condition-cards': MINI, 'deployment-cards': STANDARD, 'heroes': HERO, 'hero-class-cards': MINI,
-    'imperial-class-cards': MINI, 'supply-cards': MINI, 'story-mission-cards': STANDARD,
-    'side-mission-cards': STANDARD, 'reward-cards': MINI, 'companion-cards': STANDARD, 'upgrade-cards': MINI,
-    'threat-mission-cards': STANDARD, 'form-cards': MINI_FLIPPED,
-}
+    'imperial-class-cards': MINI, 'supply-cards': MINI, 'reward-cards': MINI, 'companion-cards': STANDARD,
+    'upgrade-cards': MINI, 'form-cards': MINI_FLIPPED,
+} | dict.fromkeys(MISSIONS, STANDARD)
 # card-backs, by the content type they're keyed on (card-backs.content_type).
 BACK_SIZES = {
     'agenda-decks': STANDARD, 'command-cards': MINI, 'companion-cards': STANDARD, 'condition-cards': MINI,
     'deployment-cards': STANDARD, 'imperial-classes': MINI, 'heroes': MINI, 'upgrade-cards': MINI,
-    'reward-cards': MINI, 'supply-cards': MINI, 'side-mission-cards': STANDARD, 'story-mission-cards': STANDARD,
-    'threat-mission-cards': STANDARD, 'form-cards': MINI_FLIPPED,
-}
+    'reward-cards': MINI, 'supply-cards': MINI, 'form-cards': MINI_FLIPPED,
+} | dict.fromkeys(MISSIONS, STANDARD)
 
 
 # Corner radius at the large size, in pixels, measured from the dataset's 2018 images (the transparent run along a
@@ -39,11 +40,10 @@ BACK_SIZES = {
 CARD_RADIUS = 32
 RADII = {
     'agenda-cards': CARD_RADIUS, 'deployment-cards': CARD_RADIUS, 'hero-class-cards': CARD_RADIUS,
-    'imperial-class-cards': CARD_RADIUS, 'reward-cards': CARD_RADIUS, 'side-mission-cards': CARD_RADIUS,
-    'story-mission-cards': CARD_RADIUS, 'threat-mission-cards': CARD_RADIUS, 'upgrade-cards': CARD_RADIUS,
+    'imperial-class-cards': CARD_RADIUS, 'reward-cards': CARD_RADIUS, 'upgrade-cards': CARD_RADIUS,
     'form-cards': CARD_RADIUS, 'command-cards': 35, 'companion-cards': 35, 'supply-cards': 27, 'condition-cards': 24,
     'card-backs': 22,
-}
+} | dict.fromkeys(MISSIONS, CARD_RADIUS)
 SUPERSAMPLE = 4  # the mask is drawn this much bigger and scaled down, for smooth (anti-aliased) corners
 
 
@@ -63,7 +63,7 @@ def fit(image, size):
 
 
 def radius_for(content_type, back_content_type, size_name):
-    radius = RADII.get(content_type)
+    radius = RADII.get(canonical(content_type))
     if not radius or size_name == 'large':
         return radius
     sizes = sizes_for(content_type, back_content_type)

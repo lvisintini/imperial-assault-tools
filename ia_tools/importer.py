@@ -9,14 +9,14 @@ import jsonschema
 
 from ia_tools import edits, images, settings
 from ia_tools.iaspec import iaspec_for
-from ia_tools.dataset import FOREIGN_KEYS
+from ia_tools.dataset import FOREIGN_KEYS, MISSION_TYPES
 from ia_tools.staging import slugify
 
-# Types source-contents links to products (child cards come with their parent; see docs/data-model.md).
+# Types source-contents links to products (child cards come with their parent; see docs/data-model.md). Mission
+# cards are linked through their missions row in data 2.0.0.
 LINKED_TYPES = {
     'agenda-decks', 'command-cards', 'companion-cards', 'condition-cards', 'deployment-cards', 'form-cards', 'heroes',
-    'imperial-classes', 'reward-cards', 'side-mission-cards', 'maps', 'story-mission-cards', 'supply-cards',
-    'threat-mission-cards', 'upgrade-cards',
+    'imperial-classes', 'reward-cards', 'maps', 'supply-cards', 'upgrade-cards', *MISSION_TYPES,
 }
 IASPEC_TYPES = ('deployment-cards', 'command-cards', 'companion-cards')
 
@@ -173,12 +173,24 @@ def plan(staging, dataset):
             if p.record['iaspec'] != expected:
                 problems.append(f'{p.key}: iaspec {p.record["iaspec"]!r} doesn\'t follow the rule; expected {expected!r}')
 
-    # source-contents rows: new records and "same as existing" links.
+    # source-contents rows: new records and "same as existing" links. In data 2.0.0 a mission card is linked through
+    # its missions row (a new card gets one here), and so is an agenda card that is a mission (its deck's product).
+    indexed = dataset.path('missions').exists()
+    index = {m['content_id']: m['id'] for m in dataset.records('missions')} if indexed else {}
+    index_ids, missions = dataset.new_ids('missions') if indexed else None, []
+
     def row(own_source, content_type, content_id):
+        if indexed and content_type in MISSION_TYPES + ['agenda-cards']:
+            if content_id not in index:
+                missions.append({'id': next(index_ids), 'content_type': content_type, 'content_id': content_id,
+                                 'map_id': None})
+                index[content_id] = missions[-1]['id']
+            content_type, content_id = 'missions', index[content_id]
         return {'source_id': source_id if own_source is None else own_source,
                 'content_type': dataset.stored(content_type), 'content_id': content_id}
 
-    rows = [row(p.source_id, p.content_type, p.record['id']) for p in pending if p.content_type in LINKED_TYPES]
+    rows = [row(p.source_id, p.content_type, p.record['id']) for p in pending if p.content_type in LINKED_TYPES
+            or (indexed and p.content_type == 'agenda-cards' and p.record.get('mission'))]
     rows += [row(entry.get('source_id'), entry['content_type'], entry['id'])
              for key, entry in sorted(entries.get('items', {}).items())
              if entry.get('action') == 'link' and entry.get('content_type') in LINKED_TYPES]
@@ -197,7 +209,7 @@ def plan(staging, dataset):
     if (entries.get('product') or {}).get('item'):
         handled.append(entries['product']['item'])
     return {
-        'pending': pending, 'rows': rows, 'items': items, 'edits': planned_edits,
+        'pending': pending, 'rows': rows, 'missions': missions, 'items': items, 'edits': planned_edits,
         'seen_hashes': sorted({items[k]['sha512'] for k in handled if k in items}),
         'skipped_hashes': sorted({items[k]['sha512'] for k, e in entries.get('items', {}).items()
                                   if e.get('action') == 'known-skip' and k in items}),
@@ -208,7 +220,8 @@ def summary(plan_):
     counts = {}
     for p in plan_['pending']:
         counts[p.content_type] = counts.get(p.content_type, 0) + 1
-    return {'new_records': counts, 'source_contents_rows': len(plan_['rows']), 'edits': len(plan_.get('edits', []))}
+    return {'new_records': counts, 'source_contents_rows': len(plan_['rows']),
+            'missions_rows': len(plan_.get('missions', [])), 'edits': len(plan_.get('edits', []))}
 
 
 def apply(plan_, staging, dataset):
@@ -225,9 +238,11 @@ def apply(plan_, staging, dataset):
             alignments[item_key] = out['alignment']
         dataset.records(p.content_type).append(p.record)
     dataset.records('source-contents').extend(plan_['rows'])
+    if plan_.get('missions'):
+        dataset.records('missions').extend(plan_['missions'])
     edited = edits.apply(plan_['edits'], dataset)
     for content_type in ({p.content_type for p in plan_['pending']} | ({'source-contents'} if plan_['rows'] else set())
-                         | edited):
+                         | ({'missions'} if plan_.get('missions') else set()) | edited):
         dataset.save(content_type)
 
     for path, hashes in ((settings.SEEN_HASHES, plan_['seen_hashes']), (settings.SKIPPED_HASHES, plan_['skipped_hashes'])):

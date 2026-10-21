@@ -4,12 +4,16 @@ each staged image, and validation of one entry at a time."""
 import jsonschema
 
 from ia_tools import importer
-from ia_tools.dataset import CONTENT_TYPES, FOREIGN_KEYS
+from ia_tools.dataset import FOREIGN_KEYS, INDEX_TYPES
 from ia_tools.iaspec import iaspec_for
 from ia_tools.match import normalise, parse_deployment_name
 
-# Types a staged image can become (source-contents is never entered by hand; sources is the product panel).
-ENTRY_TYPES = [t for t in CONTENT_TYPES if t not in ('source-contents', 'sources')]
+def entry_types(dataset):
+    """Types a staged image can become, in the checkout's data: not the indexes and join tables, which are never
+    entered by hand, nor sources, which is the product panel."""
+    return dataset.content_types(exclude=INDEX_TYPES + ['sources'])
+
+
 # Types entered without an image of their own.
 EXTRA_TYPES = ['agenda-decks', 'imperial-classes']
 
@@ -38,7 +42,7 @@ def field_spec(content_type, name, prop, required):
 def forms(dataset):
     """content type → {'fields': [...], 'images': [...]} for every type the app can create."""
     result = {}
-    for content_type in ENTRY_TYPES + ['sources']:
+    for content_type in entry_types(dataset) + ['sources']:
         schema = dataset.schema(content_type)
         images = importer.image_fields(dataset, content_type)
         result[content_type] = {
@@ -60,7 +64,7 @@ def records_index(dataset):
     """content type → [{'id', 'name'}] for link and foreign-key pickers."""
     return {
         t: [{'id': r['id'], 'name': record_label(r)} for r in dataset.records(t)]
-        for t in ENTRY_TYPES + ['sources'] if dataset.has_ids(t)
+        for t in entry_types(dataset) + ['sources'] if dataset.has_ids(t)
     }
 
 
@@ -142,8 +146,6 @@ def suggest(item, manifest, dataset, entries):
         record |= deployment_fields(item, manifest) | affiliation_hint(item, dataset)
     if content_type == 'upgrade-cards' and 'tier' in hints:
         record['tier'] = hints['tier']
-    if content_type == 'side-mission-cards' and hints.get('color'):
-        record['color'] = hints['color']
     if content_type in importer.IASPEC_TYPES:
         record['iaspec'] = iaspec_for(record, staged_iaspec_records(item, manifest, dataset, entries))
     if content_type == 'card-backs':
@@ -185,7 +187,7 @@ def find_parent(parent_type, name, dataset, entries, manifest):
 def normalise_entry(entry, dataset):
     """Text loses leading and trailing spaces ("Piece By Piece "); empty lists in nullable list fields become null,
     since those lists need at least one item (e.g. traits)."""
-    if entry.get('action') != 'new' or entry.get('content_type') not in ENTRY_TYPES + ['sources']:
+    if entry.get('action') != 'new' or entry.get('content_type') not in entry_types(dataset) + ['sources']:
         return entry
     properties = dataset.schema(entry['content_type']).get('properties', {})
     record = entry.get('record', {})
@@ -203,7 +205,7 @@ def check_entry(entry, dataset):
     if entry.get('action') != 'new':
         return []
     content_type = entry.get('content_type')
-    if content_type not in ENTRY_TYPES + ['sources']:
+    if content_type not in entry_types(dataset) + ['sources']:
         return [f'Unknown content type {content_type!r}']
     record = dict(entry.get('record', {}))
     if dataset.has_ids(content_type):

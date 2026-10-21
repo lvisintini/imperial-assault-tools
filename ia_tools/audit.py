@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 
 from ia_tools import boardwars, settings
 from ia_tools.classify import classify
-from ia_tools.dataset import CONTENT_TYPES
+from ia_tools.dataset import INDEX_TYPES
 from ia_tools.match import NameIndex
 
 # seen-*: the hash is in the register. unseen-known: not in the register, but a record with that type and name exists
@@ -46,7 +46,7 @@ def run(client, dataset, out_dir, start_url=boardwars.BASE_URL, log=print):
             hashed = json.loads(line)
             cache[hashed['url']] = hashed
     seen, skipped = load_hashes(settings.SEEN_HASHES), load_hashes(settings.SKIPPED_HASHES)
-    index = NameIndex(dataset, [t for t in CONTENT_TYPES if t not in ('source-contents', 'card-backs')])
+    index = NameIndex(dataset, dataset.content_types(exclude=INDEX_TYPES + ['card-backs']))
 
     entries = []
     with open(cache_path, 'a') as cache_file:
@@ -78,7 +78,7 @@ def rescore(dataset, out_dir):
     crawling again."""
     previous = json.loads((out_dir / 'report.json').read_text(encoding='utf-8'))
     seen, skipped = load_hashes(settings.SEEN_HASHES), load_hashes(settings.SKIPPED_HASHES)
-    index = NameIndex(dataset, [t for t in CONTENT_TYPES if t not in ('source-contents', 'card-backs')])
+    index = NameIndex(dataset, dataset.content_types(exclude=INDEX_TYPES + ['card-backs']))
     entries = [
         entry(boardwars.ImageRef(path=tuple(boardwars.clean_title(p) for p in e['path']), name=e['name'], url=e['url']),
               e, index, seen, skipped)

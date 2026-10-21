@@ -91,7 +91,8 @@ says which commit of this repo produced it.
   If anything fails it reports every problem and writes nothing. Otherwise it:
   - assigns ids (the next numbers in data 1.x, new UUIDs from 2.0.0);
   - writes the records in the dataset's exact JSON format;
-  - adds the `source-contents` rows;
+  - adds the `source-contents` rows. In data 2.0.0 a mission card (and an agenda card that is a mission) gets a
+    `missions` index row, and its product row points at that row instead of the card;
   - writes the large and small PNGs at the sizes the dataset's tests expect;
   - appends the imported originals' hashes to the register;
   - applies the edits you chose, moving image files when they're renamed. A rename is refused while a card back's

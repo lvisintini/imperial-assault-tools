@@ -13,14 +13,17 @@ SECTIONS = [
     ('rebel hero', 'hero-class-cards', 'hero'),
     ('rebel upgrade', 'upgrade-cards', 'tier'),
     ('reward', 'reward-cards', None),
-    ('side mission', 'side-mission-cards', 'color'),
+    ('side mission', 'campaign-regular-side-mission-cards', 'color'),  # by color below
     ('suppl', 'supply-cards', None),
-    ('story', 'story-mission-cards', None),
+    ('story', 'campaign-story-mission-cards', None),
     ('companion', 'companion-cards', None),
     ('condition', 'condition-cards', None),
     ('form', 'form-cards', None),
     ('skirmish map', 'maps', None),
 ]
+
+
+SIDE_MISSION_COLORS = {'red': 'campaign-hero-side-mission-cards', 'green': 'campaign-ally-side-mission-cards'}
 
 
 # boardwars keeps every skirmish map in one album that doesn't say which product it comes from. These are the maps it
@@ -91,8 +94,13 @@ def classify(image):
     name = image.name.lower()
     if content_type == 'hero-class-cards' and (name.endswith('healthy') or name.endswith('wounded')):
         content_type = 'heroes'
-    if content_type == 'side-mission-cards' and sub and 'threat' in sub.lower():
-        content_type = 'threat-mission-cards'
+    if content_type == 'campaign-regular-side-mission-cards':
+        if sub and 'threat' in sub.lower():
+            content_type = 'campaign-threat-mission-cards'
+        else:  # red missions are a hero's, green ones earn an ally
+            color = (hints.get('color') or '').lower()
+            content_type = SIDE_MISSION_COLORS.get(next((c for c in SIDE_MISSION_COLORS if c in color), None),
+                                                   content_type)
         hints.pop('color', None)
     if content_type == 'deployment-cards' and name.startswith('clawdite form'):
         content_type = 'form-cards'  # boardwars keeps the shapeshifter's forms with the deployment cards

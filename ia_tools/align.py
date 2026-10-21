@@ -14,14 +14,19 @@ import numpy
 from PIL import Image
 
 from ia_tools import settings
+from ia_tools.dataset import canonical
 
 UPGRADES = [f'upgrade-cards/{n}.png' for n in
             ('concussion-grenades', 'dh-17', 'electrostaff', 'energized-hilt', 'laminate-armor', 'sniper-scope')]
 CLASSES = ['imperial-class-cards/hutt-mercenaries-guild-hunters.png', 'imperial-class-cards/hutt-mercenaries-most-wanted.png']
 FEAT = 'hero-class-cards/davith-elso-embody-the-force.png'
 MISSION_BACK = 'card-backs/threat-mission-return-to-hoth.png'
+# Side mission cards: data 2.0.0's three collections, and 1.x's one.
+SIDE_MISSIONS = ['campaign-hero-side-mission-cards', 'campaign-ally-side-mission-cards',
+                 'campaign-regular-side-mission-cards', 'side-mission-cards']
 
-# content type (or (content type, image field)) → templates, relative to assets/templates.
+# content type (or (content type, image field)) → templates, relative to assets/templates (the templates keep the
+# dataset's 1.x paths).
 TEMPLATES = {
     'deployment-cards': ['deployment-cards/leia-organa-rebel-commander-campaign.png',
                          'deployment-cards/last-resort-skirmish.png', 'deployment-cards/clawdite-shapeshifter.png'],
@@ -36,16 +41,17 @@ TEMPLATES = {
     'reward-cards': CLASSES + UPGRADES + [FEAT],
     'upgrade-cards': UPGRADES,
     'hero-class-cards': UPGRADES + [FEAT],
-    'side-mission-cards': [f'side-mission-cards/{n}.png' for n in ('born-from-death', 'cloud-citys-secret', 'homecoming')],
-    'story-mission-cards': ['story-mission-cards/chain-of-command.png'],
-    'threat-mission-cards': ['threat-mission-cards/scouring-of-the-homestead.png'],
+    **dict.fromkeys(SIDE_MISSIONS, [f'side-mission-cards/{n}.png'
+                                    for n in ('born-from-death', 'cloud-citys-secret', 'homecoming')]),
+    'campaign-story-mission-cards': ['story-mission-cards/chain-of-command.png'],
+    'campaign-threat-mission-cards': ['threat-mission-cards/scouring-of-the-homestead.png'],
     'form-cards': ['form-cards/clawdite-shapeshifter-scout.png'],
     ('heroes', 'healthy'): ['heroes/murne-rin-healthy.png'],
     ('heroes', 'wounded'): ['heroes/diala-passil-wounded.png'],
 }
 # card-backs, by the content type they're the back of.
 BACK_TEMPLATES = {
-    'side-mission-cards': [MISSION_BACK], 'story-mission-cards': [MISSION_BACK], 'threat-mission-cards': [MISSION_BACK],
+    **dict.fromkeys(SIDE_MISSIONS + ['campaign-story-mission-cards', 'campaign-threat-mission-cards'], [MISSION_BACK]),
     'deployment-cards': ['card-backs/deployment-imperial.png'],
     'heroes': ['card-backs/rebel-hero-gideon-argus.png'],
     'imperial-classes': ['card-backs/imperial-class-inspiring-leadership.png'],
@@ -61,6 +67,7 @@ MIN_GAIN = 0.01          # and must correlate this much better than the unaligne
 
 
 def templates_for(content_type, image_field='image', back_content_type=None):
+    content_type, back_content_type = canonical(content_type), back_content_type and canonical(back_content_type)
     if content_type == 'card-backs':
         return BACK_TEMPLATES.get(back_content_type, [])
     if content_type == 'heroes' and image_field not in ('healthy', 'wounded'):  # side unknown (the entry app's preview)

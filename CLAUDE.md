@@ -14,6 +14,10 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
 - Dataset ids are numbers in data 1.x (the next id is the highest + 1) and UUIDs from data 2.0.0 (new records get a
   uuid4). The tools read which from the schema (`Dataset.uses_uuids`), so they work with either checkout; tests
   translate 1.x ids with `tests.conftest.legacy_id`.
+- Type names are data 2.0.0's (`ia_tools/dataset.py` `CONTENT_TYPES`). For a 1.x checkout, `Dataset.stored()` maps the
+  renamed ones back (`RENAMED`: `skirmish-maps`, `story-mission-cards`, `threat-mission-cards`), and
+  `Dataset.content_types()` lists only those the checkout has. 1.x's `side-mission-cards` was split in three in 2.0.0;
+  the tools don't import side missions into 1.x data. Tests that need a 2.0.0-only file skip on 1.x.
 
 ## Layout
 

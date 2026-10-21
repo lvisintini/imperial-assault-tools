@@ -22,9 +22,13 @@ def guess(*path, name='Card'):
     (('Expansion Boxes', 'Tyrants of Lothal', 'Rebel Heroes', 'Ko-Tun Feralo'), 'Rally', 'Tyrants of Lothal',
      'hero-class-cards', {'hero': 'Ko-Tun Feralo'}),
     (('Expansion Boxes', 'Return to Hoth', 'Side Missions', 'Threat Missions'), 'Escape', 'Return to Hoth',
-     'threat-mission-cards', {}),
+     'campaign-threat-mission-cards', {}),
     (('Expansion Boxes', 'Return to Hoth', 'Side Missions', 'Red'), 'Canyon Run', 'Return to Hoth',
-     'side-mission-cards', {'color': 'Red'}),
+     'campaign-hero-side-mission-cards', {}),
+    (('Expansion Boxes', 'Return to Hoth', 'Side Missions', 'Green'), 'Snowcrash', 'Return to Hoth',
+     'campaign-ally-side-mission-cards', {}),
+    (('Expansion Boxes', 'Return to Hoth', 'Side Missions', 'Grey'), 'Into the Unknown', 'Return to Hoth',
+     'campaign-regular-side-mission-cards', {}),
     (('Villain and Ally Packs', 'Wave-11', 'Thrawn', 'Agenda Deck'), 'Card', 'Thrawn', 'agenda-cards',
      {'wave': 'Wave-11'}),
     (('Villain and Ally Packs', 'Wave 11', 'Hondo Ohnaka', 'Deplyoyment Cards'), 'Lie in Ambush', 'Hondo Ohnaka',
@@ -123,12 +127,11 @@ def test_products_match_before_and_after_a_rename(real_dataset, gallery_name, so
     (('Skirmish Maps',), 'A Map Nobody Knows', None),
 ])
 def test_staged_images_name_their_own_product(real_dataset, path, name, source_id):
-    from ia_tools.dataset import CONTENT_TYPES
     from ia_tools.match import NameIndex
     from ia_tools.scrape import item_source
 
     image = ImageRef(path=path, name=name, url='')
-    source = item_source(NameIndex(real_dataset, CONTENT_TYPES), image, classify(image), None)
+    source = item_source(NameIndex(real_dataset, real_dataset.content_types()), image, classify(image), None)
     assert (source or {}).get('id') == (legacy_id(real_dataset, 'sources', source_id) if source_id is not None else None)
 
 
