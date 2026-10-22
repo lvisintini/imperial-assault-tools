@@ -14,8 +14,8 @@ def entry_types(dataset):
     return dataset.content_types(exclude=INDEX_TYPES + ['sources'])
 
 
-# Types entered without an image of their own.
-EXTRA_TYPES = ['agenda-decks', 'imperial-classes']
+# Types entered without an image of their own (miniatures: data 2.0.0).
+EXTRA_TYPES = ['agenda-decks', 'imperial-classes', 'miniatures']
 # Data 2.0.0: cards that agree on this field share a back (other types: all their cards share one), for suggesting a
 # new card's back_id.
 SAME_BACK = {'deployment-cards': 'affiliation', 'upgrade-cards': 'tier'} | {

@@ -157,7 +157,7 @@ class Handler(BaseHTTPRequestHandler):
             'records': api.records_index(self.dataset),
             'references': self.references(),
             'entry_types': api.entry_types(self.dataset),
-            'extra_types': api.EXTRA_TYPES,
+            'extra_types': [t for t in api.EXTRA_TYPES if t in self.dataset.content_types()],
             'edit_records': {e['key']: edits.find(self.dataset, e['content_type'], e['id'])
                              for e in manifest.get('edits', [])},
         }

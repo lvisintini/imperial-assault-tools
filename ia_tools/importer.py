@@ -16,7 +16,7 @@ from ia_tools.staging import slugify
 # cards are linked through their missions row in data 2.0.0.
 LINKED_TYPES = {
     'agenda-decks', 'command-cards', 'companion-cards', 'condition-cards', 'deployment-cards', 'form-cards', 'heroes',
-    'imperial-classes', 'reward-cards', 'maps', 'supply-cards', 'upgrade-cards', *MISSION_TYPES,
+    'imperial-classes', 'reward-cards', 'maps', 'supply-cards', 'upgrade-cards', 'miniatures', *MISSION_TYPES,
 }
 IASPEC_TYPES = ('deployment-cards', 'command-cards', 'companion-cards')
 
@@ -86,7 +86,7 @@ def plan(staging, dataset):
                 p.file_overrides[first] = entry['file']
             pending.append(p)
     for key, extra in sorted(entries.get('extra', {}).items()):
-        pending.append(Pending(key, extra['content_type'], dict(extra['record'])))
+        pending.append(Pending(key, extra['content_type'], dict(extra['record']), quantity=extra.get('quantity')))
     by_key = {p.key: p for p in pending}
     for key, entry in entries.get('items', {}).items():
         if entry.get('action') == 'attach':
@@ -114,7 +114,7 @@ def plan(staging, dataset):
         p = Pending('product', 'sources', dict(product['record']), {'image': product['item']} if product.get('item') else {})
         pending.insert(0, p)
         by_key['product'] = p
-    for key, entry in entries.get('items', {}).items():
+    for key, entry in [*entries.get('items', {}).items(), *entries.get('extra', {}).items()]:
         if entry.get('source_id') is not None and entry['source_id'] not in source_ids:
             problems.append(f'{key}: product id {entry["source_id"]} is not in sources.json')
         quantity = entry.get('quantity')

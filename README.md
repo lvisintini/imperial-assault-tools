@@ -94,7 +94,8 @@ says which commit of this repo produced it.
   - an extra image for another card (a hero's wounded side);
   - skip for now, or never import.
 
-  Agenda decks and imperial classes, which have no image, are added under "Records without an image". Proposed changes
+  Agenda decks, imperial classes and (data 2.0.0) miniatures, which have no image, are added under "Records without
+  an image", each with its copies in the product. Proposed changes
   to existing records are under "Edits to existing records": change the values if you want, choose whether the image
   files are renamed to match, and apply or skip each one. Decisions are saved as you go to
   `staging/<product>/entries.json`.

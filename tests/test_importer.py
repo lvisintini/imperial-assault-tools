@@ -251,3 +251,17 @@ def test_rows_say_how_many_copies(tmp_path, dataset_copy, hash_files):
     with pytest.raises(importer.ImportProblems) as raised:
         importer.plan(staging, dataset_copy)
     assert raised.value.problems == ['rew: quantity 0 is not a whole number of copies (1 or more)']
+
+
+def test_miniatures_are_records_without_an_image(tmp_path, dataset_copy, hash_files):
+    """Data 2.0.0: a new miniature is entered without an image, and its row says how many figures the product has."""
+    if not dataset_copy.path('miniatures').exists():
+        pytest.skip('no miniatures in this checkout')
+    hoth = legacy_id(dataset_copy, 'sources', 2)
+    entries = {'product': {'action': 'existing', 'id': hoth}, 'items': {}, 'extra': {
+        'x1': {'content_type': 'miniatures', 'quantity': 4,
+               'record': {'name': 'Brand New Trooper', 'affiliation': 'Imperial', 'squares': 1}}}}
+    plan = importer.plan(stage(tmp_path, {}, entries), dataset_copy)
+    [new] = plan['pending']
+    assert [(r['content_type'], r['content_id'], r['quantity']) for r in plan['rows']] == [
+        ('miniatures', new.record['id'], 4)]

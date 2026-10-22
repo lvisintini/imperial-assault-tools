@@ -232,11 +232,16 @@ function productField(draft) {
     }},
       h('option', {value: ''}, data.manifest.product ? `this folder's (${data.manifest.product})` : '— choose —'),
       data.records.sources.map(s => h('option', {value: s.id, selected: s.id === draft.source_id}, `${s.name} (#${s.id})`))),
-    data.quantities && h('label', {for: 'quantity'}, 'copies'),
-    data.quantities && h('input', {id: 'quantity', type: 'number', min: 1, value: draft.quantity ?? 1, onchange: e => {
+    copiesField(draft));
+}
+
+function copiesField(draft) {
+  // Data 2.0.0: how many of it the product has (source-contents.quantity); unset is 1.
+  return data.quantities && [h('label', {}, 'copies'),
+    h('input', {type: 'number', min: 1, value: draft.quantity ?? 1, onchange: e => {
       const n = Number(e.target.value);
       if (Number.isInteger(n) && n > 1) draft.quantity = n; else delete draft.quantity;
-    }}));
+    }})];
 }
 
 function renderItem(key) {
@@ -411,6 +416,7 @@ function renderExtras() {
       const status = h('div');
       return h('div', {class: 'panel'},
         h('h2', {}, `${extra.content_type} · ${key}`),
+        h('div', {class: 'form'}, copiesField(draft)),
         buildForm(draft.content_type, draft.record),
         h('div', {class: 'bar'},
           h('button', {type: 'button', class: 'primary', onclick: async () => {
