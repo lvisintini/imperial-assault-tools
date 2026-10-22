@@ -260,7 +260,7 @@ def test_miniatures_are_records_without_an_image(tmp_path, dataset_copy, hash_fi
     hoth = legacy_id(dataset_copy, 'sources', 2)
     entries = {'product': {'action': 'existing', 'id': hoth}, 'items': {}, 'extra': {
         'x1': {'content_type': 'miniatures', 'quantity': 4,
-               'record': {'name': 'Brand New Trooper', 'affiliation': 'Imperial', 'squares': 1}}}}
+               'record': {'name': 'Brand New Trooper', 'description': None, 'affiliation': 'Imperial', 'squares': 1}}}}
     plan = importer.plan(stage(tmp_path, {}, entries), dataset_copy)
     [new] = plan['pending']
     assert [(r['content_type'], r['content_id'], r['quantity']) for r in plan['rows']] == [
