@@ -15,7 +15,7 @@ CONTENT_TYPES = [
     'supply-cards', 'campaign-story-mission-cards', 'campaign-hero-side-mission-cards',
     'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards', 'reward-cards', 'companion-cards',
     'upgrade-cards', 'card-backs', 'campaign-threat-mission-cards', 'form-cards', 'skirmish-mission-cards',
-    'raid-missions', 'epilogue-cards', 'miniatures', 'missions', 'mission-rewards', 'record-links',
+    'raid-missions', 'epilogue-cards', 'miniatures', 'documents', 'missions', 'mission-rewards', 'record-links',
 ]
 # The mission card collections missions.json indexes (data 2.0.0; also agenda cards that are missions).
 MISSION_TYPES = [

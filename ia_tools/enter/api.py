@@ -10,8 +10,8 @@ from ia_tools.match import normalise, parse_deployment_name
 
 def entry_types(dataset):
     """Types a staged image can become, in the checkout's data: not the indexes and join tables, which are never
-    entered by hand, nor sources, which is the product panel."""
-    return dataset.content_types(exclude=INDEX_TYPES + ['sources'])
+    entered by hand, nor sources, which is the product panel, nor documents (data 2.0.0), which are PDFs."""
+    return dataset.content_types(exclude=INDEX_TYPES + ['sources', 'documents'])
 
 
 # Types entered without an image of their own (miniatures: data 2.0.0).
