@@ -50,10 +50,13 @@ def real_dataset():
 
 @pytest.fixture
 def dataset_copy(real_dataset, tmp_path):
-    """data/ and schemas/ of the real checkout, copied to a temp folder with empty image trees."""
+    """data/ and schemas/ of the real checkout (and its test fixtures, data 2.0.0), copied to a temp folder with empty
+    image trees."""
     root = tmp_path / 'imperial-assault-data'
     shutil.copytree(real_dataset.root / 'data', root / 'data')
     shutil.copytree(real_dataset.root / 'schemas', root / 'schemas')
+    if (real_dataset.root / 'tests' / 'fixtures').is_dir():
+        shutil.copytree(real_dataset.root / 'tests' / 'fixtures', root / 'tests' / 'fixtures')
     (root / 'images' / 'large').mkdir(parents=True)
     (root / 'images' / 'small').mkdir(parents=True)
     return Dataset(root)

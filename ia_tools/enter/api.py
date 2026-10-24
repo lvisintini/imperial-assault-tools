@@ -187,7 +187,8 @@ def suggest(item, manifest, dataset, entries):
     if content_type == 'upgrade-cards' and 'tier' in hints:
         record['tier'] = hints['tier']
     if content_type in importer.IASPEC_TYPES:
-        record['iaspec'] = iaspec_for(record, staged_iaspec_records(item, manifest, dataset, entries))
+        record['iaspec'] = iaspec_for(record, staged_iaspec_records(item, manifest, dataset, entries),
+                                      dataset.follows_iaspec_spec())
     if content_type == 'card-backs':
         back_type = guess.get('back_content_type')
         sample = existing_back(dataset, back_type) if back_type else None

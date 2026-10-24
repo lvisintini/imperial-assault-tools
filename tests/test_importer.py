@@ -135,14 +135,17 @@ def test_problems_are_all_reported_and_nothing_is_written(tmp_path, dataset_copy
 
 def test_an_iaspec_that_breaks_the_rule_is_a_problem(tmp_path, dataset_copy, hash_files):
     entries = full_entries(dataset_copy)
+    # Data 1.x prefixes every elite, non-unique card; 2.0.0 only one with a regular card of the same name.
+    given, expected = ('elitebrandnewupgrade', 'brandnewupgrade') if dataset_copy.follows_iaspec_spec() else \
+        ('brandnewupgrade', 'elitebrandnewupgrade')
     entries['items']['up'] = {'action': 'new', 'content_type': 'deployment-cards', 'record': {
-        'name': 'Brand New Upgrade', 'elite': True, 'unique': False, 'iaspec': 'brandnewupgrade'}}
+        'name': 'Brand New Upgrade', 'elite': True, 'unique': False, 'iaspec': given}}
     staging = stage(tmp_path, {'box': BOX, 'cmd': CARD, 'hero': HERO, 'hero-w': HERO, 'feat': CARD, 'agenda': CARD,
                                'up': CARD}, entries)
 
     with pytest.raises(importer.ImportProblems) as raised:
         importer.plan(staging, dataset_copy)
-    assert "up: iaspec 'brandnewupgrade' doesn't follow the rule; expected 'elitebrandnewupgrade'" in raised.value.problems
+    assert f"up: iaspec {given!r} doesn't follow the rule; expected {expected!r}" in raised.value.problems
 
 
 def test_existing_image_paths_are_never_overwritten(tmp_path, dataset_copy, hash_files):

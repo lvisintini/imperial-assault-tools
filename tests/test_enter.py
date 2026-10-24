@@ -83,7 +83,8 @@ def test_suggestions_keep_an_items_own_product(real_dataset):
 def test_iaspec_rule_reproduces_the_dataset(real_dataset):
     records = [r for t in ('deployment-cards', 'command-cards', 'companion-cards') for r in real_dataset.records(t)]
     for record in records:
-        assert iaspec.iaspec_for(record, [r for r in records if r is not record]) == record['iaspec']
+        assert iaspec.iaspec_for(record, [r for r in records if r is not record],
+                                 real_dataset.follows_iaspec_spec()) == record['iaspec']
 
 
 @pytest.mark.parametrize('raw, parsed', [
@@ -113,8 +114,10 @@ def test_deployment_suggestions(real_dataset):
         return api.suggest(i, manifest, real_dataset, entries or {'items': {}, 'extra': {}})['record']
 
     imperial = next((b['id'] for b in real_dataset.records('card-backs') if b.get('name') == 'Deployment: Imperial'), None)
+    # Data 2.0.0 follows the IA Skirmish Specification: of two twins, only the campaign card adds its mode.
+    skirmish = 'grandadmiral' if real_dataset.follows_iaspec_spec() else 'grandadmiralskirmish'
     assert record('0001') == {'name': 'Grand Admiral', 'elite': True, 'unique': True, 'modes': ['Skirmish'],
-                              'affiliation': 'Imperial', 'iaspec': 'grandadmiralskirmish'} | (
+                              'affiliation': 'Imperial', 'iaspec': skirmish} | (
         {'back_id': imperial} if imperial else {})
     assert record('0002')['iaspec'] == 'grandadmiralcampaign'
     assert {k: record('0003')[k] for k in ('name', 'elite', 'unique', 'iaspec')} == \

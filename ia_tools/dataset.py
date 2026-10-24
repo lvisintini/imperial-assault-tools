@@ -98,6 +98,11 @@ class Dataset:
         """Whether source-contents rows say how many copies a product has (quantity, data 2.0.0)."""
         return 'quantity' in self.schema('source-contents')['properties']
 
+    def follows_iaspec_spec(self):
+        """Whether iaspec values follow the IA Skirmish Specification's practice (data 2.0.0, #32: its keys are a
+        test fixture)."""
+        return (self.root / 'tests' / 'fixtures' / 'iaspec-spec.json').exists()
+
     def has_backs(self, content_type):
         """Whether the type's records point at their card back (back_id, data 2.0.0)."""
         return BACK_ID in self.schema(content_type)['properties']

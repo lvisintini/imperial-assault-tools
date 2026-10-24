@@ -193,7 +193,8 @@ def plan(staging, dataset):
             if p.record['iaspec'] in iaspecs:
                 problems.append(f'{p.key}: iaspec {p.record["iaspec"]!r} is already used')
             iaspecs.add(p.record['iaspec'])
-            expected = iaspec_for(p.record, [r for r in iaspec_records if r is not p.record])
+            expected = iaspec_for(p.record, [r for r in iaspec_records if r is not p.record],
+                                  dataset.follows_iaspec_spec())
             if p.record['iaspec'] != expected:
                 problems.append(f'{p.key}: iaspec {p.record["iaspec"]!r} doesn\'t follow the rule; expected {expected!r}')
 
