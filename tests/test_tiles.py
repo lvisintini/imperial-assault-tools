@@ -90,7 +90,7 @@ def test_run_stages_tiles_layouts_and_copies(tmp_path):
         ('Twin Shadows 01', 'map-tiles/twin-shadows-01-a.png', 'map-tiles/twin-shadows-01-b.png')]
     assert manifest['layouts'][0]['mission'] is None and manifest['checks']['aftermath save']
     assert (tmp_path / 'out' / 'images' / 'map-tiles' / 'twin-shadows-01-b.png').exists()
-    assert (tmp_path / 'out' / 'copies.csv').read_text().splitlines()[1] == 'Imperial Assault,1,Core Set 01,1,1'
+    assert (tmp_path / 'out' / 'copies.csv').read_text().splitlines()[1] == 'Imperial Assault,1,Core Set 01,1'
 
 
 def test_a_wrong_size_is_a_problem(tmp_path):
