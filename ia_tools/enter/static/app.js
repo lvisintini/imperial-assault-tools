@@ -509,8 +509,8 @@ function editPanel(proposal) {
   return h('div', {class: 'panel'},
     h('h2', {}, `${proposal.content_type} #${proposal.id} · ${record?.name ?? 'missing record'}`),
     proposal.note ? h('p', {class: 'meta'}, proposal.note) : null,
-    record?.image ? h('div', {class: 'images'}, h('figure', {},
-      h('img', {src: `/data-images/large/${record.image}`, alt: ''}), h('figcaption', {}, record.image))) : null,
+    data.edit_images?.[proposal.key]?.length ? h('div', {class: 'images'}, data.edit_images[proposal.key].map(path =>
+      h('figure', {}, h('img', {src: `/data-images/large/${path}`, alt: ''}), h('figcaption', {}, path)))) : null,
     h('div', {class: 'actions'}, [['apply', 'Apply'], ['skip', 'Skip']].map(([value, label]) => h('label', {},
       h('input', {type: 'radio', name: `eaction-${proposal.key}`, checked: draft.action === value,
         onchange: () => { draft.action = value; renderBody(); refresh(); }}), label))),

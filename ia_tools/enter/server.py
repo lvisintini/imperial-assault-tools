@@ -160,6 +160,9 @@ class Handler(BaseHTTPRequestHandler):
             'extra_types': [t for t in api.EXTRA_TYPES if t in self.dataset.content_types()],
             'edit_records': {e['key']: edits.find(self.dataset, e['content_type'], e['id'])
                              for e in manifest.get('edits', [])},
+            'edit_images': {e['key']: edits.images(self.dataset, e['content_type'], record)
+                            for e in manifest.get('edits', [])
+                            if (record := edits.find(self.dataset, e['content_type'], e['id']))},
         }
 
     def edit_preview(self, staging, key, decision):

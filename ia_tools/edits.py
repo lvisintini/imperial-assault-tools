@@ -50,6 +50,16 @@ def parent_name(dataset, content_type, record):
     return None
 
 
+def images(dataset, content_type, record):
+    """The image paths that show a record: its own, or, for one without (an agenda deck), its cards'."""
+    own = [record[field] for field in importer.image_fields(dataset, content_type) if record.get(field)]
+    if own:
+        return own
+    return [child[field] for (child_type, fk), parent in FOREIGN_KEYS.items() if parent == content_type
+            for child in dataset.records(child_type) if child.get(fk) == record['id']
+            for field in importer.image_fields(dataset, child_type) if child.get(field)]
+
+
 def preview(dataset, proposal, decision, taken=()):
     """What applying a decision would do: (the record afterwards, {field: (old path, new path)}, problems). taken: image
     paths other changes in the same import already claim."""

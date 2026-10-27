@@ -78,3 +78,11 @@ def test_proposals_are_checked(tmp_path, real_dataset):
                       root=tmp_path)
     with pytest.raises(ValueError):
         edits.propose(real_dataset, 'edits', 'card-backs', 0, {'deck': 'X'}, root=tmp_path)
+
+
+def test_a_record_without_images_shows_its_cards(dataset_copy):
+    deck = dataset_copy.records('agenda-decks')[0]
+    cards = [c['image'] for c in dataset_copy.records('agenda-cards') if c['agenda_id'] == deck['id']]
+    assert cards and edits.images(dataset_copy, 'agenda-decks', deck) == cards
+    source = dataset_copy.records('sources')[0]
+    assert edits.images(dataset_copy, 'sources', source) == [source['image']]
