@@ -13,6 +13,8 @@
   ia ic2                 cache ImperialCommander2's map tile sizes and campaign mission layouts in staging/ic2/
   ia tiles [module]      stage the Vassal module's map tiles and IC2's campaign layouts in staging/map-tiles/
   ia sheets [dir]        turn the scanned rules sheets (Sheets/<product>/, two pages each) into PDFs in staging/sheets/
+  ia layouts             write the map layouts entered in ia enter (Map layouts) into the data repo (--check to only
+                         validate)
 """
 import argparse
 import json
@@ -204,6 +206,19 @@ def cmd_sheets(args):
     print(f"{len(made)} sheets, {sum(s['bytes'] for s in made) / 1e6:.0f} MB: {settings.STAGING / 'sheets'}")
 
 
+def cmd_layouts(args):
+    from ia_tools import layouts
+    from ia_tools.dataset import Dataset
+
+    summary, problems = layouts.run(Dataset(), check=args.check)
+    print(json.dumps(summary, indent=2))
+    if problems:
+        print(f'{len(problems)} problems:', *problems, sep='\n  ')
+        sys.exit(1)
+    if not args.check:
+        print(f"Wrote {summary['done']} maps' layouts into map-layouts.json")
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog='ia', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     commands = parser.add_subparsers(dest='command', required=True)
@@ -279,6 +294,10 @@ def main(argv=None):
     sheets.add_argument('dir', nargs='?', default=settings.TOOLS_ROOT / 'Sheets', help='one folder of scans per sheet')
     sheets.add_argument('--check', action='store_true', help='only list each folder, its product and page order')
     sheets.set_defaults(func=cmd_sheets)
+
+    layouts = commands.add_parser('layouts', help='write the map layouts entered in ia enter into the data repo')
+    layouts.add_argument('--check', action='store_true', help='only validate the entries')
+    layouts.set_defaults(func=cmd_layouts)
 
     args = parser.parse_args(argv)
     args.func(args)

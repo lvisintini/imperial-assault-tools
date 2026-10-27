@@ -30,6 +30,9 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
 - `ia_tools/enter/` (`ia enter`): stdlib HTTP server (`server.py`), pure logic (`api.py`: form specs from the dataset's
   schemas, suggestions, per-entry validation), and the page in `static/` (plain JS). The entries.json format is
   documented in `staging.py`.
+- `ia_tools/layouts.py` (`ia layouts`, and `ia enter`'s Map layouts page, `static/layouts.html`): the skirmish and raid
+  maps' layouts, entered by hand into `staging/map-layouts/entries.json` and written to the data repo's
+  `map-layouts.json`.
 - `ia_tools/importer.py` (`ia import`): plan (all checks; raises `ImportProblems`) then apply. It writes the
   dataset's exact JSON format (`dataset.dumps`: indent 2, no trailing newline) and the image sizes in `images.py`
   (mirrors the data repo's `ImageTestHelper`; `tests/test_images.py` cross-checks them).

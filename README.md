@@ -33,6 +33,8 @@ uv run ia stage epilogues --type epilogue-cards --tts save.zip   # stage images 
 uv run ia enter                  # opens http://localhost:8001: go through the cards
 uv run ia import tyrants-of-lothal --check   # validate only
 uv run ia import tyrants-of-lothal           # write records, images and source-contents rows
+uv run ia layouts --check        # data 2.0.0: validate the map layouts entered in ia enter (Map layouts)
+uv run ia layouts                # write them into map-layouts.json
 ```
 
 Then, in the data repo, run `uv run pytest`, look at the result with `uv run python serve_site.py`, and open a PR that
@@ -113,6 +115,12 @@ says which commit of this repo produced it.
     back's `variant` still holds the old name.
 
   It never overwrites an existing image.
+- **Map layouts** (data 2.0.0; `ia enter`'s Map layouts page, `/layouts`) is where the skirmish and raid maps' tiles
+  are entered, since no source has them (the campaign maps' come from ImperialCommander2, through `ia tiles`). Each
+  map's image is shown next to the tile sides picked for it, with their counts. Sides are added from the tile grid
+  (filtered by product) or typed as Vassal names the pieces (`05A` for the Core Set, `TS 1B`, `JR3A x2`). A map
+  can't use more copies of a tile than the products hold. Entries are saved to `staging/map-layouts/entries.json`;
+  `ia layouts` writes the maps marked done into `map-layouts.json`, replacing the rows they had.
 
 | Variable | Default | |
 |---|---|---|

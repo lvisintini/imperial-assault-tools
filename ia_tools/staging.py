@@ -41,8 +41,13 @@ class Staging:
 
     @classmethod
     def all(cls, root=None):
+        """The staged products: folders whose manifest lists items (ia tiles' map-tiles folder has a manifest of its
+        own)."""
         root = root or settings.STAGING
-        return [cls(p.name, root) for p in sorted(root.iterdir()) if (p / 'manifest.json').is_file()] if root.is_dir() else []
+        if not root.is_dir():
+            return []
+        return [cls(p.name, root) for p in sorted(root.iterdir()) if (p / 'manifest.json').is_file()
+                and 'items' in json.loads((p / 'manifest.json').read_text(encoding='utf-8'))]
 
     @property
     def manifest_path(self):

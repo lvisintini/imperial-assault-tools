@@ -10,7 +10,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
-from ia_tools import edits, images, importer
+from ia_tools import edits, images, importer, layouts
 from ia_tools.dataset import Dataset
 from ia_tools.enter import api
 from ia_tools.staging import Staging
@@ -76,6 +76,10 @@ class Handler(BaseHTTPRequestHandler):
             match parts:
                 case []:
                     return self.send_file(STATIC / 'index.html')
+                case ['layouts']:
+                    return self.send_file(STATIC / 'layouts.html')
+                case ['api', 'layouts']:
+                    return self.send_json(layouts.panel(self.dataset))
                 case ['static', *rest]:
                     return self.send_file(safe_join(STATIC, '/'.join(rest)))
                 case ['api', 'products']:
@@ -97,6 +101,12 @@ class Handler(BaseHTTPRequestHandler):
         parts = [unquote(p) for p in urlsplit(self.path).path.strip('/').split('/') if p]
         body = self.read_json()
         match parts:
+            case ['api', 'layouts', map_id]:
+                with lock:
+                    entries = layouts.load()
+                    entries['maps'][map_id] = body
+                    layouts.save(entries)
+                return self.send_json({'saved': True, 'problems': layouts.check_map(body, self.dataset)})
             case ['api', 'products', slug, 'product']:
                 return self.update(Staging(slug), lambda e: e.__setitem__('product', body), body)
             case ['api', 'products', slug, 'items', key]:

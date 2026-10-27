@@ -97,7 +97,31 @@ main h1 { margin: 0 0 4px; font-size: 1.4rem; }
 .ok { color: var(--ok); }
 pre { white-space: pre-wrap; font-size: 12px; background: var(--bg); padding: 8px; border-radius: 6px; max-height: 400px; overflow: auto; }
 
+/* Map layouts (layouts.html) */
+.layout-editor { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.map-image { margin: 0; position: sticky; top: 70px; }
+.map-image img { display: block; max-width: 100%; max-height: calc(100vh - 90px); background: var(--thumb-bg); border-radius: 6px; }
+.panel h2 { margin: 0 0 8px; font-size: 1.05rem; }
+.panel .filters { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+.panel .filters button { padding: 2px 8px; font-size: 12px; }
+.panel .filters button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.tile-row { display: flex; gap: 8px; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--border); }
+.tile-row img { height: 48px; width: 72px; object-fit: contain; }
+.tile-row .name { flex: 1; }
+.tile-row button { padding: 2px 8px; }
+.tile-row .count { min-width: 2.5em; text-align: center; }
+.panel .bar input[type="text"] { flex: 1; }
+.panel .help { font-size: 12px; margin: 6px 0 0; }
+.tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.tile-card { border: 1px solid var(--border); border-radius: 6px; padding: 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.tile-card > div { grid-column: 1 / -1; font-size: 12px; }
+.tile-side { padding: 4px; display: grid; justify-items: center; gap: 2px; }
+.tile-side img { max-width: 100%; height: 72px; object-fit: contain; }
+.tile-side:hover { border-color: var(--accent); }
+
 @media (max-width: 800px) {
+  .layout-editor { grid-template-columns: minmax(0, 1fr); }
+  .map-image { position: static; }
   .layout { grid-template-columns: minmax(0, 1fr); }
   #sidebar { position: static; max-height: 40vh; border-right: 0; border-bottom: 1px solid var(--border); }
   main { padding: 16px; }
