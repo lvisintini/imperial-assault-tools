@@ -41,7 +41,9 @@ class Pending:
 
 def image_fields(dataset, content_type):
     pattern = dataset.schema('definitions')['definitions']['image-file-path']['pattern']
-    return [name for name, prop in dataset.schema(content_type)['properties'].items() if prop.get('pattern') == pattern]
+    # A nullable image field (a campaign map's, data 2.0.0) is oneOf the image path and null.
+    return [name for name, prop in dataset.schema(content_type)['properties'].items()
+            if pattern in (prop.get('pattern'), *(option.get('pattern') for option in prop.get('oneOf', [])))]
 
 
 def image_slug(content_type, record, image_field, parent_name=None):

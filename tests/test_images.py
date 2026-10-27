@@ -95,6 +95,7 @@ def test_sizes_match_the_data_repo_tests(real_dataset):
     dims = {name: (int(w), int(h)) for name, w, h in re.findall(r'^\s+(\w+) = \((\d+), (\d+)\)$', source, re.M)}
     dims['ANY'] = None
     dims['CARDS_USING_IT'] = 'skip'  # 2.0.0: a back is checked at its cards' size (the test above)
+    dims['TILE'] = 'skip'  # 2.0.0: map tiles come from the Vassal module as they are (ia tiles checks them)
     definitions = re.findall(
         r"ImageDefinition\('(large|small)', CONTENT_TYPES\.(\w+), '\w+', dims=(\w+)(?:, content_type=CONTENT_TYPES\.(\w+))?\)",
         source)
