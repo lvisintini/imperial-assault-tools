@@ -10,6 +10,8 @@
   ia wiki                cache every product's components and copies from the Imperial Assault wiki in staging/wiki/
                          (--missions: each campaign mission's hero and rewards; --skirmish: skirmish mission cards)
   ia reprocess <product> re-make an imported product's images with the current pipeline (--check to only list them)
+  ia ic2                 cache ImperialCommander2's map tile sizes and campaign mission layouts in staging/ic2/
+  ia tiles [module]      stage the Vassal module's map tiles and IC2's campaign layouts in staging/map-tiles/
   ia sheets [dir]        turn the scanned rules sheets (Sheets/<product>/, two pages each) into PDFs in staging/sheets/
 """
 import argparse
@@ -166,6 +168,27 @@ def cmd_reprocess(args):
         print('Left unaligned (no template matched well enough; check by eye):', ', '.join(unaligned))
 
 
+def cmd_ic2(args):
+    import requests
+
+    from ia_tools import ic2
+
+    cache = ic2.run(requests.Session(), log=lambda line: None)
+    print(f"{len(cache['tiles'])} tiles, {len(cache['missions'])} missions: {settings.STAGING / 'ic2' / 'ic2.json'}")
+
+
+def cmd_tiles(args):
+    from ia_tools import ic2, tiles
+    from ia_tools.dataset import Dataset
+
+    manifest, problems = tiles.run(args.module, ic2.load(), Dataset())
+    if problems:
+        print(f'{len(problems)} problems:', *problems, sep='\n  ')
+        sys.exit(1)
+    print(json.dumps(manifest['checks'], indent=2))
+    print(f"Staged in {settings.STAGING / 'map-tiles'}; fill in copies.csv")
+
+
 def cmd_sheets(args):
     from ia_tools import sheets
     from ia_tools.dataset import Dataset
@@ -243,6 +266,14 @@ def main(argv=None):
     reprocess.add_argument('product', help='staging folder name, e.g. tyrants-of-lothal')
     reprocess.add_argument('--check', action='store_true', help='only list the images and what it would cost')
     reprocess.set_defaults(func=cmd_reprocess)
+
+    ic2_ = commands.add_parser('ic2', help="cache ImperialCommander2's tile sizes and campaign layouts")
+    ic2_.set_defaults(func=cmd_ic2)
+
+    tiles_ = commands.add_parser('tiles', help="stage the Vassal module's map tiles and IC2's campaign layouts")
+    tiles_.add_argument('module', nargs='?', default=settings.TOOLS_ROOT / 'vassal',
+                        help='the extracted Vassal campaign module (buildFile, images/, Aftermath.vsav)')
+    tiles_.set_defaults(func=cmd_tiles)
 
     sheets = commands.add_parser('sheets', help='turn the scanned rules sheets into PDFs in staging/sheets/')
     sheets.add_argument('dir', nargs='?', default=settings.TOOLS_ROOT / 'Sheets', help='one folder of scans per sheet')
