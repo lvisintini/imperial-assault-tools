@@ -8,9 +8,12 @@ Writes staging/map-tiles/:
                   "tiles": [{"product", "number", "side", "count"}]}],
      "checks": {...}}
 - images/map-tiles/<name>-<side>.png: the Vassal images, under the dataset's names;
-- copies.csv: product, number, name, needed, copies: copies starts at 1 each, for the maintainer to fill in with how
-  many of each tile a box has; needed is the most copies of the tile one map uses (both sides count: a map with 36A
-  and 36B needs two tiles 36).
+- copies.csv: product, number, name, copies (1 each), for the maintainer to fill in with how many of each tile a box
+  has.
+
+A layout's count is how many times IC2 places the side in the mission, across all its map sections. Some maps are
+built from sections that replace each other during the mission (Heart of the Empire's Into a Corner places tile 18B
+44 times), so a count can exceed the copies in a box.
 
 Each Vassal image is checked against IC2's size for its tile (64 px per square, plus 0 or 32 px on each axis for
 the tabs). IC2's missions are matched to the dataset's campaign missions by name; a mission with no card (each
@@ -116,18 +119,6 @@ def plan(module, cache, dataset):
     return manifest, problems
 
 
-def needed(layouts):
-    """{(product, number): the most copies of the tile one map uses}."""
-    most = Counter()
-    for layout in layouts:
-        used = Counter()
-        for tile in layout['tiles']:
-            used[tile['product'], tile['number']] += tile['count']
-        for key, count in used.items():
-            most[key] = max(most[key], count)
-    return most
-
-
 def run(module, cache, dataset, out=None):
     out = Path(out or settings.STAGING / 'map-tiles')
     manifest, problems = plan(module, cache, dataset)
@@ -143,8 +134,6 @@ def run(module, cache, dataset, out=None):
     (out / 'manifest.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding='utf-8')
     with open(out / 'copies.csv', 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
-        most = needed(manifest['layouts'])
-        writer.writerow(['product', 'number', 'name', 'needed', 'copies'])
-        writer.writerows([t['product'], t['number'], t['name'], most[t['product'], t['number']], 1]
-                         for t in manifest['tiles'])
+        writer.writerow(['product', 'number', 'name', 'copies'])
+        writer.writerows([t['product'], t['number'], t['name'], 1] for t in manifest['tiles'])
     return manifest, []
