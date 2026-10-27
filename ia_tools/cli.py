@@ -10,6 +10,7 @@
   ia wiki                cache every product's components and copies from the Imperial Assault wiki in staging/wiki/
                          (--missions: each campaign mission's hero and rewards; --skirmish: skirmish mission cards)
   ia reprocess <product> re-make an imported product's images with the current pipeline (--check to only list them)
+  ia sheets [dir]        turn the scanned rules sheets (Sheets/<product>/, two pages each) into PDFs in staging/sheets/
 """
 import argparse
 import json
@@ -165,6 +166,21 @@ def cmd_reprocess(args):
         print('Left unaligned (no template matched well enough; check by eye):', ', '.join(unaligned))
 
 
+def cmd_sheets(args):
+    from ia_tools import sheets
+    from ia_tools.dataset import Dataset
+
+    made, problems = sheets.run(args.dir, Dataset().records('sources'), check=args.check)
+    if problems:
+        print(f'{len(problems)} problems:', *problems, sep='\n  ')
+        sys.exit(1)
+    if args.check:
+        for sheet in made:
+            print(f"  {sheet['folder']} → {sheet['file']}: {' + '.join(sheet['pages'])}")
+        return
+    print(f"{len(made)} sheets, {sum(s['bytes'] for s in made) / 1e6:.0f} MB: {settings.STAGING / 'sheets'}")
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog='ia', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     commands = parser.add_subparsers(dest='command', required=True)
@@ -227,6 +243,11 @@ def main(argv=None):
     reprocess.add_argument('product', help='staging folder name, e.g. tyrants-of-lothal')
     reprocess.add_argument('--check', action='store_true', help='only list the images and what it would cost')
     reprocess.set_defaults(func=cmd_reprocess)
+
+    sheets = commands.add_parser('sheets', help='turn the scanned rules sheets into PDFs in staging/sheets/')
+    sheets.add_argument('dir', nargs='?', default=settings.TOOLS_ROOT / 'Sheets', help='one folder of scans per sheet')
+    sheets.add_argument('--check', action='store_true', help='only list each folder, its product and page order')
+    sheets.set_defaults(func=cmd_sheets)
 
     args = parser.parse_args(argv)
     args.func(args)
