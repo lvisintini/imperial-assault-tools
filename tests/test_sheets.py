@@ -45,3 +45,56 @@ def test_run_writes_two_page_pdfs_and_a_manifest(tmp_path):
     pdf = (tmp_path / 'out' / 'han-solo-rules-sheet.pdf').read_bytes()
     assert problems == [] and pdf.startswith(b'%PDF') and len(re.findall(rb'/Type\s*/Page\b(?!s)', pdf)) == 2
     assert (tmp_path / 'out' / 'manifest.json').exists() and made[0]['bytes'] == len(pdf)
+
+
+def strips_pdf(path, pages):
+    """A PDF drawn like Microsoft Print to PDF's: each page 1 inch square, flipped (y down), and drawn in horizontal
+    strips, one solid JPEG each (72 x 36 px, so 72 DPI)."""
+    import io
+
+    from pypdf import PdfWriter
+    from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject, NumberObject, StreamObject
+
+    writer = PdfWriter()
+    for colors in pages:
+        page = writer.add_blank_page(72, 72)
+        xobjects, content = DictionaryObject(), ['1 0 0 -1 0 72 cm']
+        for i, color in enumerate(colors):
+            jpeg = io.BytesIO()
+            Image.new('RGB', (72, 36), color).save(jpeg, 'JPEG', quality=95)
+            image = StreamObject()
+            image._data = jpeg.getvalue()
+            image.update({NameObject(k): v for k, v in {
+                '/Type': NameObject('/XObject'), '/Subtype': NameObject('/Image'), '/Width': NumberObject(72),
+                '/Height': NumberObject(36), '/ColorSpace': NameObject('/DeviceRGB'),
+                '/BitsPerComponent': NumberObject(8), '/Filter': NameObject('/DCTDecode')}.items()})
+            xobjects[NameObject(f'/Im{i}')] = writer._add_object(image)
+            content.append(f'q 72 0 0 -36 0 {36 * (i + 1)} cm /Im{i} Do Q')
+        page[NameObject('/Resources')] = DictionaryObject({NameObject('/XObject'): xobjects})
+        stream = DecodedStreamObject()
+        stream.set_data(' '.join(content).encode())
+        page[NameObject('/Contents')] = writer._add_object(stream)
+    with open(path, 'wb') as file:
+        writer.write(file)
+
+
+def test_a_folder_can_hold_a_two_page_pdf(tmp_path):
+    (tmp_path / 'han solo').mkdir()
+    strips_pdf(tmp_path / 'han solo' / 'Han.pdf', [['red'], ['blue']])
+    (tmp_path / 'Weiss').mkdir()
+    strips_pdf(tmp_path / 'Weiss' / 'Weiss.pdf', [['red']])
+    scans(tmp_path, 'twin shadows skirmish', 'Scan.png', 'Scan (2).png')
+    strips_pdf(tmp_path / 'twin shadows skirmish' / 'Extra.pdf', [['red'], ['blue']])
+    made, problems = sheets.plan(tmp_path, SOURCES)
+    assert [(s['file'], s['pages']) for s in made] == [('han-solo-rules-sheet.pdf', ['Han.pdf#1', 'Han.pdf#2'])]
+    assert problems == ['Weiss: a sheet is one PDF of 2 pages, with no scans beside it',
+                        'twin shadows skirmish: a sheet is one PDF of 2 pages, with no scans beside it']
+
+
+def test_pdf_pages_are_rebuilt_from_their_strips(tmp_path):
+    strips_pdf(tmp_path / 'sheet.pdf', [[(220, 20, 20), (20, 20, 220)]])
+    image, dpi = sheets.pdf_page(tmp_path / 'sheet.pdf', 1)
+    assert image.size == (72, 72) and dpi == 72
+    top, bottom = image.getpixel((36, 10)), image.getpixel((36, 60))
+    assert top[0] > 180 > top[2] and bottom[2] > 180 > bottom[0]  # the first strip on top, upright
+    assert image.getpixel((36, 35))[0] > 180 and image.getpixel((36, 36))[2] > 180  # no seam between them
