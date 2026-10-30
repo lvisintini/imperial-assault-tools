@@ -48,8 +48,8 @@ def test_type_goes_in_place_or_after_xp():
 
 @pytest.fixture
 def dataset(dataset_copy, tmp_path, monkeypatch):
-    if not dataset_copy.path('imperial-class-cards').exists():
-        pytest.skip('The checkout has no Imperial class cards')
+    if not dataset_copy.path('missions').exists():
+        pytest.skip('The checkout is data 1.x (card types come with 2.0.0)')
     monkeypatch.setattr(settings, 'STAGING', tmp_path / 'staging')
     return dataset_copy
 
