@@ -16,6 +16,10 @@
   ia maps [--sample ...] draw the campaign maps from IC2's layouts and the Vassal tiles in staging/campaign-maps/
   ia layouts             write the map layouts entered in ia enter (Map layouts) into the data repo (--check to only
                          validate)
+  ia card-types --fetch  cache the wiki's text of every hero class, reward, Imperial class and upgrade card, to propose
+                         their type and timing on ia enter's Card types page
+  ia card-types          write the card types and timing confirmed in ia enter into the data repo (--check to only
+                         validate)
   ia missions            write the skirmish scenarios and story mission rewards entered in ia enter (Missions) into the
                          data repo (--check to only validate)
 """
@@ -239,6 +243,26 @@ def cmd_layouts(args):
         print(f"Wrote {summary['done']} maps' layouts into map-layouts.json")
 
 
+def cmd_card_types(args):
+    from ia_tools import boardwars, card_types
+    from ia_tools.dataset import Dataset
+
+    dataset = Dataset()
+    if args.fetch:
+        pages = card_types.fetch(boardwars.Client(check_robots=False), dataset, refresh=args.refresh)
+        found = card_types.proposals(dataset, pages)
+        flagged = {card_id: p for card_id, p in found.items() if p['flags']}
+        print(f'{len(found)} cards, {len(pages)} with a wiki page, {len(flagged)} flagged for a closer look')
+        return
+    summary, problems = card_types.run(dataset, check_only=args.check)
+    print(json.dumps(summary, indent=2))
+    if problems:
+        print(f'{len(problems)} problems:', *problems[:20], sep='\n  ')
+        sys.exit(1)
+    if not args.check:
+        print(f"Wrote {summary['done']} cards' type and timing")
+
+
 def cmd_missions(args):
     from ia_tools import mission_entries
     from ia_tools.dataset import Dataset
@@ -336,6 +360,13 @@ def main(argv=None):
     layouts = commands.add_parser('layouts', help='write the map layouts entered in ia enter into the data repo')
     layouts.add_argument('--check', action='store_true', help='only validate the entries')
     layouts.set_defaults(func=cmd_layouts)
+
+    card_types_ = commands.add_parser('card-types', help='propose card types and timing from the wiki, and write the '
+                                                         'ones confirmed in ia enter into the data repo')
+    card_types_.add_argument('--fetch', action='store_true', help="cache the cards' wiki pages")
+    card_types_.add_argument('--refresh', action='store_true', help='with --fetch, fetch cached pages again')
+    card_types_.add_argument('--check', action='store_true', help='only validate the entries')
+    card_types_.set_defaults(func=cmd_card_types)
 
     missions = commands.add_parser('missions', help='write the scenarios and story rewards entered in ia enter into the '
                                                     'data repo')

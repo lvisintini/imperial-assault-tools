@@ -10,7 +10,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
-from ia_tools import edits, images, importer, layouts, mission_entries
+from ia_tools import card_types, edits, images, importer, layouts, mission_entries
 from ia_tools.dataset import Dataset
 from ia_tools.enter import api
 from ia_tools.staging import Staging
@@ -80,6 +80,10 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send_file(STATIC / 'layouts.html')
                 case ['api', 'layouts']:
                     return self.send_json(layouts.panel(self.dataset))
+                case ['card-types']:
+                    return self.send_file(STATIC / 'card-types.html')
+                case ['api', 'card-types']:
+                    return self.send_json(card_types.panel(self.dataset))
                 case ['missions']:
                     return self.send_file(STATIC / 'missions.html')
                 case ['api', 'missions']:
@@ -120,6 +124,13 @@ class Handler(BaseHTTPRequestHandler):
                         entries['scenarios'].pop(card_id, None)
                     mission_entries.save(entries)
                 return self.send_json({'saved': True})
+            case ['api', 'card-types', card_id]:
+                with lock:
+                    entries = card_types.load()
+                    entries['cards'][card_id] = body
+                    card_types.save(entries)
+                content_type = card_types.content_type_of(self.dataset, card_id)
+                return self.send_json({'saved': True, 'problems': card_types.check(body, content_type)})
             case ['api', 'missions', 'rewards', mission_id]:
                 with lock:
                     entries = mission_entries.load()

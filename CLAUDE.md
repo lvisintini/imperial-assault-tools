@@ -35,6 +35,9 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
 - `ia_tools/layouts.py` (`ia layouts`, and `ia enter`'s Map layouts page, `static/layouts.html`): the skirmish and raid
   maps' layouts, entered by hand into `staging/map-layouts/entries.json` and written to the data repo's
   `map-layouts.json`.
+- `ia_tools/card_types.py` (`ia card-types`, and `ia enter`'s Card types page, `static/card-types.html`): each card's
+  `type` and `timing`, proposed from the wiki's card text (pages cached as `staging/wiki/pages/card-*.json`, found by
+  title, the class and item categories, then the wiki's search), confirmed into `staging/card-types/entries.json`.
 - `ia_tools/mission_entries.py` (`ia missions`, and `ia enter`'s Missions page, `static/missions.html`): the skirmish
   mission cards' scenarios and the story missions' rewards, entered by hand into `staging/mission-entries/entries.json`
   and written to `skirmish-mission-cards.json` and `mission-rewards.json`.

@@ -36,6 +36,9 @@ uv run ia import tyrants-of-lothal           # write records, images and source-
 uv run ia maps --sample Aftermath   # data 2.0.0: draw campaign maps from IC2's layouts (all of them without --sample)
 uv run ia layouts --check        # data 2.0.0: validate the map layouts entered in ia enter (Map layouts)
 uv run ia layouts                # write them into map-layouts.json
+uv run ia card-types --fetch     # data 2.0.0: cache the wiki's card text, to propose card types and timing
+uv run ia card-types --check     # validate the card types confirmed in ia enter (Card types)
+uv run ia card-types             # write them into the four card files
 uv run ia missions --check       # data 2.0.0: validate the scenarios and story rewards entered in ia enter (Missions)
 uv run ia missions               # write them into skirmish-mission-cards.json and mission-rewards.json
 ```
@@ -130,6 +133,12 @@ says which commit of this repo produced it.
   (filtered by product) or typed as Vassal names the pieces (`05A` for the Core Set, `TS 1B`, `JR3A x2`). A map
   can't use more copies of a tile than the products hold. Entries are saved to `staging/map-layouts/entries.json`;
   `ia layouts` writes the maps marked done into `map-layouts.json`, replacing the rows they had.
+- **Card types** (data 2.0.0; `/card-types`) goes through the hero class, reward, Imperial class and upgrade cards,
+  a tab each, with their `type` (gear, Hero/Party/Imperial Feat, Group Attachment; each collection has its own
+  values) and `timing` (Passive, Action, Exhaust, Deplete, Surge, Setup, Campaign, Single-use) proposed from the
+  wiki's text, which is shown under each card. Flags point at what needs a closer look: no text, a "Use when…" line,
+  or a name the wiki spells differently. Mark cards done one by one or all those shown; entries are saved to
+  `staging/card-types/entries.json`, and `ia card-types` writes them once every card is done.
 - **Missions** (data 2.0.0; `/missions`) has two views. *Skirmish scenarios* shows the skirmish mission cards by map,
   each with A/B buttons for the letter printed on it. *Story rewards* goes through the story missions one at a time:
   add reward cards or Campaign deployment cards from the search box, or credits, mark alternatives as *choice*, and
