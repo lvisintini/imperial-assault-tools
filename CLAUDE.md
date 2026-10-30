@@ -35,6 +35,9 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
 - `ia_tools/layouts.py` (`ia layouts`, and `ia enter`'s Map layouts page, `static/layouts.html`): the skirmish and raid
   maps' layouts, entered by hand into `staging/map-layouts/entries.json` and written to the data repo's
   `map-layouts.json`.
+- `ia_tools/mission_entries.py` (`ia missions`, and `ia enter`'s Missions page, `static/missions.html`): the skirmish
+  mission cards' scenarios and the story missions' rewards, entered by hand into `staging/mission-entries/entries.json`
+  and written to `skirmish-mission-cards.json` and `mission-rewards.json`.
 - `ia_tools/importer.py` (`ia import`): plan (all checks; raises `ImportProblems`) then apply. It writes the
   dataset's exact JSON format (`dataset.dumps`: indent 2, no trailing newline) and the image sizes in `images.py`
   (mirrors the data repo's `ImageTestHelper`; `tests/test_images.py` cross-checks them).

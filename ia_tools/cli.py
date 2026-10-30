@@ -16,6 +16,8 @@
   ia maps [--sample ...] draw the campaign maps from IC2's layouts and the Vassal tiles in staging/campaign-maps/
   ia layouts             write the map layouts entered in ia enter (Map layouts) into the data repo (--check to only
                          validate)
+  ia missions            write the skirmish scenarios and story mission rewards entered in ia enter (Missions) into the
+                         data repo (--check to only validate)
 """
 import argparse
 import json
@@ -237,6 +239,19 @@ def cmd_layouts(args):
         print(f"Wrote {summary['done']} maps' layouts into map-layouts.json")
 
 
+def cmd_missions(args):
+    from ia_tools import mission_entries
+    from ia_tools.dataset import Dataset
+
+    summary, problems = mission_entries.run(Dataset(), check=args.check)
+    print(json.dumps(summary, indent=2))
+    if problems:
+        print(f'{len(problems)} problems:', *problems, sep='\n  ')
+        sys.exit(1)
+    if not args.check:
+        print(f"Wrote {summary['scenarios']} scenarios and {summary['rows']} story mission rewards")
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog='ia', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     commands = parser.add_subparsers(dest='command', required=True)
@@ -321,6 +336,11 @@ def main(argv=None):
     layouts = commands.add_parser('layouts', help='write the map layouts entered in ia enter into the data repo')
     layouts.add_argument('--check', action='store_true', help='only validate the entries')
     layouts.set_defaults(func=cmd_layouts)
+
+    missions = commands.add_parser('missions', help='write the scenarios and story rewards entered in ia enter into the '
+                                                    'data repo')
+    missions.add_argument('--check', action='store_true', help='only validate the entries')
+    missions.set_defaults(func=cmd_missions)
 
     args = parser.parse_args(argv)
     args.func(args)

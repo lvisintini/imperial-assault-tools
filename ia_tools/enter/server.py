@@ -10,7 +10,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
-from ia_tools import edits, images, importer, layouts
+from ia_tools import edits, images, importer, layouts, mission_entries
 from ia_tools.dataset import Dataset
 from ia_tools.enter import api
 from ia_tools.staging import Staging
@@ -80,6 +80,10 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send_file(STATIC / 'layouts.html')
                 case ['api', 'layouts']:
                     return self.send_json(layouts.panel(self.dataset))
+                case ['missions']:
+                    return self.send_file(STATIC / 'missions.html')
+                case ['api', 'missions']:
+                    return self.send_json(mission_entries.panel(self.dataset))
                 case ['static', *rest]:
                     return self.send_file(safe_join(STATIC, '/'.join(rest)))
                 case ['api', 'products']:
@@ -107,6 +111,22 @@ class Handler(BaseHTTPRequestHandler):
                     entries['maps'][map_id] = body
                     layouts.save(entries)
                 return self.send_json({'saved': True, 'problems': layouts.check_map(body, self.dataset)})
+            case ['api', 'missions', 'scenarios', card_id]:
+                with lock:
+                    entries = mission_entries.load()
+                    if body in mission_entries.SCENARIOS:
+                        entries['scenarios'][card_id] = body
+                    else:
+                        entries['scenarios'].pop(card_id, None)
+                    mission_entries.save(entries)
+                return self.send_json({'saved': True})
+            case ['api', 'missions', 'rewards', mission_id]:
+                with lock:
+                    entries = mission_entries.load()
+                    entries['rewards'][mission_id] = body
+                    mission_entries.save(entries)
+                known = mission_entries.rewards(self.dataset)
+                return self.send_json({'saved': True, 'problems': mission_entries.check_rewards(body, known)})
             case ['api', 'products', slug, 'product']:
                 return self.update(Staging(slug), lambda e: e.__setitem__('product', body), body)
             case ['api', 'products', slug, 'items', key]:
