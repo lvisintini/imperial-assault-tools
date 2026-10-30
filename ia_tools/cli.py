@@ -16,10 +16,9 @@
   ia maps [--sample ...] draw the campaign maps from IC2's layouts and the Vassal tiles in staging/campaign-maps/
   ia layouts             write the map layouts entered in ia enter (Map layouts) into the data repo (--check to only
                          validate)
-  ia card-types --fetch  cache the wiki's text of every hero class, reward, Imperial class and upgrade card, to propose
-                         their type and timing on ia enter's Card types page
-  ia card-types          write the card types and timing confirmed in ia enter into the data repo (--check to only
-                         validate)
+  ia card-types --fetch  cache the wiki's text of the reward Feats and Imperial class cards, to propose which are a
+                         Group Attachment on ia enter's Card types page
+  ia card-types          write the card types confirmed in ia enter into the data repo (--check to only validate)
   ia missions            write the skirmish scenarios and story mission rewards entered in ia enter (Missions) into the
                          data repo (--check to only validate)
 """
@@ -260,7 +259,7 @@ def cmd_card_types(args):
         print(f'{len(problems)} problems:', *problems[:20], sep='\n  ')
         sys.exit(1)
     if not args.check:
-        print(f"Wrote {summary['done']} cards' type and timing")
+        print(f"Wrote {summary['done']} cards' type")
 
 
 def cmd_missions(args):
@@ -361,7 +360,7 @@ def main(argv=None):
     layouts.add_argument('--check', action='store_true', help='only validate the entries')
     layouts.set_defaults(func=cmd_layouts)
 
-    card_types_ = commands.add_parser('card-types', help='propose card types and timing from the wiki, and write the '
+    card_types_ = commands.add_parser('card-types', help='propose card types from the wiki, and write the '
                                                          'ones confirmed in ia enter into the data repo')
     card_types_.add_argument('--fetch', action='store_true', help="cache the cards' wiki pages")
     card_types_.add_argument('--refresh', action='store_true', help='with --fetch, fetch cached pages again')

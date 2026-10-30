@@ -1,5 +1,5 @@
-// IA card types: each hero class, reward, Imperial class and upgrade card's type and timing, proposed from the wiki's
-// card text. Every change is saved to staging/card-types/entries.json on the server; ia card-types writes them into
+// IA card types: whether each reward Feat and Imperial class card is a Feat or a Group Attachment, proposed from the
+// wiki's card text. Every change is saved to staging/card-types/entries.json on the server; ia card-types writes them into
 // the data repo once every card is done.
 
 import {fill, h, request} from './dom.js';
@@ -17,7 +17,7 @@ let typeFilter = null; // a type, or null for all
 
 const image = path => `/data-images/small/${path}`;
 // What a card shows: its entry, or the proposal until it has one.
-const valueOf = card => panel.entries[card.id] || {type: card.proposal.type, timing: card.proposal.timing, done: false};
+const valueOf = card => panel.entries[card.id] || {type: card.proposal.type, done: false};
 const isDone = card => !!panel.entries[card.id]?.done;
 
 function visible(card) {
@@ -76,10 +76,6 @@ function tile(card) {
     h('div', {}, h('strong', {}, card.name), card.owner ? h('span', {class: 'muted'}, ` ${card.owner}`) : null),
     h('select', {'aria-label': `${card.name} type`, onchange: e => change(card, n => { n.type = e.target.value; })},
       panel.collections[card.content_type].map(t => h('option', {value: t, selected: t === value.type}, t))),
-    h('div', {class: 'timings'}, panel.timings.map(t => h('button', {type: 'button',
-      'aria-pressed': String(value.timing.includes(t)), onclick: () => change(card, n => {
-        n.timing = n.timing.includes(t) ? n.timing.filter(x => x !== t) : [...n.timing, t];
-      })}, t))),
     card.proposal.lines.length
       ? h('ul', {class: 'lines'}, card.proposal.lines.map(line => h('li', {}, line)))
       : null,
@@ -102,7 +98,7 @@ function render() {
   fill(main,
     h('h1', {}, collection),
     h('p', {class: 'meta'}, 'Proposed from the wiki’s card text (shown under each card). ',
-      'Type is where the card sits; timing is how its abilities are used, and a card can have several. ',
+      'A Group Attachment is attached to an Imperial deployment group; every other card here is a Feat. ',
       'Tick Done when a card is right, or confirm all the cards shown once you’ve looked at them.'),
     h('div', {class: 'bar'}, h('button', {type: 'button', disabled: !cards.some(c => !isDone(c)),
       onclick: () => confirmShown(cards)}, `Mark the ${cards.filter(c => !isDone(c)).length} shown as done`)),

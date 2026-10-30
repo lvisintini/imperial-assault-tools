@@ -1,15 +1,13 @@
-"""Card types and timing (data 2.0.0): what each hero class, reward, Imperial class and upgrade card is, and how its
-abilities are used, proposed from the wiki's card text and confirmed by the maintainer in ia enter (its Card types
-page). ia card-types writes them to the data repo.
+"""Card types (data 2.0.0): which reward and Imperial class cards are a Group Attachment, proposed from the wiki's card
+text and confirmed by the maintainer in ia enter (its Card types page). ia card-types writes them to the data repo.
 
-- type: what the card is and where it sits on the table, one value. Gear (Armor, Equipment, weapons and their
-  modifications) is held by a hero; a Hero Feat is tied to one hero, a Party Feat is the whole Rebel side's, an
-  Imperial Feat sits in the Imperial play area, and a Group Attachment is attached to an Imperial deployment group.
-- timing: how the card's abilities are used, read from its wording, one or more of TIMINGS.
+A Group Attachment is attached to an Imperial deployment group ("Attach this card to a deployment card"); every other
+card that isn't an item stays a Feat. Imperial class cards had no type and get one; reward Feats can become Group
+Attachments. Hero class and upgrade cards, and reward items, keep their type and aren't shown.
 
 The wiki's pages are cached in staging/wiki/pages/card-<slug>.json (ia card-types --fetch). Entries are saved to
 staging/card-types/entries.json:
-    {"cards": {"<card id>": {"type": "Hero Feat", "timing": ["Exhaust"], "done": true, "note": "..."}}}
+    {"cards": {"<card id>": {"type": "Group Attachment", "done": true, "note": "..."}}}
 ia card-types writes only when every card is done."""
 import difflib
 import hashlib
@@ -24,33 +22,16 @@ from ia_tools.wiki_missions import BATCH, category_members, query
 
 GEAR = ['Armor', 'Equipment', 'Melee Weapon', 'Melee Weapon Modification', 'Ranged Weapon',
         'Ranged Weapon Modification']
-FEATS = ['Hero Feat', 'Party Feat', 'Imperial Feat', 'Group Attachment']
-TYPES = GEAR + FEATS
-TIMINGS = ['Passive', 'Action', 'Exhaust', 'Deplete', 'Surge', 'Setup', 'Campaign', 'Single-use']
-# Each collection's types: the shared list's values it uses.
+FEAT = 'Feat'
+ATTACHMENT = 'Group Attachment'
+# The types a card shown here can be given: its collection's cards that aren't items.
 COLLECTIONS = {
-    'hero-class-cards': GEAR + ['Hero Feat'],
-    'reward-cards': GEAR + ['Hero Feat', 'Party Feat', 'Imperial Feat', 'Group Attachment'],
-    'imperial-class-cards': ['Imperial Feat', 'Group Attachment'],
-    'upgrade-cards': GEAR,
+    'reward-cards': [FEAT, ATTACHMENT],
+    'imperial-class-cards': [FEAT, ATTACHMENT],
 }
-OLD_FEAT = 'Feat'
 
 ICON = re.compile(r'\{\{\s*([A-Za-z]+)\s*\}\}')
 LINE_FIELD = re.compile(r'^(?:effect|ability)(\d*)$')
-# Timing patterns, tried on each ability line (icons as <A>, <Z>, ...). A line that matches none is Passive.
-PATTERNS = {
-    'Action': re.compile(r'<A>'),
-    'Surge': re.compile(r'<Z>\s*:'),
-    'Exhaust': re.compile(r'\bexhaust (?:this|1) card\b|\bexhaust it\b', re.I),
-    'Deplete': re.compile(r'\bdeplete\b', re.I),
-    'Single-use': re.compile(r'\b(?:discard|remove) this card\b|\breturn this card to the (?:game )?box\b', re.I),
-    'Setup': re.compile(r'\bduring (?:mission )?setup\b|\bat the (?:start|beginning) of (?:each|a|the) mission\b|'
-                        r'\b(?:before|at the start of) the first round\b|\bafter setup\b|'
-                        r'\bwhen (?:you|the imperial player) (?:set up|sets up)\b', re.I),
-    'Campaign': re.compile(r'\bupgrade stage\b|\b(?:at the end of|after) (?:each|a|the) mission\b|'
-                           r'\bbetween missions\b', re.I),
-}
 # The wiki's categories of class, reward and item cards: their titles are matched to cards whose name the wiki
 # spells differently (Smugglers Luck, "Smuggler's Luck").
 CATEGORIES = ['Hero Class Card', 'Hero Class Item', 'Hero Class Reward', 'Imperial Class Card', 'Imperial Class Reward',
@@ -62,11 +43,8 @@ def candidates(content_type, record, hero):
     """Wiki titles to try for a card, most specific first."""
     name = record['name']
     titles = {
-        'hero-class-cards': [f'{name} ({hero})', f"{name} ({hero.split()[0]})" if hero else None, name,
-                             f'{name} (Hero Class Card)'],
         'reward-cards': [f'{name} (Reward Card)', name, f'{name} (Reward)'],
         'imperial-class-cards': [f'{name} (Imperial Class Card)', name],
-        'upgrade-cards': [name, f'{name} (Item)', f'{name} (Upgrade)'],
     }[content_type]
     return [t for t in dict.fromkeys(titles) if t]
 
@@ -118,44 +96,20 @@ def ability_lines(fields):
     return lines
 
 
-def timing_of(lines):
-    """(timing, flags): the timings in TIMINGS order, and why a reviewer should look closer."""
-    found, flags = set(), []
-    for line in lines:
-        matched = {name for name, pattern in PATTERNS.items() if pattern.search(line)}
-        found |= matched or {'Passive'}
-        if re.match(r'^\s*Use (?:when|during|after|while)\b', line):
-            flags.append('A "Use when…" line: Passive, or something else?')
-    if not lines:
-        flags.append('No card text on the wiki')
-    return [t for t in TIMINGS if t in found], flags
-
-
-def type_of(content_type, record, template, fields, categories):
-    """(type, flags) proposed for a card."""
-    current = record.get('type')
-    if current in GEAR:
-        return current, []
-    text = ' '.join(fields.values())
-    if content_type == 'hero-class-cards':
-        return 'Hero Feat', []
-    if content_type == 'imperial-class-cards':
-        return ('Group Attachment', []) if fields.get('type', '').lower() == 'attachment' else ('Imperial Feat', [])
-    if content_type == 'reward-cards':
-        if 'heroclasscard' in (template or '').lower().replace(' ', '').replace('_', '') or \
-                'Hero Class Reward' in categories:
-            return 'Hero Feat', []
-        if record.get('for') == 'Imperial player':
-            if fields.get('type', '').lower() == 'attachment' or ATTACH.search(text):
-                return 'Group Attachment', []
-            return 'Imperial Feat', []
-        return 'Party Feat', [] if template else ['No wiki page: is it a Party Feat?']
-    return current, [f'Unexpected type {current!r}']
+def type_of(content_type, record, fields):
+    """The type proposed for a card: Group Attachment where the wiki's type is Attachment, or (an Imperial reward card)
+    its text attaches it to a group; Feat otherwise."""
+    if fields.get('type', '').lower() == 'attachment':
+        return ATTACHMENT
+    if content_type == 'reward-cards' and record.get('for') == 'Imperial player' and ATTACH.search(' '.join(fields.values())):
+        return ATTACHMENT
+    return FEAT
 
 
 def records(dataset):
-    """[(content type, record)] for every card classified here."""
-    return [(content_type, r) for content_type in COLLECTIONS for r in dataset.records(content_type)]
+    """[(content type, record)] for every card classified here: the collections' cards that aren't items."""
+    return [(content_type, r) for content_type in COLLECTIONS for r in dataset.records(content_type)
+            if r.get('type') in (None, FEAT, ATTACHMENT)]
 
 
 def accepts(page, hero):
@@ -275,24 +229,18 @@ def cached_pages(dataset):
     return fetch(None, dataset, log=lambda *_: None)
 
 
-def categories_of(wikitext):
-    return re.findall(r'\[\[Category:([^\]|]+)', wikitext or '')
-
-
 def proposals(dataset, pages=None):
-    """{card id: {"type", "timing", "flags", "title", "lines"}}."""
+    """{card id: {"type", "flags", "title", "lines"}}."""
     pages = cached_pages(dataset) if pages is None else pages
     found = {}
     for content_type, record in records(dataset):
         page = pages.get(record['id'])
-        template, fields = infobox(page['wikitext']) if page else (None, {})
+        _, fields = infobox(page['wikitext']) if page else (None, {})
         lines = ability_lines(fields)
-        timing, timing_flags = timing_of(lines)
-        type_, type_flags = type_of(content_type, record, template, fields, categories_of(page and page['wikitext']))
         name_flags = [f"The wiki spells it {spelled(page['title'])!r}"] if page and \
             spelled(page['title']) != record['name'] else []
-        found[record['id']] = {'type': type_, 'timing': timing or ['Passive'],
-                               'flags': name_flags + type_flags + timing_flags,
+        text_flags = [] if lines else ['No card text on the wiki']
+        found[record['id']] = {'type': type_of(content_type, record, fields), 'flags': name_flags + text_flags,
                                'title': page and page['title'], 'lines': lines}
     return found
 
@@ -323,7 +271,7 @@ def panel(dataset):
         owner = heroes.get(record.get('hero_id')) or classes.get(record.get('class_id')) or record.get('for')
         cards.append({'id': record['id'], 'content_type': content_type, 'name': record['name'], 'image': record['image'],
                       'owner': owner, 'current': record.get('type'), 'proposal': found[record['id']]})
-    return {'cards': cards, 'collections': COLLECTIONS, 'timings': TIMINGS, 'entries': entries,
+    return {'cards': cards, 'collections': COLLECTIONS, 'entries': entries,
             'problems': {card_id: check(entry, content_type_of(dataset, card_id)) for card_id, entry in entries.items()}}
 
 
@@ -335,40 +283,25 @@ def check(entry, content_type):
     """Problems with one card's entry."""
     if content_type is None:
         return ['Not a card classified here']
-    problems = []
     if entry.get('type') not in COLLECTIONS[content_type]:
-        problems.append(f"Type {entry.get('type')!r} isn't one of {content_type}'s")
-    timing = entry.get('timing') or []
-    if not timing:
-        problems.append('No timing')
-    if any(t not in TIMINGS for t in timing) or len(set(timing)) != len(timing):
-        problems.append(f'Timing {timing!r} has unknown or repeated values')
-    return problems
+        return [f"Type {entry.get('type')!r} isn't one of {content_type}'s"]
+    return []
 
 
-def with_fields(record, type_, timing):
-    """The record with type and timing set: in place where it has a type, after xp (Imperial class cards) otherwise."""
+def with_type(record, type_):
+    """The record with its type set: in place where it has one, after xp (Imperial class cards) otherwise."""
     if 'type' in record:
-        out = {}
-        for key, value in record.items():
-            if key == 'timing':
-                continue
-            out[key] = type_ if key == 'type' else value
-            if key == 'type':
-                out['timing'] = timing
-        return out
+        return record | {'type': type_}
     out = {}
     for key, value in record.items():
-        if key in ('type', 'timing'):
-            continue
         out[key] = value
         if key == 'xp':
-            out |= {'type': type_, 'timing': timing}
-    return out if 'type' in out else out | {'type': type_, 'timing': timing}
+            out['type'] = type_
+    return out if 'type' in out else out | {'type': type_}
 
 
 def plan(dataset, entries=None):
-    """({content type: records}, summary, problems): the four files after writing the entries."""
+    """({content type: records}, summary, problems): the files after writing the entries."""
     entries = (entries or load())['cards']
     known = {r['id']: t for t, r in records(dataset)}
     problems = [f'{card_id}: not a card classified here' for card_id in entries if card_id not in known]
@@ -377,12 +310,15 @@ def plan(dataset, entries=None):
         files[content_type] = []
         for record in dataset.records(content_type):
             entry = entries.get(record['id'])
+            if record['id'] not in known:  # an item: its type stays
+                files[content_type].append(record)
+                continue
             if not (entry and entry.get('done')):
                 left += 1
                 files[content_type].append(record)
                 continue
             problems += [f"{content_type} {record['name']}: {p}" for p in check(entry, content_type)]
-            files[content_type].append(with_fields(record, entry['type'], [t for t in TIMINGS if t in entry['timing']]))
+            files[content_type].append(with_type(record, entry['type']))
     if left:
         problems.append(f'{left} cards are not done yet')
     summary = {'cards': len(known), 'done': len(known) - left, 'left': left}
@@ -390,7 +326,7 @@ def plan(dataset, entries=None):
 
 
 def run(dataset, check_only=False):
-    """(summary, problems); writes the four files unless checking or there are problems."""
+    """(summary, problems); writes the files unless checking or there are problems."""
     files, summary, problems = plan(dataset)
     if not problems and not check_only:
         for content_type, rows in files.items():
