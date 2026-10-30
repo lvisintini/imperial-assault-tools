@@ -3,20 +3,20 @@ product codes. ia mats stages each as a source: its values from the wiki cache, 
 as the Wayback Machine archived it (FFG's site is gone, and boardwars has no mat images).
 
 - name, product_code: the mat page's infobox (name, sku), e.g. "Training Ground", SWI38.
-- wave: the main page's wave for the mat (8 to 11). announced_date: null (the main page's dates are the waves').
-- release_date: the infobox's, or null where it has none.
+- wave, announced_date, release_date: the main page's, which lists each mat under a wave with that wave's dates, as
+  for every other source. The mat pages' own release dates don't fit them (some precede their wave's announcement),
+  so they aren't used.
 - map: the map record of the same name (MAP_NAMES where the product's name differs from the map's).
 - image: the product page's og:image, fitted to the sources' size like boardwars' originals (images.process).
 
 staging/mats/:
     originals/<sku>.<ext>, the downloaded images (fetched once);
     large/sources/<slug>.png and small/sources/<slug>.png;
-    manifest.json: {"mats": [{"product_code", "name", "wave", "release_date", "map_id", "map", "image",
-                              "original", "page", "snapshot"}]}
+    manifest.json: {"mats": [{"product_code", "name", "wave", "announced_date", "release_date", "map_id", "map",
+                              "image", "original", "page", "snapshot", "upscaled"}]}
 The data repo's migration 19 reads the manifest."""
 import json
 import re
-from datetime import datetime
 from pathlib import PurePosixPath
 
 from ia_tools import images, settings, wiki
@@ -34,18 +34,8 @@ def out_dir():
     return settings.STAGING / 'mats'
 
 
-def parse_date(text):
-    """An infobox date ("2016-07-14", "28 Feb 2019") as YYYY-MM-DD, or None."""
-    for pattern in ('%Y-%m-%d', '%d %b %Y', '%d %B %Y'):
-        try:
-            return datetime.strptime((text or '').strip(), pattern).date().isoformat()
-        except ValueError:
-            pass
-    return None
-
-
 def mats(dataset):
-    """[{"product_code", "name", "wave", "release_date", "map_id", "map", "page"}] for the wiki cache's skirmish map
+    """[{"product_code", "name", "wave", "announced_date", "release_date", "map_id", "map", "page"}] for the wiki cache's skirmish map
     products, in product code order, and the problems found."""
     pages = settings.STAGING / 'wiki' / 'pages'
     maps = {m['name']: m['id'] for m in dataset.records('maps')}
@@ -66,7 +56,8 @@ def mats(dataset):
         if not link:
             problems.append(f'{name}: no FFG product page on the wiki')
         found.append({'product_code': box['sku'], 'name': name, 'wave': int(wave.group(1)) if wave else None,
-                      'release_date': parse_date(box.get('release_date')), 'map_id': maps.get(map_name),
+                      'announced_date': wiki.parse_date(product['announced']),
+                      'release_date': wiki.parse_date(product['released']), 'map_id': maps.get(map_name),
                       'map': map_name, 'page': link and link.group(1)})
     return sorted(found, key=lambda m: m['product_code']), problems
 
@@ -92,22 +83,29 @@ def original(client, mat, log=print):
 
 
 def run(client, dataset, log=print):
-    """(manifest, problems): stage every mat's image and the manifest."""
+    """(manifest, problems): stage every mat's image and the manifest. Images already staged are kept (each encode is
+    a TinyPNG compression), so a run for new values only rewrites the manifest."""
     found, problems = mats(dataset)
     if problems:
         return None, problems
     out = out_dir()
+    path = out / 'manifest.json'
+    before = {m['product_code']: m for m in json.loads(path.read_text(encoding='utf-8'))['mats']} if path.exists() \
+        else {}
     for mat in found:
-        path, snapshot = original(client, mat, log)
-        processed = images.process(path, 'sources')
+        source, snapshot = original(client, mat, log)
         mat['image'] = f"sources/{slugify(mat['name'])}.png"
-        mat['original'] = path.name
+        mat['original'] = source.name
         mat['snapshot'] = snapshot
+        targets = {size: out / size / mat['image'] for size in ('large', 'small')}
+        if mat['product_code'] in before and all(t.exists() for t in targets.values()):
+            mat['upscaled'] = before[mat['product_code']]['upscaled']
+            continue
+        processed = images.process(source, 'sources')
         mat['upscaled'] = processed['upscaled']
-        for size in ('large', 'small'):
-            target = out / size / mat['image']
+        for size, target in targets.items():
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(processed[size])
     manifest = {'mats': found}
-    (out / 'manifest.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding='utf-8')
+    path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding='utf-8')
     return manifest, []

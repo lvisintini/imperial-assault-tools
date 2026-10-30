@@ -39,8 +39,8 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
   reward Feat and Imperial class card is a Feat or a Group Attachment, proposed from the wiki's card text (pages
   cached as `staging/wiki/pages/card-*.json`, found by title, the class and item categories, then the wiki's
   search), confirmed into `staging/card-types/entries.json`.
-- `ia_tools/mats.py` (`ia mats`): the 13 skirmish map mats as sources, from the wiki cache (infobox name, sku, release
-  date; the main page's wave) with images from FFG's product pages as the Wayback Machine archived them (og:image,
+- `ia_tools/mats.py` (`ia mats`): the 13 skirmish map mats as sources, from the wiki cache (infobox name and sku; the main
+  page's wave and dates) with images from FFG's product pages as the Wayback Machine archived them (og:image,
   fitted like other sources), staged in `staging/mats/` with a manifest that the data repo's migration 19 reads.
 - `ia_tools/mission_entries.py` (`ia missions`, and `ia enter`'s Missions page, `static/missions.html`): the skirmish
   mission cards' scenarios and the story missions' rewards, entered by hand into `staging/mission-entries/entries.json`

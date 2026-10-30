@@ -253,7 +253,8 @@ def cmd_mats(args):
         print(f'{len(problems)} problems:', *problems, sep='\n  ')
         sys.exit(1)
     for mat in manifest['mats']:
-        print(f"{mat['product_code']} {mat['name']}: wave {mat['wave']}, released {mat['release_date']}, map "
+        print(f"{mat['product_code']} {mat['name']}: wave {mat['wave']}, announced {mat['announced_date']}, released "
+              f"{mat['release_date']}, map "
               f"{mat['map']}{', upscaled' if mat['upscaled'] else ''}")
     print(f"Staged {len(manifest['mats'])} mats in {mats.out_dir()}")
 

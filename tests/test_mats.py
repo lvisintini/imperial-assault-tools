@@ -10,12 +10,6 @@ PAGE = 'https://www.fantasyflightgames.com/en/products/fantasy-flight-supply/pro
 IMAGE = 'https://web.archive.org/web/20200104011458im_/http://images-cdn.fantasyflightgames.com/x/swi45_main.png'
 
 
-def test_infobox_dates():
-    assert mats.parse_date('2016-07-14') == '2016-07-14'
-    assert mats.parse_date('28 Feb 2019') == '2019-02-28'
-    assert mats.parse_date(None) is None and mats.parse_date('soon') is None
-
-
 @pytest.fixture
 def staging(dataset_copy, tmp_path, monkeypatch):
     if not dataset_copy.path('maps').exists():
@@ -24,8 +18,9 @@ def staging(dataset_copy, tmp_path, monkeypatch):
     monkeypatch.setattr(settings, 'TINIFY_KEY', None)
     pages = tmp_path / 'staging' / 'wiki' / 'pages'
     pages.mkdir(parents=True)
-    products = [{'code': 'SWI45', 'title': 'Anchorhead Cantina Skirmish Map', 'wave': 'Wave 9'},
-                {'code': 'SWI46', 'title': 'Some Ally Pack', 'wave': 'Wave 9'}]
+    dates = {'wave': 'Wave 9', 'announced': 'January 13th, 2017', 'released': 'May 11th, 2017'}
+    products = [{'code': 'SWI45', 'title': 'Anchorhead Cantina Skirmish Map'} | dates,
+                {'code': 'SWI46', 'title': 'Some Ally Pack'} | dates]
     (pages.parent / 'products.json').write_text(json.dumps({'products': products}), encoding='utf-8')
     wikitext = ('{{Expansion|name=Anchorhead Cantina|type=Skirmish Map|release_date=2 Feb 2017|sku=SWI45|'
                 f'link=[{PAGE} Product Page]}}}}')
@@ -55,9 +50,10 @@ def test_mats_come_from_the_wiki_cache(staging):
     assert problems == []
     assert len(found) == 1
     mat = found[0]
-    assert {k: mat[k] for k in ('product_code', 'name', 'wave', 'release_date', 'map')} == \
-        {'product_code': 'SWI45', 'name': 'Anchorhead Cantina', 'wave': 9, 'release_date': '2017-02-02',
-         'map': 'Anchorhead Bar'}
+    # The main page's dates, not the mat page's own release date.
+    assert {k: mat[k] for k in ('product_code', 'name', 'wave', 'announced_date', 'release_date', 'map')} == \
+        {'product_code': 'SWI45', 'name': 'Anchorhead Cantina', 'wave': 9, 'announced_date': '2017-01-13',
+         'release_date': '2017-05-11', 'map': 'Anchorhead Bar'}
     assert mat['map_id'] == next(m['id'] for m in staging.records('maps') if m['name'] == 'Anchorhead Bar')
 
 
@@ -72,5 +68,7 @@ def test_run_stages_images_and_a_manifest_and_fetches_once(staging):
             assert image.size == (300, 300)
     assert json.loads((mats.out_dir() / 'manifest.json').read_text(encoding='utf-8')) == manifest
 
+    staged = (mats.out_dir() / 'large' / mat['image']).stat().st_mtime_ns
     mats.run(client, staging, log=lambda *_: None)
     assert len(client.urls) == 2  # the original is cached
+    assert (mats.out_dir() / 'large' / mat['image']).stat().st_mtime_ns == staged  # and so are the staged images
