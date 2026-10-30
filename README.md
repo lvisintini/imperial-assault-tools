@@ -41,6 +41,7 @@ uv run ia card-types --check     # validate the card types confirmed in ia enter
 uv run ia card-types             # write them into reward-cards.json and imperial-class-cards.json
 uv run ia missions --check       # data 2.0.0: validate the scenarios and story rewards entered in ia enter (Missions)
 uv run ia missions               # write them into skirmish-mission-cards.json and mission-rewards.json
+uv run ia mats                   # data 2.0.0: stage the 13 skirmish map mats as sources in staging/mats/ (migration 19)
 ```
 
 Then, in the data repo, run `uv run pytest`, look at the result with `uv run python serve_site.py`, and open a PR that

@@ -19,6 +19,8 @@
   ia card-types --fetch  cache the wiki's text of the reward Feats and Imperial class cards, to propose which are a
                          Group Attachment on ia enter's Card types page
   ia card-types          write the card types confirmed in ia enter into the data repo (--check to only validate)
+  ia mats                stage the 13 skirmish map mats as sources (wiki values, images from FFG's archived product
+                         pages) in staging/mats/, for the data repo's migration 19
   ia missions            write the skirmish scenarios and story mission rewards entered in ia enter (Missions) into the
                          data repo (--check to only validate)
 """
@@ -242,6 +244,20 @@ def cmd_layouts(args):
         print(f"Wrote {summary['done']} maps' layouts into map-layouts.json")
 
 
+def cmd_mats(args):
+    from ia_tools import boardwars, mats
+    from ia_tools.dataset import Dataset
+
+    manifest, problems = mats.run(boardwars.Client(check_robots=False), Dataset())
+    if problems:
+        print(f'{len(problems)} problems:', *problems, sep='\n  ')
+        sys.exit(1)
+    for mat in manifest['mats']:
+        print(f"{mat['product_code']} {mat['name']}: wave {mat['wave']}, released {mat['release_date']}, map "
+              f"{mat['map']}{', upscaled' if mat['upscaled'] else ''}")
+    print(f"Staged {len(manifest['mats'])} mats in {mats.out_dir()}")
+
+
 def cmd_card_types(args):
     from ia_tools import boardwars, card_types
     from ia_tools.dataset import Dataset
@@ -359,6 +375,10 @@ def main(argv=None):
     layouts = commands.add_parser('layouts', help='write the map layouts entered in ia enter into the data repo')
     layouts.add_argument('--check', action='store_true', help='only validate the entries')
     layouts.set_defaults(func=cmd_layouts)
+
+    mats_ = commands.add_parser('mats', help="stage the skirmish map mats as sources, with images from FFG's archived "
+                                             'product pages')
+    mats_.set_defaults(func=cmd_mats)
 
     card_types_ = commands.add_parser('card-types', help='propose card types from the wiki, and write the '
                                                          'ones confirmed in ia enter into the data repo')
