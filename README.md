@@ -33,6 +33,7 @@ uv run ia stage epilogues --type epilogue-cards --tts save.zip   # stage images 
 uv run ia enter                  # opens http://localhost:8001: go through the cards
 uv run ia import tyrants-of-lothal --check   # validate only
 uv run ia import tyrants-of-lothal           # write records, images and source-contents rows
+uv run ia maps --sample Aftermath   # data 2.0.0: draw campaign maps from IC2's layouts (all of them without --sample)
 uv run ia layouts --check        # data 2.0.0: validate the map layouts entered in ia enter (Map layouts)
 uv run ia layouts                # write them into map-layouts.json
 ```
@@ -115,6 +116,12 @@ says which commit of this repo produced it.
     back's `variant` still holds the old name.
 
   It never overwrites an existing image.
+- **`ia maps`** (data 2.0.0) draws the campaign maps into `staging/campaign-maps/`, from ImperialCommander2's tile
+  positions and rotations (`ia ic2`) and the Vassal module's tile images: 64 px per square, tiles only (no doors or
+  tokens), transparent around them. IC2's own tile images, fetched once into `staging/ic2/textures/`, only tell which
+  way each Vassal image is turned: by their colours, or, when that's close, by which turn fits the neighbouring tiles'
+  tabs into their notches. Aftermath's turns are checked against the Vassal module's Aftermath save. A map whose
+  sections replace each other during the mission is drawn with its start section only.
 - **Map layouts** (data 2.0.0; `ia enter`'s Map layouts page, `/layouts`) is where the skirmish and raid maps' tiles
   are entered, since no source has them (the campaign maps' come from ImperialCommander2, through `ia tiles`). Each
   map's image is shown next to the tile sides picked for it, with their counts. Sides are added from the tile grid

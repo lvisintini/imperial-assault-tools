@@ -30,6 +30,8 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
 - `ia_tools/enter/` (`ia enter`): stdlib HTTP server (`server.py`), pure logic (`api.py`: form specs from the dataset's
   schemas, suggestions, per-entry validation), and the page in `static/` (plain JS). The entries.json format is
   documented in `staging.py`.
+- `ia_tools/campaign_maps.py` (`ia maps`): the campaign maps drawn from IC2's placements (`ic2.parse_sections`) with
+  the Vassal tiles; how IC2 and Vassal place and turn tiles is in its docstring.
 - `ia_tools/layouts.py` (`ia layouts`, and `ia enter`'s Map layouts page, `static/layouts.html`): the skirmish and raid
   maps' layouts, entered by hand into `staging/map-layouts/entries.json` and written to the data repo's
   `map-layouts.json`.

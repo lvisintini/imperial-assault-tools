@@ -9,8 +9,11 @@ campaign missions. Two of its files are what the dataset uses:
 
 ia ic2 fetches them at COMMIT and writes staging/ic2/ic2.json:
     {"commit", "tiles": [{"expansion", "number", "width", "height"}],
-     "missions": [{"file", "folder", "name", "campaign", "tiles": {"Core_1A": count}}]}
-Tiles placed in several map sections, or several times in one, add up."""
+     "missions": [{"file", "folder", "name", "campaign", "tiles": {"Core_1A": count},
+                   "sections": [{"name", "hidden", "tiles": [{"texture", "x", "y", "rotation"}]}]}]}
+Tiles placed in several map sections, or several times in one, add up. A section is hidden until the mission reveals
+it (invisibleUntilActivated). A tile's x and y are IC2's editor coordinates (10 per square, y down) and its rotation
+is in degrees; IC2 draws a tile turned by -rotation about its pivot (TileRenderer.cs)."""
 import json
 import re
 from collections import Counter
@@ -24,6 +27,8 @@ TREE = f'https://api.github.com/repos/{REPO}/git/trees/{COMMIT}?recursive=1'
 DIMENSIONS = 'ImperialCommander2/Assets/Resources/dimensions.json'
 MISSIONS = re.compile(r'^ImperialCommander2/Assets/Resources/SagaMissions/([^/]+)/([^/]+\.json)$')
 TEXTURE = re.compile(r'^([A-Za-z]+)_(\d+)([AB])$')
+# The tiles' own images, cut to the grid: only used to tell how each Vassal image is turned (ia maps).
+TEXTURES = re.compile(r'^ImperialCommander2/Assets/SagaTiles/[^/]+/([A-Za-z]+_\d+[AB])\.png$')
 
 
 def lenient_json(text):
@@ -45,6 +50,22 @@ def parse_mission(text):
     return properties.get('missionName'), properties.get('campaignName'), dict(sorted(tiles.items()))
 
 
+def parse_sections(text):
+    """A mission file's map sections, with each tile's placement."""
+    mission = lenient_json(text.lstrip('﻿'))
+    sections = []
+    for section in mission.get('mapSections', []):
+        placed = []
+        for tile in section.get('mapTiles', []):
+            if TEXTURE.match(tile.get('textureName', '')):
+                x, y = (float(v) for v in tile['entityPosition'].split(','))
+                placed.append({'texture': tile['textureName'], 'x': x, 'y': y,
+                               'rotation': float(tile.get('entityRotation') or 0)})
+        sections.append({'name': section.get('name'), 'hidden': bool(section.get('invisibleUntilActivated')),
+                         'tiles': placed})
+    return sections
+
+
 def run(session, root=None, log=print):
     out = (root or settings.STAGING) / 'ic2'
     out.mkdir(parents=True, exist_ok=True)
@@ -59,12 +80,34 @@ def run(session, root=None, log=print):
     missions = []
     for path in sorted(p for p in paths if MISSIONS.match(p)):
         folder, file = MISSIONS.match(path).groups()
-        name, campaign, used = parse_mission(get(RAW + path).content.decode('utf-8-sig'))
-        missions.append({'file': file, 'folder': folder, 'name': name, 'campaign': campaign, 'tiles': used})
+        text = get(RAW + path).content.decode('utf-8-sig')
+        name, campaign, used = parse_mission(text)
+        missions.append({'file': file, 'folder': folder, 'name': name, 'campaign': campaign, 'tiles': used,
+                         'sections': parse_sections(text)})
         log(f'  {folder}/{file}: {name} ({sum(used.values())} tiles)')
     cache = {'commit': COMMIT, 'tiles': tiles, 'missions': missions}
     (out / 'ic2.json').write_text(json.dumps(cache, indent=2, ensure_ascii=False), encoding='utf-8')
     return cache
+
+
+def fetch_textures(session, root=None, log=print):
+    """{texture name: path} of IC2's tile images, downloaded once into staging/ic2/textures/."""
+    out = (root or settings.STAGING) / 'ic2' / 'textures'
+    out.mkdir(parents=True, exist_ok=True)
+    response = session.get(TREE, timeout=60)
+    response.raise_for_status()
+    found = {}
+    for entry in response.json()['tree']:
+        match = TEXTURES.match(entry['path'])
+        if match:
+            path = out / f'{match[1]}.png'
+            if not path.exists():
+                image = session.get(RAW + entry['path'], timeout=60)
+                image.raise_for_status()
+                path.write_bytes(image.content)
+                log(f'  {path.name}')
+            found[match[1]] = path
+    return found
 
 
 def load(root=None):

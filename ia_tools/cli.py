@@ -13,6 +13,7 @@
   ia ic2                 cache ImperialCommander2's map tile sizes and campaign mission layouts in staging/ic2/
   ia tiles [module]      stage the Vassal module's map tiles and IC2's campaign layouts in staging/map-tiles/
   ia sheets [dir]        turn the scanned rules sheets (Sheets/<product>/, two pages each) into PDFs in staging/sheets/
+  ia maps [--sample ...] draw the campaign maps from IC2's layouts and the Vassal tiles in staging/campaign-maps/
   ia layouts             write the map layouts entered in ia enter (Map layouts) into the data repo (--check to only
                          validate)
 """
@@ -206,6 +207,23 @@ def cmd_sheets(args):
     print(f"{len(made)} sheets, {sum(s['bytes'] for s in made) / 1e6:.0f} MB: {settings.STAGING / 'sheets'}")
 
 
+def cmd_maps(args):
+    import requests
+
+    from ia_tools import campaign_maps, ic2
+    from ia_tools.dataset import Dataset
+
+    textures = ic2.fetch_textures(requests.Session())
+    manifest, problems = campaign_maps.run(args.module, ic2.load(), textures, Dataset(), sample=args.sample)
+    by = {}
+    for turn in manifest['turns'].values():
+        by[turn['by']] = by.get(turn['by'], 0) + 1
+    print(f"{len(manifest['maps'])} maps; tile sides turned by {by}: {settings.STAGING / 'campaign-maps'}")
+    if problems:
+        print(f'{len(problems)} problems:', *problems, sep='\n  ')
+        sys.exit(1)
+
+
 def cmd_layouts(args):
     from ia_tools import layouts
     from ia_tools.dataset import Dataset
@@ -294,6 +312,11 @@ def main(argv=None):
     sheets.add_argument('dir', nargs='?', default=settings.TOOLS_ROOT / 'Sheets', help='one folder of scans per sheet')
     sheets.add_argument('--check', action='store_true', help='only list each folder, its product and page order')
     sheets.set_defaults(func=cmd_sheets)
+
+    maps = commands.add_parser('maps', help="draw the campaign maps from IC2's layouts and the Vassal tiles")
+    maps.add_argument('module', nargs='?', default=settings.TOOLS_ROOT / 'vassal', help='the extracted Vassal module')
+    maps.add_argument('--sample', nargs='+', metavar='MISSION', help='only these missions (IC2 names)')
+    maps.set_defaults(func=cmd_maps)
 
     layouts = commands.add_parser('layouts', help='write the map layouts entered in ia enter into the data repo')
     layouts.add_argument('--check', action='store_true', help='only validate the entries')
