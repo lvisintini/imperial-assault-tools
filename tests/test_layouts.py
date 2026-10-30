@@ -15,6 +15,11 @@ def dataset(dataset_copy, tmp_path, monkeypatch):
     if not dataset_copy.path('map-tiles').exists():
         pytest.skip('The checkout has no map tiles (data 2.0.0)')
     monkeypatch.setattr(settings, 'STAGING', tmp_path / 'staging')
+    # Start from no skirmish or raid layouts, as before they were entered.
+    entered = {m['map_id'] for m in dataset_copy.records('missions') if m['content_type'] in layouts.ENTRY_TYPES}
+    rows = [r for r in dataset_copy.records('map-layouts') if r['map_id'] not in entered]
+    dataset_copy.path('map-layouts').write_text(json.dumps(rows, indent=2), encoding='utf-8')
+    dataset_copy._data.pop('map-layouts')
     return dataset_copy
 
 
