@@ -72,8 +72,7 @@ def test_nothing_is_written_until_everything_is_entered(dataset):
     entries['rewards'][mission_entries.story_missions(dataset)[0]['id']]['done'] = False
     mission_entries.save(entries)
     summary, problems = mission_entries.run(dataset)
-    assert len(problems) == 2 and '1 skirmish cards have no scenario yet' in problems[0]
-    assert problems[1] == '1 story missions are not done yet'
+    assert len(problems) == 1 and '1 skirmish cards have no scenario yet' in problems[0]  # story missions are optional
     assert dataset.path('mission-rewards').read_text(encoding='utf-8') == before
 
 

@@ -134,8 +134,8 @@ says which commit of this repo produced it.
   each with A/B buttons for the letter printed on it. *Story rewards* goes through the story missions one at a time:
   add reward cards or Campaign deployment cards from the search box, or credits, mark alternatives as *choice*, and
   mark the mission done (with no rows if it gives none). Entries are saved to `staging/mission-entries/entries.json`;
-  `ia missions` writes them only once every card has a scenario and every story mission is done, replacing the story
-  missions' rows.
+  `ia missions` writes them only once every card has a scenario, replacing the rows of the story missions marked done.
+  Story mission cards give no rewards, so none are required.
 
 | Variable | Default | |
 |---|---|---|

@@ -8,9 +8,9 @@ staging/mission-entries/entries.json:
                                             "choice": false}],
                                   "done": true, "note": "..."}}}
 
-ia missions writes only when every skirmish card has a scenario and every story mission is marked done (a story
-mission done with no rows gives no card or credits). A story mission's rows replace the ones it had; other missions'
-rows stay as they are."""
+ia missions writes only when every skirmish card has a scenario. Story mission cards give no rewards (the campaign
+guide's outcomes are XP, credits and influence), so none are required; a story mission marked done has its rows
+replaced by the ones entered, and other missions' rows stay as they are."""
 import json
 from collections import Counter
 
@@ -125,8 +125,6 @@ def plan(dataset, entries=None):
         problems.append(f"{len(left)} skirmish cards have no scenario yet: {', '.join(left[:5])}"
                         f"{', …' if len(left) > 5 else ''}")
     done = [m for m in missions if entries['rewards'].get(m, {}).get('done')]
-    if len(done) < len(missions):
-        problems.append(f'{len(missions) - len(done)} story missions are not done yet')
     for mission_id in done:
         problems += [f"{missions[mission_id]['name']}: {p}" for p in check_rewards(entries['rewards'][mission_id], known)]
     replaced = set(done)
