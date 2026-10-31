@@ -11,12 +11,12 @@ from tests.test_enter import call
 
 @pytest.fixture
 def dataset(dataset_copy, tmp_path, monkeypatch):
-    if not dataset_copy.path('skirmish-mission-cards').exists():
+    if not dataset_copy.path('skirmish-missions').exists():
         pytest.skip('The checkout has no skirmish mission cards (data 2.0.0)')
     monkeypatch.setattr(settings, 'STAGING', tmp_path / 'staging')
     # Start from no scenarios and no story rewards, as before they were entered.
-    cards = [c | {'scenario': None} for c in dataset_copy.records('skirmish-mission-cards')]
-    dataset_copy.path('skirmish-mission-cards').write_text(json.dumps(cards, indent=2), encoding='utf-8')
+    cards = [c | {'scenario': None} for c in dataset_copy.records('skirmish-missions')]
+    dataset_copy.path('skirmish-missions').write_text(json.dumps(cards, indent=2), encoding='utf-8')
     story = {m['id'] for m in dataset_copy.records('missions') if m['content_type'] == mission_entries.STORY}
     rows = [r for r in dataset_copy.records('mission-rewards') if r['mission_id'] not in story]
     dataset_copy.path('mission-rewards').write_text(json.dumps(rows, indent=2), encoding='utf-8')
@@ -43,7 +43,7 @@ def everything_entered(dataset, rewards=lambda mission: []):
 
 def test_the_cards_and_missions_entered(dataset):
     cards = mission_entries.skirmish_cards(dataset)
-    assert len(cards) == len(dataset.records('skirmish-mission-cards')) and all(c['map'] and c['products'] for c in cards)
+    assert len(cards) == len(dataset.records('skirmish-missions')) and all(c['map'] and c['products'] for c in cards)
     story = mission_entries.story_missions(dataset)
     assert len(story) == len(dataset.records(mission_entries.STORY)) and all(m['rows'] == 0 for m in story)
     rewards = mission_entries.rewards(dataset)
@@ -81,7 +81,7 @@ def test_run_writes_scenarios_and_replaces_story_rewards(dataset):
     reward, ally = a_reward(dataset), a_reward(dataset, 'deployment-cards')
     before = list(dataset.records('mission-rewards'))
     entries = everything_entered(dataset, lambda m: [row(reward), CREDITS] if m['id'] == first['id'] else [])
-    entries['scenarios'][dataset.records('skirmish-mission-cards')[0]['id']] = 'B'
+    entries['scenarios'][dataset.records('skirmish-missions')[0]['id']] = 'B'
     mission_entries.save(entries)
     summary, problems = mission_entries.run(dataset, check=True)
     assert problems == [] and summary['rows'] == 2 and summary['without rewards'] == summary['story'] - 1
@@ -89,7 +89,7 @@ def test_run_writes_scenarios_and_replaces_story_rewards(dataset):
     assert json.loads(dataset.path('mission-rewards').read_text(encoding='utf-8')) == before  # --check writes nothing
 
     mission_entries.run(dataset)
-    cards = json.loads(dataset.path('skirmish-mission-cards').read_text(encoding='utf-8'))
+    cards = json.loads(dataset.path('skirmish-missions').read_text(encoding='utf-8'))
     assert [c['scenario'] for c in cards[:2]] == ['B', 'A']
     written = json.loads(dataset.path('mission-rewards').read_text(encoding='utf-8'))
     assert written == before + [{'mission_id': first['id'], 'content_type': 'reward-cards', 'content_id': reward['id'],

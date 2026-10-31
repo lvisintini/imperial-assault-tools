@@ -40,7 +40,7 @@ uv run ia card-types --fetch     # data 2.0.0: cache the wiki's card text, to pr
 uv run ia card-types --check     # validate the card types confirmed in ia enter (Card types)
 uv run ia card-types             # write them into reward-cards.json and imperial-class-cards.json
 uv run ia missions --check       # data 2.0.0: validate the scenarios and story rewards entered in ia enter (Missions)
-uv run ia missions               # write them into skirmish-mission-cards.json and mission-rewards.json
+uv run ia missions               # write them into skirmish-missions.json and mission-rewards.json
 uv run ia mats                   # data 2.0.0: stage the 13 skirmish map mats as sources in staging/mats/ (migration 19)
 ```
 

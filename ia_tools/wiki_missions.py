@@ -32,8 +32,8 @@ from ia_tools.wiki import API_URL, LINK
 # The dataset's mission collections, before and after data 2.0.0 split and renamed them.
 MISSION_TYPES = [
     'story-mission-cards', 'threat-mission-cards', 'side-mission-cards',
-    'campaign-story-mission-cards', 'campaign-threat-mission-cards', 'campaign-hero-side-mission-cards',
-    'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards',
+    'campaign-story-missions', 'campaign-threat-missions', 'campaign-hero-side-missions',
+    'campaign-ally-side-missions', 'campaign-regular-side-missions',
 ]
 # Dataset names that aren't the wiki's (typos in the data, fixed in data 2.0.0), and the wiki's title for them.
 TITLES = {

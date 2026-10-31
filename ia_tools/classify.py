@@ -13,9 +13,9 @@ SECTIONS = [
     ('rebel hero', 'hero-class-cards', 'hero'),
     ('rebel upgrade', 'upgrade-cards', 'tier'),
     ('reward', 'reward-cards', None),
-    ('side mission', 'campaign-regular-side-mission-cards', 'color'),  # by color below
+    ('side mission', 'campaign-regular-side-missions', 'color'),  # by color below
     ('suppl', 'supply-cards', None),
-    ('story', 'campaign-story-mission-cards', None),
+    ('story', 'campaign-story-missions', None),
     ('companion', 'companion-cards', None),
     ('condition', 'condition-cards', None),
     ('form', 'form-cards', None),
@@ -23,7 +23,7 @@ SECTIONS = [
 ]
 
 
-SIDE_MISSION_COLORS = {'red': 'campaign-hero-side-mission-cards', 'green': 'campaign-ally-side-mission-cards'}
+SIDE_MISSION_COLORS = {'red': 'campaign-hero-side-missions', 'green': 'campaign-ally-side-missions'}
 
 
 # boardwars keeps every skirmish map in one album that doesn't say which product it comes from. These are the maps it
@@ -86,9 +86,9 @@ def classify(image):
     name = image.name.lower()
     if content_type == 'hero-class-cards' and (name.endswith('healthy') or name.endswith('wounded')):
         content_type = 'heroes'
-    if content_type == 'campaign-regular-side-mission-cards':
+    if content_type == 'campaign-regular-side-missions':
         if sub and 'threat' in sub.lower():
-            content_type = 'campaign-threat-mission-cards'
+            content_type = 'campaign-threat-missions'
         else:  # red missions are a hero's, green ones earn an ally
             color = (hints.get('color') or '').lower()
             content_type = SIDE_MISSION_COLORS.get(next((c for c in SIDE_MISSION_COLORS if c in color), None),

@@ -19,13 +19,13 @@ HERO = {'large': (1490, 1186), 'small': (650, 515)}
 ANY = None  # skirmish maps keep their size, and the small copy is the same file
 
 # Mission cards: data 2.0.0's collections, and 1.x's side-mission-cards (split in 2.0.0; still sized for 1.x checkouts).
-MISSIONS = ['campaign-story-mission-cards', 'campaign-threat-mission-cards', 'campaign-hero-side-mission-cards',
-            'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards', 'side-mission-cards']
+MISSIONS = ['campaign-story-missions', 'campaign-threat-missions', 'campaign-hero-side-missions',
+            'campaign-ally-side-missions', 'campaign-regular-side-missions', 'side-mission-cards']
 SIZES = {
     'sources': SOURCE, 'maps': ANY, 'agenda-cards': STANDARD, 'command-cards': MINI,
     'condition-cards': MINI, 'deployment-cards': STANDARD, 'heroes': HERO, 'hero-class-cards': MINI,
     'imperial-class-cards': MINI, 'supply-cards': MINI, 'reward-cards': MINI, 'companion-cards': STANDARD,
-    'upgrade-cards': MINI, 'form-cards': MINI_FLIPPED, 'skirmish-mission-cards': STANDARD_FLIPPED,
+    'upgrade-cards': MINI, 'form-cards': MINI_FLIPPED, 'skirmish-missions': STANDARD_FLIPPED,
     'epilogue-cards': STANDARD,
 } | dict.fromkeys(MISSIONS, STANDARD)
 # card-backs, by the content type they're the back of (Dataset.back_type): their cards' size.
@@ -33,7 +33,7 @@ BACK_SIZES = {
     'agenda-decks': STANDARD, 'command-cards': MINI, 'companion-cards': STANDARD, 'condition-cards': MINI,
     'deployment-cards': STANDARD, 'imperial-classes': MINI, 'heroes': MINI, 'upgrade-cards': MINI,
     'reward-cards': MINI, 'supply-cards': MINI, 'form-cards': MINI_FLIPPED, 'epilogue-cards': STANDARD,
-    'skirmish-mission-cards': STANDARD_FLIPPED,
+    'skirmish-missions': STANDARD_FLIPPED,
 } | dict.fromkeys(MISSIONS, STANDARD)
 
 
@@ -45,7 +45,7 @@ RADII = {
     'agenda-cards': CARD_RADIUS, 'deployment-cards': CARD_RADIUS, 'hero-class-cards': CARD_RADIUS,
     'imperial-class-cards': CARD_RADIUS, 'reward-cards': CARD_RADIUS, 'upgrade-cards': CARD_RADIUS,
     'form-cards': CARD_RADIUS, 'command-cards': 35, 'companion-cards': 35, 'supply-cards': 27, 'condition-cards': 24,
-    'card-backs': 22, 'skirmish-mission-cards': CARD_RADIUS, 'epilogue-cards': CARD_RADIUS,
+    'card-backs': 22, 'skirmish-missions': CARD_RADIUS, 'epilogue-cards': CARD_RADIUS,
 } | dict.fromkeys(MISSIONS, CARD_RADIUS)
 SUPERSAMPLE = 4  # the mask is drawn this much bigger and scaled down, for smooth (anti-aliased) corners
 

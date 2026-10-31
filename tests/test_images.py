@@ -78,7 +78,7 @@ def test_process_rounds_cards_but_not_hero_sheets(tmp_path):
 def test_card_backs_size_by_what_they_are_the_back_of():
     assert images.sizes_for('card-backs', 'heroes') == images.MINI
     assert images.sizes_for('card-backs', 'deployment-cards') == images.STANDARD
-    assert images.sizes_for('card-backs', 'skirmish-mission-cards') == images.STANDARD_FLIPPED
+    assert images.sizes_for('card-backs', 'skirmish-missions') == images.STANDARD_FLIPPED
     with pytest.raises(KeyError):
         images.sizes_for('card-backs', 'sources')
     for back_of, sizes in images.BACK_SIZES.items():  # a back has its cards' size

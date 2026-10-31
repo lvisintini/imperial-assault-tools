@@ -38,8 +38,8 @@ EXPANSIONS = {
 }
 # A tile's name starts with its product's: the Core Set's is "Imperial Assault", which the tiles don't say.
 NAMES = {'Imperial Assault': 'Core Set'}
-CAMPAIGN_TYPES = ('campaign-story-mission-cards', 'campaign-threat-mission-cards', 'campaign-hero-side-mission-cards',
-                  'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards', 'agenda-cards')
+CAMPAIGN_TYPES = ('campaign-story-missions', 'campaign-threat-missions', 'campaign-hero-side-missions',
+                  'campaign-ally-side-missions', 'campaign-regular-side-missions', 'agenda-cards')
 
 
 def tile_name(product, number):

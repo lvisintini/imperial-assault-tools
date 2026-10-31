@@ -19,8 +19,8 @@ from ia_tools.dataset import dumps
 from ia_tools.layouts import products_of
 
 SCENARIOS = ('A', 'B')
-SKIRMISH = 'skirmish-mission-cards'
-STORY = 'campaign-story-mission-cards'
+SKIRMISH = 'skirmish-missions'
+STORY = 'campaign-story-missions'
 # What a mission can reward: reward cards, and the Campaign deployment cards (an ally or a villain).
 REWARD_TYPES = ('reward-cards', 'deployment-cards')
 
@@ -142,7 +142,7 @@ def plan(dataset, entries=None):
 
 
 def run(dataset, check=False):
-    """(summary, problems); writes skirmish-mission-cards.json and mission-rewards.json unless checking or there are
+    """(summary, problems); writes skirmish-missions.json and mission-rewards.json unless checking or there are
     problems."""
     cards, rows, summary, problems = plan(dataset)
     if not problems and not check:

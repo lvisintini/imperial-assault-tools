@@ -16,7 +16,7 @@ from collections import Counter
 from ia_tools import settings
 from ia_tools.dataset import dumps
 
-ENTRY_TYPES = ('skirmish-mission-cards', 'raid-missions')
+ENTRY_TYPES = ('skirmish-missions', 'raid-missions')
 SIDES = ('A', 'B')
 # The tile codes typed in the panel's quick add, as the Vassal module names its pieces ("05A", "TS 1A", "HotE01A").
 CODES = {

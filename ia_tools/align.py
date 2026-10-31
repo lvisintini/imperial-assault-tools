@@ -22,8 +22,8 @@ CLASSES = ['imperial-class-cards/hutt-mercenaries-guild-hunters.png', 'imperial-
 FEAT = 'hero-class-cards/davith-elso-embody-the-force.png'
 MISSION_BACK = 'card-backs/threat-mission-return-to-hoth.png'
 # Side mission cards: data 2.0.0's three collections, and 1.x's one.
-SIDE_MISSIONS = ['campaign-hero-side-mission-cards', 'campaign-ally-side-mission-cards',
-                 'campaign-regular-side-mission-cards', 'side-mission-cards']
+SIDE_MISSIONS = ['campaign-hero-side-missions', 'campaign-ally-side-missions',
+                 'campaign-regular-side-missions', 'side-mission-cards']
 
 # content type (or (content type, image field)) → templates, relative to assets/templates (the templates keep the
 # dataset's 1.x paths).
@@ -43,15 +43,15 @@ TEMPLATES = {
     'hero-class-cards': UPGRADES + [FEAT],
     **dict.fromkeys(SIDE_MISSIONS, [f'side-mission-cards/{n}.png'
                                     for n in ('born-from-death', 'cloud-citys-secret', 'homecoming')]),
-    'campaign-story-mission-cards': ['story-mission-cards/chain-of-command.png'],
-    'campaign-threat-mission-cards': ['threat-mission-cards/scouring-of-the-homestead.png'],
+    'campaign-story-missions': ['story-mission-cards/chain-of-command.png'],
+    'campaign-threat-missions': ['threat-mission-cards/scouring-of-the-homestead.png'],
     'form-cards': ['form-cards/clawdite-shapeshifter-scout.png'],
     ('heroes', 'healthy'): ['heroes/murne-rin-healthy.png'],
     ('heroes', 'wounded'): ['heroes/diala-passil-wounded.png'],
 }
 # card-backs, by the content type they're the back of.
 BACK_TEMPLATES = {
-    **dict.fromkeys(SIDE_MISSIONS + ['campaign-story-mission-cards', 'campaign-threat-mission-cards'], [MISSION_BACK]),
+    **dict.fromkeys(SIDE_MISSIONS + ['campaign-story-missions', 'campaign-threat-missions'], [MISSION_BACK]),
     'deployment-cards': ['card-backs/deployment-imperial.png'],
     'heroes': ['card-backs/rebel-hero-gideon-argus.png'],
     'imperial-classes': ['card-backs/imperial-class-inspiring-leadership.png'],

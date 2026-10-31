@@ -1,5 +1,5 @@
 """ia wiki --skirmish: every skirmish mission card, its map and format, and its card image, from the Imperial Assault
-wiki (data 2.0.0's skirmish-mission-cards; the wiki is this collection's image source, as boardwars has none).
+wiki (data 2.0.0's skirmish-missions; the wiki is this collection's image source, as boardwars has none).
 
 The wiki's "Skirmish Mission" page lists every skirmish map with its two missions, under the product they come in:
 

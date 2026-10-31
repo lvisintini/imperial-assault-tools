@@ -220,14 +220,14 @@ def test_missions_link_through_their_index_row(tmp_path, dataset_copy, hash_file
     existing = dataset_copy.records('missions')[0]
     bespin = legacy_id(dataset_copy, 'sources', 3)  # the first mission (Disaster) is Return to Hoth's
     entries = {'product': {'action': 'existing', 'id': bespin}, 'extra': {}, 'items': {
-        'new': {'action': 'new', 'content_type': 'campaign-regular-side-mission-cards',
-                'record': {'name': 'A Brand New Mission'} | backs(dataset_copy, 'campaign-regular-side-mission-cards')},
+        'new': {'action': 'new', 'content_type': 'campaign-regular-side-missions',
+                'record': {'name': 'A Brand New Mission'} | backs(dataset_copy, 'campaign-regular-side-missions')},
         'old': {'action': 'link', 'content_type': existing['content_type'], 'id': existing['content_id']},
     }}
     plan = importer.plan(stage(tmp_path, {'new': CARD, 'old': CARD}, entries), dataset_copy)
     new = next(p.record for p in plan['pending'] if p.key == 'new')
     [row] = plan['missions']
-    assert row | {'id': None} == {'id': None, 'content_type': 'campaign-regular-side-mission-cards',
+    assert row | {'id': None} == {'id': None, 'content_type': 'campaign-regular-side-missions',
                                   'content_id': new['id'], 'map_id': None}
     assert {(r['content_type'], r['content_id']) for r in plan['rows']} == {
         ('missions', row['id']), ('missions', existing['id'])}

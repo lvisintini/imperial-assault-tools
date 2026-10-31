@@ -12,16 +12,16 @@ from ia_tools import settings
 CONTENT_TYPES = [
     'sources', 'source-contents', 'maps', 'agenda-decks', 'agenda-cards', 'command-cards',
     'condition-cards', 'deployment-cards', 'heroes', 'hero-class-cards', 'imperial-classes', 'imperial-class-cards',
-    'supply-cards', 'campaign-story-mission-cards', 'campaign-hero-side-mission-cards',
-    'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards', 'reward-cards', 'companion-cards',
-    'upgrade-cards', 'card-backs', 'campaign-threat-mission-cards', 'form-cards', 'skirmish-mission-cards',
+    'supply-cards', 'campaign-story-missions', 'campaign-hero-side-missions',
+    'campaign-ally-side-missions', 'campaign-regular-side-missions', 'reward-cards', 'companion-cards',
+    'upgrade-cards', 'card-backs', 'campaign-threat-missions', 'form-cards', 'skirmish-missions',
     'raid-missions', 'epilogue-cards', 'miniatures', 'documents', 'missions', 'mission-rewards', 'record-links',
     'map-tiles', 'map-layouts',
 ]
 # The mission card collections missions.json indexes (data 2.0.0; also agenda cards that are missions).
 MISSION_TYPES = [
-    'campaign-story-mission-cards', 'campaign-threat-mission-cards', 'campaign-hero-side-mission-cards',
-    'campaign-ally-side-mission-cards', 'campaign-regular-side-mission-cards', 'skirmish-mission-cards',
+    'campaign-story-missions', 'campaign-threat-missions', 'campaign-hero-side-missions',
+    'campaign-ally-side-missions', 'campaign-regular-side-missions', 'skirmish-missions',
     'raid-missions',
 ]
 # Indexes and join tables: never entered, imported or matched by name.
@@ -30,8 +30,8 @@ INDEX_TYPES = ['source-contents', 'missions', 'mission-rewards', 'record-links',
 # Types renamed in data 2.0.0. The tools use the new names; a 1.x checkout still stores the old ones, and Dataset
 # translates wherever a name meets the files (file names, image folders, source-contents' content_type). 1.x's
 # side-mission-cards was split in three; the tools don't import side missions into 1.x data.
-RENAMED = {'maps': 'skirmish-maps', 'campaign-story-mission-cards': 'story-mission-cards',
-           'campaign-threat-mission-cards': 'threat-mission-cards'}
+RENAMED = {'maps': 'skirmish-maps', 'campaign-story-missions': 'story-mission-cards',
+           'campaign-threat-missions': 'threat-mission-cards'}
 
 
 def canonical(content_type):
@@ -44,7 +44,7 @@ FOREIGN_KEYS = {
     ('agenda-cards', 'agenda_id'): 'agenda-decks',
     ('hero-class-cards', 'hero_id'): 'heroes',
     ('imperial-class-cards', 'class_id'): 'imperial-classes',
-    ('campaign-hero-side-mission-cards', 'hero_id'): 'heroes',  # data 2.0.0: the hero a red side mission is for
+    ('campaign-hero-side-missions', 'hero_id'): 'heroes',  # data 2.0.0: the hero a red side mission is for
     ('epilogue-cards', 'mission_id'): 'missions',  # data 2.0.0: the mission an epilogue ends
 }
 # Data 2.0.0: every card's back (card-backs). Not in FOREIGN_KEYS, which are parents (a hero class card's parent names
