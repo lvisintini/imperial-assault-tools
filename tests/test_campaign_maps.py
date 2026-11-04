@@ -74,3 +74,21 @@ def test_sections_keep_each_tiles_placement():
     assert ic2.parse_sections('﻿' + text) == [
         {'name': 'Start Section', 'hidden': False, 'tiles': [{'texture': 'Core_7A', 'x': 980, 'y': 1000, 'rotation': 90}]},
         {'name': 'Section 2', 'hidden': True, 'tiles': []}]
+
+
+def test_corrections_swap_sides_and_keep_placements(monkeypatch):
+    monkeypatch.setattr(ic2, 'CORRECTIONS', {'CORE4.json': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}})
+    placement = {'x': 1000.0, 'y': 980.0, 'rotation': 270.0}
+    cache = {'missions': [
+        {'file': 'CORE4.json', 'tiles': {'Core_24A': 1, 'Core_32A': 2, 'Core_6B': 1}, 'sections': [
+            {'name': 'Start', 'hidden': False, 'tiles': [{'texture': 'Core_32A', **placement}]},
+            {'name': 'Two', 'hidden': True, 'tiles': [{'texture': 'Core_24A', **placement},
+                                                      {'texture': 'Core_32A', **placement},
+                                                      {'texture': 'Core_6B', **placement}]}]},
+        {'file': 'CORE5.json', 'tiles': {'Core_24A': 1}, 'sections': [
+            {'name': 'Start', 'hidden': False, 'tiles': [{'texture': 'Core_24A', **placement}]}]}]}
+    fixed, other = ic2.correct(cache)['missions']
+    assert fixed['tiles'] == {'Core_24B': 1, 'Core_32B': 2, 'Core_6B': 1}
+    assert [t['texture'] for s in fixed['sections'] for t in s['tiles']] == ['Core_32B', 'Core_24B', 'Core_32B', 'Core_6B']
+    assert all({k: t[k] for k in placement} == placement for s in fixed['sections'] for t in s['tiles'])
+    assert other['tiles'] == {'Core_24A': 1}

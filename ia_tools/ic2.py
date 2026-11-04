@@ -13,7 +13,10 @@ ia ic2 fetches them at COMMIT and writes staging/ic2/ic2.json:
                    "sections": [{"name", "hidden", "tiles": [{"texture", "x", "y", "rotation"}]}]}]}
 Tiles placed in several map sections, or several times in one, add up. A section is hidden until the mission reveals
 it (invisibleUntilActivated). A tile's x and y are IC2's editor coordinates (10 per square, y down) and its rotation
-is in degrees; IC2 draws a tile turned by -rotation about its pivot (TileRenderer.cs)."""
+is in degrees; IC2 draws a tile turned by -rotation about its pivot (TileRenderer.cs).
+
+load() applies CORRECTIONS: the tile sides IC2 gets wrong, by mission file, each placement keeping its position and
+rotation (the right side's tabs then fit, which ia maps checks)."""
 import json
 import re
 from collections import Counter
@@ -29,6 +32,10 @@ MISSIONS = re.compile(r'^ImperialCommander2/Assets/Resources/SagaMissions/([^/]+
 TEXTURE = re.compile(r'^([A-Za-z]+)_(\d+)([AB])$')
 # The tiles' own images, cut to the grid: only used to tell how each Vassal image is turned (ia maps).
 TEXTURES = re.compile(r'^ImperialCommander2/Assets/SagaTiles/[^/]+/([A-Za-z]+_\d+[AB])\.png$')
+# {mission file: {IC2's texture: the right one}}, from the Campaign Guide's maps.
+CORRECTIONS = {
+    'CORE4.json': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'},  # Desperate Hour
+}
 
 
 def lenient_json(text):
@@ -110,5 +117,24 @@ def fetch_textures(session, root=None, log=print):
     return found
 
 
+def correct(cache):
+    """The cache with CORRECTIONS applied."""
+    for mission in cache['missions']:
+        swap = CORRECTIONS.get(mission['file'], {})
+        if not swap:
+            continue
+        missing = set(swap) - set(mission['tiles'])
+        if missing:
+            raise ValueError(f"{mission['file']}: no {sorted(missing)} to correct")
+        for section in mission['sections']:
+            for tile in section['tiles']:
+                tile['texture'] = swap.get(tile['texture'], tile['texture'])
+        tiles = Counter()
+        for texture, count in mission['tiles'].items():
+            tiles[swap.get(texture, texture)] += count
+        mission['tiles'] = dict(sorted(tiles.items()))
+    return cache
+
+
 def load(root=None):
-    return json.loads(((root or settings.STAGING) / 'ic2' / 'ic2.json').read_text(encoding='utf-8'))
+    return correct(json.loads(((root or settings.STAGING) / 'ic2' / 'ic2.json').read_text(encoding='utf-8')))
