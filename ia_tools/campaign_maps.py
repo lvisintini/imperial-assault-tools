@@ -16,11 +16,18 @@ The tools compare images numerically; they never look at them.
 
 Writes staging/campaign-maps/:
 - <map slug>.png for each campaign map: 64 px per square, the tiles only (no doors, crates or tokens), the sections
-  drawn in order (later ones on top), transparent around the tiles and cropped to them. A map whose sections replace
-  each other during the mission (more than OVERLAP of it covered twice) is drawn with the sections shown at the start;
+  drawn in order (later ones on top), transparent around the tiles and cropped to them. A mission whose correction
+  (ic2.CORRECTIONS) names its main sections is drawn with those, and each of its other sections is drawn on its own
+  as <map slug>-hidden-<n>.png, in IC2's order: the parts of the map revealed during the mission. Any other map is
+  drawn with every section, or, when its sections replace each other (more than OVERLAP of it covered twice), with
+  the sections shown at the start;
 - manifest.json: {"ic2_commit", "turns": {"<product> <number><side>": {"turn", "scores", "by"}},
-  "maps": [{"name", "map_id", "ic2", "file", "size", "bytes", "sections": "all" | "start", "overlap"}]}. overlap is the
-  share of the drawn tile pixels that two tiles cover (tabs' anti-aliased edges make a little)."""
+  "maps": [{"name", "map_id", "ic2", "file", "size", "bytes", "sections": "all" | "start" | "main", "overlap",
+            "hidden": [{"section", "file", "size", "bytes"}]}]}. overlap is the share of the drawn tile pixels that
+  two tiles cover (tabs' anti-aliased edges make a little).
+
+write() puts them in the data repo: the images in images/large/maps and images/small/maps (the same file), each
+campaign map's hidden_images, and its map-layouts rows (the corrected mission's tiles)."""
 import json
 import re
 from pathlib import Path
@@ -212,12 +219,15 @@ def save_turns(save, pieces, mission):
             if len(f) == 1 and len(rotations.get(key, [])) == 1}
 
 
-def draw(mission, sides, turns, start_only=False):
+def draw(mission, sides, turns, start_only=False, sections=None):
     """(RGBA image, overlap share). start_only: only the sections shown when the mission starts (the first section if
-    IC2 hides them all)."""
+    IC2 hides them all). sections: only these (names)."""
     from PIL import Image
 
-    shown = [s for s in mission['sections'] if not (start_only and s['hidden'])] or mission['sections'][:1]
+    if sections is not None:
+        shown = [s for s in mission['sections'] if s['name'] in sections]
+    else:
+        shown = [s for s in mission['sections'] if not (start_only and s['hidden'])] or mission['sections'][:1]
     pieces = []
     for section in shown:
         for tile in section['tiles']:
@@ -239,9 +249,13 @@ def draw(mission, sides, turns, start_only=False):
     return canvas.crop(canvas.getbbox()), round(float((count > 1).sum() / covered), 4) if covered else 0.0
 
 
+NOT_CAMPAIGN = ('skirmish-missions', 'raid-missions')
+
+
 def campaign_maps(dataset):
-    """{normalised name: map record} for the maps without an image (data 2.0.0's campaign maps)."""
-    return {normalise(m['name']): m for m in dataset.records('maps') if m['image'] is None}
+    """{normalised name: map record} for the campaign missions' maps."""
+    ids = {m['map_id'] for m in dataset.records('missions') if m['content_type'] not in NOT_CAMPAIGN}
+    return {normalise(m['name']): m for m in dataset.records('maps') if m['id'] in ids}
 
 
 def run(module, cache, textures, dataset, sample=None, out=None, log=print):
@@ -266,21 +280,97 @@ def run(module, cache, textures, dataset, sample=None, out=None, log=print):
         name = record['name'] if record else mission['name']
         if record is None:
             problems.append(f"{mission['name']}: no campaign map of that name")
-        image, overlap = draw(mission, sides, turns)
-        sections = 'all'
-        if overlap > OVERLAP:
-            image, overlap = draw(mission, sides, turns, start_only=True)
-            sections = 'start'
         file = f'{slugify(name)}.png'
+        hidden = []
+        if 'main' in mission:
+            image, overlap = draw(mission, sides, turns, sections=mission['main'])
+            sections = 'main'
+            for section in mission['sections']:
+                if section['name'] in mission['main'] or not section['tiles']:
+                    continue
+                part, _ = draw(mission, sides, turns, sections=[section['name']])
+                hidden.append({'section': section['name'], 'file': f'{slugify(name)}-hidden-{len(hidden) + 1}.png'})
+                part.save(out / hidden[-1]['file'], optimize=True)
+                hidden[-1] |= {'size': list(part.size), 'bytes': (out / hidden[-1]['file']).stat().st_size}
+        else:
+            image, overlap = draw(mission, sides, turns)
+            sections = 'all'
+            if overlap > OVERLAP:
+                image, overlap = draw(mission, sides, turns, start_only=True)
+                sections = 'start'
         image.save(out / file, optimize=True)
         maps.append({'name': name, 'map_id': record and record['id'], 'ic2': f"{mission['folder']}/{mission['file']}",
                      'file': file, 'size': list(image.size), 'bytes': (out / file).stat().st_size,
-                     'sections': sections, 'overlap': overlap})
+                     'sections': sections, 'overlap': overlap, 'hidden': hidden})
         log(f"  {file}: {image.size[0]}x{image.size[1]} px, {maps[-1]['bytes'] / 1e6:.1f} MB"
             + (', start section only' if sections == 'start' else '')
+            + (f', {len(hidden)} hidden' if hidden else '')
             + (f', {overlap:.1%} covered twice' if overlap else ''))
     manifest = {'ic2_commit': cache['commit'],
                 'turns': {k: {f: t[f] for f in ('turn', 'scores', 'by', 'fits') if f in t} for k, t in turns.items()},
                 'maps': maps}
     (out / 'manifest.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding='utf-8')
     return manifest, problems
+
+
+def write(manifest, cache, dataset, out=None, log=print):
+    """Puts the drawn maps in the data repo (see the module's docstring). Every campaign map must be in the manifest
+    (a full run, not a sample). Returns the problems; nothing is written if there are any."""
+    import shutil
+
+    from ia_tools.dataset import dumps
+    from ia_tools.tiles import EXPANSIONS, tile_name
+
+    out = Path(out or settings.STAGING / 'campaign-maps')
+    records = campaign_maps(dataset)
+    drawn = {m['map_id']: m for m in manifest['maps'] if m['map_id']}
+    problems = [f"{r['name']}: not drawn" for r in records.values() if r['id'] not in drawn]
+    missions = {f"{m['folder']}/{m['file']}": m for m in cache['missions']}
+    tiles = {t['name']: t['id'] for t in dataset.records('map-tiles')}
+    rows = {}
+    for map_id, entry in drawn.items():
+        mission = missions[entry['ic2']]
+        rows[map_id] = []
+        for texture, count in mission['tiles'].items():
+            expansion, number, side = ic2.TEXTURE.match(texture).groups()
+            name = tile_name(EXPANSIONS[expansion], int(number))
+            if name not in tiles:
+                problems.append(f"{entry['name']}: no tile {name}")
+                continue
+            rows[map_id].append({'map_id': map_id, 'tile_id': tiles[name], 'side': side, 'count': count})
+    if problems:
+        return problems
+
+    root = dataset.root / 'images'
+    files = {f"maps/{entry['file']}" for entry in drawn.values()}
+    files |= {f"maps/{h['file']}" for entry in drawn.values() for h in entry['hidden']}
+    slugs = {Path(entry['file']).stem for entry in drawn.values()}
+    for size in ('large', 'small'):
+        folder = root / size / 'maps'
+        folder.mkdir(parents=True, exist_ok=True)
+        for old in folder.glob('*-hidden-*.png'):  # hidden images no map has any more
+            if old.stem.rsplit('-hidden-', 1)[0] in slugs and f'maps/{old.name}' not in files:
+                old.unlink()
+        for file in files:
+            shutil.copyfile(out / Path(file).name, root / size / file)
+
+    maps = []
+    for record in dataset.records('maps'):
+        entry = drawn.get(record['id'])
+        hidden = [f"maps/{h['file']}" for h in entry['hidden']] if entry else record.get('hidden_images', [])
+        if entry:
+            record = record | {'image': f"maps/{entry['file']}"}
+        maps.append({k: v for k, v in record.items() if k != 'hidden_images'} | {'hidden_images': hidden})
+    dataset.path('maps').write_text(dumps(maps), encoding='utf-8')
+
+    layouts, placed = [], set()
+    for row in dataset.records('map-layouts'):
+        if row['map_id'] not in rows:
+            layouts.append(row)
+        elif row['map_id'] not in placed:  # a map's rows stay where its first one was
+            layouts += rows[row['map_id']]
+            placed.add(row['map_id'])
+    layouts += [r for map_id, new in rows.items() if map_id not in placed for r in new]
+    dataset.path('map-layouts').write_text(dumps(layouts), encoding='utf-8')
+    log(f'  {len(drawn)} maps, {len(files)} images, {sum(len(r) for r in rows.values())} layout rows')
+    return []

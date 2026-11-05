@@ -1,6 +1,7 @@
 import json
 
 import numpy as np
+import pytest
 
 from ia_tools import campaign_maps, ic2
 
@@ -76,19 +77,102 @@ def test_sections_keep_each_tiles_placement():
         {'name': 'Section 2', 'hidden': True, 'tiles': []}]
 
 
-def test_corrections_swap_sides_and_keep_placements(monkeypatch):
-    monkeypatch.setattr(ic2, 'CORRECTIONS', {'CORE4.json': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}})
-    placement = {'x': 1000.0, 'y': 980.0, 'rotation': 270.0}
-    cache = {'missions': [
-        {'file': 'CORE4.json', 'tiles': {'Core_24A': 1, 'Core_32A': 2, 'Core_6B': 1}, 'sections': [
-            {'name': 'Start', 'hidden': False, 'tiles': [{'texture': 'Core_32A', **placement}]},
-            {'name': 'Two', 'hidden': True, 'tiles': [{'texture': 'Core_24A', **placement},
-                                                      {'texture': 'Core_32A', **placement},
-                                                      {'texture': 'Core_6B', **placement}]}]},
-        {'file': 'CORE5.json', 'tiles': {'Core_24A': 1}, 'sections': [
-            {'name': 'Start', 'hidden': False, 'tiles': [{'texture': 'Core_24A', **placement}]}]}]}
-    fixed, other = ic2.correct(cache)['missions']
-    assert fixed['tiles'] == {'Core_24B': 1, 'Core_32B': 2, 'Core_6B': 1}
-    assert [t['texture'] for s in fixed['sections'] for t in s['tiles']] == ['Core_32B', 'Core_24B', 'Core_32B', 'Core_6B']
-    assert all({k: t[k] for k in placement} == placement for s in fixed['sections'] for t in s['tiles'])
-    assert other['tiles'] == {'Core_24A': 1}
+def ic2_mission():
+    at = {'x': 1000.0, 'y': 980.0, 'rotation': 270.0}
+    return {'file': 'CORE4.json', 'name': 'Test', 'tiles': {}, 'sections': [
+        {'name': 'Start', 'hidden': False, 'tiles': [{'texture': 'Core_32A', **at}, {'texture': 'Core_18B', **at}]},
+        {'name': 'Two', 'hidden': True, 'tiles': [{'texture': 'Core_24A', **at}, {'texture': 'Core_32A', **at},
+                                                  {'texture': 'Core_18B', **at}]},
+        {'name': 'Three', 'hidden': True, 'tiles': [{'texture': 'Core_36B', **at}]}]}
+
+
+def textures(mission):
+    return {s['name']: [t['texture'] for t in s['tiles']] for s in mission['sections']}
+
+
+def test_corrections_swap_sides_and_keep_placements():
+    cache = {'missions': [ic2_mission(), {**ic2_mission(), 'file': 'CORE5.json'}]}
+    fixed, other = ic2.correct(cache, {'CORE4.json': {'sides': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}},
+                                       'CORE5.json': {'section sides': {'Two': {'Core_32A': 'Core_32B'}}}})['missions']
+    assert textures(fixed) == {'Start': ['Core_32B', 'Core_18B'], 'Two': ['Core_24B', 'Core_32B', 'Core_18B'],
+                               'Three': ['Core_36B']}
+    assert fixed['tiles'] == {'Core_18B': 2, 'Core_24B': 1, 'Core_32B': 2, 'Core_36B': 1}
+    assert all((t['x'], t['y'], t['rotation']) == (1000, 980, 270) for s in fixed['sections'] for t in s['tiles'])
+    assert textures(other)['Start'] == ['Core_32A', 'Core_18B'] and textures(other)['Two'][1] == 'Core_32B'
+
+
+def test_corrections_drop_add_count_and_choose_the_main_sections():
+    added = {'texture': 'Core_18B', 'x': 0.0, 'y': 0.0, 'rotation': 90.0}
+    (fixed,) = ic2.correct({'missions': [ic2_mission()]}, {'CORE4.json': {
+        'drop': ['Three', ['Start', 'Core_18B']], 'add': {'Two': [added]}, 'counts': {'Core_18B': 1},
+        'main': ['Start']}})['missions']
+    assert textures(fixed) == {'Start': ['Core_32A'], 'Two': ['Core_24A', 'Core_32A', 'Core_18B', 'Core_18B']}
+    assert fixed['tiles'] == {'Core_18B': 1, 'Core_24A': 1, 'Core_32A': 2}
+    assert fixed['main'] == ['Start']
+
+
+@pytest.mark.parametrize('fix', [
+    {'sides': {'Core_7A': 'Core_7B'}}, {'section sides': {'Three': {'Core_32A': 'Core_32B'}}}, {'drop': ['Four']},
+    {'drop': [['Three', 'Core_18B']]}, {'add': {'Four': []}}, {'counts': {'Core_7A': 1}}, {'main': ['Four']},
+    {'add': {'Two': [{'texture': 'Door', 'x': 0, 'y': 0, 'rotation': 0}]}}, {'side': {}},
+])
+def test_corrections_name_what_the_mission_has(fix):
+    with pytest.raises(ValueError):
+        ic2.correct({'missions': [ic2_mission()]}, {'CORE4.json': fix})
+
+
+
+def fake_run(dataset, out):
+    """A manifest and IC2 cache that draw every campaign map with the tiles the data has for it, and the drawn files
+    (1 x 1 px)."""
+    from PIL import Image
+
+    from ia_tools.tiles import EXPANSIONS, NAMES
+
+    codes = {NAMES.get(product, product): code for code, product in EXPANSIONS.items()}
+    tiles = {t['id']: t['name'] for t in dataset.records('map-tiles')}
+    rows = {}
+    for row in dataset.records('map-layouts'):
+        product, number = tiles[row['tile_id']].rsplit(' ', 1)
+        rows.setdefault(row['map_id'], {})[f"{codes[product]}_{int(number)}{row['side']}"] = row['count']
+    out.mkdir(parents=True, exist_ok=True)
+    maps, missions = [], []
+    for i, record in enumerate(campaign_maps.campaign_maps(dataset).values()):
+        file = record['image'].split('/')[-1]
+        Image.new('RGBA', (1, 1)).save(out / file)
+        maps.append({'name': record['name'], 'map_id': record['id'], 'ic2': f'F/M{i}.json', 'file': file, 'hidden': []})
+        missions.append({'folder': 'F', 'file': f'M{i}.json', 'tiles': dict(sorted(rows[record['id']].items()))})
+    return {'maps': maps}, {'missions': missions}
+
+
+def test_write_puts_the_maps_hidden_images_and_layouts_in_the_data(dataset_copy, tmp_path):
+    from PIL import Image
+
+    out = tmp_path / 'campaign-maps'
+    manifest, cache = fake_run(dataset_copy, out)
+    before = {p: dataset_copy.path(p).read_text(encoding='utf-8') for p in ('maps', 'map-layouts')}
+    assert campaign_maps.write(manifest, cache, dataset_copy, out=out, log=lambda *a: None) == []
+    layouts = json.loads(dataset_copy.path('map-layouts').read_text(encoding='utf-8'))
+    assert layouts == json.loads(before['map-layouts'])  # the same tiles: the same rows, in the same order
+    maps = json.loads(dataset_copy.path('maps').read_text(encoding='utf-8'))
+    assert all(list(m) == ['id', 'name', 'image', 'hidden_images'] and m['hidden_images'] == [] for m in maps)
+
+    entry, mission = manifest['maps'][0], cache['missions'][0]
+    stem = entry['file'][:-4]
+    Image.new('RGBA', (1, 1)).save(out / f'{stem}-hidden-1.png')
+    (dataset_copy.root / 'images' / 'large' / 'maps' / f'{stem}-hidden-2.png').write_bytes(b'stale')
+    entry['hidden'] = [{'section': 'Two', 'file': f'{stem}-hidden-1.png'}]
+    mission['tiles'] = {'Core_1A': 2}
+    assert campaign_maps.write(manifest, cache, dataset_copy, out=out, log=lambda *a: None) == []
+    maps = json.loads(dataset_copy.path('maps').read_text(encoding='utf-8'))
+    assert next(m for m in maps if m['id'] == entry['map_id'])['hidden_images'] == [f'maps/{stem}-hidden-1.png']
+    for size in ('large', 'small'):
+        assert sorted(p.name for p in (dataset_copy.root / 'images' / size / 'maps').glob(f'{stem}-hidden-*')) == [
+            f'{stem}-hidden-1.png']
+    layouts = json.loads(dataset_copy.path('map-layouts').read_text(encoding='utf-8'))
+    own = [i for i, r in enumerate(layouts) if r['map_id'] == entry['map_id']]
+    first = next(i for i, r in enumerate(json.loads(before['map-layouts'])) if r['map_id'] == entry['map_id'])
+    assert own == [first] and layouts[first]['side'] == 'A' and layouts[first]['count'] == 2
+
+    del manifest['maps'][1]
+    assert campaign_maps.write(manifest, cache, dataset_copy, out=out, log=lambda *a: None) != []
