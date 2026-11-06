@@ -253,9 +253,18 @@ def draw(mission, sides, turns, start_only=False, sections=None):
 NOT_CAMPAIGN = ('skirmish-missions', 'raid-missions')
 
 
+# A map that several missions play on is named after them all, in order: "Desperate Hour / Last Stand".
+SHARED = ' / '
+
+
+def file_stem(name):
+    """A map's image file name without .png: its missions' slugs joined by "--" ("desperate-hour--last-stand")."""
+    return '--'.join(slugify(part) for part in name.split(SHARED))
+
+
 def campaign_maps(dataset):
-    """{normalised mission name: map record} for the campaign missions. A map is named after one of its missions;
-    another can use it too (Last Stand plays on Desperate Hour's)."""
+    """{normalised mission name: map record} for the campaign missions. A map is named after its mission, or after
+    each of the missions that play on it (SHARED)."""
     maps = {m['id']: m for m in dataset.records('maps')}
     names = {}
     found = {}
@@ -291,12 +300,16 @@ def run(module, cache, textures, dataset, sample=None, out=None, log=print):
         name = record['name'] if record else mission['name']
         if record is None:
             problems.append(f"{mission['name']}: no campaign mission of that name")
-        elif normalise(name) != normalise(mission['name']):  # it plays on another mission's map, drawn from that one
-            if mission['tiles'] != by_name[normalise(name)]['tiles']:
-                problems.append(f"{mission['name']}: uses {name}'s map, but IC2's tiles (as corrected) differ")
-            log(f"  {mission['name']}: {name}'s map")
-            continue
-        file = f'{slugify(name)}.png'
+        else:
+            named = [normalise(part) for part in name.split(SHARED)]
+            if normalise(mission['name']) not in named:
+                problems.append(f"{mission['name']}: plays on {name}, which isn't named after it")
+            elif normalise(mission['name']) != named[0]:  # a shared map is drawn from its first mission
+                if mission['tiles'] != by_name[named[0]]['tiles']:
+                    problems.append(f"{mission['name']}: plays on {name}, but IC2's tiles (as corrected) differ")
+                log(f"  {mission['name']}: on {name}")
+                continue
+        file = f'{file_stem(name)}.png'
         hidden = []
         if 'main' in mission:
             image, overlap = draw(mission, sides, turns, sections=mission['main'])
@@ -304,7 +317,7 @@ def run(module, cache, textures, dataset, sample=None, out=None, log=print):
             for section in mission['hidden']:
                 part, _ = draw(mission, sides, turns, sections=section['sections'])
                 hidden.append({'name': section['name'], 'sections': section['sections'],
-                               'file': f'{slugify(name)}-hidden-{len(hidden) + 1}.png'})
+                               'file': f'{file_stem(name)}-hidden-{len(hidden) + 1}.png'})
                 part.save(out / hidden[-1]['file'], optimize=True)
                 hidden[-1] |= {'size': list(part.size), 'bytes': (out / hidden[-1]['file']).stat().st_size}
         else:
@@ -360,12 +373,16 @@ def write(manifest, cache, dataset, out=None, log=print):
     files = {f"maps/{entry['file']}" for entry in drawn.values()}
     files |= {f"maps/{h['file']}" for entry in drawn.values() for h in entry['hidden']}
     slugs = {Path(entry['file']).stem for entry in drawn.values()}
+    replaced = {path for r in dataset.records('maps') if r['id'] in drawn
+                for path in [r['image']] + [h['image'] for h in r.get('hidden_sections', [])]}
     for size in ('large', 'small'):
         folder = root / size / 'maps'
         folder.mkdir(parents=True, exist_ok=True)
         for old in folder.glob('*-hidden-*.png'):  # hidden images no map has any more
             if old.stem.rsplit('-hidden-', 1)[0] in slugs and f'maps/{old.name}' not in files:
                 old.unlink()
+        for old in replaced - files:  # a renamed map's images
+            (root / size / old).unlink(missing_ok=True)
         for file in files:
             shutil.copyfile(out / Path(file).name, root / size / file)
 

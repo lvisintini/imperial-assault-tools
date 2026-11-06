@@ -198,3 +198,8 @@ def test_write_puts_the_maps_hidden_sections_and_layouts_in_the_data(dataset_cop
 
     del manifest['maps'][1]
     assert campaign_maps.write(manifest, cache, dataset_copy, out=out, log=lambda *a: None) != []
+
+
+def test_a_shared_maps_file_joins_its_missions_slugs():
+    assert campaign_maps.file_stem('Desperate Hour / Last Stand') == 'desperate-hour--last-stand'
+    assert campaign_maps.file_stem("Jabba's Realm") == campaign_maps.slugify("Jabba's Realm")
