@@ -254,9 +254,18 @@ NOT_CAMPAIGN = ('skirmish-missions', 'raid-missions')
 
 
 def campaign_maps(dataset):
-    """{normalised name: map record} for the campaign missions' maps."""
-    ids = {m['map_id'] for m in dataset.records('missions') if m['content_type'] not in NOT_CAMPAIGN}
-    return {normalise(m['name']): m for m in dataset.records('maps') if m['id'] in ids}
+    """{normalised mission name: map record} for the campaign missions. A map is named after one of its missions;
+    another can use it too (Last Stand plays on Desperate Hour's)."""
+    maps = {m['id']: m for m in dataset.records('maps')}
+    names = {}
+    found = {}
+    for mission in dataset.records('missions'):
+        if mission['content_type'] in NOT_CAMPAIGN:
+            continue
+        if mission['content_type'] not in names:
+            names[mission['content_type']] = {r['id']: r['name'] for r in dataset.records(mission['content_type'])}
+        found[normalise(names[mission['content_type']][mission['content_id']])] = maps[mission['map_id']]
+    return found
 
 
 def run(module, cache, textures, dataset, sample=None, out=None, log=print):
@@ -276,11 +285,17 @@ def run(module, cache, textures, dataset, sample=None, out=None, log=print):
         problems.append(f'IC2 has no mission named {sorted(wanted - {normalise(m["name"]) for m in missions})}')
     out.mkdir(parents=True, exist_ok=True)
     maps = []
+    by_name = {normalise(m['name']): m for m in cache['missions']}
     for mission in missions:
         record = records.get(normalise(mission['name']))
         name = record['name'] if record else mission['name']
         if record is None:
-            problems.append(f"{mission['name']}: no campaign map of that name")
+            problems.append(f"{mission['name']}: no campaign mission of that name")
+        elif normalise(name) != normalise(mission['name']):  # it plays on another mission's map, drawn from that one
+            if mission['tiles'] != by_name[normalise(name)]['tiles']:
+                problems.append(f"{mission['name']}: uses {name}'s map, but IC2's tiles (as corrected) differ")
+            log(f"  {mission['name']}: {name}'s map")
+            continue
         file = f'{slugify(name)}.png'
         hidden = []
         if 'main' in mission:

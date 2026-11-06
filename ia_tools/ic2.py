@@ -50,7 +50,7 @@ CORRECTIONS = {
     'CORE4.json': {'sides': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}},  # Desperate Hour
     'CORE6.json': {  # Fly Solo: the second 18B, right of 6B and under 16B
         'add': {'Start Section': [{'texture': 'Core_18B', 'x': 1030.0, 'y': 970.0, 'rotation': 270.0}]}},
-    'CORE9.json': {'sides': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}},  # Last Stand
+    'CORE9.json': {'sides': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}},  # Last Stand, on Desperate Hour's map
     'CORE26.json': {'drop': ['Section 3 - Control']},  # The Spice Job
     'CORE31.json': {'drop': ['Section 3 - Control Room']},  # Means of Production
     'EMPIRE1.json': {  # Capital Escape: the 18B under 2B a square to the right

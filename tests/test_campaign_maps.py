@@ -158,7 +158,7 @@ def fake_run(dataset, out):
         rows.setdefault(row['map_id'], {})[f"{codes[product]}_{int(number)}{row['side']}"] = row['count']
     out.mkdir(parents=True, exist_ok=True)
     maps, missions = [], []
-    for i, record in enumerate(campaign_maps.campaign_maps(dataset).values()):
+    for i, record in enumerate({r['id']: r for r in campaign_maps.campaign_maps(dataset).values()}.values()):
         file = record['image'].split('/')[-1]
         Image.new('RGBA', (1, 1)).save(out / file)
         maps.append({'name': record['name'], 'map_id': record['id'], 'ic2': f'F/M{i}.json', 'file': file, 'hidden': []})
