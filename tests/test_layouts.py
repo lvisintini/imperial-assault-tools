@@ -81,7 +81,8 @@ def test_run_writes_the_maps_marked_done(dataset):
 
     layouts.run(dataset)
     written = json.loads(dataset.path('map-layouts').read_text(encoding='utf-8'))
-    assert written == before + [{'map_id': first['id'], 'tile_id': tile['id'], 'side': 'B', 'count': 1}]
+    assert written == layouts.sort_rows(dataset, before + [{'map_id': first['id'], 'tile_id': tile['id'], 'side': 'B',
+                                                             'count': 1}])
 
     # Run again after a correction: the map's rows are replaced, not added to.
     entries = layouts.load()
@@ -90,7 +91,26 @@ def test_run_writes_the_maps_marked_done(dataset):
     dataset._data.pop('map-layouts')
     assert layouts.run(dataset)[0]['replacing'] == 1
     written = json.loads(dataset.path('map-layouts').read_text(encoding='utf-8'))
-    assert written == before + [{'map_id': first['id'], 'tile_id': tile['id'], 'side': 'A', 'count': 1}]
+    assert written == layouts.sort_rows(dataset, before + [{'map_id': first['id'], 'tile_id': tile['id'], 'side': 'A',
+                                                             'count': 1}])
+
+
+def test_rows_sort_by_mission_product_map_name_then_tiles_newest_product_first(dataset_copy):
+    dataset = dataset_copy
+    codes = layouts.product_codes(dataset)
+    by_name = {s['name']: s['id'] for s in dataset.records('sources')}
+    assert codes[by_name['Imperial Assault']] == ('SWI01', 0)
+    assert codes[by_name['Luke Skywalker']] == ('SWI01', 1)  # no code: right after the Core Set
+    rows = layouts.sort_rows(dataset, dataset.records('map-layouts'))
+    assert sorted(map(json.dumps, rows)) == sorted(map(json.dumps, dataset.records('map-layouts')))
+    names = {m['id']: m['name'] for m in dataset.records('maps')}
+    order = list(dict.fromkeys(names[r['map_id']] for r in rows))
+    assert order.index('Moisture Farm') > order.index('Aftermath')  # a Luke pack map after the Core Set's
+    assert order.index('Imperial Command Hub') < order.index('Echo Base')  # SWI17 before SWI19, though released later
+    tiles = {t['id']: t for t in dataset.records('map-tiles')}
+    own = [(tiles[r['tile_id']]['name'], r['side']) for r in rows if names[r['map_id']] == 'Into a Corner']
+    assert own[0][0].startswith('Heart of the Empire') and own[-1][0].startswith('Core Set') and own == sorted(
+        own, key=lambda t: (not t[0].startswith('Heart'), t))
 
 
 def test_run_writes_nothing_with_problems(dataset):

@@ -28,7 +28,8 @@ Writes staging/campaign-maps/:
   two tiles cover (tabs' anti-aliased edges make a little).
 
 write() puts them in the data repo: the images in images/large/maps and images/small/maps (the same file), each
-campaign map's hidden_sections ({name, image}), and its map-layouts rows (the corrected mission's tiles)."""
+campaign map's hidden_sections ({name, image}), and its map-layouts rows (the corrected mission's tiles), the file
+sorted as layouts.row_order says."""
 import json
 import re
 from pathlib import Path
@@ -347,6 +348,7 @@ def write(manifest, cache, dataset, out=None, log=print):
     import shutil
 
     from ia_tools.dataset import dumps
+    from ia_tools.layouts import sort_rows
     from ia_tools.tiles import EXPANSIONS, tile_name
 
     out = Path(out or settings.STAGING / 'campaign-maps')
@@ -403,14 +405,8 @@ def write(manifest, cache, dataset, out=None, log=print):
         maps.append(fields)
     dataset.path('maps').write_text(dumps(maps), encoding='utf-8')
 
-    layouts, placed = [], set()
-    for row in dataset.records('map-layouts'):
-        if row['map_id'] not in rows:
-            layouts.append(row)
-        elif row['map_id'] not in placed:  # a map's rows stay where its first one was
-            layouts += rows[row['map_id']]
-            placed.add(row['map_id'])
-    layouts += [r for map_id, new in rows.items() if map_id not in placed for r in new]
+    layouts = [row for row in dataset.records('map-layouts') if row['map_id'] not in rows]
+    layouts = sort_rows(dataset, layouts + [r for new in rows.values() for r in new], maps)  # as maps.json now names them
     dataset.path('map-layouts').write_text(dumps(layouts), encoding='utf-8')
     log(f'  {len(drawn)} maps, {len(files)} images, {sum(len(r) for r in rows.values())} layout rows')
     return []

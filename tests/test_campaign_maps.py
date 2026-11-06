@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from ia_tools import campaign_maps, ic2
+from ia_tools.layouts import sort_rows
 
 
 def side(width, height, seed=0, tabs=(False, False)):
@@ -174,7 +175,7 @@ def test_write_puts_the_maps_hidden_sections_and_layouts_in_the_data(dataset_cop
     before = {p: dataset_copy.path(p).read_text(encoding='utf-8') for p in ('maps', 'map-layouts')}
     assert campaign_maps.write(manifest, cache, dataset_copy, out=out, log=lambda *a: None) == []
     layouts = json.loads(dataset_copy.path('map-layouts').read_text(encoding='utf-8'))
-    assert layouts == json.loads(before['map-layouts'])  # the same tiles: the same rows, in the same order
+    assert layouts == sort_rows(dataset_copy, json.loads(before['map-layouts']))  # the same tiles: the same rows, sorted
     maps = json.loads(dataset_copy.path('maps').read_text(encoding='utf-8'))
     assert all(list(m) == ['id', 'name', 'image', 'hidden_sections'] and m['hidden_sections'] == [] for m in maps)
 
@@ -192,9 +193,8 @@ def test_write_puts_the_maps_hidden_sections_and_layouts_in_the_data(dataset_cop
         assert sorted(p.name for p in (dataset_copy.root / 'images' / size / 'maps').glob(f'{stem}-hidden-*')) == [
             f'{stem}-hidden-1.png']
     layouts = json.loads(dataset_copy.path('map-layouts').read_text(encoding='utf-8'))
-    own = [i for i, r in enumerate(layouts) if r['map_id'] == entry['map_id']]
-    first = next(i for i, r in enumerate(json.loads(before['map-layouts'])) if r['map_id'] == entry['map_id'])
-    assert own == [first] and layouts[first]['side'] == 'A' and layouts[first]['count'] == 2
+    own = [r for r in layouts if r['map_id'] == entry['map_id']]
+    assert [(r['side'], r['count']) for r in own] == [('A', 2)] and layouts == sort_rows(dataset_copy, layouts)
 
     del manifest['maps'][1]
     assert campaign_maps.write(manifest, cache, dataset_copy, out=out, log=lambda *a: None) != []

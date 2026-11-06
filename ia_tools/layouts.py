@@ -8,7 +8,8 @@ staging/map-layouts/entries.json:
     {"maps": {"<map id>": {"tiles": [{"tile_id": "<id>", "side": "A", "count": 2}], "done": true, "note": "..."}}}
 
 The maps entered here are those of the skirmish and raid missions, and any other map with no layout yet. ia layouts
-writes the maps marked done, replacing the rows they had; the other maps' rows stay as they are. A map can't use more
+writes the maps marked done, replacing the rows they had; the other maps' rows stay as they are, and the file is
+sorted as row_order says. A map can't use more
 copies of a tile (both sides together) than all the products hold."""
 import json
 from collections import Counter
@@ -48,6 +49,51 @@ def products_of(dataset, content_type):
         if row['content_type'] == content_type:
             found.setdefault(row['content_id'], []).append(names[row['source_id']])
     return found
+
+
+def product_codes(dataset):
+    """{source id: (product code, 0)}, or (the code before it, 1) for a product without one: the last coded product
+    released on or before it (the Luke and Vader packs follow the Core Set), so it sorts right after that one."""
+    sources = dataset.records('sources')
+    coded = sorted((s['release_date'] or '9999', s['product_code']) for s in sources if s['product_code'])
+    codes = {}
+    for source in sources:
+        if source['product_code']:
+            codes[source['id']] = (source['product_code'], 0)
+        else:
+            before = [code for date, code in coded if date <= (source['release_date'] or '9999')]
+            codes[source['id']] = (before[-1] if before else '', 1)
+    return codes
+
+
+def row_order(dataset, maps=None):
+    """A sort key for map-layouts rows, the order map-layouts.json keeps: by the map's mission product (the earliest
+    product code of its missions' products, see product_codes), the map's name, then the tile's product code
+    descending, its number and the side. maps: the map records to name maps by (default: the dataset's)."""
+    codes = product_codes(dataset)
+    found = {}
+    for row in dataset.records('source-contents'):
+        found.setdefault((row['content_type'], row['content_id']), []).append(codes[row['source_id']])
+    first = {}
+    for mission in dataset.records('missions'):
+        own = found.get(('missions', mission['id']), [])
+        if mission['map_id'] and own:
+            first[mission['map_id']] = min(own + [first.get(mission['map_id'], min(own))])
+    names = {m['id']: m['name'].casefold() for m in (maps or dataset.records('maps'))}
+    tile_codes = {t['id']: min(code for code, _ in found.get(('map-tiles', t['id']), [('~', 0)]))
+                  for t in dataset.records('map-tiles')}
+    rank = {code: i for i, code in enumerate(sorted(set(tile_codes.values()), reverse=True))}
+    numbers = {t['id']: t['number'] for t in dataset.records('map-tiles')}
+
+    def key(row):
+        return (first.get(row['map_id'], ('~', 2)), names.get(row['map_id'], ''),
+                rank.get(tile_codes.get(row['tile_id']), len(rank)), numbers.get(row['tile_id'], 0), row['side'])
+    return key
+
+
+def sort_rows(dataset, rows, maps=None):
+    """map-layouts rows in the file's order (row_order)."""
+    return sorted(rows, key=row_order(dataset, maps))
 
 
 def tiles(dataset):
@@ -141,7 +187,7 @@ def plan(dataset, entries=None):
     summary = {'maps': len(enterable), 'done': len(done), 'left': len(enterable) - len(done),
                'rows': sum(len(entries[m]['tiles']) for m in done),
                'replacing': sum(1 for m in done if enterable[m]['rows'])}
-    return rows, summary, problems
+    return sort_rows(dataset, rows), summary, problems
 
 
 def run(dataset, check=False):
