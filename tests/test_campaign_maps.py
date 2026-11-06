@@ -119,6 +119,11 @@ def test_corrections_move_a_placement_and_name_the_hidden_sections():
     assert [(t['texture'], t['y']) for t in fixed['sections'][1]['tiles']] == [
         ('Core_24A', 980), ('Core_32A', 970), ('Core_18B', 980)]
     assert fixed['hidden'] == [{'name': 'Back rooms', 'sections': ['Two', 'Three']}]
+    at = {'x': 0.0, 'y': 0.0, 'rotation': 0.0}
+    two = {'name': 'Two', 'hidden': True, 'tiles': [{'texture': 'Core_18B', **at}, {'texture': 'Core_18B', **at, 'x': 10.0}]}
+    (dropped,) = ic2.correct({'missions': [{**ic2_mission(), 'sections': [two]}]},
+                             {'CORE4.json': {'drop': [['Two', 'Core_18B', [10.0, 0.0]]]}})['missions']
+    assert [t['x'] for t in dropped['sections'][0]['tiles']] == [0.0]
     (renamed,) = ic2.correct({'missions': [{**ic2_mission(), 'sections': [
         {**s, 'name': n} for s, n in zip(ic2_mission()['sections'], ('Start', 'Section 2 - Cave', 'Section 3'))]}]},
         {'CORE4.json': {'main': ['Start']}})['missions']
@@ -129,7 +134,7 @@ def test_corrections_move_a_placement_and_name_the_hidden_sections():
     {'sides': {'Core_7A': 'Core_7B'}}, {'section sides': {'Three': {'Core_32A': 'Core_32B'}}}, {'drop': ['Four']},
     {'drop': [['Three', 'Core_18B']]}, {'add': {'Four': []}}, {'counts': {'Core_7A': 1}}, {'main': ['Four']},
     {'add': {'Two': [{'texture': 'Door', 'x': 0, 'y': 0, 'rotation': 0}]}}, {'side': {}},
-    {'move': {'Two': [['Core_32A', [0.0, 0.0], [1.0, 1.0]]]}}, {'hidden': [['Two', ['Two']]]},
+    {'move': {'Two': [['Core_32A', [0.0, 0.0], [1.0, 1.0]]]}}, {'drop': [['Two', 'Core_32A', [0.0, 0.0]]]}, {'hidden': [['Two', ['Two']]]},
     {'main': ['Start'], 'hidden': [['Start', ['Start']]]}, {'main': ['Start'], 'hidden': [['Four', ['Four']]]},
 ])
 def test_corrections_name_what_the_mission_has(fix):

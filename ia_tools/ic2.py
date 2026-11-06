@@ -36,7 +36,8 @@ TEXTURES = re.compile(r'^ImperialCommander2/Assets/SagaTiles/[^/]+/([A-Za-z]+_\d
 # {mission file: correction}. A correction has any of:
 # - sides: {IC2's texture: the right one}, for each of the mission's placements of it;
 # - section sides: {section name: {IC2's texture: the right one}}, for one section's placements only;
-# - drop: section names IC2 has but the mission doesn't, or [section name, texture] for that section's placements of it;
+# - drop: section names IC2 has but the mission doesn't, or [section name, texture] for that section's placements of it,
+#   or [section name, texture, [x, y]] for the one at x, y;
 # - add: {section name: [{"texture", "x", "y", "rotation"}]}, placements IC2 lacks;
 # - counts: {texture: count}, the copies the mission takes where that isn't its placements' sum (sections that reuse
 #   the same tiles);
@@ -63,7 +64,12 @@ CORRECTIONS = {
                    ['Hideaway', ['Section 4 - Hideaway']]]},
     'EMPIRE9.json': {  # Into a Corner
         'sides': {'Empire_13B': 'Empire_13A'},
-        'drop': [['Start Section', 'Empire_18B']],
+        # City Square without 18Bs, Main Street's two on 3B's long sides, Landing's three on 1B (17B on the fourth)
+        'drop': [['Start Section', 'Empire_18B'], ['Section 2 - City Square N', 'Empire_18B'],
+                 ['Section 3 - Main Street NW', 'Empire_18B', [880.0, 940.0]],
+                 ['Section 3 - Main Street NW', 'Empire_18B', [900.0, 900.0]]],
+        'add': {'Section 4 - Landing NWN': [{'texture': 'Empire_18B', 'x': 850.0, 'y': 870.0, 'rotation': 90.0},
+                                            {'texture': 'Empire_18B', 'x': 930.0, 'y': 890.0, 'rotation': 270.0}]},
         'counts': {'Empire_1B': 1, 'Empire_2B': 1, 'Empire_3B': 1, 'Empire_7B': 1, 'Empire_17B': 1, 'Empire_18B': 5},
         'main': ['Start Section'],
         # IC2 places each copy of a section on every side of the map; the mission's book shows one of each
@@ -214,11 +220,12 @@ def apply(mission, fix):
             mission['sections'].remove(section(drop))
             del sections[drop]
         else:
-            name, texture = drop
+            name, texture, *at = drop
             tiles = section(name)['tiles']
-            if texture not in {t['texture'] for t in tiles}:
-                fail(f'no {texture} in {name!r}')
-            tiles[:] = [t for t in tiles if t['texture'] != texture]
+            dropped = [t for t in tiles if t['texture'] == texture and (not at or [t['x'], t['y']] == at[0])]
+            if not dropped:
+                fail(f"no {texture}{f' at {at[0]}' if at else ''} in {name!r}")
+            tiles[:] = [t for t in tiles if t not in dropped]
     swap([t for s in mission['sections'] for t in s['tiles']], fix.get('sides', {}), 'the mission')
     for name, swaps in fix.get('section sides', {}).items():
         swap(section(name)['tiles'], swaps, repr(name))
