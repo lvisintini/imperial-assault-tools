@@ -17,17 +17,18 @@ The tools compare images numerically; they never look at them.
 Writes staging/campaign-maps/:
 - <map slug>.png for each campaign map: 64 px per square, the tiles only (no doors, crates or tokens), the sections
   drawn in order (later ones on top), transparent around the tiles and cropped to them. A mission whose correction
-  (ic2.CORRECTIONS) names its main sections is drawn with those, and each of its other sections is drawn on its own
-  as <map slug>-hidden-<n>.png, in IC2's order: the parts of the map revealed during the mission. Any other map is
+  (ic2.CORRECTIONS) names its main sections is drawn with those, and each of its hidden sections (the parts of the
+  map revealed during the mission, each one or more of IC2's sections) on its own as <map slug>-hidden-<n>.png, in
+  order. Any other map is
   drawn with every section, or, when its sections replace each other (more than OVERLAP of it covered twice), with
   the sections shown at the start;
 - manifest.json: {"ic2_commit", "turns": {"<product> <number><side>": {"turn", "scores", "by"}},
   "maps": [{"name", "map_id", "ic2", "file", "size", "bytes", "sections": "all" | "start" | "main", "overlap",
-            "hidden": [{"section", "file", "size", "bytes"}]}]}. overlap is the share of the drawn tile pixels that
+            "hidden": [{"name", "sections", "file", "size", "bytes"}]}]}. overlap is the share of the drawn tile pixels that
   two tiles cover (tabs' anti-aliased edges make a little).
 
 write() puts them in the data repo: the images in images/large/maps and images/small/maps (the same file), each
-campaign map's hidden_images, and its map-layouts rows (the corrected mission's tiles)."""
+campaign map's hidden_sections ({name, image}), and its map-layouts rows (the corrected mission's tiles)."""
 import json
 import re
 from pathlib import Path
@@ -285,11 +286,10 @@ def run(module, cache, textures, dataset, sample=None, out=None, log=print):
         if 'main' in mission:
             image, overlap = draw(mission, sides, turns, sections=mission['main'])
             sections = 'main'
-            for section in mission['sections']:
-                if section['name'] in mission['main'] or not section['tiles']:
-                    continue
-                part, _ = draw(mission, sides, turns, sections=[section['name']])
-                hidden.append({'section': section['name'], 'file': f'{slugify(name)}-hidden-{len(hidden) + 1}.png'})
+            for section in mission['hidden']:
+                part, _ = draw(mission, sides, turns, sections=section['sections'])
+                hidden.append({'name': section['name'], 'sections': section['sections'],
+                               'file': f'{slugify(name)}-hidden-{len(hidden) + 1}.png'})
                 part.save(out / hidden[-1]['file'], optimize=True)
                 hidden[-1] |= {'size': list(part.size), 'bytes': (out / hidden[-1]['file']).stat().st_size}
         else:
@@ -357,10 +357,18 @@ def write(manifest, cache, dataset, out=None, log=print):
     maps = []
     for record in dataset.records('maps'):
         entry = drawn.get(record['id'])
-        hidden = [f"maps/{h['file']}" for h in entry['hidden']] if entry else record.get('hidden_images', [])
         if entry:
-            record = record | {'image': f"maps/{entry['file']}"}
-        maps.append({k: v for k, v in record.items() if k != 'hidden_images'} | {'hidden_images': hidden})
+            record = record | {'image': f"maps/{entry['file']}",
+                               'hidden_sections': [{'name': h['name'], 'image': f"maps/{h['file']}"}
+                                                   for h in entry['hidden']]}
+        hidden = record.get('hidden_sections', [])
+        fields = {}
+        for k, v in record.items():
+            if k not in ('hidden_images', 'hidden_sections'):
+                fields[k] = v
+            if k == 'image':
+                fields['hidden_sections'] = hidden
+        maps.append(fields)
     dataset.path('maps').write_text(dumps(maps), encoding='utf-8')
 
     layouts, placed = [], set()

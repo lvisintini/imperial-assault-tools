@@ -40,8 +40,11 @@ TEXTURES = re.compile(r'^ImperialCommander2/Assets/SagaTiles/[^/]+/([A-Za-z]+_\d
 # - add: {section name: [{"texture", "x", "y", "rotation"}]}, placements IC2 lacks;
 # - counts: {texture: count}, the copies the mission takes where that isn't its placements' sum (sections that reuse
 #   the same tiles);
-# - main: the sections the map's image shows. Each other section is a hidden image of its own, revealed during the
-#   mission. Without main, the image shows every section.
+# - move: {section name: [[texture, [x, y], [x, y]]]}, a placement of that texture moved from IC2's position to another;
+# - main: the sections the map's image shows. Without main, the image shows every section;
+# - hidden: [[name, [section names]]], with main: the map's hidden sections, revealed during the mission, each an image
+#   of those IC2 sections. Without it, each other section with tiles is one, named after it ("Section 2 - Cave" is
+#   "Cave").
 CORRECTIONS = {
     'CORE4.json': {'sides': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}},  # Desperate Hour
     'CORE6.json': {  # Fly Solo: the second 18B, right of 6B and under 16B
@@ -52,28 +55,46 @@ CORRECTIONS = {
     'EMPIRE2.json': {'section sides': {'Start Section': {'Empire_17A': 'Empire_17B'}}},  # Dark Recon
     'EMPIRE3.json': {  # Disruption
         'counts': {'Empire_16B': 3, 'Empire_17B': 3},
-        'main': ['Start Section']},
+        'main': ['Start Section'],
+        'hidden': [['Underworld (Visible area)', ['Section 2 - Underworld']],
+                   ['Underworld (Obscured area)', ['R1', 'R2', 'R3', 'R4', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6',
+                                                   'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7']],
+                   ['Landing Platform', ['Section 3 - Landing Platform']],
+                   ['Hideaway', ['Section 4 - Hideaway']]]},
     'EMPIRE9.json': {  # Into a Corner
         'sides': {'Empire_13B': 'Empire_13A'},
         'drop': [['Start Section', 'Empire_18B']],
         'counts': {'Empire_1B': 1, 'Empire_2B': 1, 'Empire_3B': 1, 'Empire_7B': 1, 'Empire_17B': 1, 'Empire_18B': 5},
-        'main': ['Start Section']},
-    'EMPIRE12.json': {'sides': {'Empire_4A': 'Empire_4B'}},  # The Realm of the Dark Side
+        'main': ['Start Section'],
+        # IC2 places each copy of a section on every side of the map; the mission's book shows one of each
+        'hidden': [['Main Street', ['Section 3 - Main Street NW']], ['City Square', ['Section 2 - City Square N']],
+                   ['Landing', ['Section 4 - Landing NWN']]]},
+    'EMPIRE12.json': {  # The Realm of the Dark Side: the 18B left of 4B a square higher
+        'sides': {'Empire_4A': 'Empire_4B'},
+        'move': {'Section 3 - Temple': [['Empire_18B', [980.0, 940.0], [980.0, 930.0]]]}},
     'EMPIRE14.json': {'drop': ['Section 3 - Penthouse Elevator']},  # Extraction: one elevator, on 15B
     'HOTH1.json': {'sides': {'Hoth_9A': 'Hoth_9B'}},  # Disaster
     'HOTH2.json': {'sides': {'Core_36B': 'Core_36A'}},  # Home Front
     'HOTH3.json': {'sides': {'Core_24A': 'Core_24B'}},  # One Step Behind
-    'HOTH4.json': {'main': ['Start Section']},  # Our Last Hope
+    'HOTH4.json': {  # Our Last Hope
+        'section sides': {'Section 2 - Rebel Base': {'Hoth_6A': 'Hoth_6B'}},
+        'main': ['Start Section']},
     'HOTH12.json': {'sides': {'Hoth_7A': 'Hoth_7B'}},  # Preventative Measures
     'HOTH13.json': {'sides': {'Core_24B': 'Core_24A'}},  # Escape from Cloud City
-    'HOTH15.json': {'main': ['Start Section']},  # Survival of the Fittest
+    'HOTH15.json': {  # Survival of the Fittest
+        'main': ['Start Section'],
+        'hidden': [['Hidden area', ['Section 2 - Cave', 'Section 3 - NW', 'Section 4 - Pass', 'Section 5 - SW',
+                                    'Section 6 - S', 'Section 7 - Cavern']]]},
     'JABBA5.json': {'sides': {'Jabba_9A': 'Jabba_9B'}},  # Hostile Negotiations
     'LOTHAL3.json': {  # Race on Ryloth
         'counts': {'Core_18B': 4, 'Lothal_12B': 3},
         'main': ['Start Section', 'Section 2']},
     'LOTHAL6.json': {  # The Final Order
         'sides': {'Lothal_2A': 'Lothal_2B', 'Lothal_5A': 'Lothal_5B', 'Lothal_6A': 'Lothal_6B', 'Lothal_7A': 'Lothal_7B'}},
-    'OTHER24.json': {'main': ['Start Section']},  # Into the Unknown
+    'OTHER24.json': {  # Into the Unknown
+        'main': ['Start Section'],
+        'hidden': [['Hidden area', ['Up 1', 'Up 2', 'Up 3', 'Up 4', 'Up 5', 'Middle 1', 'Middle 2 - Hall',
+                                    'Middle 3 - Cross', 'Down 1', 'Down 2', 'Down 3', 'Down 4', 'Down 5', 'Down 6']]]},
 }
 
 
@@ -185,7 +206,7 @@ def apply(mission, fix):
         for tile in tiles:
             tile['texture'] = swaps.get(tile['texture'], tile['texture'])
 
-    unknown = set(fix) - {'sides', 'section sides', 'drop', 'add', 'counts', 'main'}
+    unknown = set(fix) - {'sides', 'section sides', 'drop', 'add', 'move', 'counts', 'main', 'hidden'}
     if unknown:
         fail(f'unknown corrections {sorted(unknown)}')
     for drop in fix.get('drop', []):
@@ -203,6 +224,13 @@ def apply(mission, fix):
         swap(section(name)['tiles'], swaps, repr(name))
     for name, tiles in fix.get('add', {}).items():
         section(name)['tiles'].extend(dict(t) for t in tiles)
+    for name, moves in fix.get('move', {}).items():
+        tiles = section(name)['tiles']
+        for texture, (x, y), (to_x, to_y) in moves:
+            tile = next((t for t in tiles if (t['texture'], t['x'], t['y']) == (texture, x, y)), None)
+            if tile is None:
+                fail(f'no {texture} at {x}, {y} in {name!r}')
+            tile['x'], tile['y'] = to_x, to_y
     for tile in (t for s in mission['sections'] for t in s['tiles']):
         if not TEXTURE.match(tile['texture']):
             fail(f"{tile['texture']!r} isn't a tile texture")
@@ -212,10 +240,22 @@ def apply(mission, fix):
             fail(f'no {texture} to count')
         tiles[texture] = count
     mission['tiles'] = dict(sorted(tiles.items()))
+    if 'hidden' in fix and 'main' not in fix:
+        fail('hidden sections without main ones')
     if 'main' in fix:
         for name in fix['main']:
             section(name)
         mission['main'] = list(fix['main'])
+        if 'hidden' in fix:
+            hidden = [{'name': name, 'sections': list(names)} for name, names in fix['hidden']]
+        else:
+            hidden = [{'name': re.sub(r'^Section \d+ - ', '', s['name']), 'sections': [s['name']]}
+                      for s in mission['sections'] if s['name'] not in mission['main'] and s['tiles']]
+        for name in (n for h in hidden for n in h['sections']):
+            if name in mission['main']:
+                fail(f'{name!r} is a main section')
+            section(name)
+        mission['hidden'] = hidden
 
 
 def load(root=None):
