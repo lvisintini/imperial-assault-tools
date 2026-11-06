@@ -53,6 +53,9 @@ CORRECTIONS = {
     'CORE9.json': {'sides': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}},  # Last Stand
     'CORE26.json': {'drop': ['Section 3 - Control']},  # The Spice Job
     'CORE31.json': {'drop': ['Section 3 - Control Room']},  # Means of Production
+    'EMPIRE1.json': {  # Capital Escape
+        'main': ['Start Section'],
+        'hidden': [['Command Center', ['Section 2 - Crash', 'Section 3 - Facility']]]},
     'EMPIRE2.json': {'section sides': {'Start Section': {'Empire_17A': 'Empire_17B'}}},  # Dark Recon
     'EMPIRE3.json': {  # Disruption
         'counts': {'Empire_16B': 3, 'Empire_17B': 3},
@@ -62,6 +65,10 @@ CORRECTIONS = {
                                                    'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7']],
                    ['Landing Platform', ['Section 3 - Landing Platform']],
                    ['Hideaway', ['Section 4 - Hideaway']]]},
+    'EMPIRE6.json': {  # From Dark Clutches
+        'main': ['Start Section'],
+        'hidden': [['Hidden area', ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'M1-Corridor', 'M2', 'M3', 'M4', 'M5',
+                                    'M6-Hall', 'M7-Cell', 'L1', 'L2-Interrogation Chamber', 'L3', 'L4', 'L5', 'L6']]]},
     'EMPIRE9.json': {  # Into a Corner
         'sides': {'Empire_13B': 'Empire_13A'},
         # City Square without 18Bs, Main Street's two on 3B's long sides, Landing's three on 1B (17B on the fourth)
@@ -91,7 +98,18 @@ CORRECTIONS = {
         'main': ['Start Section'],
         'hidden': [['Hidden area', ['Section 2 - Cave', 'Section 3 - NW', 'Section 4 - Pass', 'Section 5 - SW',
                                     'Section 6 - S', 'Section 7 - Cavern']]]},
+    'JABBA2.json': {  # Dangerous Allies: one Khetanna; the Canyon's 39B (IC2's 2nd Khetanna's) in place of its left 18B
+        'drop': ['Section 3 - 2nd Khetanna', ['Section 5 - Canyon', 'Core_18B', [1000.0, 1140.0]]],
+        'add': {'Section 5 - Canyon': [{'texture': 'Core_39B', 'x': 1000.0, 'y': 1160.0, 'rotation': 180.0}]},
+        'main': ['Start Section - First Khetanna'],
+        'hidden': [['Skiff', ['Section 2 - Skiff']], ['Canyon', ['Section 4 - Spaceport', 'Section 5 - Canyon']]]},
     'JABBA5.json': {'sides': {'Jabba_9A': 'Jabba_9B'}},  # Hostile Negotiations
+    'JABBA7.json': {  # Mutiny
+        'main': ['Start Section', 'Skiff'],
+        'hidden': [['Second Skiff', ['Red Skiff']], ['Khetanna', ['Khetanna']]]},
+    'JABBA9.json': {'main': ['Start Section', 'Section 2 - Throne Room', 'Section 4 - Back Room']},  # Storming the Palace
+    'JABBA10.json': {'main': ['Start Section', 'Section 2 - Command Post']},  # Trespass
+    'LOTHAL1.json': {'main': ['Start Section']},  # Call to Action
     'LOTHAL3.json': {  # Race on Ryloth
         'counts': {'Core_18B': 4, 'Lothal_12B': 3},
         'main': ['Start Section', 'Section 2']},
@@ -101,6 +119,10 @@ CORRECTIONS = {
         'main': ['Start Section'],
         'hidden': [['Hidden area', ['Up 1', 'Up 2', 'Up 3', 'Up 4', 'Up 5', 'Middle 1', 'Middle 2 - Hall',
                                     'Middle 3 - Cross', 'Down 1', 'Down 2', 'Down 3', 'Down 4', 'Down 5', 'Down 6']]]},
+    'OTHER32.json': {  # Salvage Operatives: one Sand Crawler, IC2's left one
+        'drop': ['Sand Crawler Middle', 'Sand Crawler Right'],
+        'main': ['Start Section'],
+        'hidden': [['Sand Crawler', ['Sand Crawler Left']]]},
 }
 
 
