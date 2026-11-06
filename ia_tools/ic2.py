@@ -53,7 +53,8 @@ CORRECTIONS = {
     'CORE9.json': {'sides': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}},  # Last Stand
     'CORE26.json': {'drop': ['Section 3 - Control']},  # The Spice Job
     'CORE31.json': {'drop': ['Section 3 - Control Room']},  # Means of Production
-    'EMPIRE1.json': {  # Capital Escape
+    'EMPIRE1.json': {  # Capital Escape: the 18B under 2B a square to the right
+        'move': {'Start Section': [['Empire_18B', [1020.0, 1050.0], [1030.0, 1050.0]]]},
         'main': ['Start Section'],
         'hidden': [['Command Center', ['Section 2 - Crash', 'Section 3 - Facility']]]},
     'EMPIRE2.json': {'section sides': {'Start Section': {'Empire_17A': 'Empire_17B'}}},  # Dark Recon
