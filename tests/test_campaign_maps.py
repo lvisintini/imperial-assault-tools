@@ -44,6 +44,16 @@ def test_a_placement_is_its_grid_corner_and_the_stored_image_turned_clockwise(k,
     assert np.array_equal(np.rot90(tile, -campaign_maps.rotation_of(k, rotation) // 90), image)
 
 
+def test_the_whole_map_draws_sections_in_the_order_given():
+    sides = {'Imperial Assault 1A': {'image': side(1, 1, seed=1)}, 'Imperial Assault 2A': {'image': side(1, 1, seed=2)}}
+    turns = {key: {'turn': 0} for key in sides}
+    two = mission((False, [{'texture': 'Core_1A', 'x': 0, 'y': 0, 'rotation': 0}]),
+                  (True, [{'texture': 'Core_2A', 'x': 0, 'y': 0, 'rotation': 0}]))
+    top = lambda order: campaign_maps.draw(two, sides, turns, sections=order, ordered=True)[0].getpixel((32, 32))
+    assert top(['S0', 'S1']) == tuple(sides['Imperial Assault 2A']['image'][32, 32])  # the later section on top
+    assert top(['S1', 'S0']) == tuple(sides['Imperial Assault 1A']['image'][32, 32])
+
+
 def test_placements_follow_the_sections_draw_shows():
     sides = {'Imperial Assault 1A': {'image': side(2, 1, seed=1)}}
     turns = {'Imperial Assault 1A': {'turn': 1}}
@@ -210,24 +220,28 @@ def test_write_puts_the_maps_hidden_sections_and_layouts_in_the_data(dataset_cop
     assert min(p['x'] for p in first) == 0 and min(p['y'] for p in first) == 0  # the frame starts at 0, 0
     assert {p['rotation'] for p in first} == {90} and {p['section'] for p in first} == {None}
     maps = json.loads(dataset_copy.path('maps').read_text(encoding='utf-8'))
-    assert all(list(m) == ['id', 'name', 'image', 'hidden_sections'] and m['hidden_sections'] == [] for m in maps)
+    assert all(list(m) == ['id', 'name', 'image', 'hidden_sections', 'whole_image'] and m['hidden_sections'] == []
+               and m['whole_image'] is None for m in maps)
 
     entry, mission = manifest['maps'][0], cache['missions'][0]
     stem = entry['file'][:-4]
     Image.new('RGBA', (1, 1)).save(out / f'{stem}-hidden-1.png')
     (dataset_copy.root / 'images' / 'large' / 'maps' / f'{stem}-hidden-2.png').write_bytes(b'stale')
+    Image.new('RGBA', (1, 1)).save(out / f'{stem}-whole.png')
     entry['hidden'] = [{'name': 'Cave', 'sections': ['Two'], 'file': f'{stem}-hidden-1.png'}]
+    entry['whole'] = {'file': f'{stem}-whole.png'}
     mission['tiles'] = {'Core_1A': 2}
     entry['placements'] = [{'texture': 'Core_1A', 'section': None, 'x': 5, 'y': 3, 'rotation': 90},
                            {'texture': 'Core_1A', 'section': 'Cave', 'x': 4, 'y': 3, 'rotation': 0},
                            {'texture': 'Core_1A', 'section': 'Cave', 'x': 6, 'y': 3, 'rotation': 0}]
     assert campaign_maps.write(manifest, cache, dataset_copy, out=out, log=lambda *a: None) == []
     maps = json.loads(dataset_copy.path('maps').read_text(encoding='utf-8'))
-    assert next(m for m in maps if m['id'] == entry['map_id'])['hidden_sections'] == [
-        {'name': 'Cave', 'image': f'maps/{stem}-hidden-1.png'}]
+    record = next(m for m in maps if m['id'] == entry['map_id'])
+    assert record['hidden_sections'] == [{'name': 'Cave', 'image': f'maps/{stem}-hidden-1.png'}]
+    assert record['whole_image'] == f'maps/{stem}-whole.png'
     for size in ('large', 'small'):
-        assert sorted(p.name for p in (dataset_copy.root / 'images' / size / 'maps').glob(f'{stem}-hidden-*')) == [
-            f'{stem}-hidden-1.png']
+        assert sorted(p.name for p in (dataset_copy.root / 'images' / size / 'maps').glob(f'{stem}-*')) == [
+            f'{stem}-hidden-1.png', f'{stem}-whole.png']
     layouts = json.loads(dataset_copy.path('map-layouts').read_text(encoding='utf-8'))
     own = [r for r in layouts if r['map_id'] == entry['map_id']]
     assert [(r['side'], r['count']) for r in own] == [('A', 2)] and layouts == sort_rows(dataset_copy, layouts)

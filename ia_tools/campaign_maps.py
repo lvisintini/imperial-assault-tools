@@ -19,19 +19,21 @@ Writes staging/campaign-maps/:
   drawn in order (later ones on top), transparent around the tiles and cropped to them. A mission whose correction
   (ic2.CORRECTIONS) names its main sections is drawn with those, and each of its hidden sections (the parts of the
   map revealed during the mission, each one or more of IC2's sections) on its own as <map slug>-hidden-<n>.png, in
-  order. Any other map is
+  order, and the whole map, its image's sections and then each hidden section's in one frame, as
+  <map slug>-whole.png. Any other map is
   drawn with every section, or, when its sections replace each other (more than OVERLAP of it covered twice), with
   the sections shown at the start;
 - manifest.json: {"ic2_commit", "turns": {"<product> <number><side>": {"turn", "scores", "by"}},
   "maps": [{"name", "map_id", "ic2", "file", "size", "bytes", "sections": "all" | "start" | "main", "overlap",
-            "hidden": [{"name", "sections", "file", "size", "bytes"}],
+            "hidden": [{"name", "sections", "file", "size", "bytes"}], "whole": {"file", "size", "bytes"} | null,
             "placements": [{"texture", "section", "x", "y", "rotation"}]}]}. overlap is the share of the drawn tile
   pixels that two tiles cover (tabs' anti-aliased edges make a little). placements are every tile the images draw
   (section null for the map's image, else the hidden section's name), x, y the top-left square of its turned grid in
   IC2's frame, rotation the clockwise degrees that turn the side's stored image (placements()).
 
 write() puts them in the data repo: the images in images/large/maps and images/small/maps (the same file), each
-campaign map's hidden_sections ({name, image}), and its map-layouts rows: the corrected mission's tiles with their
+campaign map's hidden_sections ({name, image}) and whole_image (null for a map without hidden sections), and its
+map-layouts rows: the corrected mission's tiles with their
 copies and placements (layouts.rows_for), the file sorted as layouts.row_order says."""
 import json
 import re
@@ -235,10 +237,13 @@ def save_turns(save, pieces, mission):
             if len(f) == 1 and len(rotations.get(key, [])) == 1}
 
 
-def shown_sections(mission, start_only=False, sections=None):
-    """The IC2 sections an image shows: these (names), or every section, or only those shown when the mission starts
-    (the first section if IC2 hides them all)."""
+def shown_sections(mission, start_only=False, sections=None, ordered=False):
+    """The IC2 sections an image shows: these (names; in the mission's order, or in the names' when ordered), or every
+    section, or only those shown when the mission starts (the first section if IC2 hides them all)."""
     if sections is not None:
+        if ordered:
+            by_name = {s['name']: s for s in mission['sections']}
+            return [by_name[name] for name in sections if name in by_name]
         return [s for s in mission['sections'] if s['name'] in sections]
     return [s for s in mission['sections'] if not (start_only and s['hidden'])] or mission['sections'][:1]
 
@@ -258,13 +263,13 @@ def placements(mission, sides, turns, start_only=False, sections=None):
     return found
 
 
-def draw(mission, sides, turns, start_only=False, sections=None):
+def draw(mission, sides, turns, start_only=False, sections=None, ordered=False):
     """(RGBA image, overlap share). start_only: only the sections shown when the mission starts (the first section if
     IC2 hides them all). sections: only these (names)."""
     from PIL import Image
 
     pieces = []
-    for section in shown_sections(mission, start_only, sections):
+    for section in shown_sections(mission, start_only, sections, ordered):
         for tile in section['tiles']:
             key = texture_key(tile['texture'])
             pieces.append(placed(sides[key]['image'], turns[key]['turn'], tile['x'], tile['y'], tile['rotation']))
@@ -344,7 +349,7 @@ def run(module, cache, textures, dataset, sample=None, out=None, log=print):
                 log(f"  {mission['name']}: on {name}")
                 continue
         file = f'{file_stem(name)}.png'
-        hidden = []
+        hidden, whole = [], None
         if 'main' in mission:
             image, overlap = draw(mission, sides, turns, sections=mission['main'])
             sections = 'main'
@@ -357,6 +362,13 @@ def run(module, cache, textures, dataset, sample=None, out=None, log=print):
                 hidden[-1] |= {'size': list(part.size), 'bytes': (out / hidden[-1]['file']).stat().st_size}
                 placed_here += [p | {'section': section['name']}
                                 for p in placements(mission, sides, turns, sections=section['sections'])]
+            if mission['hidden']:
+                # The whole map: its image's sections, then each hidden section's, in order (later ones on top).
+                every = list(mission['main']) + [n for h in mission['hidden'] for n in h['sections']]
+                part, _ = draw(mission, sides, turns, sections=every, ordered=True)
+                whole = {'file': f'{file_stem(name)}-whole.png'}
+                part.save(out / whole['file'], optimize=True)
+                whole |= {'size': list(part.size), 'bytes': (out / whole['file']).stat().st_size}
         else:
             image, overlap = draw(mission, sides, turns)
             sections = 'all'
@@ -368,10 +380,11 @@ def run(module, cache, textures, dataset, sample=None, out=None, log=print):
         image.save(out / file, optimize=True)
         maps.append({'name': name, 'map_id': record and record['id'], 'ic2': f"{mission['folder']}/{mission['file']}",
                      'file': file, 'size': list(image.size), 'bytes': (out / file).stat().st_size,
-                     'sections': sections, 'overlap': overlap, 'hidden': hidden, 'placements': placed_here})
+                     'sections': sections, 'overlap': overlap, 'hidden': hidden, 'whole': whole,
+                     'placements': placed_here})
         log(f"  {file}: {image.size[0]}x{image.size[1]} px, {maps[-1]['bytes'] / 1e6:.1f} MB"
             + (', start section only' if sections == 'start' else '')
-            + (f', {len(hidden)} hidden' if hidden else '')
+            + (f', {len(hidden)} hidden and a whole-map image' if hidden else '')
             + (f', {overlap:.1%} covered twice' if overlap else ''))
     manifest = {'ic2_commit': cache['commit'],
                 'turns': {k: {f: t[f] for f in ('turn', 'scores', 'by', 'fits') if f in t} for k, t in turns.items()},
@@ -418,14 +431,16 @@ def write(manifest, cache, dataset, out=None, log=print):
     root = dataset.root / 'images'
     files = {f"maps/{entry['file']}" for entry in drawn.values()}
     files |= {f"maps/{h['file']}" for entry in drawn.values() for h in entry['hidden']}
+    files |= {f"maps/{entry['whole']['file']}" for entry in drawn.values() if entry.get('whole')}
     slugs = {Path(entry['file']).stem for entry in drawn.values()}
     replaced = {path for r in dataset.records('maps') if r['id'] in drawn
-                for path in [r['image']] + [h['image'] for h in r.get('hidden_sections', [])]}
+                for path in [r['image'], r.get('whole_image')] + [h['image'] for h in r.get('hidden_sections', [])]
+                if path}
     for size in ('large', 'small'):
         folder = root / size / 'maps'
         folder.mkdir(parents=True, exist_ok=True)
-        for old in folder.glob('*-hidden-*.png'):  # hidden images no map has any more
-            if old.stem.rsplit('-hidden-', 1)[0] in slugs and f'maps/{old.name}' not in files:
+        for old in [*folder.glob('*-hidden-*.png'), *folder.glob('*-whole.png')]:  # ones no map has any more
+            if re.sub(r'-(hidden-\d+|whole)$', '', old.stem) in slugs and f'maps/{old.name}' not in files:
                 old.unlink()
         for old in replaced - files:  # a renamed map's images
             (root / size / old).unlink(missing_ok=True)
@@ -438,14 +453,16 @@ def write(manifest, cache, dataset, out=None, log=print):
         if entry:
             record = record | {'image': f"maps/{entry['file']}",
                                'hidden_sections': [{'name': h['name'], 'image': f"maps/{h['file']}"}
-                                                   for h in entry['hidden']]}
-        hidden = record.get('hidden_sections', [])
+                                                   for h in entry['hidden']],
+                               'whole_image': f"maps/{entry['whole']['file']}" if entry.get('whole') else None}
+        hidden, whole = record.get('hidden_sections', []), record.get('whole_image')
         fields = {}
         for k, v in record.items():
-            if k not in ('hidden_images', 'hidden_sections'):
+            if k not in ('hidden_images', 'hidden_sections', 'whole_image'):
                 fields[k] = v
             if k == 'image':
                 fields['hidden_sections'] = hidden
+                fields['whole_image'] = whole
         maps.append(fields)
     dataset.path('maps').write_text(dumps(maps), encoding='utf-8')
 
