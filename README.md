@@ -34,8 +34,8 @@ uv run ia enter                  # opens http://localhost:8001: go through the c
 uv run ia import tyrants-of-lothal --check   # validate only
 uv run ia import tyrants-of-lothal           # write records, images and source-contents rows
 uv run ia maps --sample Aftermath   # data 2.0.0: draw campaign maps from IC2's layouts (all of them without --sample)
-uv run ia layouts --check        # data 2.0.0: validate the map layouts entered in ia enter (Map layouts)
-uv run ia layouts                # write them into map-layouts.json
+uv run ia skirmish-maps          # data 2.0.0: check the skirmish and raid maps' reviewed tile placements
+uv run ia skirmish-maps --write  # write their rows into map-layouts.json
 uv run ia card-types --fetch     # data 2.0.0: cache the wiki's card text, to propose card types
 uv run ia card-types --check     # validate the card types confirmed in ia enter (Card types)
 uv run ia card-types             # write them into reward-cards.json and imperial-class-cards.json
@@ -127,13 +127,13 @@ says which commit of this repo produced it.
   tokens), transparent around them. IC2's own tile images, fetched once into `staging/ic2/textures/`, only tell which
   way each Vassal image is turned: by their colours, or, when that's close, by which turn fits the neighbouring tiles'
   tabs into their notches. Aftermath's turns are checked against the Vassal module's Aftermath save. A map whose
-  sections replace each other during the mission is drawn with its start section only.
-- **Map layouts** (data 2.0.0; `ia enter`'s Map layouts page, `/layouts`) is where the skirmish and raid maps' tiles
-  are entered, since no source has them (the campaign maps' come from ImperialCommander2, through `ia tiles`). Each
-  map's image is shown next to the tile sides picked for it, with their counts. Sides are added from the tile grid
-  (filtered by product) or typed as Vassal names the pieces (`05A` for the Core Set, `TS 1B`, `JR3A x2`). A map
-  can't use more copies of a tile than the products hold. Entries are saved to `staging/map-layouts/entries.json`;
-  `ia layouts` writes the maps marked done into `map-layouts.json`, replacing the rows they had.
+  sections replace each other during the mission is drawn with its start section only. `--write` puts the images in
+  the data repo, and each map's `map-layouts.json` rows: its tile sides' copies, and where each image places them.
+- **`ia skirmish-maps`** (data 2.0.0) writes the skirmish, four-player and raid maps' `map-layouts.json` rows from
+  their tile placements, `staging/skirmish-maps/final.json`. No source has them: they were found by matching each
+  map's tile sides against the Vassal skirmish module's boards (`vassal-2/`) and our map images, and reviewed map by
+  map (the prototype and the rulings are in `staging/skirmish-maps/`). Rows hold each side's copies and placements
+  (`ia_tools/layouts.py`); `ia maps --write` writes the campaign maps' the same way.
 - **Card types** (data 2.0.0; `/card-types`) goes through the reward Feats and the Imperial class cards, a tab each,
   with their `type` (Feat, or Group Attachment for a card attached to an Imperial deployment group) proposed from the
   wiki's text, which is shown under each card. Flags point at what needs a closer look: no text, or a name the wiki

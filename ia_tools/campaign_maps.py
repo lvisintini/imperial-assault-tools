@@ -24,12 +24,15 @@ Writes staging/campaign-maps/:
   the sections shown at the start;
 - manifest.json: {"ic2_commit", "turns": {"<product> <number><side>": {"turn", "scores", "by"}},
   "maps": [{"name", "map_id", "ic2", "file", "size", "bytes", "sections": "all" | "start" | "main", "overlap",
-            "hidden": [{"name", "sections", "file", "size", "bytes"}]}]}. overlap is the share of the drawn tile pixels that
-  two tiles cover (tabs' anti-aliased edges make a little).
+            "hidden": [{"name", "sections", "file", "size", "bytes"}],
+            "placements": [{"texture", "section", "x", "y", "rotation"}]}]}. overlap is the share of the drawn tile
+  pixels that two tiles cover (tabs' anti-aliased edges make a little). placements are every tile the images draw
+  (section null for the map's image, else the hidden section's name), x, y the top-left square of its turned grid in
+  IC2's frame, rotation the clockwise degrees that turn the side's stored image (placements()).
 
 write() puts them in the data repo: the images in images/large/maps and images/small/maps (the same file), each
-campaign map's hidden_sections ({name, image}), and its map-layouts rows (the corrected mission's tiles), the file
-sorted as layouts.row_order says."""
+campaign map's hidden_sections ({name, image}), and its map-layouts rows: the corrected mission's tiles with their
+copies and placements (layouts.rows_for), the file sorted as layouts.row_order says."""
 import json
 import re
 from pathlib import Path
@@ -116,13 +119,24 @@ def turn_scores(texture, side):
     return scores
 
 
+def grid_corner(side, k, x, y, rotation, px=SQUARE):
+    """(x, y): the top-left square of a placed side's grid, once turned, in squares (whole ones for IC2's layouts)."""
+    _, _, tw, th = grid_rect(alpha_of(np.rot90(side, k)), px)
+    corners = [rotate_point(cx, cy, rotation) for cx, cy in ((0, 0), (tw, 0), (0, th), (tw, th))]
+    return x / 10 + min(c[0] for c in corners), y / 10 + min(c[1] for c in corners)
+
+
+def rotation_of(k, rotation):
+    """Clockwise degrees that turn a side's stored image as placed: placed() turns it counter-clockwise by k - rotation
+    / 90 quarter turns."""
+    return (round(rotation) - 90 * k) % 360
+
+
 def placed(side, k, x, y, rotation, px=SQUARE):
     """(image, left, top): a side (an image, or a mask at px per square) turned for its placement, and where its
     top-left pixel goes."""
     image = np.rot90(side, k - round(rotation / 90))
-    _, _, tw, th = grid_rect(alpha_of(np.rot90(side, k)), px)
-    corners = [rotate_point(cx, cy, rotation) for cx, cy in ((0, 0), (tw, 0), (0, th), (tw, th))]
-    gx, gy = x / 10 + min(c[0] for c in corners), y / 10 + min(c[1] for c in corners)
+    gx, gy = grid_corner(side, k, x, y, rotation, px)
     x0, y0, _, _ = grid_rect(alpha_of(image), px)
     return image, round(gx * px) - x0, round(gy * px) - y0
 
@@ -221,17 +235,36 @@ def save_turns(save, pieces, mission):
             if len(f) == 1 and len(rotations.get(key, [])) == 1}
 
 
+def shown_sections(mission, start_only=False, sections=None):
+    """The IC2 sections an image shows: these (names), or every section, or only those shown when the mission starts
+    (the first section if IC2 hides them all)."""
+    if sections is not None:
+        return [s for s in mission['sections'] if s['name'] in sections]
+    return [s for s in mission['sections'] if not (start_only and s['hidden'])] or mission['sections'][:1]
+
+
+def placements(mission, sides, turns, start_only=False, sections=None):
+    """[{"texture", "x", "y", "rotation"}]: where the image draw() makes with the same arguments puts each tile. x, y
+    are the top-left square of the tile's turned grid, in IC2's frame; rotation turns the side's stored image
+    clockwise."""
+    found = []
+    for section in shown_sections(mission, start_only, sections):
+        for tile in section['tiles']:
+            key = texture_key(tile['texture'])
+            k = turns[key]['turn']
+            x, y = grid_corner(alpha_of(sides[key]['image']), k, tile['x'], tile['y'], tile['rotation'])
+            found.append({'texture': tile['texture'], 'x': round(x), 'y': round(y),
+                          'rotation': rotation_of(k, tile['rotation'])})
+    return found
+
+
 def draw(mission, sides, turns, start_only=False, sections=None):
     """(RGBA image, overlap share). start_only: only the sections shown when the mission starts (the first section if
     IC2 hides them all). sections: only these (names)."""
     from PIL import Image
 
-    if sections is not None:
-        shown = [s for s in mission['sections'] if s['name'] in sections]
-    else:
-        shown = [s for s in mission['sections'] if not (start_only and s['hidden'])] or mission['sections'][:1]
     pieces = []
-    for section in shown:
+    for section in shown_sections(mission, start_only, sections):
         for tile in section['tiles']:
             key = texture_key(tile['texture'])
             pieces.append(placed(sides[key]['image'], turns[key]['turn'], tile['x'], tile['y'], tile['rotation']))
@@ -315,22 +348,27 @@ def run(module, cache, textures, dataset, sample=None, out=None, log=print):
         if 'main' in mission:
             image, overlap = draw(mission, sides, turns, sections=mission['main'])
             sections = 'main'
+            placed_here = [p | {'section': None} for p in placements(mission, sides, turns, sections=mission['main'])]
             for section in mission['hidden']:
                 part, _ = draw(mission, sides, turns, sections=section['sections'])
                 hidden.append({'name': section['name'], 'sections': section['sections'],
                                'file': f'{file_stem(name)}-hidden-{len(hidden) + 1}.png'})
                 part.save(out / hidden[-1]['file'], optimize=True)
                 hidden[-1] |= {'size': list(part.size), 'bytes': (out / hidden[-1]['file']).stat().st_size}
+                placed_here += [p | {'section': section['name']}
+                                for p in placements(mission, sides, turns, sections=section['sections'])]
         else:
             image, overlap = draw(mission, sides, turns)
             sections = 'all'
             if overlap > OVERLAP:
                 image, overlap = draw(mission, sides, turns, start_only=True)
                 sections = 'start'
+            placed_here = [p | {'section': None}
+                           for p in placements(mission, sides, turns, start_only=sections == 'start')]
         image.save(out / file, optimize=True)
         maps.append({'name': name, 'map_id': record and record['id'], 'ic2': f"{mission['folder']}/{mission['file']}",
                      'file': file, 'size': list(image.size), 'bytes': (out / file).stat().st_size,
-                     'sections': sections, 'overlap': overlap, 'hidden': hidden})
+                     'sections': sections, 'overlap': overlap, 'hidden': hidden, 'placements': placed_here})
         log(f"  {file}: {image.size[0]}x{image.size[1]} px, {maps[-1]['bytes'] / 1e6:.1f} MB"
             + (', start section only' if sections == 'start' else '')
             + (f', {len(hidden)} hidden' if hidden else '')
@@ -348,7 +386,7 @@ def write(manifest, cache, dataset, out=None, log=print):
     import shutil
 
     from ia_tools.dataset import dumps
-    from ia_tools.layouts import sort_rows
+    from ia_tools.layouts import rows_for, sort_rows
     from ia_tools.tiles import EXPANSIONS, tile_name
 
     out = Path(out or settings.STAGING / 'campaign-maps')
@@ -360,14 +398,20 @@ def write(manifest, cache, dataset, out=None, log=print):
     rows = {}
     for map_id, entry in drawn.items():
         mission = missions[entry['ic2']]
-        rows[map_id] = []
-        for texture, count in mission['tiles'].items():
+        sides = {}
+        for texture in set(mission['tiles']) | {p['texture'] for p in entry.get('placements', [])}:
             expansion, number, side = ic2.TEXTURE.match(texture).groups()
             name = tile_name(EXPANSIONS[expansion], int(number))
             if name not in tiles:
                 problems.append(f"{entry['name']}: no tile {name}")
                 continue
-            rows[map_id].append({'map_id': map_id, 'tile_id': tiles[name], 'side': side, 'count': count})
+            sides[texture] = (tiles[name], side)
+        counts = {sides[t]: count for t, count in mission['tiles'].items() if t in sides}
+        placed = [{'tile_id': sides[p['texture']][0], 'side': sides[p['texture']][1], 'section': p['section'],
+                   'x': p['x'], 'y': p['y'], 'rotation': p['rotation']}
+                  for p in entry.get('placements', []) if p['texture'] in sides]
+        rows[map_id], trouble = rows_for(dataset, map_id, counts, placed, [h['name'] for h in entry['hidden']])
+        problems += [f"{entry['name']}: {t}" for t in trouble]
     if problems:
         return problems
 

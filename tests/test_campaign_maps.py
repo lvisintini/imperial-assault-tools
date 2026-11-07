@@ -33,6 +33,28 @@ def test_tiles_turn_clockwise_about_their_top_left_corner():
     assert campaign_maps.rotate_point(1, 0, 90) == (0, 1) and campaign_maps.rotate_point(1, 0, 270) == (0, -1)
 
 
+@pytest.mark.parametrize('k', range(4))
+@pytest.mark.parametrize('rotation', [0, 90, 180, 270])
+def test_a_placement_is_its_grid_corner_and_the_stored_image_turned_clockwise(k, rotation):
+    tile = side(3, 1, seed=k, tabs=(True, False))
+    image, left, top = campaign_maps.placed(tile, k, 100, 200, rotation)
+    gx, gy = campaign_maps.grid_corner(tile[..., 3], k, 100, 200, rotation)
+    x0, y0, _, _ = campaign_maps.grid_rect(image[..., 3])
+    assert (gx, gy) == ((left + x0) / 64, (top + y0) / 64) and gx.is_integer() and gy.is_integer()
+    assert np.array_equal(np.rot90(tile, -campaign_maps.rotation_of(k, rotation) // 90), image)
+
+
+def test_placements_follow_the_sections_draw_shows():
+    sides = {'Imperial Assault 1A': {'image': side(2, 1, seed=1)}}
+    turns = {'Imperial Assault 1A': {'turn': 1}}
+    tile = {'texture': 'Core_1A', 'x': 30, 'y': 40, 'rotation': 90}
+    two = mission((False, [tile]), (True, [tile | {'x': 0}]))
+    assert campaign_maps.placements(two, sides, turns, start_only=True) == [
+        {'texture': 'Core_1A', 'x': 1, 'y': 4, 'rotation': 0}]  # turned 90 about (3, 4), its 1 x 2 grid starts at x 1
+    assert [p['x'] for p in campaign_maps.placements(two, sides, turns)] == [1, -2]
+    assert [p['x'] for p in campaign_maps.placements(two, sides, turns, sections=['S1'])] == [-2]
+
+
 def test_a_sides_turn_is_the_one_whose_colours_match():
     tile = side(2, 1, seed=3)
     texture = np.rot90(tile, 3)[..., :3].repeat(4, axis=0).repeat(4, axis=1)  # IC2's, larger and turned
@@ -162,8 +184,12 @@ def fake_run(dataset, out):
     for i, record in enumerate({r['id']: r for r in campaign_maps.campaign_maps(dataset).values()}.values()):
         file = record['image'].split('/')[-1]
         Image.new('RGBA', (1, 1)).save(out / file)
-        maps.append({'name': record['name'], 'map_id': record['id'], 'ic2': f'F/M{i}.json', 'file': file, 'hidden': []})
-        missions.append({'folder': 'F', 'file': f'M{i}.json', 'tiles': dict(sorted(rows[record['id']].items()))})
+        tiles = dict(sorted(rows[record['id']].items()))
+        placements = [{'texture': t, 'section': None, 'x': 10 + 3 * j, 'y': 5 + n, 'rotation': 90}
+                      for n, (t, count) in enumerate(tiles.items()) for j in range(count)]
+        maps.append({'name': record['name'], 'map_id': record['id'], 'ic2': f'F/M{i}.json', 'file': file, 'hidden': [],
+                     'placements': placements})
+        missions.append({'folder': 'F', 'file': f'M{i}.json', 'tiles': tiles})
     return {'maps': maps}, {'missions': missions}
 
 
@@ -175,7 +201,14 @@ def test_write_puts_the_maps_hidden_sections_and_layouts_in_the_data(dataset_cop
     before = {p: dataset_copy.path(p).read_text(encoding='utf-8') for p in ('maps', 'map-layouts')}
     assert campaign_maps.write(manifest, cache, dataset_copy, out=out, log=lambda *a: None) == []
     layouts = json.loads(dataset_copy.path('map-layouts').read_text(encoding='utf-8'))
-    assert layouts == sort_rows(dataset_copy, json.loads(before['map-layouts']))  # the same tiles: the same rows, sorted
+    counted = [(r['map_id'], r['tile_id'], r['side'], r['count']) for r in layouts]
+    assert counted == [(r['map_id'], r['tile_id'], r['side'], r['count'])  # the same tiles: the same rows, sorted
+                       for r in sort_rows(dataset_copy, json.loads(before['map-layouts']))]
+    drawn = {m['map_id'] for m in manifest['maps']}
+    assert all(len(r['placements']) == r['count'] for r in layouts if r['map_id'] in drawn)
+    first = [p for r in layouts if r['map_id'] == manifest['maps'][0]['map_id'] for p in r['placements']]
+    assert min(p['x'] for p in first) == 0 and min(p['y'] for p in first) == 0  # the frame starts at 0, 0
+    assert {p['rotation'] for p in first} == {90} and {p['section'] for p in first} == {None}
     maps = json.loads(dataset_copy.path('maps').read_text(encoding='utf-8'))
     assert all(list(m) == ['id', 'name', 'image', 'hidden_sections'] and m['hidden_sections'] == [] for m in maps)
 
@@ -185,6 +218,9 @@ def test_write_puts_the_maps_hidden_sections_and_layouts_in_the_data(dataset_cop
     (dataset_copy.root / 'images' / 'large' / 'maps' / f'{stem}-hidden-2.png').write_bytes(b'stale')
     entry['hidden'] = [{'name': 'Cave', 'sections': ['Two'], 'file': f'{stem}-hidden-1.png'}]
     mission['tiles'] = {'Core_1A': 2}
+    entry['placements'] = [{'texture': 'Core_1A', 'section': None, 'x': 5, 'y': 3, 'rotation': 90},
+                           {'texture': 'Core_1A', 'section': 'Cave', 'x': 4, 'y': 3, 'rotation': 0},
+                           {'texture': 'Core_1A', 'section': 'Cave', 'x': 6, 'y': 3, 'rotation': 0}]
     assert campaign_maps.write(manifest, cache, dataset_copy, out=out, log=lambda *a: None) == []
     maps = json.loads(dataset_copy.path('maps').read_text(encoding='utf-8'))
     assert next(m for m in maps if m['id'] == entry['map_id'])['hidden_sections'] == [
@@ -195,6 +231,13 @@ def test_write_puts_the_maps_hidden_sections_and_layouts_in_the_data(dataset_cop
     layouts = json.loads(dataset_copy.path('map-layouts').read_text(encoding='utf-8'))
     own = [r for r in layouts if r['map_id'] == entry['map_id']]
     assert [(r['side'], r['count']) for r in own] == [('A', 2)] and layouts == sort_rows(dataset_copy, layouts)
+    assert own[0]['placements'] == [{'section': None, 'x': 1, 'y': 0, 'rotation': 90},
+                                    {'section': 'Cave', 'x': 0, 'y': 0, 'rotation': 0},
+                                    {'section': 'Cave', 'x': 2, 'y': 0, 'rotation': 0}]
+
+    entry['placements'] = entry['placements'][:1]  # a copy placed nowhere
+    assert campaign_maps.write(manifest, cache, dataset_copy, out=out, log=lambda *a: None) != []
+    entry['placements'] = [{'texture': 'Core_1A', 'section': None, 'x': x, 'y': 0, 'rotation': 0} for x in range(2)]
 
     del manifest['maps'][1]
     assert campaign_maps.write(manifest, cache, dataset_copy, out=out, log=lambda *a: None) != []

@@ -58,8 +58,8 @@ CORRECTIONS = {
         'main': ['Start Section'],
         'hidden': [['Command Center', ['Section 2 - Crash', 'Section 3 - Facility']]]},
     'EMPIRE2.json': {'section sides': {'Start Section': {'Empire_17A': 'Empire_17B'}}},  # Dark Recon
-    'EMPIRE3.json': {  # Disruption
-        'counts': {'Empire_16B': 3, 'Empire_17B': 3},
+    'EMPIRE3.json': {  # Disruption: the 17B in R3 (below 10B, above 28B) is a 16B, so 16B x3 and 17B x3
+        'section sides': {'R3': {'Empire_17B': 'Empire_16B'}},
         'main': ['Start Section'],
         'hidden': [['Underworld (Visible area)', ['Section 2 - Underworld']],
                    ['Underworld (Obscured area)', ['R1', 'R2', 'R3', 'R4', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6',

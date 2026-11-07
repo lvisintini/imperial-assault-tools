@@ -14,9 +14,9 @@
   ia tiles [module]      stage the Vassal module's map tiles and IC2's campaign layouts in staging/map-tiles/
   ia sheets [dir]        turn the scanned rules sheets (Sheets/<product>/, two pages each) into PDFs in staging/sheets/
   ia maps [--sample ...] draw the campaign maps from IC2's corrected layouts and the Vassal tiles in staging/campaign-maps/
-                         (--write: also their images, hidden images and layouts into the data repo)
-  ia layouts             write the map layouts entered in ia enter (Map layouts) into the data repo (--check to only
-                         validate)
+                         (--write: also their images, hidden images and layouts, with placements, into the data repo)
+  ia skirmish-maps       check the skirmish and raid maps' reviewed placements (staging/skirmish-maps/final.json)
+                         (--write: their map-layouts rows into the data repo)
   ia card-types --fetch  cache the wiki's text of the reward Feats and Imperial class cards, to propose which are a
                          Group Attachment on ia enter's Card types page
   ia card-types          write the card types confirmed in ia enter into the data repo (--check to only validate)
@@ -237,17 +237,18 @@ def cmd_maps(args):
         sys.exit(1)
 
 
-def cmd_layouts(args):
-    from ia_tools import layouts
+def cmd_skirmish_maps(args):
+    from ia_tools import skirmish_maps
     from ia_tools.dataset import Dataset
 
-    summary, problems = layouts.run(Dataset(), check=args.check)
+    dataset = Dataset()
+    summary, problems = skirmish_maps.run(dataset, write=args.write)
     print(json.dumps(summary, indent=2))
     if problems:
         print(f'{len(problems)} problems:', *problems, sep='\n  ')
         sys.exit(1)
-    if not args.check:
-        print(f"Wrote {summary['done']} maps' layouts into map-layouts.json")
+    if args.write:
+        print(f'Wrote them into {dataset.path("map-layouts")}')
 
 
 def cmd_mats(args):
@@ -381,9 +382,10 @@ def main(argv=None):
                       help="write the images, hidden images and layouts into the data repo (all missions)")
     maps.set_defaults(func=cmd_maps)
 
-    layouts = commands.add_parser('layouts', help='write the map layouts entered in ia enter into the data repo')
-    layouts.add_argument('--check', action='store_true', help='only validate the entries')
-    layouts.set_defaults(func=cmd_layouts)
+    skirmish = commands.add_parser('skirmish-maps', help="the skirmish and raid maps' layout rows, from their reviewed "
+                                                          'placements (staging/skirmish-maps/final.json)')
+    skirmish.add_argument('--write', action='store_true', help='write them into the data repo')
+    skirmish.set_defaults(func=cmd_skirmish_maps)
 
     mats_ = commands.add_parser('mats', help="stage the skirmish map mats as sources, with images from FFG's archived "
                                              'product pages')

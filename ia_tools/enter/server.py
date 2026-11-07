@@ -10,7 +10,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
-from ia_tools import card_types, edits, images, importer, layouts, mission_entries
+from ia_tools import card_types, edits, images, importer, mission_entries
 from ia_tools.dataset import Dataset
 from ia_tools.enter import api
 from ia_tools.staging import Staging
@@ -76,10 +76,6 @@ class Handler(BaseHTTPRequestHandler):
             match parts:
                 case []:
                     return self.send_file(STATIC / 'index.html')
-                case ['layouts']:
-                    return self.send_file(STATIC / 'layouts.html')
-                case ['api', 'layouts']:
-                    return self.send_json(layouts.panel(self.dataset))
                 case ['card-types']:
                     return self.send_file(STATIC / 'card-types.html')
                 case ['api', 'card-types']:
@@ -109,12 +105,6 @@ class Handler(BaseHTTPRequestHandler):
         parts = [unquote(p) for p in urlsplit(self.path).path.strip('/').split('/') if p]
         body = self.read_json()
         match parts:
-            case ['api', 'layouts', map_id]:
-                with lock:
-                    entries = layouts.load()
-                    entries['maps'][map_id] = body
-                    layouts.save(entries)
-                return self.send_json({'saved': True, 'problems': layouts.check_map(body, self.dataset)})
             case ['api', 'missions', 'scenarios', card_id]:
                 with lock:
                     entries = mission_entries.load()
