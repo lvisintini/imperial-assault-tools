@@ -63,7 +63,7 @@ def test_a_sides_scan_is_found_whatever_its_names_case(tmp_path):
     assert hires_tiles.scan_file('Imperial Assault', 1, 'A', tmp_path) is None
 
 
-def test_a_scan_of_another_side_is_found_out_and_not_staged(dataset_copy, tmp_path):
+def test_a_scan_that_fits_another_sides_image_better_is_flagged(dataset_copy, tmp_path):
     """Two same-sized sides with generated art; one's scan is a copy of the other's (as Heart_13A.png was 15A's)."""
     from PIL import Image
 
@@ -82,7 +82,34 @@ def test_a_scan_of_another_side_is_found_out_and_not_staged(dataset_copy, tmp_pa
     # The first side's scan is the second's.
     (scans / f"Core_{first['number']}A.png").write_bytes((scans / f"Core_{second['number']}A.png").read_bytes())
     keys = [f"{t['name']} A" for t in (first, second)]
-    manifest, problems = hires_tiles.run(dataset_copy, scans=scans, out=tmp_path / 'out', only=keys, log=lambda *_: None)
-    assert any(p.startswith(f'{keys[0]}: its scan') and f'looks like {keys[1]}' in p for p in problems)
-    assert list(manifest['sides']) == [keys[1]]
-    assert not (tmp_path / 'out' / first['side_a']).exists() and (tmp_path / 'out' / second['side_a']).exists()
+    manifest, problems = hires_tiles.run(dataset_copy, scans=scans, out=tmp_path / 'out', only=keys,
+                                         log=lambda *_: None, page=False)
+    assert problems == [] and list(manifest['sides']) == keys  # both staged
+    assert manifest['sides'][keys[0]]['fits_better']['side'] == keys[1] and 'fits_better' not in manifest['sides'][keys[1]]
+    assert hires_tiles.weak(manifest['sides'][keys[0]])
+    assert any('fits ' + keys[1] in r for r in hires_tiles.reasons(manifest['sides'][keys[0]]))
+
+
+def test_a_placement_covers_its_turned_squares():
+    alpha = np.zeros((64, 160), np.uint8)  # 2 x 1 squares, tabs across
+    alpha[:, 16:144] = 255
+    assert hires_tiles.covered(alpha, 0, 3, 4, 64) == {(3, 4), (4, 4)}
+    assert hires_tiles.covered(alpha, 90, 3, 4, 64) == {(3, 4), (3, 5)}
+    notched = np.full((128, 128), 255, np.uint8)
+    notched[:64, 64:] = 0  # an L: its top-right square missing
+    assert hires_tiles.covered(notched, 90, 0, 0, 64) == {(0, 0), (0, 1), (1, 0)}  # turned, the missing one is (1, 1)
+
+
+def test_a_map_spot_is_the_side_and_a_square_round_it(dataset_copy):
+    from PIL import Image
+
+    tile = dataset_copy.records('map-tiles')[0]
+    side = np.zeros((128, 128, 4), np.uint8)
+    side[...] = (200, 10, 10, 255)
+    neighbour = {'tile_id': tile['id'], 'side': 'A', 'x': 2, 'y': 0, 'rotation': 0}
+    use = {'placement': {'tile_id': tile['id'], 'side': 'A', 'x': 0, 'y': 0, 'rotation': 0},
+           'neighbours': [neighbour]}
+    drawn = np.array(hires_tiles.draw_usage(dataset_copy, use, lambda t, s: side, 64))
+    assert drawn.shape == (4 * 64, 4 * 64, 4)  # 2 x 2 squares plus one all round
+    assert drawn[64 + 32, 64 + 32, 3] == 255 and drawn[64 + 32, 3 * 64 + 32, 3] == 255  # the side, its neighbour
+    assert drawn[16, 16, 3] == 0

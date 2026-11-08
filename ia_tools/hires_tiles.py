@@ -17,9 +17,11 @@ product's well-registered sides (colour correlation >= GOOD); the maintainer cho
 Writes staging/hires-tiles/:
 - map-tiles/<the dataset's file name>: the new sides;
 - manifest.json: {"square", "luts": {product: [[256] x 3]}, "sides": {"<tile name> <side>": {"scan", "file", "turn",
-  "how", "corr", "iou", "clipped", "band", "scale", "after"}}}: clipped is the scan's pixels outside our frame, band
-  that as px all along our outline (the scans are cut a pixel or so outside the print);
-- index.html: a review page, ours and the new side next to each other, the weakest fits first.
+  "how", "corr", "iou", "clipped", "band", "scale", "after", "fits_better"?}}}: clipped is the scan's pixels outside
+  our frame, band that as px all along our outline (the scans are cut a pixel or so outside the print), fits_better
+  {"side", "corr"} when the scan fits another side's image clearly better than its own;
+- index.html and review/: a review page (review()), a collapsible section per product, each side's current and new
+  images, and the same spot of a map drawn with each: where the side touches the most other tiles.
 
 The tools measure the images; the maintainer looks at them."""
 import html
@@ -103,8 +105,23 @@ def outline_length(alpha):
     return int((inside - cv2.erode(inside, np.ones((3, 3), np.uint8))).sum())
 
 
+def reasons(info):
+    """Why the review page flags a fit (none: it isn't)."""
+    found = []
+    if info.get('fits_better'):
+        found.append(f"its scan fits {info['fits_better']['side']}'s image better ({info['fits_better']['corr']}, "
+                     f"against {info['corr']} for its own)")
+    if info['corr'] < GOOD:
+        found.append(f"colour correlation {info['corr']} (below {GOOD})")
+    if info['iou'] < OVERLAP:
+        found.append(f"outline overlap {info['iou']} (below {OVERLAP})")
+    if info['band'] > BAND:
+        found.append(f"{info['band']} px of the scan outside the frame (over {BAND})")
+    return found
+
+
 def weak(info):
-    return info['corr'] < GOOD or info['iou'] < OVERLAP or info['band'] > BAND
+    return bool(reasons(info))
 
 
 def warp(scan, M, size):
@@ -222,8 +239,9 @@ def apply_curves(rgba, curves):
 
 # Run ---------------------------------------------------------------------------------------------------------------
 
-def run(dataset, scans=None, out=None, only=None, log=print):
-    """(manifest, problems). only: keys ("Core Set 01 A") to do, for a sample run."""
+def run(dataset, scans=None, out=None, only=None, log=print, page=True):
+    """(manifest, problems). only: keys ("Core Set 01 A") to do; with an earlier full run, its tone curves and other
+    sides are kept."""
     import cv2
     import numpy as np
     from PIL import Image
@@ -269,8 +287,9 @@ def run(dataset, scans=None, out=None, only=None, log=print):
         log(f"  {key}: {how}, turn {fitted[key]['info']['turn']}, corr {corr:.3f}, outline IoU {iou:.3f}, "
             f"{fitted[key]['info']['band']} px outside the frame")
 
-    # A weak fit may be a scan of another side (Heart_13A.png was 15A's): try it on the product's other sides of the
-    # same size; one that fits it clearly better means the scan is of that side, so it's left out.
+    # A weak fit may be a scan of another side, or of a tile printed with another's art (Heart_13A.png fits 15A's
+    # image, its number pill says 13A): try it on the product's other sides of the same size, and flag one that fits
+    # clearly better, for the maintainer to look at.
     for key, f in list(fitted.items()):
         if f['info']['corr'] >= GOOD:
             continue
@@ -288,14 +307,17 @@ def run(dataset, scans=None, out=None, only=None, log=print):
             if corr and corr > f['info']['corr'] + 0.05 and (best is None or corr > best[0]):
                 best = (corr, other)
         if best:
-            problems.append(f"{key}: its scan ({f['info']['scan']}) looks like {best[1]} (colour correlation "
-                            f"{best[0]:.3f}, against {f['info']['corr']} for its own side); not staged")
-            (out / f['info']['file']).unlink(missing_ok=True)
-            del fitted[key]
+            f['info']['fits_better'] = {'side': best[1], 'corr': round(best[0], 3)}
+            log(f"  {key}: its scan fits {best[1]}'s image better ({best[0]:.3f})")
 
+    # A run of some sides (only) keeps the last full run's tone curves and sides, and updates these.
+    earlier = json.loads((out / 'manifest.json').read_text(encoding='utf-8')) if only and (
+        out / 'manifest.json').exists() else {'luts': {}, 'sides': {}}
     rng = np.random.default_rng(0)
-    curves = {}
+    curves = {p: np.array(c, np.uint8) for p, c in earlier['luts'].items()}
     for product in PREFIXES:
+        if product in curves:
+            continue
         src, dst = [], []
         for f in fitted.values():
             if f['product'] != product or f['info']['corr'] < GOOD:
@@ -309,7 +331,7 @@ def run(dataset, scans=None, out=None, only=None, log=print):
             curves[product] = np.stack([tone_curve(src[:, c], dst[:, c]) for c in range(3)])
         elif any(f['product'] == product for f in fitted.values()):
             problems.append(f'{product}: no side fits well enough for its tone curve')
-    sides_info = {}
+    sides_info = dict(earlier['sides'])
     for key, f in fitted.items():
         if f['product'] not in curves:
             continue
@@ -317,34 +339,192 @@ def run(dataset, scans=None, out=None, only=None, log=print):
         f['info']['after'] = round(score(f['ours'], final)[0], 3)
         Image.fromarray(final).save(out / f['info']['file'], optimize=True)
         sides_info[key] = f['info']
-    manifest = {'square': SQUARE, 'luts': {p: c.tolist() for p, c in curves.items()}, 'sides': sides_info}
+    order = [key for key, *_ in sides(dataset)]
+    manifest = {'square': SQUARE, 'luts': {p: c.tolist() for p, c in curves.items()},
+                'sides': dict(sorted(sides_info.items(), key=lambda item: order.index(item[0])))}
     (out / 'manifest.json').write_text(json.dumps(manifest, indent=1), encoding='utf-8')
-    review(dataset, manifest, out)
+    if page:
+        review(dataset, manifest, out)
     return manifest, problems
 
 
+# Review ------------------------------------------------------------------------------------------------------------
+
+SHORT = {'Imperial Assault': 'Core', 'Twin Shadows': 'TS', 'Return to Hoth': 'H', 'The Bespin Gambit': 'BG',
+         "Jabba's Realm": 'JR', 'Heart of the Empire': 'HotE', 'Tyrants of Lothal': 'ToL'}
+
+
+def covered(alpha, rotation, x, y, px):
+    """The squares a placement covers: its side's grid turned clockwise by rotation, a square counted when the tile
+    is at its centre, from (x, y)."""
+    import numpy as np
+    from ia_tools.campaign_maps import grid_rect
+
+    turned = np.rot90(alpha, -rotation // 90)
+    x0, y0, w, h = grid_rect(turned, px)
+    return {(x + i, y + j) for i in range(w) for j in range(h)
+            if turned[y0 + j * px + px // 2, x0 + i * px + px // 2] > 127}
+
+
+def usages(dataset):
+    """{side key: {"map", "section", "placement", "neighbours": [placement], "touching"}}: for each tile side, the
+    placement in map-layouts where it touches the most other tiles (then the most square edges shared), with those
+    tiles. A placement here: {"tile_id", "side", "x", "y", "rotation"}, on one of the map's images."""
+    import numpy as np
+    from PIL import Image
+
+    tiles = {t['id']: t for t in dataset.records('map-tiles')}
+    maps = {m['id']: m['name'] for m in dataset.records('maps')}
+    alphas, images = {}, {}
+    for row in dataset.records('map-layouts'):
+        for p in row['placements']:
+            images.setdefault((row['map_id'], p['section']), []).append(
+                {'tile_id': row['tile_id'], 'side': row['side'], 'x': p['x'], 'y': p['y'], 'rotation': p['rotation']})
+    best = {}
+    for (map_id, section), placed in images.items():
+        squares = []
+        for p in placed:
+            field = f"side_{p['side'].lower()}"
+            path = tiles[p['tile_id']][field]
+            if path not in alphas:
+                alphas[path] = np.array(Image.open(dataset.root / 'images' / 'large' / path).convert('RGBA'))[..., 3]
+            squares.append(covered(alphas[path], p['rotation'], p['x'], p['y'], 64))
+        for i, p in enumerate(placed):
+            edges = {(x + dx, y + dy) for x, y in squares[i] for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))}
+            edges -= squares[i]
+            touching = [j for j in range(len(placed)) if j != i and squares[j] & edges]
+            shared = sum(len(squares[j] & edges) for j in touching)
+            tile = tiles[p['tile_id']]
+            key = f"{tile['name']} {p['side']}"
+            rank = (len(touching), shared, maps[map_id])
+            if key not in best or rank[:2] > best[key]['rank'][:2] or (
+                    rank[:2] == best[key]['rank'][:2] and rank[2] < best[key]['rank'][2]):
+                best[key] = {'rank': rank, 'map': maps[map_id], 'section': section, 'placement': p,
+                             'neighbours': [placed[j] for j in touching], 'touching': len(touching), 'shared': shared}
+    return best
+
+
+def draw_usage(dataset, use, image_of, px):
+    """The spot of a map a usage shows: its side and the tiles it touches, drawn at px per square from image_of(tile,
+    side) (RGBA arrays), cropped to the side's grid plus a square all round. The side is drawn last, on top."""
+    import numpy as np
+    from PIL import Image
+    from ia_tools.campaign_maps import grid_rect
+
+    tiles = {t['id']: t for t in dataset.records('map-tiles')}
+    page = None
+    pieces = []
+    for p in use['neighbours'] + [use['placement']]:
+        image = np.rot90(image_of(tiles[p['tile_id']], p['side']), -p['rotation'] // 90)
+        x0, y0, w, h = grid_rect(image[..., 3], px)
+        pieces.append((image, p['x'] * px - x0, p['y'] * px - y0, (p['x'], p['y'], w, h)))
+    _, _, _, (sx, sy, sw, sh) = pieces[-1]
+    left, top = (sx - 1) * px, (sy - 1) * px
+    width, height = (sw + 2) * px, (sh + 2) * px
+    page = Image.new('RGBA', (width, height), (0, 0, 0, 0))
+    for image, x, y, _ in pieces:
+        layer = Image.new('RGBA', page.size, (0, 0, 0, 0))
+        layer.paste(Image.fromarray(np.ascontiguousarray(image)), (x - left, y - top))
+        page = Image.alpha_composite(page, layer)
+    return page
+
+
 def review(dataset, manifest, out):
-    """index.html: each side, ours (upscaled) and the new one, the flagged fits first, then the weakest."""
+    """index.html and review/: every side in the tiles' file order, a collapsible section per product; flagged sides
+    first in a list at the top, and marked in red. Per side: its current image, the new one, and the spot of a map
+    where it touches the most other tiles, drawn with the current tiles and with the new ones."""
     import os
 
-    rows = sorted(manifest['sides'].items(), key=lambda item: (not weak(item[1]), item[1]['corr'], item[1]['iou']))
-    # Relative, so the page works from any browser that opens the file (Windows' too).
-    data = Path(os.path.relpath(dataset.root / 'images' / 'large', out)).as_posix()
-    flagged = sum(weak(info) for _, info in rows)
-    page = ['<!doctype html><meta charset="utf-8"><title>High-res tiles</title><style>',
-            'body{font:14px system-ui;margin:16px;background:#222;color:#ddd}h2{margin:24px 0 4px;font-size:15px}',
-            '.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}img{width:100%;height:auto}',
-            '.row.zoom{grid-template-columns:1fr}.weak{color:#f99}figcaption{font-size:12px;opacity:.8}</style>',
-            f'<p><b>{len(rows)} tile sides at {manifest["square"]} px per square</b>; {flagged} flagged (in red: '
-            f'colour correlation below {GOOD}, outline overlap below {OVERLAP}, or more than {BAND} px of the scan '
-            'outside the frame), first. Left: the current image (Vassal, 64 px per square); right: the scan, fitted '
-            'onto it and colour-corrected. Click a row for full size.</p>']
-    for key, info in rows:
-        page.append(f'<h2 class="{"weak" if weak(info) else ""}">{html.escape(key)}</h2><div>{html.escape(info["scan"])}: '
-                    f'{html.escape(info["how"])}, turned {info["turn"]}°, {info["scale"]} px per square in the scan; '
-                    f'colour correlation {info["corr"]} (after the curve {info.get("after")}), outline overlap '
-                    f'{info["iou"]}, {info["band"]} px outside the frame</div>'
-                    '<div class="row" onclick="this.classList.toggle(\'zoom\')">'
-                    f'<figure><img loading="lazy" src="{data}/{info["file"]}"><figcaption>current</figcaption></figure>'
-                    f'<figure><img loading="lazy" src="{info["file"]}"><figcaption>new</figcaption></figure></div>')
+    import numpy as np
+    from PIL import Image
+
+    (out / 'review').mkdir(exist_ok=True)
+    for old in (out / 'review').glob('*.png'):  # the PNGs earlier pages had
+        old.unlink()
+    data = dataset.root / 'images' / 'large'
+    rel = Path(os.path.relpath(data, out)).as_posix()  # relative, so any browser opening the file finds them
+
+    def current(tile, side):
+        return np.array(Image.open(data / tile[f'side_{side.lower()}']).convert('RGBA'))
+
+    def new(tile, side):
+        path = out / tile[f'side_{side.lower()}']
+        return np.array(Image.open(path).convert('RGBA')) if path.exists() else (
+            np.array(Image.fromarray(current(tile, side)).resize(
+                (current(tile, side).shape[1] * 2, current(tile, side).shape[0] * 2))))
+
+    uses = usages(dataset)
+    groups, flagged = {}, []
+    for key, product, tile, side, field in sides(dataset):
+        info = manifest['sides'].get(key)
+        groups.setdefault(product, []).append((key, tile, side, info))
+        if info is None or weak(info):
+            flagged.append((key, product))
+    slug = lambda key: key.lower().replace("'", '').replace(' ', '-')
+    css = """
+body{font:14px system-ui,sans-serif;margin:16px;background:#1e1e1e;color:#ddd}a{color:#9cf}
+details.set{margin:10px 0;border:1px solid #444;border-radius:6px;padding:4px 10px}
+details.set>summary{cursor:pointer;font-size:16px;font-weight:600;padding:6px 0}
+.side{margin:12px 0 18px;padding:8px;border-radius:6px;background:#262626}
+.side.flag{background:#3a1d1d;outline:2px solid #e55}
+.side h3{margin:0 0 4px;font-size:14px}.flags{margin:4px 0;color:#fbb;font-weight:600}
+.flags li{margin-left:18px}.meta{font-size:12px;opacity:.75;margin-bottom:6px}
+.imgs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:start;max-width:1400px}
+.imgs figure{margin:0}.imgs img{max-width:100%;height:auto;display:block;background:#333}
+figcaption{font-size:12px;opacity:.8;margin-top:3px}.count{font-weight:normal;opacity:.7}
+.badge{background:#e55;color:#fff;border-radius:10px;padding:1px 8px;font-size:12px;margin-left:6px}
+.top{background:#3a1d1d;border:2px solid #e55;border-radius:6px;padding:8px 12px}"""
+    page = [f'<!doctype html><meta charset="utf-8"><title>High-res tiles</title><style>{css}</style>',
+            f'<h1>High-res tiles: {len(manifest["sides"])} sides at {manifest["square"]} px per square</h1>',
+            '<p>Each side: the current image (Vassal, 64 px per square), the new one (the scan fitted onto it and '
+            'colour-corrected), then the spot of a map where the side touches the most other tiles, drawn with the '
+            'current tiles and with the new ones, to check how it fits its set. Click an image to open it.</p>']
+    if flagged:
+        page.append(f'<div class="top"><b>{len(flagged)} flagged</b>: ' + ', '.join(
+            f'<a href="#{slug(k)}">{html.escape(k)}</a>' for k, _ in flagged) + '</div>')
+    for product, members in groups.items():
+        bad = sum(1 for k, _ in flagged if _ == product)
+        page.append(f'<details class="set"><summary>{SHORT[product]}: '
+                    f'{html.escape(members[0][1]["name"].rsplit(" ", 1)[0])} <span class="count">{len(members)} '
+                    f'sides</span>{f"<span class=badge>{bad} flagged</span>" if bad else ""}</summary>')
+        for key, tile, side, info in members:
+            s = slug(key)
+            found = reasons(info) if info else ['no high-res image (no scan, or not staged)']
+            use = uses.get(key)
+            figures = [f'<figure><a href="{rel}/{tile["side_" + side.lower()]}"><img loading="lazy" '
+                       f'src="{rel}/{tile["side_" + side.lower()]}"></a><figcaption>current (Vassal)</figcaption></figure>']
+            if info:
+                figures.append(f'<figure><a href="{info["file"]}"><img loading="lazy" src="{info["file"]}"></a>'
+                               '<figcaption>new (high-res)</figcaption></figure>')
+            else:
+                figures.append('<figure><figcaption>no high-res image</figcaption></figure>')
+            if use:
+                where = f'{use["map"]}' + (f' ({use["section"]})' if use['section'] else '')
+                for label, image_of, px in (('current tiles', current, 64), ('new tiles', new, SQUARE)):
+                    # JPEG on the page's grey: these are only to look at, and PNGs of them run to hundreds of MB.
+                    file = f'review/{s}-{"vassal" if px == 64 else "hires"}.jpg'
+                    drawn = draw_usage(dataset, use, image_of, px)
+                    flat = Image.new('RGB', drawn.size, (51, 51, 51))
+                    flat.paste(drawn, mask=drawn.getchannel('A'))
+                    flat.save(out / file, quality=88)
+                    figures.append(f'<figure><a href="{file}"><img loading="lazy" src="{file}"></a><figcaption>'
+                                   f'{html.escape(where)}, {label}: touches {use["touching"]} tiles</figcaption></figure>')
+            else:
+                figures.append('<figure><figcaption>not used on any map, so no map spot to show</figcaption></figure>')
+            meta = (f'{html.escape(info["scan"])}: {html.escape(info["how"])}, turned {info["turn"]}°, {info["scale"]} '
+                    f'px per square; colour correlation {info["corr"]}, outline overlap {info["iou"]}, {info["band"]} '
+                    'px outside the frame') if info else ''
+            page.append(f'<div class="side{" flag" if found else ""}" id="{s}"><h3>{html.escape(key)}'
+                        f'{"<span class=badge>check</span>" if found else ""}</h3>'
+                        + (f'<ul class="flags">{"".join(f"<li>{html.escape(r)}</li>" for r in found)}</ul>' if found else '')
+                        + f'<div class="meta">{meta}</div><div class="imgs">{"".join(figures)}</div></div>')
+        page.append('</details>')
+    # A link to a side (the flagged list, or the address) opens its set.
+    page.append("""<script>
+function reveal() {
+  const side = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (side) { side.closest('details').open = true; side.scrollIntoView(); }
+}
+addEventListener('hashchange', reveal); reveal();
+</script>""")
     (out / 'index.html').write_text('\n'.join(page), encoding='utf-8')

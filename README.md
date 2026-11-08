@@ -142,8 +142,11 @@ says which commit of this repo produced it.
   their outline, any turn) onto the dataset's tile images at 128 px per square: SIFT and a similarity (or, for a
   plain tile, its outline at each quarter turn), refined by ECC, then drawn into the dataset side's frame (so grids
   and tabs land where ours are), with one tone curve per product histogram-matched to ours (chosen from samples in
-  `staging/tile-samples/`). It stages them in `staging/hires-tiles/` with a manifest and a review page (`--only`
-  for a sample). The 13 sides scanned later, several to a page, were cut out of their scans by
+  `staging/tile-samples/`). It stages them in `staging/hires-tiles/` with a manifest and a review page: every side
+  in file order, a collapsible section per product, flagged fits marked (a weak fit, or a scan that fits another
+  side's image better), and for each side the spot of a map where it touches the most other tiles, drawn with the
+  current tiles and with the new ones. `--only` refits some sides (keeping the last full run's tone curves),
+  `--review` rebuilds the page. The 13 sides scanned later, several to a page, were cut out of their scans by
   `staging/missing-tiles/`.
 - **Card types** (data 2.0.0; `/card-types`) goes through the reward Feats and the Imperial class cards, a tab each,
   with their `type` (Feat, or Group Attachment for a card attached to an Imperial deployment group) proposed from the

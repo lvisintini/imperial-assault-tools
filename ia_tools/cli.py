@@ -257,11 +257,17 @@ def cmd_hires_tiles(args):
     from ia_tools import hires_tiles
     from ia_tools.dataset import Dataset
 
-    manifest, problems = hires_tiles.run(Dataset(), only=args.only)
+    dataset = Dataset()
+    if args.review:
+        manifest = json.loads((hires_tiles.out_dir() / 'manifest.json').read_text(encoding='utf-8'))
+        hires_tiles.review(dataset, manifest, hires_tiles.out_dir())
+        print(hires_tiles.out_dir() / 'index.html')
+        return
+    manifest, problems = hires_tiles.run(dataset, only=args.only)
     sides = manifest['sides'].values()
-    weak = [s for s in sides if s['corr'] < hires_tiles.GOOD]
-    print(f"{len(manifest['sides'])} sides at {manifest['square']} px per square, {len(weak)} below "
-          f"{hires_tiles.GOOD} colour correlation: {hires_tiles.out_dir() / 'index.html'}")
+    flagged = [s for s in sides if hires_tiles.weak(s)]
+    print(f"{len(manifest['sides'])} sides at {manifest['square']} px per square, {len(flagged)} flagged: "
+          f"{hires_tiles.out_dir() / 'index.html'}")
     if problems:
         print(f'{len(problems)} problems:', *problems, sep='\n  ')
         sys.exit(1)
@@ -407,7 +413,9 @@ def main(argv=None):
     hires = commands.add_parser('hires-tiles', help="the map tiles' sides from the scans in tiles/, fitted onto "
                                                     'ours at 128 px per square and colour-corrected, staged with a '
                                                     'review page (staging/hires-tiles)')
-    hires.add_argument('--only', nargs='+', metavar='SIDE', help='only these sides ("Core Set 01 A")')
+    hires.add_argument('--only', nargs='+', metavar='SIDE', help='only these sides ("Core Set 01 A"), keeping the last '
+                                                               "full run's tone curves and other sides")
+    hires.add_argument('--review', action='store_true', help='only rebuild the review page from the last run')
     hires.set_defaults(func=cmd_hires_tiles)
 
     mats_ = commands.add_parser('mats', help="stage the skirmish map mats as sources, with images from FFG's archived "
