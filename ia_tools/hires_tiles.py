@@ -231,21 +231,27 @@ def run(dataset, scans=None, out=None, only=None, log=print):
     scans = Path(scans or scans_dir())
     out = Path(out or out_dir())
     (out / 'map-tiles').mkdir(parents=True, exist_ok=True)
-    problems, fitted = [], {}
-    for key, product, tile, side, field in sides(dataset):
+
+    def ours_of(tile, field):
+        image = np.array(Image.open(dataset.root / 'images' / 'large' / tile[field]).convert('RGBA'))
+        k = SQUARE / 64
+        return cv2.resize(image, (round(image.shape[1] * k), round(image.shape[0] * k)), interpolation=cv2.INTER_CUBIC)
+
+    every = sides(dataset)
+    problems, fitted, scanned = [], {}, {}
+    for key, product, tile, side, field in every:
         if only and key not in only:
             continue
         file = scan_file(product, tile['number'], side, scans)
         if file is None:
             problems.append(f'{key}: no scan')
             continue
-        ours = np.array(Image.open(dataset.root / 'images' / 'large' / tile[field]).convert('RGBA'))
-        k = SQUARE / 64
-        ours = cv2.resize(ours, (round(ours.shape[1] * k), round(ours.shape[0] * k)), interpolation=cv2.INTER_CUBIC)
+        ours = ours_of(tile, field)
         scan = np.array(Image.open(file).convert('RGBA'))
         ys, xs = np.where(scan[..., 3] > 0)
         scan = scan[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
         scan = cv2.resize(scan, None, fx=SQUARE / SCAN_PX, fy=SQUARE / SCAN_PX, interpolation=cv2.INTER_AREA)
+        scanned[key] = scan
         M, how, (corr, iou) = register(ours, scan)
         size = ours.shape[1], ours.shape[0]
         warped = warp(scan, M, size)
@@ -262,6 +268,30 @@ def run(dataset, scans=None, out=None, only=None, log=print):
                                 'scale': round(math.hypot(M[0][0], M[1][0]) * SCAN_PX, 1)}}
         log(f"  {key}: {how}, turn {fitted[key]['info']['turn']}, corr {corr:.3f}, outline IoU {iou:.3f}, "
             f"{fitted[key]['info']['band']} px outside the frame")
+
+    # A weak fit may be a scan of another side (Heart_13A.png was 15A's): try it on the product's other sides of the
+    # same size; one that fits it clearly better means the scan is of that side, so it's left out.
+    for key, f in list(fitted.items()):
+        if f['info']['corr'] >= GOOD:
+            continue
+        tile = f['tile']
+        best = None
+        for other, product, other_tile, _, other_field in every:
+            if other == key or product != f['product'] or other_tile['squares'] != tile['squares'] or \
+                    sorted((other_tile['width'], other_tile['height'])) != sorted((tile['width'], tile['height'])):
+                continue
+            if not (dataset.root / 'images' / 'large' / other_tile[other_field]).exists():
+                continue
+            theirs = ours_of(other_tile, other_field)
+            M = by_features(theirs, scanned[key])
+            corr = M is not None and score(theirs, warp(scanned[key], M, (theirs.shape[1], theirs.shape[0])))[0]
+            if corr and corr > f['info']['corr'] + 0.05 and (best is None or corr > best[0]):
+                best = (corr, other)
+        if best:
+            problems.append(f"{key}: its scan ({f['info']['scan']}) looks like {best[1]} (colour correlation "
+                            f"{best[0]:.3f}, against {f['info']['corr']} for its own side); not staged")
+            (out / f['info']['file']).unlink(missing_ok=True)
+            del fitted[key]
 
     rng = np.random.default_rng(0)
     curves = {}

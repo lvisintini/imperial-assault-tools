@@ -61,3 +61,28 @@ def test_a_sides_scan_is_found_whatever_its_names_case(tmp_path):
     assert hires_tiles.scan_file('Heart of the Empire', 1, 'B', tmp_path).name == 'heart_1B.png'
     assert hires_tiles.scan_file('Imperial Assault', 10, 'A', tmp_path).name == 'Core_10A.png'
     assert hires_tiles.scan_file('Imperial Assault', 1, 'A', tmp_path) is None
+
+
+def test_a_scan_of_another_side_is_found_out_and_not_staged(dataset_copy, tmp_path):
+    """Two same-sized sides with generated art; one's scan is a copy of the other's (as Heart_13A.png was 15A's)."""
+    from PIL import Image
+
+    tiles = [t for t in dataset_copy.records('map-tiles') if t['name'].startswith('Core Set')]
+    first, second = [t for t in tiles if (t['width'], t['height'], t['squares']) == (2, 2, 4)][:2]
+    scans = tmp_path / 'scans'
+    scans.mkdir()
+    for n, tile in enumerate((first, second)):
+        art = textured(2, 2, seed=10 + n)
+        art[..., 3] = 255
+        path = dataset_copy.root / 'images' / 'large' / tile['side_a']
+        path.parent.mkdir(parents=True, exist_ok=True)
+        Image.fromarray(cv2.resize(art, (128, 128), interpolation=cv2.INTER_AREA)).save(path)
+        scan = cv2.resize(art, (2 * 299, 2 * 299), interpolation=cv2.INTER_CUBIC)
+        Image.fromarray(scan).save(scans / f"Core_{tile['number']}A.png")
+    # The first side's scan is the second's.
+    (scans / f"Core_{first['number']}A.png").write_bytes((scans / f"Core_{second['number']}A.png").read_bytes())
+    keys = [f"{t['name']} A" for t in (first, second)]
+    manifest, problems = hires_tiles.run(dataset_copy, scans=scans, out=tmp_path / 'out', only=keys, log=lambda *_: None)
+    assert any(p.startswith(f'{keys[0]}: its scan') and f'looks like {keys[1]}' in p for p in problems)
+    assert list(manifest['sides']) == [keys[1]]
+    assert not (tmp_path / 'out' / first['side_a']).exists() and (tmp_path / 'out' / second['side_a']).exists()
