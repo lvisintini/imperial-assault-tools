@@ -19,8 +19,8 @@ Writes staging/campaign-maps/:
   drawn in order (later ones on top), transparent around the tiles and cropped to them. A mission whose correction
   (ic2.CORRECTIONS) names its main sections is drawn with those, and each of its hidden sections (the parts of the
   map revealed during the mission, each one or more of IC2's sections) on its own as <map slug>-hidden-<n>.png, in
-  order, and the whole map, its image's sections and then each hidden section's in one frame, as
-  <map slug>-whole.png. Any other map is
+  order, and the whole map, its image's sections and then each hidden section's in one frame (a tile whose
+  squares a later section's tiles all cover left out), as <map slug>-whole.png. Any other map is
   drawn with every section, or, when its sections replace each other (more than OVERLAP of it covered twice), with
   the sections shown at the start;
 - manifest.json: {"ic2_commit", "turns": {"<product> <number><side>": {"turn", "scores", "by"}},
@@ -263,16 +263,31 @@ def placements(mission, sides, turns, start_only=False, sections=None):
     return found
 
 
-def draw(mission, sides, turns, start_only=False, sections=None, ordered=False):
+def squares_of(image, left, top, px=SQUARE):
+    """The squares a placed image covers (its grid's squares with the tile at their centre), as (x, y) at px per
+    square."""
+    alpha = alpha_of(image)
+    x0, y0, w, h = grid_rect(alpha, px)
+    x, y = round((left + x0) / px), round((top + y0) / px)
+    return {(x + i, y + j) for i in range(w) for j in range(h)
+            if alpha[y0 + j * px + px // 2, x0 + i * px + px // 2] > 127}
+
+
+def draw(mission, sides, turns, start_only=False, sections=None, ordered=False, replace=False):
     """(RGBA image, overlap share). start_only: only the sections shown when the mission starts (the first section if
-    IC2 hides them all). sections: only these (names)."""
+    IC2 hides them all). sections: only these (names). replace: a tile whose squares a later section's tiles all cover
+    is left out (a revealed section's tile takes the place of the one it lands on)."""
     from PIL import Image
 
-    pieces = []
-    for section in shown_sections(mission, start_only, sections, ordered):
+    pieces, at = [], []
+    for n, section in enumerate(shown_sections(mission, start_only, sections, ordered)):
         for tile in section['tiles']:
             key = texture_key(tile['texture'])
             pieces.append(placed(sides[key]['image'], turns[key]['turn'], tile['x'], tile['y'], tile['rotation']))
+            at.append((n, squares_of(*pieces[-1])))
+    if replace:
+        pieces = [p for p, (n, squares) in zip(pieces, at)
+                  if not squares <= set().union(*(s for m, s in at if m > n))]
     left = min(p[1] for p in pieces)
     top = min(p[2] for p in pieces)
     width = max(p[1] + p[0].shape[1] for p in pieces) - left
@@ -363,9 +378,10 @@ def run(module, cache, textures, dataset, sample=None, out=None, log=print):
                 placed_here += [p | {'section': section['name']}
                                 for p in placements(mission, sides, turns, sections=section['sections'])]
             if mission['hidden']:
-                # The whole map: its image's sections, then each hidden section's, in order (later ones on top).
+                # The whole map: its image's sections, then each hidden section's, in order (later ones on top, in place of
+                # the tiles they cover).
                 every = list(mission['main']) + [n for h in mission['hidden'] for n in h['sections']]
-                part, _ = draw(mission, sides, turns, sections=every, ordered=True)
+                part, _ = draw(mission, sides, turns, sections=every, ordered=True, replace=True)
                 whole = {'file': f'{file_stem(name)}-whole.png'}
                 part.save(out / whole['file'], optimize=True)
                 whole |= {'size': list(part.size), 'bytes': (out / whole['file']).stat().st_size}

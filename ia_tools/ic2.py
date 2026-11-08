@@ -41,7 +41,10 @@ TEXTURES = re.compile(r'^ImperialCommander2/Assets/SagaTiles/[^/]+/([A-Za-z]+_\d
 # - add: {section name: [{"texture", "x", "y", "rotation"}]}, placements IC2 lacks;
 # - counts: {texture: count}, the copies the mission takes where that isn't its placements' sum (sections that reuse
 #   the same tiles);
-# - move: {section name: [[texture, [x, y], [x, y]]]}, a placement of that texture moved from IC2's position to another;
+# - move: {section name: [[texture, [x, y], [x, y]]]}, a placement of that texture moved from IC2's position to another
+#   ([x, y, rotation] to turn it too: it turns about its x, y, so the same squares take another x, y);
+# - shift: {section or hidden section name: [dx, dy]}, every placement in it moved by dx, dy (IC2's units, 10 to a
+#   square), to close up the gaps IC2 leaves between a map's sections;
 # - main: the sections the map's image shows. Without main, the image shows every section;
 # - hidden: [[name, [section names]]], with main: the map's hidden sections, revealed during the mission, each an image
 #   of those IC2 sections. Without it, each other section with tiles is one, named after it ("Section 2 - Cave" is
@@ -53,13 +56,17 @@ CORRECTIONS = {
     'CORE9.json': {'sides': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}},  # Last Stand, on Desperate Hour's map
     'CORE26.json': {'drop': ['Section 3 - Control']},  # The Spice Job
     'CORE31.json': {'drop': ['Section 3 - Control Room']},  # Means of Production
-    'EMPIRE1.json': {  # Capital Escape: the 18B under 2B a square to the right
+    'EMPIRE1.json': {  # Capital Escape: the 18B under 2B a square to the right; the Command Center a square from the map
         'move': {'Start Section': [['Empire_18B', [1020.0, 1050.0], [1030.0, 1050.0]]]},
+        'shift': {'Command Center': [-90.0, 0.0]},
         'main': ['Start Section'],
         'hidden': [['Command Center', ['Section 2 - Crash', 'Section 3 - Facility']]]},
     'EMPIRE2.json': {'section sides': {'Start Section': {'Empire_17A': 'Empire_17B'}}},  # Dark Recon
-    'EMPIRE3.json': {  # Disruption: the 17B in R3 (below 10B, above 28B) is a 16B, so 16B x3 and 17B x3
+    'EMPIRE3.json': {  # Disruption: the 17B in R3 (below 10B, above 28B) is a 16B, so 16B x3 and 17B x3; the hidden
+        # sections a square right of the map
         'section sides': {'R3': {'Empire_17B': 'Empire_16B'}},
+        'shift': {name: [-140.0, 0.0] for name in ('Underworld (Visible area)', 'Underworld (Obscured area)',
+                                                   'Landing Platform', 'Hideaway')},
         'main': ['Start Section'],
         'hidden': [['Underworld (Visible area)', ['Section 2 - Underworld']],
                    ['Underworld (Obscured area)', ['R1', 'R2', 'R3', 'R4', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6',
@@ -99,13 +106,16 @@ CORRECTIONS = {
         'main': ['Start Section'],
         'hidden': [['Hidden area', ['Section 2 - Cave', 'Section 3 - NW', 'Section 4 - Pass', 'Section 5 - SW',
                                     'Section 6 - S', 'Section 7 - Cavern']]]},
-    'JABBA2.json': {  # Dangerous Allies: one Khetanna; the Canyon's 39B (IC2's 2nd Khetanna's) in place of its left 18B
+    'JABBA2.json': {  # Dangerous Allies: one Khetanna; the Canyon's 39B (IC2's 2nd Khetanna's) in place of its left 18B,
+        # and the Canyon 16 squares up, its 39B on the Khetanna's right 36B
         'drop': ['Section 3 - 2nd Khetanna', ['Section 5 - Canyon', 'Core_18B', [1000.0, 1140.0]]],
         'add': {'Section 5 - Canyon': [{'texture': 'Core_39B', 'x': 1000.0, 'y': 1160.0, 'rotation': 180.0}]},
+        'shift': {'Canyon': [0.0, -160.0]},
         'main': ['Start Section - First Khetanna'],
         'hidden': [['Skiff', ['Section 2 - Skiff']], ['Canyon', ['Section 4 - Spaceport', 'Section 5 - Canyon']]]},
     'JABBA5.json': {'sides': {'Jabba_9A': 'Jabba_9B'}},  # Hostile Negotiations
-    'JABBA7.json': {  # Mutiny
+    'JABBA7.json': {  # Mutiny: the Khetanna a square from the map
+        'shift': {'Khetanna': [-10.0, 0.0]},
         'main': ['Start Section', 'Skiff'],
         'hidden': [['Second Skiff', ['Red Skiff']], ['Khetanna', ['Khetanna']]]},
     'JABBA9.json': {'main': ['Start Section', 'Section 2 - Throne Room', 'Section 4 - Back Room']},  # Storming the Palace
@@ -120,8 +130,9 @@ CORRECTIONS = {
         'main': ['Start Section'],
         'hidden': [['Hidden area', ['Up 1', 'Up 2', 'Up 3', 'Up 4', 'Up 5', 'Middle 1', 'Middle 2 - Hall',
                                     'Middle 3 - Cross', 'Down 1', 'Down 2', 'Down 3', 'Down 4', 'Down 5', 'Down 6']]]},
-    'OTHER32.json': {  # Salvage Operatives: one Sand Crawler, IC2's left one
+    'OTHER32.json': {  # Salvage Operatives: one Sand Crawler, IC2's left one, its 39B turned round to match its art
         'drop': ['Sand Crawler Middle', 'Sand Crawler Right'],
+        'move': {'Sand Crawler Left': [['Core_39B', [960.0, 950.0], [940.0, 960.0, 270.0]]]},
         'main': ['Start Section'],
         'hidden': [['Sand Crawler', ['Sand Crawler Left']]]},
 }
@@ -235,7 +246,8 @@ def apply(mission, fix):
         for tile in tiles:
             tile['texture'] = swaps.get(tile['texture'], tile['texture'])
 
-    unknown = set(fix) - {'sides', 'section sides', 'drop', 'add', 'move', 'counts', 'main', 'hidden'}
+    unknown = set(fix) - {'sides', 'section sides', 'drop', 'add', 'move', 'shift', 'counts', 'main',
+                       'hidden'}
     if unknown:
         fail(f'unknown corrections {sorted(unknown)}')
     for drop in fix.get('drop', []):
@@ -256,11 +268,17 @@ def apply(mission, fix):
         section(name)['tiles'].extend(dict(t) for t in tiles)
     for name, moves in fix.get('move', {}).items():
         tiles = section(name)['tiles']
-        for texture, (x, y), (to_x, to_y) in moves:
+        for texture, (x, y), (to_x, to_y, *turned) in moves:
             tile = next((t for t in tiles if (t['texture'], t['x'], t['y']) == (texture, x, y)), None)
             if tile is None:
                 fail(f'no {texture} at {x}, {y} in {name!r}')
             tile['x'], tile['y'] = to_x, to_y
+            if turned:
+                tile['rotation'] = turned[0]
+    hidden_names = dict(fix.get('hidden', []))
+    for name, (dx, dy) in fix.get('shift', {}).items():
+        for tile in (t for n in hidden_names.get(name, [name]) for t in section(n)['tiles']):
+            tile['x'], tile['y'] = tile['x'] + dx, tile['y'] + dy
     for tile in (t for s in mission['sections'] for t in s['tiles']):
         if not TEXTURE.match(tile['texture']):
             fail(f"{tile['texture']!r} isn't a tile texture")

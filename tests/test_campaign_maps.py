@@ -54,6 +54,24 @@ def test_the_whole_map_draws_sections_in_the_order_given():
     assert top(['S1', 'S0']) == tuple(sides['Imperial Assault 1A']['image'][32, 32])
 
 
+def test_the_whole_map_leaves_out_a_tile_a_later_section_covers():
+    covered = side(1, 2, seed=1, tabs=(True, False))
+    covered[:, :16, 3] = 255  # a tab left of its grid, which would show beside the tile on top of it
+    sides = {'Imperial Assault 1A': {'image': covered},
+             'Imperial Assault 2A': {'image': side(1, 2, seed=2, tabs=(True, False))},
+             'Imperial Assault 3A': {'image': side(2, 1, seed=3)}}
+    turns = {key: {'turn': 0} for key in sides}
+    at = {'x': 0, 'y': 0, 'rotation': 0}
+    two = mission((False, [{'texture': 'Core_1A', **at}, {'texture': 'Core_3A', **at, 'x': 10}]),
+                  (True, [{'texture': 'Core_2A', **at}, {'texture': 'Core_3A', **at, 'x': 20, 'y': 10}]))
+    drawn = lambda replace: np.array(campaign_maps.draw(two, sides, turns, sections=['S0', 'S1'], ordered=True,
+                                                        replace=replace)[0])
+    assert drawn(False).shape[1] == 16 + 4 * 64  # 1A's tab, under 2A
+    replaced = drawn(True)
+    assert replaced.shape[1] == 4 * 64 and np.array_equal(replaced[:, :64], sides['Imperial Assault 2A']['image'][:, 16:80])
+    assert replaced[32, 96, 3] == 255  # S0's 3A is only half covered by S1's, so it stays
+
+
 def test_placements_follow_the_sections_draw_shows():
     sides = {'Imperial Assault 1A': {'image': side(2, 1, seed=1)}}
     turns = {'Imperial Assault 1A': {'turn': 1}}
@@ -152,6 +170,18 @@ def test_corrections_move_a_placement_and_name_the_hidden_sections():
     assert [(t['texture'], t['y']) for t in fixed['sections'][1]['tiles']] == [
         ('Core_24A', 980), ('Core_32A', 970), ('Core_18B', 980)]
     assert fixed['hidden'] == [{'name': 'Back rooms', 'sections': ['Two', 'Three']}]
+    (shifted,) = ic2.correct({'missions': [ic2_mission()]}, {'CORE4.json': {'shift': {'Two': [10.0, -160.0]}}})['missions']
+    assert [(t['x'], t['y']) for t in shifted['sections'][1]['tiles']] == [
+        (t['x'] + 10, t['y'] - 160) for t in ic2_mission()['sections'][1]['tiles']]
+    assert shifted['sections'][0] == ic2_mission()['sections'][0]
+    (by_hidden,) = ic2.correct({'missions': [ic2_mission()]}, {'CORE4.json': {
+        'shift': {'Back rooms': [10.0, 0.0]}, 'main': ['Start'], 'hidden': [['Back rooms', ['Two', 'Three']]]}})['missions']
+    assert [t['x'] for s in by_hidden['sections'][1:] for t in s['tiles']] == [
+        t['x'] + 10 for s in ic2_mission()['sections'][1:] for t in s['tiles']]
+    (turned,) = ic2.correct({'missions': [ic2_mission()]}, {'CORE4.json': {
+        'move': {'Two': [['Core_32A', [1000.0, 980.0], [990.0, 990.0, 90.0]]]}}})['missions']
+    assert [(t['x'], t['y'], t['rotation']) for t in turned['sections'][1]['tiles'] if t['texture'] == 'Core_32A'] == [
+        (990.0, 990.0, 90.0)]
     at = {'x': 0.0, 'y': 0.0, 'rotation': 0.0}
     two = {'name': 'Two', 'hidden': True, 'tiles': [{'texture': 'Core_18B', **at}, {'texture': 'Core_18B', **at, 'x': 10.0}]}
     (dropped,) = ic2.correct({'missions': [{**ic2_mission(), 'sections': [two]}]},
@@ -167,7 +197,7 @@ def test_corrections_move_a_placement_and_name_the_hidden_sections():
     {'sides': {'Core_7A': 'Core_7B'}}, {'section sides': {'Three': {'Core_32A': 'Core_32B'}}}, {'drop': ['Four']},
     {'drop': [['Three', 'Core_18B']]}, {'add': {'Four': []}}, {'counts': {'Core_7A': 1}}, {'main': ['Four']},
     {'add': {'Two': [{'texture': 'Door', 'x': 0, 'y': 0, 'rotation': 0}]}}, {'side': {}},
-    {'move': {'Two': [['Core_32A', [0.0, 0.0], [1.0, 1.0]]]}}, {'drop': [['Two', 'Core_32A', [0.0, 0.0]]]}, {'hidden': [['Two', ['Two']]]},
+    {'move': {'Two': [['Core_32A', [0.0, 0.0], [1.0, 1.0]]]}}, {'shift': {'Four': [0.0, 10.0]}}, {'drop': [['Two', 'Core_32A', [0.0, 0.0]]]}, {'hidden': [['Two', ['Two']]]},
     {'main': ['Start'], 'hidden': [['Start', ['Start']]]}, {'main': ['Start'], 'hidden': [['Four', ['Four']]]},
 ])
 def test_corrections_name_what_the_mission_has(fix):
