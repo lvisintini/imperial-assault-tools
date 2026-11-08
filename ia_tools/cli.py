@@ -17,6 +17,8 @@
                          (--write: also their images, hidden images and layouts, with placements, into the data repo)
   ia skirmish-maps       check the skirmish and raid maps' reviewed placements (staging/skirmish-maps/final.json)
                          (--write: their map-layouts rows and their images, drawn from the tiles, into the data repo)
+  ia hires-tiles         fit the tile scans (tiles/) onto ours at 128 px per square, colour-corrected, with a review
+                         page (staging/hires-tiles)
   ia card-types --fetch  cache the wiki's text of the reward Feats and Imperial class cards, to propose which are a
                          Group Attachment on ia enter's Card types page
   ia card-types          write the card types confirmed in ia enter into the data repo (--check to only validate)
@@ -251,6 +253,20 @@ def cmd_skirmish_maps(args):
         print(f'Wrote them into {dataset.path("map-layouts")} and the maps\' images')
 
 
+def cmd_hires_tiles(args):
+    from ia_tools import hires_tiles
+    from ia_tools.dataset import Dataset
+
+    manifest, problems = hires_tiles.run(Dataset(), only=args.only)
+    sides = manifest['sides'].values()
+    weak = [s for s in sides if s['corr'] < hires_tiles.GOOD]
+    print(f"{len(manifest['sides'])} sides at {manifest['square']} px per square, {len(weak)} below "
+          f"{hires_tiles.GOOD} colour correlation: {hires_tiles.out_dir() / 'index.html'}")
+    if problems:
+        print(f'{len(problems)} problems:', *problems, sep='\n  ')
+        sys.exit(1)
+
+
 def cmd_mats(args):
     from ia_tools import boardwars, mats
     from ia_tools.dataset import Dataset
@@ -387,6 +403,12 @@ def main(argv=None):
                                                           '(staging/skirmish-maps/final.json)')
     skirmish.add_argument('--write', action='store_true', help='write them into the data repo')
     skirmish.set_defaults(func=cmd_skirmish_maps)
+
+    hires = commands.add_parser('hires-tiles', help="the map tiles' sides from the scans in tiles/, fitted onto "
+                                                    'ours at 128 px per square and colour-corrected, staged with a '
+                                                    'review page (staging/hires-tiles)')
+    hires.add_argument('--only', nargs='+', metavar='SIDE', help='only these sides ("Core Set 01 A")')
+    hires.set_defaults(func=cmd_hires_tiles)
 
     mats_ = commands.add_parser('mats', help="stage the skirmish map mats as sources, with images from FFG's archived "
                                              'product pages')

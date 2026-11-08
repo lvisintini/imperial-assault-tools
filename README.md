@@ -36,6 +36,7 @@ uv run ia import tyrants-of-lothal           # write records, images and source-
 uv run ia maps --sample Aftermath   # data 2.0.0: draw campaign maps from IC2's layouts (all of them without --sample)
 uv run ia skirmish-maps          # data 2.0.0: check the skirmish and raid maps' reviewed tile placements
 uv run ia skirmish-maps --write  # write their rows into map-layouts.json, and their images drawn from the tiles
+uv run ia hires-tiles            # the tile scans (tiles/) fitted onto ours at 128 px per square, with a review page
 uv run ia card-types --fetch     # data 2.0.0: cache the wiki's card text, to propose card types
 uv run ia card-types --check     # validate the card types confirmed in ia enter (Card types)
 uv run ia card-types             # write them into reward-cards.json and imperial-class-cards.json
@@ -137,6 +138,13 @@ says which commit of this repo produced it.
   image from its rows and the tiles' images, like the campaign maps (in place of the Skirmish Map Project's).
   Every map image is framed on its tiles' squares plus 16 px all round (`campaign_maps.compose`), so a square's
   pixel position follows from the placements.
+- **`ia hires-tiles`** fits the maintainer's tile scans (`tiles/<Prefix>_<n><side>.png`, ~299 px per square, cut on
+  their outline, any turn) onto the dataset's tile images at 128 px per square: SIFT and a similarity (or, for a
+  plain tile, its outline at each quarter turn), refined by ECC, then drawn into the dataset side's frame (so grids
+  and tabs land where ours are), with one tone curve per product histogram-matched to ours (chosen from samples in
+  `staging/tile-samples/`). It stages them in `staging/hires-tiles/` with a manifest and a review page (`--only`
+  for a sample). The 13 sides scanned later, several to a page, were cut out of their scans by
+  `staging/missing-tiles/`.
 - **Card types** (data 2.0.0; `/card-types`) goes through the reward Feats and the Imperial class cards, a tab each,
   with their `type` (Feat, or Group Attachment for a card attached to an Imperial deployment group) proposed from the
   wiki's text, which is shown under each card. Flags point at what needs a closer look: no text, or a name the wiki
