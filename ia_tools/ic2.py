@@ -126,6 +126,12 @@ CORRECTIONS = {
         'main': ['Start Section', 'Section 2']},
     'LOTHAL6.json': {  # The Final Order
         'sides': {'Lothal_2A': 'Lothal_2B', 'Lothal_5A': 'Lothal_5B', 'Lothal_6A': 'Lothal_6B', 'Lothal_7A': 'Lothal_7B'}},
+    'TWIN5.json': {  # Fire in the Sky: 34A a quarter turn back, on the same squares, to match its art
+        'move': {'Section 2 - Inner Ship': [['Core_34A', [1030.0, 1020.0], [1010.0, 1020.0, 0.0]]]}},
+    'TWIN6.json': {  # Infiltrated, on Fire in the Sky's map
+        'move': {'Start Section': [['Core_34A', [1030.0, 1020.0], [1010.0, 1020.0, 0.0]]]}},
+    'OTHER10.json': {  # Communication Breakdown: 21B turned round, on the same squares, to match its art
+        'move': {'Start Section': [['Hoth_21B', [930.0, 960.0], [910.0, 980.0, 270.0]]]}},
     'OTHER24.json': {  # Into the Unknown
         'main': ['Start Section'],
         'hidden': [['Hidden area', ['Up 1', 'Up 2', 'Up 3', 'Up 4', 'Up 5', 'Middle 1', 'Middle 2 - Hall',
