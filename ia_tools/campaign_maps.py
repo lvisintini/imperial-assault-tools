@@ -16,8 +16,8 @@ The tools compare images numerically; they never look at them.
 
 Writes staging/campaign-maps/:
 - <map slug>.png for each campaign map: 64 px per square, the tiles only (no doors, crates or tokens), the sections
-  drawn in order (later ones on top), transparent around the tiles and cropped to them. A mission whose correction
-  (ic2.CORRECTIONS) names its main sections is drawn with those, and each of its hidden sections (the parts of the
+  drawn in order (later ones on top), transparent around the tiles, framed on their squares plus a quarter square
+  all round (compose()). A mission whose correction (ic2.CORRECTIONS) names its main sections is drawn with those, and each of its hidden sections (the parts of the
   map revealed during the mission, each one or more of IC2's sections) on its own as <map slug>-hidden-<n>.png, in
   order, and the whole map, its image's sections and then each hidden section's in one frame (a tile whose
   squares a later section's tiles all cover left out), as <map slug>-whole.png. Any other map is
@@ -277,8 +277,6 @@ def draw(mission, sides, turns, start_only=False, sections=None, ordered=False, 
     """(RGBA image, overlap share). start_only: only the sections shown when the mission starts (the first section if
     IC2 hides them all). sections: only these (names). replace: a tile whose squares a later section's tiles all cover
     is left out (a revealed section's tile takes the place of the one it lands on)."""
-    from PIL import Image
-
     pieces, at = [], []
     for n, section in enumerate(shown_sections(mission, start_only, sections, ordered)):
         for tile in section['tiles']:
@@ -288,10 +286,22 @@ def draw(mission, sides, turns, start_only=False, sections=None, ordered=False, 
     if replace:
         pieces = [p for p, (n, squares) in zip(pieces, at)
                   if not squares <= set().union(*(s for m, s in at if m > n))]
-    left = min(p[1] for p in pieces)
-    top = min(p[2] for p in pieces)
-    width = max(p[1] + p[0].shape[1] for p in pieces) - left
-    height = max(p[2] + p[0].shape[0] for p in pieces) - top
+    return compose(pieces)
+
+
+def compose(pieces, px=SQUARE):
+    """(RGBA image, overlap share): pieces [(image, left, top)] drawn in order on the tiles' frame: their grids'
+    squares plus a MARGIN of px / 4 all round, for the tabs. So the image's (MARGIN, MARGIN) is the top-left corner
+    of the top-left square any tile covers, whatever tabs stick out."""
+    from PIL import Image
+
+    grids = [(left + x0, top + y0, left + x0 + w * px, top + y0 + h * px)
+             for image, left, top in pieces for x0, y0, w, h in [grid_rect(alpha_of(image), px)]]
+    margin = px // 4
+    left = min(g[0] for g in grids) - margin
+    top = min(g[1] for g in grids) - margin
+    width = max(g[2] for g in grids) + margin - left
+    height = max(g[3] for g in grids) + margin - top
     canvas = Image.new('RGBA', (width, height), (0, 0, 0, 0))
     count = np.zeros((height, width), dtype=np.int16)
     for image, x, y in pieces:
@@ -301,7 +311,7 @@ def draw(mission, sides, turns, start_only=False, sections=None, ordered=False, 
         canvas = Image.alpha_composite(canvas, layer)
         count[y - top:y - top + h, x - left:x - left + w] += image[..., 3] > 127
     covered = (count > 0).sum()
-    return canvas.crop(canvas.getbbox()), round(float((count > 1).sum() / covered), 4) if covered else 0.0
+    return canvas, round(float((count > 1).sum() / covered), 4) if covered else 0.0
 
 
 NOT_CAMPAIGN = ('skirmish-missions', 'raid-missions')

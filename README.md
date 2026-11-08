@@ -35,7 +35,7 @@ uv run ia import tyrants-of-lothal --check   # validate only
 uv run ia import tyrants-of-lothal           # write records, images and source-contents rows
 uv run ia maps --sample Aftermath   # data 2.0.0: draw campaign maps from IC2's layouts (all of them without --sample)
 uv run ia skirmish-maps          # data 2.0.0: check the skirmish and raid maps' reviewed tile placements
-uv run ia skirmish-maps --write  # write their rows into map-layouts.json
+uv run ia skirmish-maps --write  # write their rows into map-layouts.json, and their images drawn from the tiles
 uv run ia card-types --fetch     # data 2.0.0: cache the wiki's card text, to propose card types
 uv run ia card-types --check     # validate the card types confirmed in ia enter (Card types)
 uv run ia card-types             # write them into reward-cards.json and imperial-class-cards.json
@@ -133,7 +133,10 @@ says which commit of this repo produced it.
   their tile placements, `staging/skirmish-maps/final.json`. No source has them: they were found by matching each
   map's tile sides against the Vassal skirmish module's boards (`vassal-2/`) and our map images, and reviewed map by
   map (the prototype and the rulings are in `staging/skirmish-maps/`). Rows hold each side's copies and placements
-  (`ia_tools/layouts.py`); `ia maps --write` writes the campaign maps' the same way.
+  (`ia_tools/layouts.py`); `ia maps --write` writes the campaign maps' the same way. `--write` also draws each map's
+  image from its rows and the tiles' images, like the campaign maps (in place of the Skirmish Map Project's).
+  Every map image is framed on its tiles' squares plus 16 px all round (`campaign_maps.compose`), so a square's
+  pixel position follows from the placements.
 - **Card types** (data 2.0.0; `/card-types`) goes through the reward Feats and the Imperial class cards, a tab each,
   with their `type` (Feat, or Group Attachment for a card attached to an Imperial deployment group) proposed from the
   wiki's text, which is shown under each card. Flags point at what needs a closer look: no text, or a name the wiki

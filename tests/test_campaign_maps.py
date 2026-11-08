@@ -49,7 +49,7 @@ def test_the_whole_map_draws_sections_in_the_order_given():
     turns = {key: {'turn': 0} for key in sides}
     two = mission((False, [{'texture': 'Core_1A', 'x': 0, 'y': 0, 'rotation': 0}]),
                   (True, [{'texture': 'Core_2A', 'x': 0, 'y': 0, 'rotation': 0}]))
-    top = lambda order: campaign_maps.draw(two, sides, turns, sections=order, ordered=True)[0].getpixel((32, 32))
+    top = lambda order: campaign_maps.draw(two, sides, turns, sections=order, ordered=True)[0].getpixel((48, 48))
     assert top(['S0', 'S1']) == tuple(sides['Imperial Assault 2A']['image'][32, 32])  # the later section on top
     assert top(['S1', 'S0']) == tuple(sides['Imperial Assault 1A']['image'][32, 32])
 
@@ -66,10 +66,11 @@ def test_the_whole_map_leaves_out_a_tile_a_later_section_covers():
                   (True, [{'texture': 'Core_2A', **at}, {'texture': 'Core_3A', **at, 'x': 20, 'y': 10}]))
     drawn = lambda replace: np.array(campaign_maps.draw(two, sides, turns, sections=['S0', 'S1'], ordered=True,
                                                         replace=replace)[0])
-    assert drawn(False).shape[1] == 16 + 4 * 64  # 1A's tab, under 2A
-    replaced = drawn(True)
-    assert replaced.shape[1] == 4 * 64 and np.array_equal(replaced[:, :64], sides['Imperial Assault 2A']['image'][:, 16:80])
-    assert replaced[32, 96, 3] == 255  # S0's 3A is only half covered by S1's, so it stays
+    kept, replaced = drawn(False), drawn(True)
+    assert kept.shape == replaced.shape == (2 * 64 + 32, 4 * 64 + 32, 4)  # the same frame: squares + 16 px all round
+    assert (kept[16:144, :16, 3] == 255).all() and (replaced[16:144, :16, 3] == 0).all()  # 1A's tab, under 2A, gone
+    assert np.array_equal(replaced[16:144, 16:80], sides['Imperial Assault 2A']['image'][:, 16:80])
+    assert replaced[16 + 32, 16 + 96, 3] == 255  # S0's 3A is only half covered by S1's, so it stays
 
 
 def test_placements_follow_the_sections_draw_shows():
@@ -102,8 +103,9 @@ def test_draw_places_tiles_side_by_side_on_a_transparent_page():
         {'texture': 'Core_1A', 'x': 0, 'y': 0, 'rotation': 0},
         {'texture': 'Core_2A', 'x': 20, 'y': 10, 'rotation': 0},  # right of tile 1, a square lower
     ])), sides, turns)
-    assert image.size == (3 * 64, 2 * 64) and overlap == 0
-    assert image.getpixel((0, 127))[3] == 0 and image.getpixel((0, 0))[3] == 255
+    assert image.size == (3 * 64 + 32, 2 * 64 + 32) and overlap == 0  # the squares and a 16 px margin
+    assert image.getpixel((16, 16 + 127))[3] == 0 and image.getpixel((16, 16))[3] == 255
+    assert image.getpixel((0, 0))[3] == 0
 
 
 def test_draw_can_keep_to_the_start_section():
@@ -114,7 +116,7 @@ def test_draw_can_keep_to_the_start_section():
     assert campaign_maps.draw(replaced, sides, turns)[1] == 1.0  # both sections cover the square
     assert campaign_maps.draw(replaced, sides, turns, start_only=True)[1] == 0
     only_hidden = mission((True, [tile]))
-    assert campaign_maps.draw(only_hidden, sides, turns, start_only=True)[0].size == (64, 64)
+    assert campaign_maps.draw(only_hidden, sides, turns, start_only=True)[0].size == (96, 96)
 
 
 def test_sections_keep_each_tiles_placement():

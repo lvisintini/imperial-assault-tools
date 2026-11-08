@@ -34,7 +34,8 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
   the Vassal tiles; how IC2 and Vassal place and turn tiles is in its docstring.
 - `ia_tools/layouts.py`: `map-layouts.json`'s row order (`row_order`) and a map's rows from its placements
   (`rows_for`: copies, placements, frame at 0, 0, the count rule). `ia_tools/skirmish_maps.py` (`ia skirmish-maps`):
-  the skirmish and raid maps' rows from `staging/skirmish-maps/final.json`, their reviewed placements.
+  the skirmish and raid maps' rows from `staging/skirmish-maps/final.json`, their reviewed placements, and their
+  images drawn from the rows (`draw`, on `campaign_maps.compose`'s frame: the tiles' squares plus 16 px all round).
 - `ia_tools/card_types.py` (`ia card-types`, and `ia enter`'s Card types page, `static/card-types.html`): whether each
   reward Feat and Imperial class card is a Feat or a Group Attachment, proposed from the wiki's card text (pages
   cached as `staging/wiki/pages/card-*.json`, found by title, the class and item categories, then the wiki's

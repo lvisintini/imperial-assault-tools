@@ -16,7 +16,7 @@
   ia maps [--sample ...] draw the campaign maps from IC2's corrected layouts and the Vassal tiles in staging/campaign-maps/
                          (--write: also their images, hidden images and layouts, with placements, into the data repo)
   ia skirmish-maps       check the skirmish and raid maps' reviewed placements (staging/skirmish-maps/final.json)
-                         (--write: their map-layouts rows into the data repo)
+                         (--write: their map-layouts rows and their images, drawn from the tiles, into the data repo)
   ia card-types --fetch  cache the wiki's text of the reward Feats and Imperial class cards, to propose which are a
                          Group Attachment on ia enter's Card types page
   ia card-types          write the card types confirmed in ia enter into the data repo (--check to only validate)
@@ -248,7 +248,7 @@ def cmd_skirmish_maps(args):
         print(f'{len(problems)} problems:', *problems, sep='\n  ')
         sys.exit(1)
     if args.write:
-        print(f'Wrote them into {dataset.path("map-layouts")}')
+        print(f'Wrote them into {dataset.path("map-layouts")} and the maps\' images')
 
 
 def cmd_mats(args):
@@ -382,8 +382,9 @@ def main(argv=None):
                       help="write the images, hidden images and layouts into the data repo (all missions)")
     maps.set_defaults(func=cmd_maps)
 
-    skirmish = commands.add_parser('skirmish-maps', help="the skirmish and raid maps' layout rows, from their reviewed "
-                                                          'placements (staging/skirmish-maps/final.json)')
+    skirmish = commands.add_parser('skirmish-maps', help="the skirmish and raid maps' layout rows and "
+                                                          'images, from their reviewed placements '
+                                                          '(staging/skirmish-maps/final.json)')
     skirmish.add_argument('--write', action='store_true', help='write them into the data repo')
     skirmish.set_defaults(func=cmd_skirmish_maps)
 
