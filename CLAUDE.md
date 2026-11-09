@@ -39,6 +39,10 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
 - `ia_tools/hires_tiles.py` (`ia hires-tiles`): the tile scans in `tiles/` fitted onto the dataset's sides at 128 px
   per square (`register`: features or outline, then ECC), colour-corrected per product (`tone_curve`), staged in
   `staging/hires-tiles/` with `manifest.json` and a review page (`weak` flags a fit).
+- `ia_tools/tile_orientation.py` (`ia tile-orientation`): each side's upright turn, on its scan (its number pill's
+  template matched at 4 turns, its code read by nearest-neighbour glyphs) and on the dataset's image (through the
+  hi-res fit, checked by the pill), into `staging/tile-orientation/turns.json` with a review page; `rulings.json`
+  overrides.
 - `ia_tools/card_types.py` (`ia card-types`, and `ia enter`'s Card types page, `static/card-types.html`): whether each
   reward Feat and Imperial class card is a Feat or a Group Attachment, proposed from the wiki's card text (pages
   cached as `staging/wiki/pages/card-*.json`, found by title, the class and item categories, then the wiki's

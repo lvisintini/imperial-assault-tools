@@ -37,6 +37,7 @@ uv run ia maps --sample Aftermath   # data 2.0.0: draw campaign maps from IC2's 
 uv run ia skirmish-maps          # data 2.0.0: check the skirmish and raid maps' reviewed tile placements
 uv run ia skirmish-maps --write  # write their rows into map-layouts.json, and their images drawn from the tiles
 uv run ia hires-tiles            # the tile scans (tiles/) fitted onto ours at 128 px per square, with a review page
+uv run ia tile-orientation       # which way up each side's number pill reads, on its scan and our image, with a review page
 uv run ia card-types --fetch     # data 2.0.0: cache the wiki's card text, to propose card types
 uv run ia card-types --check     # validate the card types confirmed in ia enter (Card types)
 uv run ia card-types             # write them into reward-cards.json and imperial-class-cards.json
@@ -148,6 +149,16 @@ says which commit of this repo produced it.
   current tiles and with the new ones. `--only` refits some sides (keeping the last full run's tone curves),
   `--review` rebuilds the page. The 13 sides scanned later, several to a page, were cut out of their scans by
   `staging/missing-tiles/`.
+- **`ia tile-orientation`** finds which way up each tile side's number pill (its product's icon, two digits and a
+  smaller A or B) reads, on its scan and on the dataset's image, so every side can be stored upright. Each product's
+  pill template is bootstrapped from the scans' pills that segment as upright (two tall glyphs, then a shorter one on
+  their baseline), then rebuilt from every pill it finds clearly; it's matched on each scan at the 4 quarter turns.
+  Each scan's code is read from its glyph cells by their nearest neighbours among the other scans' (labelled with
+  their sides' codes; Tesseract can't read the font), so a scan of the wrong side shows. Our images (64 px per
+  square) are too small to read: their turn is the scan's turn through its `ia hires-tiles` fit, checked by matching
+  the shrunk template. `staging/tile-orientation/` gets `turns.json` and a review page listing the sides that need a
+  new scan (the same file as another side's, or reading another code), the Vassal images that are another side's,
+  and the ones to check; `rulings.json` (`{"side key": {"scan": turn, "vassal": turn}}`) overrides a turn.
 - **Card types** (data 2.0.0; `/card-types`) goes through the reward Feats and the Imperial class cards, a tab each,
   with their `type` (Feat, or Group Attachment for a card attached to an Imperial deployment group) proposed from the
   wiki's text, which is shown under each card. Flags point at what needs a closer look: no text, or a name the wiki

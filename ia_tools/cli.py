@@ -19,6 +19,8 @@
                          (--write: their map-layouts rows and their images, drawn from the tiles, into the data repo)
   ia hires-tiles         fit the tile scans (tiles/) onto ours at 128 px per square, colour-corrected, with a review
                          page (staging/hires-tiles)
+  ia tile-orientation    find which way up each side's number pill reads, on its scan and on our image, with a review
+                         page (staging/tile-orientation)
   ia card-types --fetch  cache the wiki's text of the reward Feats and Imperial class cards, to propose which are a
                          Group Attachment on ia enter's Card types page
   ia card-types          write the card types confirmed in ia enter into the data repo (--check to only validate)
@@ -273,6 +275,15 @@ def cmd_hires_tiles(args):
         sys.exit(1)
 
 
+def cmd_tile_orientation(args):
+    from ia_tools import tile_orientation
+    from ia_tools.dataset import Dataset
+
+    turns = tile_orientation.run(Dataset())
+    flagged = [k for k, v in turns.items() if v['flags']]
+    print(f"{len(turns)} sides, {len(flagged)} to check: {tile_orientation.out_dir() / 'index.html'}")
+
+
 def cmd_mats(args):
     from ia_tools import boardwars, mats
     from ia_tools.dataset import Dataset
@@ -417,6 +428,10 @@ def main(argv=None):
                                                                "full run's tone curves and other sides")
     hires.add_argument('--review', action='store_true', help='only rebuild the review page from the last run')
     hires.set_defaults(func=cmd_hires_tiles)
+    orientation = commands.add_parser('tile-orientation', help="which way up each tile side's number pill reads, on "
+                                                               'its scan and on our image, with a review page '
+                                                               '(staging/tile-orientation)')
+    orientation.set_defaults(func=cmd_tile_orientation)
 
     mats_ = commands.add_parser('mats', help="stage the skirmish map mats as sources, with images from FFG's archived "
                                              'product pages')
