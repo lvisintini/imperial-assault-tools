@@ -3,8 +3,11 @@ square, staged for the data repo (data 2.x).
 
 Each side's scan (tiles/<Prefix>_<number><side>.png, cut on its outline, any turn) is fitted onto the dataset's image
 of that side (Vassal's, 64 px per square), which fixes where the tile's grid is:
+- turned upright first, by its number pill's turn (`ia tile-orientation`'s turns.json, "scan"), as the dataset's
+  images are stored: the fit then keeps it at that turn;
 - scaled by SQUARE / SCAN_PX, then registered onto ours upscaled to SQUARE px per square: SIFT features and a
-  similarity (RANSAC), or, for a tile too plain for features, its outline at each quarter turn;
+  similarity (RANSAC), or, for a tile too plain for features (or whose features turn it), its outline (at each
+  quarter turn for a scan with no pill turn);
 - refined by ECC (affine), on the colours and on the outline, keeping whichever fits best (scored on blurred colour
   correlation and outline overlap with ours);
 - drawn into our side's frame: SQUARE px per square plus SQUARE / 4 at each end of an axis with tabs, as the dataset's
@@ -17,9 +20,10 @@ product's well-registered sides (colour correlation >= GOOD); the maintainer cho
 Writes staging/hires-tiles/:
 - map-tiles/<the dataset's file name>: the new sides;
 - manifest.json: {"square", "luts": {product: [[256] x 3]}, "sides": {"<tile name> <side>": {"scan", "file", "turn",
-  "how", "corr", "iou", "clipped", "band", "scale", "after", "fits_better"?}}}: clipped is the scan's pixels outside
+  "scan_turn", "how", "corr", "iou", "clipped", "band", "scale", "after", "fits_better"?}}}: clipped is the scan's pixels outside
   our frame, band that as px all along our outline (the scans are cut a pixel or so outside the print), fits_better
-  {"side", "corr"} when the scan fits another side's image clearly better than its own;
+  {"side", "corr"} when the scan fits another side's image clearly better than its own; turn the clockwise degrees
+  the fit turns the scan (from the file), scan_turn its pill's (a fit at another turn is flagged);
 - index.html and review/: a review page (review()), a collapsible section per product, each side's current and new
   images, and the same spot of a map drawn with each: where the side touches the most other tiles.
 
@@ -115,6 +119,8 @@ def reasons(info):
         found.append(f"colour correlation {info['corr']} (below {GOOD})")
     if info['iou'] < OVERLAP:
         found.append(f"outline overlap {info['iou']} (below {OVERLAP})")
+    if 'scan_turn' in info and info['turn'] != info['scan_turn']:
+        found.append(f"fitted at {info['turn']}°, its pill reads upright at {info['scan_turn']}°")
     if info['band'] > BAND:
         found.append(f"{info['band']} px of the scan outside the frame (over {BAND})")
     return found
@@ -151,14 +157,15 @@ def by_features(ours, scan):
     return None if M is None or inliers.sum() < 8 else M
 
 
-def by_outline(ours, scan):
-    """For a plain tile: the quarter turn and scale that best fit the scan's outline (and colours) onto ours."""
+def by_outline(ours, scan, turns=range(4)):
+    """For a plain tile: the quarter turn (of turns) and scale that best fit the scan's outline (and colours) onto
+    ours."""
     import numpy as np
 
     h, w = ours.shape[:2]
     H, W = scan.shape[:2]
     best = None
-    for k in range(4):
+    for k in turns:
         sh, sw = np.rot90(scan[..., 3], k).shape
         # numpy's rot90, k quarter turns counter-clockwise, as a matrix on (x, y), then scaled onto ours: scan px ->
         # ours px.
@@ -197,12 +204,15 @@ def refine(ours, scan, M, channel):
     return (np.linalg.inv(full(D)) @ full(M))[:2]
 
 
-def register(ours, scan):
-    """(M scan px -> ours px, how, (corr, iou)): features (or the outline), then the best of the ECC refinements."""
+def register(ours, scan, upright=False):
+    """(M scan px -> ours px, how, (corr, iou)): features (or the outline), then the best of the ECC refinements. An
+    upright scan keeps its turn: features that turn it give way to its outline at turn 0."""
     M = by_features(ours, scan)
     how = 'features'
+    if M is not None and upright and turn_of(M):
+        M = None
     if M is None:
-        M, how = by_outline(ours, scan), 'outline'
+        M, how = by_outline(ours, scan, (0,) if upright else range(4)), 'outline'
     size = ours.shape[1], ours.shape[0]
     candidates = [(M, how)]
     for channel in ('colour', 'outline'):
@@ -239,9 +249,16 @@ def apply_curves(rgba, curves):
 
 # Run ---------------------------------------------------------------------------------------------------------------
 
-def run(dataset, scans=None, out=None, only=None, log=print, page=True):
+def upright_turns():
+    """{side key: clockwise degrees that make its scan's pill upright}, from `ia tile-orientation` (none before it)."""
+    path = settings.STAGING / 'tile-orientation' / 'turns.json'
+    turns = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+    return {key: entry['scan']['turn'] for key, entry in turns.items() if 'scan' in entry}
+
+
+def run(dataset, scans=None, out=None, only=None, log=print, page=True, upright=None):
     """(manifest, problems). only: keys ("Core Set 01 A") to do; with an earlier full run, its tone curves and other
-    sides are kept."""
+    sides are kept. upright: {key: the scan's pill turn} (default upright_turns())."""
     import cv2
     import numpy as np
     from PIL import Image
@@ -255,6 +272,9 @@ def run(dataset, scans=None, out=None, only=None, log=print, page=True):
         k = SQUARE / 64
         return cv2.resize(image, (round(image.shape[1] * k), round(image.shape[0] * k)), interpolation=cv2.INTER_CUBIC)
 
+    from ia_tools.tile_orientation import k_of_turn
+
+    upright = upright_turns() if upright is None else upright
     every = sides(dataset)
     problems, fitted, scanned = [], {}, {}
     for key, product, tile, side, field in every:
@@ -269,8 +289,10 @@ def run(dataset, scans=None, out=None, only=None, log=print, page=True):
         ys, xs = np.where(scan[..., 3] > 0)
         scan = scan[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
         scan = cv2.resize(scan, None, fx=SQUARE / SCAN_PX, fy=SQUARE / SCAN_PX, interpolation=cv2.INTER_AREA)
+        if key in upright:
+            scan = np.ascontiguousarray(np.rot90(scan, k_of_turn(upright[key])))
         scanned[key] = scan
-        M, how, (corr, iou) = register(ours, scan)
+        M, how, (corr, iou) = register(ours, scan, key in upright)
         size = ours.shape[1], ours.shape[0]
         warped = warp(scan, M, size)
         # Scan pixels the frame cuts off (the outline sticking out of ours' frame): the scan drawn with 100 px of room
@@ -280,7 +302,9 @@ def run(dataset, scans=None, out=None, only=None, log=print, page=True):
         clipped = int((cv2.warpAffine(scan[..., 3], roomy, (size[0] + 200, size[1] + 200)) > 127).sum()
                       - (warped[..., 3] > 127).sum())
         fitted[key] = {'product': product, 'tile': tile, 'field': field, 'ours': ours, 'warped': warped,
-                       'info': {'scan': file.name, 'file': tile[field], 'turn': turn_of(M), 'how': how,
+                       'info': {'scan': file.name, 'file': tile[field],
+                                'turn': (upright.get(key, 0) + turn_of(M)) % 360,
+                                **({'scan_turn': upright[key]} if key in upright else {}), 'how': how,
                                 'corr': round(corr, 3), 'iou': round(iou, 4), 'clipped': clipped,
                                 'band': round(max(clipped, 0) / outline_length(ours[..., 3]), 2),
                                 'scale': round(math.hypot(M[0][0], M[1][0]) * SCAN_PX, 1)}}
