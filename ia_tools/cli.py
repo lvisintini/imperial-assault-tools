@@ -22,6 +22,8 @@
   ia tile-orientation    find which way up each side's number pill reads, on its scan and on our image, with a review
                          page (staging/tile-orientation) (--write: store every side upright in the data repo,
                          turning its placements to match)
+  ia tile-matches        group the tile sides with the same art but for their number pill (interchangeable), with a
+                         review page (staging/tile-matches)
   ia card-types --fetch  cache the wiki's text of the reward Feats and Imperial class cards, to propose which are a
                          Group Attachment on ia enter's Card types page
   ia card-types          write the card types confirmed in ia enter into the data repo (--check to only validate)
@@ -299,6 +301,14 @@ def cmd_tile_orientation(args):
     print(f"{len(turns)} sides, {len(flagged)} to check: {tile_orientation.out_dir() / 'index.html'}")
 
 
+def cmd_tile_matches(args):
+    from ia_tools import tile_matches
+    from ia_tools.dataset import Dataset
+
+    tile_matches.run(Dataset())
+    print(tile_matches.out_dir() / 'index.html')
+
+
 def cmd_mats(args):
     from ia_tools import boardwars, mats
     from ia_tools.dataset import Dataset
@@ -452,6 +462,11 @@ def main(argv=None):
                                                                   '(images, map-tiles width/height, map-layouts '
                                                                   'rotations) and turn the skirmish maps\' final.json')
     orientation.set_defaults(func=cmd_tile_orientation)
+
+    matches = commands.add_parser('tile-matches', help='tile sides with the same art but for their number pill, '
+                                                       'grouped from the hi-res scans, with a review page '
+                                                       '(staging/tile-matches)')
+    matches.set_defaults(func=cmd_tile_matches)
 
     mats_ = commands.add_parser('mats', help="stage the skirmish map mats as sources, with images from FFG's archived "
                                              'product pages')

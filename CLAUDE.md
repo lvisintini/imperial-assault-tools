@@ -45,6 +45,9 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
   hi-res fit, checked by the pill), into `staging/tile-orientation/turns.json` with a review page; `rulings.json`
   overrides. `write` (`--write`) stores the sides upright and turns map-tiles' width/height, map-layouts' rotations
   and `final.json`'s turns to match (refuses once the images aren't the Vassal module's).
+- `ia_tools/tile_matches.py` (`ia tile-matches`): interchangeable sides (same art, another pill), compared on the
+  staged hi-res sides with the pills masked (`compare`: coarse gradients, then fine detail with a shift), grouped
+  into `staging/tile-matches/candidates.json` with a review page.
 - `ia_tools/card_types.py` (`ia card-types`, and `ia enter`'s Card types page, `static/card-types.html`): whether each
   reward Feat and Imperial class card is a Feat or a Group Attachment, proposed from the wiki's card text (pages
   cached as `staging/wiki/pages/card-*.json`, found by title, the class and item categories, then the wiki's

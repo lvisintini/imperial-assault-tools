@@ -39,6 +39,7 @@ uv run ia skirmish-maps --write  # write their rows into map-layouts.json, and t
 uv run ia hires-tiles            # the tile scans (tiles/) fitted onto ours at 128 px per square, with a review page
 uv run ia tile-orientation       # which way up each side's number pill reads, on its scan and our image, with a review page
 uv run ia tile-orientation --write  # store every side upright in the data repo, its placements turned to match
+uv run ia tile-matches           # group the sides with the same art but for their number pill, with a review page
 uv run ia card-types --fetch     # data 2.0.0: cache the wiki's card text, to propose card types
 uv run ia card-types --check     # validate the card types confirmed in ia enter (Card types)
 uv run ia card-types             # write them into reward-cards.json and imperial-class-cards.json
@@ -165,6 +166,10 @@ says which commit of this repo produced it.
   `map-tiles.json`'s width and height, every `map-layouts.json` placement's rotation (rotation − turn) and the
   skirmish maps' `final.json` turns to match, so `ia maps --write` and `ia skirmish-maps --write` draw every map the
   same.
+- **`ia tile-matches`** groups the tile sides whose art is the same but for their number pill (interchangeable),
+  from the staged hi-res sides with both pills masked: gradients at 32 px per square at each quarter turn their
+  outlines allow, then fine detail at 64 px per square at the best shift of a few px. `staging/tile-matches/`
+  gets `candidates.json` and a review page: each group's sides and their differences from its reference.
 - **Card types** (data 2.0.0; `/card-types`) goes through the reward Feats and the Imperial class cards, a tab each,
   with their `type` (Feat, or Group Attachment for a card attached to an Imperial deployment group) proposed from the
   wiki's text, which is shown under each card. Flags point at what needs a closer look: no text, or a name the wiki
