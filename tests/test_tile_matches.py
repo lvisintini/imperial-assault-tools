@@ -52,3 +52,23 @@ def test_copied_art_scores_better_as_stored_than_turned():
     one = tm.prepare(image, pill)
     fine = tm.compare(one, tm.prepare(*side(1, '10A')))[1]
     assert tm.turned_score(one, *side(1, '10A')) < fine - tm.PLAIN
+
+
+def test_a_small_fit_error_is_taken_out():
+    """Two scans fitted separately can sit a degree and a few px apart: the same art still scores as the same."""
+    image, pill = side(1, '35A')
+    turn = cv2.getRotationMatrix2D((128, 128), 1.5, 1.0)
+    turn[:, 2] += (6, -4)
+    moved = image.copy()
+    moved[..., :3] = cv2.warpAffine(image[..., :3], turn, (256, 256), borderMode=cv2.BORDER_REFLECT)
+    one, two = tm.prepare(image, pill), tm.prepare(moved, pill)
+    as_stored = tm._scores(one, two)[1]
+    assert as_stored < 0.9 and tm.compare(one, two)[1] > as_stored + 0.1
+
+
+def test_rulings_are_read_by_side_not_group_number():
+    rules = [{'same': [['a', 'b', 'c']], 'not': ['d']}, {'same': [['e', 'f']]}]
+    assert tm.ruled(rules, 'a', 'c') == 'same'
+    assert tm.ruled(rules, 'a', 'd') == 'not'
+    assert tm.ruled(rules, 'a', 'e') is None
+    assert tm.ruled_extra(rules, {'sides': ['a', 'b']}) == ['c']
