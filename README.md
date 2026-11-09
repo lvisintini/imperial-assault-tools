@@ -37,8 +37,8 @@ uv run ia maps --sample Aftermath   # data 2.0.0: draw campaign maps from IC2's 
 uv run ia skirmish-maps          # data 2.0.0: check the skirmish and raid maps' reviewed tile placements
 uv run ia skirmish-maps --write  # write their rows into map-layouts.json, and their images drawn from the tiles
 uv run ia hires-tiles            # the tile scans (tiles/) fitted onto ours at 128 px per square, with a review page
+uv run ia hires-tiles --write    # put them in the data repo: large 128, small 64 px per square
 uv run ia tile-orientation       # which way up each side's number pill reads, on its scan and our image, with a review page
-uv run ia tile-orientation --write  # store every side upright in the data repo, its placements turned to match
 uv run ia tile-matches           # group the sides with the same art but for their number pill, with a review page
 uv run ia card-types --fetch     # data 2.0.0: cache the wiki's card text, to propose card types
 uv run ia card-types --check     # validate the card types confirmed in ia enter (Card types)
@@ -127,11 +127,12 @@ says which commit of this repo produced it.
 
   It never overwrites an existing image.
 - **`ia maps`** (data 2.0.0) draws the campaign maps into `staging/campaign-maps/`, from ImperialCommander2's tile
-  positions and rotations (`ia ic2`) and the Vassal module's tile images as the data repo stores them (turned
-  upright by `ia tile-orientation --write`): 64 px per square, tiles only (no doors or
+  positions and rotations (`ia ic2`) and the data repo's tile images (stored upright, from the maintainer's scans):
+  128 px per square in `images/large` and halved to 64 in `images/small`, tiles only (no doors or
   tokens), transparent around them. IC2's own tile images, fetched once into `staging/ic2/textures/`, only tell which
-  way each Vassal image is turned: by their colours, or, when that's close, by which turn fits the neighbouring tiles'
-  tabs into their notches. Aftermath's turns are checked against the Vassal module's Aftermath save. A map whose
+  way each of ours is turned: by their colours, or, when that's close, by which turn fits the neighbouring tiles'
+  tabs into their notches. Aftermath's turns are checked against the Vassal module's Aftermath save (its images
+  matched to ours by colour). A map whose
   sections replace each other during the mission is drawn with its start section only. `--write` puts the images in
   the data repo, and each map's `map-layouts.json` rows: its tile sides' copies, and where each image places them.
 - **`ia skirmish-maps`** (data 2.0.0) writes the skirmish, four-player and raid maps' `map-layouts.json` rows from
@@ -140,8 +141,8 @@ says which commit of this repo produced it.
   map (the prototype and the rulings are in `staging/skirmish-maps/`). Rows hold each side's copies and placements
   (`ia_tools/layouts.py`); `ia maps --write` writes the campaign maps' the same way. `--write` also draws each map's
   image from its rows and the tiles' images, like the campaign maps (in place of the Skirmish Map Project's).
-  Every map image is framed on its tiles' squares plus 16 px all round (`campaign_maps.compose`), so a square's
-  pixel position follows from the placements.
+  Every map image is framed on its tiles' squares plus a quarter square all round (`campaign_maps.compose`: 32 px
+  in large, 16 in small), so a square's pixel position follows from the placements.
 - **`ia hires-tiles`** fits the maintainer's tile scans (`tiles/<Prefix>_<n><side>.png`, ~299 px per square, cut on
   their outline, any turn) onto the dataset's tile images at 128 px per square: SIFT and a similarity (or, for a
   plain tile, its outline at each quarter turn), refined by ECC, then drawn into the dataset side's frame (so grids
@@ -150,25 +151,24 @@ says which commit of this repo produced it.
   in file order, a collapsible section per product, flagged fits marked (a weak fit, or a scan that fits another
   side's image better), and for each side the spot of a map where it touches the most other tiles, drawn with the
   current tiles and with the new ones. `--only` refits some sides (keeping the last full run's tone curves),
-  `--review` rebuilds the page. The 13 sides scanned later, several to a page, were cut out of their scans by
-  `staging/missing-tiles/`.
+  `--review` rebuilds the page. Each scan is turned upright by its pill (`ia tile-orientation`) before it's fitted,
+  and kept at that turn. `--write` puts the staged sides in the data repo (large at 128 px per square, small halved
+  to 64), refusing a side that isn't staged, isn't at its pill's turn or isn't twice its small image's size. The 13
+  sides scanned later, several to a page, were cut out of their scans by `staging/missing-tiles/`.
 - **`ia tile-orientation`** finds which way up each tile side's number pill (its product's icon, two digits and a
   smaller A or B) reads, on its scan and on the dataset's image, so every side can be stored upright. Each product's
   pill template is bootstrapped from the scans' pills that segment as upright (two tall glyphs, then a shorter one on
   their baseline), then rebuilt from every pill it finds clearly; it's matched on each scan at the 4 quarter turns.
   Each scan's code is read from its glyph cells by their nearest neighbours among the other scans' (labelled with
-  their sides' codes; Tesseract can't read the font), so a scan of the wrong side shows. Our images (64 px per
-  square) are too small to read: their turn is the scan's turn through its `ia hires-tiles` fit, checked by matching
-  the shrunk template. `staging/tile-orientation/` gets `turns.json` and a review page listing the sides that need a
-  new scan (the same file as another side's, or reading another code), the Vassal images that are another side's,
-  and the ones to check; `rulings.json` (`{"side key": {"scan": turn, "vassal": turn}}`) overrides a turn.
-  `--write` turns the data repo's tile images upright (once: every image must still be the Vassal module's), with
-  `map-tiles.json`'s width and height, every `map-layouts.json` placement's rotation (rotation − turn) and the
-  skirmish maps' `final.json` turns to match, so `ia maps --write` and `ia skirmish-maps --write` draw every map the
-  same.
+  their sides' codes; Tesseract can't read the font), so a scan of the wrong side shows. Our images, at 128 px per
+  square: their turn is the scan's turn through its `ia hires-tiles` fit, checked by matching the shrunk template,
+  and their code is read the same way (not by their own scan). `staging/tile-orientation/` gets `turns.json` and a
+  review page listing the sides that need a new scan (the same file as another side's, or reading another code),
+  our images that are another side's, and the ones to check; `rulings.json` (`{"side key": {"scan": turn, "ours":
+  turn}}`) overrides a turn. (Data PR #93 turned every stored side upright, with a one-off `--write` since removed.)
 - **`ia tile-matches`** groups the tile sides whose art is the same but for their number pill (interchangeable),
-  from the staged hi-res sides with both pills masked: gradients at 32 px per square at each quarter turn their
-  outlines allow, then fine detail at 64 px per square at the best shift of a few px. `staging/tile-matches/`
+  from the dataset's images with both pills masked, as stored (upright, so at turn 0 only): gradients at 32 px per
+  square, then fine detail at 64 px per square at the best shift of a few px. `staging/tile-matches/`
   gets `candidates.json` and a review page: each group's sides and their differences from its reference.
 - **Card types** (data 2.0.0; `/card-types`) goes through the reward Feats and the Imperial class cards, a tab each,
   with their `type` (Feat, or Group Attachment for a card attached to an Imperial deployment group) proposed from the

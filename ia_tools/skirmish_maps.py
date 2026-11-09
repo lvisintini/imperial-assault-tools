@@ -12,9 +12,9 @@ x, y: the top-left square of the tile's turned grid; turn: the quarter turns cou
 side's stored image. A map's rows: one per tile side, count = its placements (these maps have no hidden sections),
 rotation = (-90 * turn) mod 360 clockwise, the frame moved to start at 0, 0 (layouts.rows_for).
 
-Each map's image is drawn from those rows and the tiles' images, like the campaign maps (campaign_maps.compose(): 64
-px per square, tiles only, framed on their squares plus a quarter square all round), in place of the Skirmish Map
-Project's that the maps had until data 2.0.0. Files keep their names."""
+Each map's image is drawn from those rows and the tiles' images, like the campaign maps (campaign_maps.compose(): the
+large tiles' px per square, and halved to 64 for images/small; tiles only, framed on their squares plus a quarter
+square all round), in place of the Skirmish Map Project's that the maps had until data 2.0.0. Files keep their names."""
 import json
 from collections import Counter
 
@@ -62,29 +62,32 @@ def plan(dataset, final):
     return sort_rows(dataset, rows), problems
 
 
-def draw(dataset, rows):
-    """A map's image (PIL RGBA) from its map-layouts rows: each placement's side image turned clockwise by its rotation,
-    its grid's top-left square at x, y, drawn in the rows' order on the campaign maps' frame."""
+def draw(dataset, rows, px=None):
+    """A map's image (PIL RGBA) from its map-layouts rows, at px per square (the large tiles' by default): each
+    placement's side image turned clockwise by its rotation, its grid's top-left square at x, y, drawn in the rows'
+    order on the campaign maps' frame."""
     import numpy as np
-    from PIL import Image
 
-    from ia_tools.campaign_maps import SQUARE, alpha_of, compose, grid_rect
+    from ia_tools.campaign_maps import alpha_of, compose, grid_rect, large_px
+    from ia_tools.hires_tiles import stored
 
+    px = px or large_px(dataset)
     tiles = {t['id']: t for t in dataset.records('map-tiles')}
     sides, pieces = {}, []
     for row in rows:
         path = tiles[row['tile_id']]['side_a' if row['side'] == 'A' else 'side_b']
         if path not in sides:
-            sides[path] = np.array(Image.open(dataset.root / 'images' / 'large' / path).convert('RGBA'))
+            sides[path] = stored(dataset, path, px)
         for p in row['placements']:
             image = np.rot90(sides[path], -p['rotation'] // 90)
-            x0, y0, _, _ = grid_rect(alpha_of(image))
-            pieces.append((image, p['x'] * SQUARE - x0, p['y'] * SQUARE - y0))
-    return compose(pieces)[0]
+            x0, y0, _, _ = grid_rect(alpha_of(image), px)
+            pieces.append((image, p['x'] * px - x0, p['y'] * px - y0))
+    return compose(pieces, px)[0]
 
 
 def run(dataset, write=False, path=None, log=print):
     """(summary, problems); writes map-layouts.json and the maps' images when asked and there are no problems."""
+    from ia_tools.campaign_maps import halved, large_px
     from ia_tools.dataset import dumps
 
     final = json.loads((path or final_path()).read_text(encoding='utf-8'))
@@ -96,12 +99,13 @@ def run(dataset, write=False, path=None, log=print):
     if write and not problems:
         dataset.path('map-layouts').write_text(dumps(rows), encoding='utf-8')
         images = {m['id']: m['image'] for m in dataset.records('maps')}
+        px = large_px(dataset)
         for map_id, name in sorted(wanted.items(), key=lambda item: item[1]):
-            image = draw(dataset, [r for r in own if r['map_id'] == map_id])
-            for size in ('large', 'small'):
+            image = draw(dataset, [r for r in own if r['map_id'] == map_id], px)
+            for size, drawn in (('large', image), ('small', halved(image, px))):
                 file = dataset.root / 'images' / size / images[map_id]
                 file.parent.mkdir(parents=True, exist_ok=True)
-                image.save(file, optimize=True)
+                drawn.save(file, optimize=True)
             log(f'  {images[map_id]}: {image.width}x{image.height} px')
         summary['images'] = len(wanted)
     return summary, problems

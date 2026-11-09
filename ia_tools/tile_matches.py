@@ -1,10 +1,12 @@
 """ia tile-matches: tile sides with the same art, but for their number pill ("interchangeable": the maintainer's
 examples are Twin Shadows 10A = Core Set 35A and Twin Shadows 11A = Core Set 36A).
 
-Compared on the staged hi-res sides (`ia hires-tiles`: 128 px per square, upright like the dataset's), with both
-sides' pills masked out (their boxes from `ia tile-orientation`'s turns.json, PAD px around):
-1. coarse: every two sides of different tiles with the same squares, at each quarter turn where their outlines overlap
-   at least OUTLINE: the correlation of their gradient magnitudes at 32 px per square. A pair needs COARSE;
+Compared on the dataset's own images (images/large, at 128 px per square: the maintainer's scans), with both sides'
+pills masked out (their boxes from `ia tile-orientation`'s turns.json, "ours", PAD px around). Every side is stored
+with its pill upright, so the same art lines up as stored: sides are compared at turn 0 only (a match found only
+turned was a plain square room that looks alike turned):
+1. coarse: every two sides of different tiles with the same squares whose outlines overlap at least OUTLINE: the
+   correlation of their gradient magnitudes at 32 px per square. A pair needs COARSE;
 2. fine: their fine detail (a high-pass) at 64 px per square, at the best shift of up to SHIFT px (two sides' fits can
    sit a pixel or two apart). A pair needs FINE.
 Every square of a tile has the same grid lines, so a whole-tile score is high for any two tiles with a similar
@@ -13,9 +15,8 @@ pair) and on the gap below them (no other pair scores between 0.68 and 0.77 fine
 into groups, for the maintainer to rule which sides really are the same.
 
 Writes staging/tile-matches/:
-- candidates.json: {"groups": [{"sides": [key, ...], "reference": key, "pairs": [{"sides": [a, b], "turn", "coarse",
-  "fine", "shift": [dx, dy]}]}]}: turn is the clockwise degrees b is turned to line up with a (0 when their pills sit
-  in the same corner);
+- candidates.json: {"groups": [{"sides": [key, ...], "reference": key, "pairs": [{"sides": [a, b], "coarse",
+  "fine", "shift": [dx, dy]}]}]};
 - img/: each side (48 px per square, its pill boxed) and each side's difference from its group's reference;
 - index.html: the groups, a section each.
 
@@ -75,31 +76,23 @@ def prepare(image, pill):
 
 
 def compare(one, two):
-    """(coarse, turn, fine, (dx, dy)) for the best quarter turn of two (clockwise degrees) onto one, or None when
-    their outlines never overlap enough."""
+    """(coarse, fine, (dx, dy)) for two onto one as stored, or None when their outlines don't overlap enough."""
     import numpy as np
 
-    best = None
-    for k in range(4):
-        a1, a2 = one['coarse']['alpha'], np.rot90(two['coarse']['alpha'], k)
-        if a1.shape != a2.shape or (a1 & a2).sum() / (a1 | a2).sum() < OUTLINE:
-            continue
-        m = one['coarse']['mask'] & np.rot90(two['coarse']['mask'], k)
-        score = _ncc(one['coarse']['signal'][m], np.rot90(two['coarse']['signal'], k)[m])
-        if best is None or score > best[0]:
-            best = (score, k)
-    if best is None:
+    a1, a2 = one['coarse']['alpha'], two['coarse']['alpha']
+    if a1.shape != a2.shape or (a1 & a2).sum() / (a1 | a2).sum() < OUTLINE:
         return None
-    score, k = best
+    m = one['coarse']['mask'] & two['coarse']['mask']
+    score = _ncc(one['coarse']['signal'][m], two['coarse']['signal'][m])
     fine = (-1.0, (0, 0))
-    s2, m2 = np.rot90(two['fine']['signal'], k), np.rot90(two['fine']['mask'], k)
+    s2, m2 = two['fine']['signal'], two['fine']['mask']
     for dy in range(-SHIFT, SHIFT + 1):
         for dx in range(-SHIFT, SHIFT + 1):
             m = one['fine']['mask'] & np.roll(m2, (dy, dx), (0, 1))
             v = _ncc(one['fine']['signal'][m], np.roll(s2, (dy, dx), (0, 1))[m])
             if v > fine[0]:
                 fine = (v, (dx, dy))
-    return round(score, 3), (-90 * k) % 360, round(fine[0], 3), fine[1]
+    return round(score, 3), round(fine[0], 3), fine[1]
 
 
 def groups_of(pairs, order):
@@ -121,9 +114,6 @@ def groups_of(pairs, order):
 
 
 def run(dataset, out=None, log=print):
-    import numpy as np
-    from PIL import Image
-
     from ia_tools import hires_tiles
 
     out = Path(out or out_dir())
@@ -133,8 +123,8 @@ def run(dataset, out=None, log=print):
     order = [key for key, *_ in every]
     sides, images = {}, {}
     for key, product, tile, side, field in every:
-        image = np.array(Image.open(hires_tiles.out_dir() / tile[field]).convert('RGBA'))
-        pill = (tuple(turns[key]['vassal']['at']), tuple(turns[key]['vassal']['size']))
+        image = hires_tiles.stored(dataset, tile[field], 128)
+        pill = (tuple(turns[key]['ours']['at']), tuple(turns[key]['ours']['size']))
         images[key] = (image, pill)
         sides[key] = {'tile': tile['id'], 'squares': tile['squares'], **prepare(image, pill)}
 
@@ -143,9 +133,8 @@ def run(dataset, out=None, log=print):
         if sides[a]['tile'] == sides[b]['tile'] or sides[a]['squares'] != sides[b]['squares']:
             continue
         found = compare(sides[a], sides[b])
-        if found and found[0] >= COARSE and found[2] >= FINE:
-            pairs.append({'sides': [a, b], 'turn': found[1], 'coarse': found[0], 'fine': found[2],
-                          'shift': list(found[3])})
+        if found and found[0] >= COARSE and found[1] >= FINE:
+            pairs.append({'sides': [a, b], 'coarse': found[0], 'fine': found[1], 'shift': list(found[2])})
     groups = []
     for members in groups_of(pairs, order):
         inside = [p for p in pairs if p['sides'][0] in members]
@@ -182,18 +171,16 @@ def pictures(groups, sides, images, out):
             found = compare(ref, sides[key])
             if found is None:
                 continue
-            _, turn, fine, (dx, dy) = found
-            k = (-turn // 90) % 4
+            _, fine, (dx, dy) = found
             s1, m1 = ref['fine']['signal'], ref['fine']['mask']
-            s2 = np.roll(np.rot90(sides[key]['fine']['signal'], k), (dy, dx), (0, 1))
-            m2 = np.roll(np.rot90(sides[key]['fine']['mask'], k), (dy, dx), (0, 1))
+            s2 = np.roll(sides[key]['fine']['signal'], (dy, dx), (0, 1))
+            m2 = np.roll(sides[key]['fine']['mask'], (dy, dx), (0, 1))
             m = m1 & m2
             a, b = s1 / (s1[m].std() or 1), s2 / (s2[m].std() or 1)
             diff = np.clip(cv2.GaussianBlur(np.abs(a - b), (0, 0), 1.5) / 1.5, 0, 1) * m
             rgb = np.stack([gray * 0.45] * 3, -1)
             rgb[..., 0] = np.maximum(rgb[..., 0], diff * 255)
-            pills = (ref['fine']['pill'] | np.roll(np.rot90(sides[key]['fine']['pill'], k), (dy, dx), (0, 1))) \
-                & ref['fine']['alpha']
+            pills = (ref['fine']['pill'] | np.roll(sides[key]['fine']['pill'], (dy, dx), (0, 1))) & ref['fine']['alpha']
             rgb[pills] = rgb[pills] * 0.5 + np.array([0, 40, 120])
             rgb[~ref['fine']['alpha']] = 40
             small = cv2.resize(rgb.astype(np.uint8), None, fx=48 / 64, fy=48 / 64, interpolation=cv2.INTER_AREA)
@@ -215,13 +202,9 @@ def review(groups, out):
                 continue
             pair = next((p for p in group['pairs'] if set(p['sides']) == {ref, key}), None)
             score = f"fine {pair['fine']}, coarse {pair['coarse']}" if pair else 'linked through others'
-            turned = f", turned {pair['turn']}°" if pair and pair['turn'] else ''
             cells.append(f'<figure><img src="img/{slug(key)}.jpg"><img src="img/{slug(key)}-diff.jpg">'
-                         f'<figcaption><b>{e(key)}</b>: {score}{turned}</figcaption></figure>')
-        turned = [p for p in group['pairs'] if p['turn']]
-        listed = '; '.join(f"{p['sides'][0]} / {p['sides'][1]} {p['turn']}°" for p in turned)
-        note = f'<p class="warn">Lines up only turned: {e(listed)}</p>' if turned else ''
-        sections.append(f'<section id="g{n}"><h2>Group {n}: {e(", ".join(group["sides"]))}</h2>{note}'
+                         f'<figcaption><b>{e(key)}</b>: {score}</figcaption></figure>')
+        sections.append(f'<section id="g{n}"><h2>Group {n}: {e(", ".join(group["sides"]))}</h2>'
                         f'<div class="grid">{"".join(cells)}</div></section>')
     page = f"""<!doctype html><html><head><meta charset="utf-8"><title>Interchangeable tile sides</title>
 <style>
@@ -231,10 +214,9 @@ h2 {{ font-size: 16px; }}
 .grid {{ display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }}
 figure {{ margin: 0; max-width: 420px; }} figure img {{ display: block; margin-bottom: 4px; max-width: 200px; height: auto; }}
 figure {{ display: grid; grid-template-columns: auto auto; gap: 4px; }} figcaption {{ grid-column: 1 / -1; font-size: 12px; color: #555; }}
-.warn {{ color: #a30; }}
 </style></head><body>
 <h1>Interchangeable tile sides</h1>
-<p>Sides whose art looks the same but for their number pill (boxed in blue), from the hi-res scans, grouped. Next to
+<p>Sides whose art looks the same but for their number pill (boxed in blue), from our stored images, grouped. Next to
 each side: where its fine detail differs from the group's reference, red over the reference (pills masked, in blue).
 Same art shows only faint, even speckle; different art shows red shapes. Rule each group in chat: all the same, or
 which sides aren't.</p>

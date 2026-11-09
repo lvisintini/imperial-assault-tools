@@ -19,16 +19,18 @@ def side(seed, pill_text, size=256):
 
 def test_same_art_with_another_pill_matches_and_other_art_doesnt():
     one, two, other = (tm.prepare(*side(seed, text)) for seed, text in ((1, '35A'), (1, '10A'), (2, '35A')))
-    coarse, turn, fine, shift = tm.compare(one, two)
-    assert coarse > 0.95 and fine > 0.95 and turn == 0 and shift == (0, 0)
-    coarse, _, fine, _ = tm.compare(one, other)
+    coarse, fine, shift = tm.compare(one, two)
+    assert coarse > 0.95 and fine > 0.95 and shift == (0, 0)
+    coarse, fine, _ = tm.compare(one, other)
     assert coarse < tm.COARSE and fine < tm.FINE
 
 
-def test_turned_art_is_found_turned():
+def test_the_same_art_turned_isnt_a_match():
+    """Sides are stored upright: art that lines up only turned has its pill elsewhere, so it's other art."""
     image, pill = side(1, '35A')
     turned = tm.prepare(np.ascontiguousarray(np.rot90(image, -1)), ((216, 20), (70, 20)))  # a quarter clockwise
-    assert tm.compare(turned, tm.prepare(image, pill))[1] == 90
+    coarse, fine, _ = tm.compare(turned, tm.prepare(image, pill))
+    assert coarse < tm.COARSE and fine < tm.FINE
 
 
 def test_groups_join_linked_pairs():

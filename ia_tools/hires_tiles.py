@@ -67,6 +67,22 @@ def sides(dataset):
     return found
 
 
+def stored(dataset, path, px):
+    """A side's stored image (RGBA array) at px per square: images/large, at whatever px per square it has (its size
+    against images/small's, which is 64), scaled to px."""
+    import cv2
+    import numpy as np
+    from PIL import Image
+
+    image = np.array(Image.open(dataset.root / 'images' / 'large' / path).convert('RGBA'))
+    with Image.open(dataset.root / 'images' / 'small' / path) as small:
+        k = px * small.width / (64 * image.shape[1])
+    if k == 1:
+        return image
+    return cv2.resize(image, (round(image.shape[1] * k), round(image.shape[0] * k)),
+                      interpolation=cv2.INTER_CUBIC if k > 1 else cv2.INTER_AREA)
+
+
 def scan_file(product, number, side, folder):
     """The scan of a side, its name's case aside (heart_1B.png), or None."""
     wanted = f'{PREFIXES[product]}_{number}{side}.png'.lower()
@@ -268,9 +284,7 @@ def run(dataset, scans=None, out=None, only=None, log=print, page=True, upright=
     (out / 'map-tiles').mkdir(parents=True, exist_ok=True)
 
     def ours_of(tile, field):
-        image = np.array(Image.open(dataset.root / 'images' / 'large' / tile[field]).convert('RGBA'))
-        k = SQUARE / 64
-        return cv2.resize(image, (round(image.shape[1] * k), round(image.shape[0] * k)), interpolation=cv2.INTER_CUBIC)
+        return stored(dataset, tile[field], SQUARE)
 
     from ia_tools.tile_orientation import k_of_turn
 
@@ -552,3 +566,40 @@ function reveal() {
 addEventListener('hashchange', reveal); reveal();
 </script>""")
     (out / 'index.html').write_text('\n'.join(page), encoding='utf-8')
+
+
+# Write -------------------------------------------------------------------------------------------------------------
+
+def write(dataset, out=None, log=print):
+    """Puts the staged sides in the data repo: images/large/map-tiles at SQUARE px per square, and images/small/map-tiles
+    halved (BOX) to 64, the frame the dataset's tiles have always had. Every side must be staged, fitted at its pill's
+    turn and twice the size of its small image. map-tiles.json doesn't change (its sizes are in squares). Returns the
+    problems; nothing is written if there are any."""
+    from PIL import Image
+
+    out = Path(out or out_dir())
+    manifest = json.loads((out / 'manifest.json').read_text(encoding='utf-8'))
+    root = dataset.root / 'images'
+    problems, staged = [], []
+    for key, product, tile, side, field in sides(dataset):
+        info = manifest['sides'].get(key)
+        path = tile[field]
+        if info is None or not (out / path).exists():
+            problems.append(f'{key}: not staged')
+            continue
+        if info.get('scan_turn') is None or info['turn'] != info['scan_turn']:
+            problems.append(f"{key}: fitted at {info['turn']}°, not at its pill's turn")
+        with Image.open(out / path) as image, Image.open(root / 'small' / path) as small:
+            if image.size != (small.width * SQUARE // 64, small.height * SQUARE // 64):
+                problems.append(f'{key}: staged {image.size}, but its small image is {small.size}')
+        staged.append(path)
+    if problems:
+        return problems
+    for path in staged:
+        with Image.open(out / path) as image:
+            image = image.convert('RGBA')
+            (root / 'large' / path).write_bytes((out / path).read_bytes())
+            image.resize((image.width * 64 // SQUARE, image.height * 64 // SQUARE), Image.BOX).save(
+                root / 'small' / path, optimize=True)
+    log(f'  {len(staged)} sides at {SQUARE} px per square (large) and 64 (small)')
+    return []

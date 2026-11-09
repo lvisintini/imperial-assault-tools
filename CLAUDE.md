@@ -31,22 +31,26 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
   schemas, suggestions, per-entry validation), and the page in `static/` (plain JS). The entries.json format is
   documented in `staging.py`.
 - `ia_tools/campaign_maps.py` (`ia maps`): the campaign maps drawn from IC2's placements (`ic2.parse_sections`) with
-  the Vassal tiles as the data repo stores them (`upright`: the quarter turns from the module's image); how IC2 and
-  Vassal place and turn tiles is in its docstring.
+  the data repo's tiles (`tile_sides`; turns solved on `images/small` at 64 px per square, maps drawn at
+  `large_px` and halved for small, `save_both`; `upright` matches the Vassal module's images to ours by colour, for
+  the Aftermath save check); how IC2 and Vassal place and turn tiles is in its docstring.
 - `ia_tools/layouts.py`: `map-layouts.json`'s row order (`row_order`) and a map's rows from its placements
   (`rows_for`: copies, placements, frame at 0, 0, the count rule). `ia_tools/skirmish_maps.py` (`ia skirmish-maps`):
   the skirmish and raid maps' rows from `staging/skirmish-maps/final.json`, their reviewed placements, and their
-  images drawn from the rows (`draw`, on `campaign_maps.compose`'s frame: the tiles' squares plus 16 px all round).
+  images drawn from the rows (`draw`, at any px per square, on `campaign_maps.compose`'s frame: the tiles' squares
+  plus a quarter square all round).
 - `ia_tools/hires_tiles.py` (`ia hires-tiles`): the tile scans in `tiles/` fitted onto the dataset's sides at 128 px
   per square (`register`: features or outline, then ECC), colour-corrected per product (`tone_curve`), staged in
-  `staging/hires-tiles/` with `manifest.json` and a review page (`weak` flags a fit).
+  `staging/hires-tiles/` with `manifest.json` and a review page (`weak` flags a fit); each scan turned upright by
+  its pill first. `write` (`--write`) puts them in the data repo (large 128, small 64 px per square). `stored` gives a
+  side's stored image at any px per square.
 - `ia_tools/tile_orientation.py` (`ia tile-orientation`): each side's upright turn, on its scan (its number pill's
-  template matched at 4 turns, its code read by nearest-neighbour glyphs) and on the dataset's image (through the
-  hi-res fit, checked by the pill), into `staging/tile-orientation/turns.json` with a review page; `rulings.json`
-  overrides. `write` (`--write`) stores the sides upright and turns map-tiles' width/height, map-layouts' rotations
-  and `final.json`'s turns to match (refuses once the images aren't the Vassal module's).
+  template matched at 4 turns, its code read by nearest-neighbour glyphs) and on the dataset's image ("ours", at
+  128 px per square: through the hi-res fit, checked by the pill, its code read too), into
+  `staging/tile-orientation/turns.json` with a review page; `rulings.json` overrides.
 - `ia_tools/tile_matches.py` (`ia tile-matches`): interchangeable sides (same art, another pill), compared on the
-  staged hi-res sides with the pills masked (`compare`: coarse gradients, then fine detail with a shift), grouped
+  dataset's images as stored (upright: turn 0 only), the pills masked (`compare`: coarse gradients, then fine
+  detail with a shift), grouped
   into `staging/tile-matches/candidates.json` with a review page.
 - `ia_tools/card_types.py` (`ia card-types`, and `ia enter`'s Card types page, `static/card-types.html`): whether each
   reward Feat and Imperial class card is a Feat or a Group Attachment, proposed from the wiki's card text (pages

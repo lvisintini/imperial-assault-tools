@@ -1,29 +1,32 @@
-"""ia maps: the campaign maps, drawn from ImperialCommander2's layouts with the Vassal module's tiles (data 2.0.0)
-as the data repo stores them (turned upright by `ia tile-orientation --write`).
+"""ia maps: the campaign maps, drawn from ImperialCommander2's layouts with the data repo's tiles (data 2.0.0): stored
+upright, from the maintainer's scans since `ia hires-tiles --write` (images/large at large_px() px per square,
+images/small at SQUARE).
 
 IC2's mission files place each tile (ic2.parse_sections) with its texture's top-left corner at (x, y) / 10 squares,
 turned clockwise by its rotation about that corner: TileRenderer.cs turns it by -rotation, and the sprites' pivot is
 their top-left corner (alignment 1 in their .meta files).
 
-A Vassal image is the side cut on its outline: on an axis with tabs it is 32 px wider than its squares, a 16 px margin
-at each end (grid_rect). IC2's textures are cut to the grid, and not always turned like
-the Vassal image of the same side. A side's turn k (the Vassal image turned counter-clockwise k times looks like IC2's
+A side's image is cut on its outline: on an axis with tabs it is half a square wider than its squares, a quarter
+square's margin at each end (grid_rect). IC2's textures are cut to the grid, and not always turned like
+our image of the same side. A side's turn k (our small image turned counter-clockwise k times looks like IC2's
 texture) is the one whose colours match IC2's best, compared at 32 px per square. When two turns score within MARGIN of
 each other, the side gets the turn that fits its neighbours best across the maps that use it: the fewest gaps left
 inside the tiles' squares (a notch whose neighbour's tab went elsewhere) and squares covered twice. Aftermath's turns
-are checked against the Vassal module's Aftermath save, which places the same tiles.
+are checked against the Vassal module's Aftermath save, which places the same tiles (its images matched to ours by
+colour, upright()).
 
 The tools compare images numerically; they never look at them.
 
 Writes staging/campaign-maps/:
-- <map slug>.png for each campaign map: 64 px per square, the tiles only (no doors, crates or tokens), the sections
+- <map slug>.png for each campaign map, at large_px() px per square, and small/<map slug>.png at SQUARE (the large one
+  halved): the tiles only (no doors, crates or tokens), the sections
   drawn in order (later ones on top), transparent around the tiles, framed on their squares plus a quarter square
   all round (compose()). A mission whose correction (ic2.CORRECTIONS) names its main sections is drawn with those, and each of its hidden sections (the parts of the
   map revealed during the mission, each one or more of IC2's sections) on its own as <map slug>-hidden-<n>.png, in
   order, and the whole map, its image's sections and then each hidden section's in one frame (a tile whose
   squares a later section's tiles all cover left out), as <map slug>-whole.png. Any other map is
-  drawn with every section, or, when its sections replace each other (more than OVERLAP of it covered twice), with
-  the sections shown at the start;
+  drawn with every section, or, when its sections replace each other (more than OVERLAP of it covered twice, measured
+  at SQUARE), with the sections shown at the start;
 - manifest.json: {"ic2_commit", "turns": {"<product> <number><side>": {"turn", "scores", "by"}},
   "maps": [{"name", "map_id", "ic2", "file", "size", "bytes", "sections": "all" | "start" | "main", "overlap",
             "hidden": [{"name", "sections", "file", "size", "bytes"}], "whole": {"file", "size", "bytes"} | null,
@@ -32,7 +35,7 @@ Writes staging/campaign-maps/:
   (section null for the map's image, else the hidden section's name), x, y the top-left square of its turned grid in
   IC2's frame, rotation the clockwise degrees that turn the side's stored image (placements()).
 
-write() puts them in the data repo: the images in images/large/maps and images/small/maps (the same file), each
+write() puts them in the data repo: the images in images/large/maps and images/small/maps, each
 campaign map's hidden_sections ({name, image}) and whole_image (null for a map without hidden sections), and its
 map-layouts rows: the corrected mission's tiles with their
 copies and placements (layouts.rows_for), the file sorted as layouts.row_order says."""
@@ -166,33 +169,66 @@ def fit(mission, sides, turns):
     return int(((count == 0) & grid).sum() + (count > 1).sum())
 
 
-def upright(stored, image):
-    """The counter-clockwise quarter turns that make the Vassal module's image of a side look like its stored one
-    (`ia tile-orientation --write` turns them upright)."""
+def upright(ours, theirs):
+    """The counter-clockwise quarter turns that make the Vassal module's image of a side look most like ours (both at
+    SQUARE px per square; ours is stored upright and, since `ia hires-tiles --write`, from the maintainer's scans)."""
+    best = None
     for k in range(4):
-        turned = np.rot90(image, k)
-        if turned.shape == stored.shape and (turned == stored).all():
-            return k
-    raise ValueError("a side's stored image isn't its Vassal image turned")
+        turned = np.rot90(theirs, k)
+        if turned.shape != ours.shape:
+            continue
+        mask = (turned[..., 3] > 250) & (ours[..., 3] > 250)
+        score = ncc(turned[..., :3][mask].astype(float), ours[..., :3][mask].astype(float))
+        if best is None or score > best[0]:
+            best = (score, k)
+    return best[1]
 
 
-def solve(cache, module, textures, dataset, log=print):
-    """{side key: {"turn", "scores", "by"}} and the sides' images and masks: the data repo's images (the Vassal module's
-    turned upright), with "upright", the quarter turns from the module's image to ours."""
+def tile_sides(dataset):
+    """{side key: image path} for every side in map-tiles.json, keyed like IC2's textures (texture_key)."""
+    products = {name: product for product, name in tiles.NAMES.items()}
+    found = {}
+    for record in dataset.records('map-tiles'):
+        prefix, number = record['name'].rsplit(' ', 1)
+        for side in 'AB':
+            found[side_key(products.get(prefix, prefix), int(number), side)] = record[f'side_{side.lower()}']
+    return found
+
+
+def large_px(dataset):
+    """The px per square of the data repo's images/large map tiles (images/small's are SQUARE)."""
     from PIL import Image
 
-    pieces = vassal.tiles(Path(module) / 'buildFile')
-    records = {t['name']: t for t in dataset.records('map-tiles')}
+    path = dataset.records('map-tiles')[0]['side_a']
+    with Image.open(dataset.root / 'images' / 'large' / path) as large, \
+            Image.open(dataset.root / 'images' / 'small' / path) as small:
+        return SQUARE * large.width // small.width
+
+
+def image_at(side, px):
+    """A side's image at px per square: its small one (SQUARE) or its large one (scaled if need be)."""
+    from ia_tools.hires_tiles import stored
+
+    if px == SQUARE:
+        return side['image']
+    if px not in side['at']:
+        side['at'][px] = stored(side['dataset'], side['path'], px)
+    return side['at'][px]
+
+
+def solve(cache, textures, dataset, log=print):
+    """{side key: {"turn", "scores", "by"}} and the sides: the data repo's images (images/small, SQUARE px per square;
+    larger ones loaded when drawn) and their masks."""
+    from PIL import Image
+
     sides = {}
-    for piece in pieces:
-        record = records[tiles.tile_name(piece['product'], piece['number'])]
-        image = load_rgba(dataset.root / 'images' / 'large' / record[f"side_{piece['side'].lower()}"])
-        k_up = upright(image, load_rgba(Path(module) / 'images' / piece['image']))
+    for key, path in tile_sides(dataset).items():
+        image = load_rgba(dataset.root / 'images' / 'small' / path)
         # A tab or notch is 32 px deep: SOLVE_PX keeps it at least 8 px.
         small = Image.fromarray(image[..., 3]).resize(
             (image.shape[1] * SOLVE_PX // SQUARE, image.shape[0] * SOLVE_PX // SQUARE), Image.BOX)
-        sides[side_key(piece['product'], piece['number'], piece['side'])] = {
-            'piece': piece, 'image': image, 'upright': k_up, 'mask': (np.asarray(small) > 127).astype(np.int16)}
+        sides[key] = {'image': image, 'path': path, 'dataset': dataset, 'at': {},
+                      'mask': (np.asarray(small) > 127).astype(np.int16)}
     names = {texture_key(name): name for name in textures}
     turns = {}
     for key, side in sides.items():
@@ -288,20 +324,37 @@ def squares_of(image, left, top, px=SQUARE):
             if alpha[y0 + j * px + px // 2, x0 + i * px + px // 2] > 127}
 
 
-def draw(mission, sides, turns, start_only=False, sections=None, ordered=False, replace=False):
-    """(RGBA image, overlap share). start_only: only the sections shown when the mission starts (the first section if
-    IC2 hides them all). sections: only these (names). replace: a tile whose squares a later section's tiles all cover
-    is left out (a revealed section's tile takes the place of the one it lands on)."""
+def draw(mission, sides, turns, start_only=False, sections=None, ordered=False, replace=False, px=SQUARE):
+    """(RGBA image, overlap share), at px per square. start_only: only the sections shown when the mission starts (the
+    first section if IC2 hides them all). sections: only these (names). replace: a tile whose squares a later
+    section's tiles all cover is left out (a revealed section's tile takes the place of the one it lands on)."""
     pieces, at = [], []
     for n, section in enumerate(shown_sections(mission, start_only, sections, ordered)):
         for tile in section['tiles']:
             key = texture_key(tile['texture'])
-            pieces.append(placed(sides[key]['image'], turns[key]['turn'], tile['x'], tile['y'], tile['rotation']))
-            at.append((n, squares_of(*pieces[-1])))
+            pieces.append(placed(image_at(sides[key], px), turns[key]['turn'], tile['x'], tile['y'], tile['rotation'],
+                                 px))
+            at.append((n, squares_of(*pieces[-1], px)))
     if replace:
         pieces = [p for p, (n, squares) in zip(pieces, at)
                   if not squares <= set().union(*(s for m, s in at if m > n))]
-    return compose(pieces)
+    return compose(pieces, px)
+
+
+def halved(image, px):
+    """A map image drawn at px per square, at SQUARE (BOX): its small image."""
+    from PIL import Image
+
+    if px == SQUARE:
+        return image
+    return image.resize((image.width * SQUARE // px, image.height * SQUARE // px), Image.BOX)
+
+
+def save_both(image, px, out, file):
+    """out/<file> (large, px per square) and out/small/<file> (SQUARE)."""
+    (out / 'small').mkdir(parents=True, exist_ok=True)
+    image.save(out / file, optimize=True)
+    halved(image, px).save(out / 'small' / file, optimize=True)
 
 
 def compose(pieces, px=SQUARE):
@@ -359,12 +412,14 @@ def campaign_maps(dataset):
 def run(module, cache, textures, dataset, sample=None, out=None, log=print):
     """(manifest, problems). sample: mission names to draw, instead of all."""
     out = Path(out or settings.STAGING / 'campaign-maps')
-    turns, sides = solve(cache, module, textures, dataset, log)
+    turns, sides = solve(cache, textures, dataset, log)
+    px = large_px(dataset)
     problems = []
     aftermath = next(m for m in cache['missions'] if m['name'] == 'Aftermath')
-    pieces = [s['piece'] for s in sides.values()]
-    for key, turn in save_turns(Path(module) / 'Aftermath.vsav', pieces, aftermath).items():
-        turn = (turn - sides[key]['upright']) % 4  # the save turns the module's image
+    pieces = {side_key(p['product'], p['number'], p['side']): p for p in vassal.tiles(Path(module) / 'buildFile')}
+    for key, turn in save_turns(Path(module) / 'Aftermath.vsav', list(pieces.values()), aftermath).items():
+        # The save turns the module's image.
+        turn = (turn - upright(sides[key]['image'], load_rgba(Path(module) / 'images' / pieces[key]['image']))) % 4
         if turns[key]['turn'] != turn:
             problems.append(f"{key}: turned {turns[key]['turn']}, but the Aftermath save shows {turn}")
     records = campaign_maps(dataset)
@@ -392,14 +447,15 @@ def run(module, cache, textures, dataset, sample=None, out=None, log=print):
         file = f'{file_stem(name)}.png'
         hidden, whole = [], None
         if 'main' in mission:
-            image, overlap = draw(mission, sides, turns, sections=mission['main'])
+            _, overlap = draw(mission, sides, turns, sections=mission['main'])  # measured at SQUARE, as always
+            image, _ = draw(mission, sides, turns, sections=mission['main'], px=px)
             sections = 'main'
             placed_here = [p | {'section': None} for p in placements(mission, sides, turns, sections=mission['main'])]
             for section in mission['hidden']:
-                part, _ = draw(mission, sides, turns, sections=section['sections'])
+                part, _ = draw(mission, sides, turns, sections=section['sections'], px=px)
                 hidden.append({'name': section['name'], 'sections': section['sections'],
                                'file': f'{file_stem(name)}-hidden-{len(hidden) + 1}.png'})
-                part.save(out / hidden[-1]['file'], optimize=True)
+                save_both(part, px, out, hidden[-1]['file'])
                 hidden[-1] |= {'size': list(part.size), 'bytes': (out / hidden[-1]['file']).stat().st_size}
                 placed_here += [p | {'section': section['name']}
                                 for p in placements(mission, sides, turns, sections=section['sections'])]
@@ -407,19 +463,20 @@ def run(module, cache, textures, dataset, sample=None, out=None, log=print):
                 # The whole map: its image's sections, then each hidden section's, in order (later ones on top, in place of
                 # the tiles they cover).
                 every = list(mission['main']) + [n for h in mission['hidden'] for n in h['sections']]
-                part, _ = draw(mission, sides, turns, sections=every, ordered=True, replace=True)
+                part, _ = draw(mission, sides, turns, sections=every, ordered=True, replace=True, px=px)
                 whole = {'file': f'{file_stem(name)}-whole.png'}
-                part.save(out / whole['file'], optimize=True)
+                save_both(part, px, out, whole['file'])
                 whole |= {'size': list(part.size), 'bytes': (out / whole['file']).stat().st_size}
         else:
-            image, overlap = draw(mission, sides, turns)
+            _, overlap = draw(mission, sides, turns)
             sections = 'all'
             if overlap > OVERLAP:
-                image, overlap = draw(mission, sides, turns, start_only=True)
+                _, overlap = draw(mission, sides, turns, start_only=True)
                 sections = 'start'
+            image, _ = draw(mission, sides, turns, start_only=sections == 'start', px=px)
             placed_here = [p | {'section': None}
                            for p in placements(mission, sides, turns, start_only=sections == 'start')]
-        image.save(out / file, optimize=True)
+        save_both(image, px, out, file)
         maps.append({'name': name, 'map_id': record and record['id'], 'ic2': f"{mission['folder']}/{mission['file']}",
                      'file': file, 'size': list(image.size), 'bytes': (out / file).stat().st_size,
                      'sections': sections, 'overlap': overlap, 'hidden': hidden, 'whole': whole,
@@ -487,7 +544,8 @@ def write(manifest, cache, dataset, out=None, log=print):
         for old in replaced - files:  # a renamed map's images
             (root / size / old).unlink(missing_ok=True)
         for file in files:
-            shutil.copyfile(out / Path(file).name, root / size / file)
+            source = out / Path(file).name if size == 'large' else out / 'small' / Path(file).name
+            shutil.copyfile(source, root / size / file)
 
     maps = []
     for record in dataset.records('maps'):

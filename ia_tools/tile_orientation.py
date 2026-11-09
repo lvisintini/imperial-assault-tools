@@ -1,8 +1,8 @@
 """Tile sides with their number pills upright.
 
 Every tile side has a pill in a corner with its code: the product's icon, two digits and a smaller A or B ("01A").
-The scans in tiles/ are ~299 px per square, enough to read it; our (Vassal) images are 64 px per square, where its
-text is ~5 px tall, too small to read, so the pill is only matched there.
+The scans in tiles/ are ~299 px per square, enough to read it; our stored images are read at 128 px per square
+(OURS_PX: the hi-res tiles' size since `ia hires-tiles --write`), where its text is about 11 px tall.
 
 1. Bootstrap: find pill-sized light rounded rectangles in each scan and keep the ones that segment as an upright
    pill (two tall glyphs, then a shorter one on their baseline); their crops make each product's pill template, and
@@ -10,11 +10,12 @@ text is ~5 px tall, too small to read, so the pill is only matched there.
 2. Each scan: its product's template matched at the 4 quarter turns finds its pill and which way up it reads.
 3. Each scan's code: its glyph cells read by their nearest neighbours among every other scan's (labelled with those
    sides' codes; Tesseract can't read the pills' font), so a scan reading another side's code shows.
-4. Each Vassal image: turned like the scan's registration onto it (`ia hires-tiles`), checked by matching the pill
-   template, shrunk to its scale, at the 4 turns.
+4. Each of our images: turned like the scan's registration onto it (`ia hires-tiles`), checked by matching the pill
+   template, shrunk to its scale, at the 4 turns; its code read like the scans' (its own scan and the scan's copies
+   don't vote).
 
 Turns are clockwise degrees that make an image's pill upright. The maintainer's rulings (rulings.json: {side key:
-{"scan": turn, "vassal": turn}}) override them.
+{"scan": turn, "ours": turn}}) override them.
 """
 import hashlib
 import html
@@ -32,6 +33,7 @@ SHIFTS = [(dx, dy) for dx in (-4, -2, 0, 2, 4) for dy in (-2, 0, 2)]
 NEIGHBOURS = 7
 MARGIN = 0.15  # a turn's template score must beat the next turn's by this much
 SURE = 0.6  # a glyph's share of its neighbours' votes
+OURS_PX = 128
 
 
 def out_dir():
@@ -216,7 +218,7 @@ def pixels_digest(image):
 # Run ----------------------------------------------------------------------------------------------------------------
 
 def run(dataset, scans=None, out=None, log=print):
-    """Find every side's turns (scan and Vassal image), write turns.json and the review page; returns the turns."""
+    """Find every side's turns (scan and our image), write turns.json and the review page; returns the turns."""
     import cv2
     import numpy as np
     from PIL import Image
@@ -248,11 +250,11 @@ def run(dataset, scans=None, out=None, log=print):
     for key, file in files.items():
         scan_dups[digest(file)].append(key)
     copies = {key: [k for k in scan_dups[digest(file)] if k != key] for key, file in files.items()}
-    vassal_images, vassal_dups = {}, defaultdict(list)
+    ours_images, ours_dups = {}, defaultdict(list)
     for key, product, tile, side, field in every:
-        image = np.array(Image.open(dataset.root / 'images' / 'large' / tile[field]).convert('RGBA'))
-        vassal_images[key] = image
-        vassal_dups[pixels_digest(image)].append(key)
+        image = hires_tiles.stored(dataset, tile[field], OURS_PX)
+        ours_images[key] = image
+        ours_dups[pixels_digest(image)].append(key)
 
     masked = {key: np.where(scan[..., 3] > 127, gray, 0).astype(np.float32) for key, (_, gray, scan) in grays.items()}
     product_of = {key: product for key, product, *_ in every}
@@ -283,7 +285,7 @@ def run(dataset, scans=None, out=None, log=print):
         log(f'  {key}: pill upright after {turn_of_k(matches[0][1])}° ({matches[0][0]:.2f}, next {matches[1][0]:.2f}), '
             f'reads {reads[key][0]}')
 
-    turns = {}
+    turns, ours_pills = {}, {}
     for key, product, tile, side, field in every:
         entry = {'code': code_of(tile, side), 'flags': []}
         flags = entry['flags']
@@ -308,43 +310,57 @@ def run(dataset, scans=None, out=None, log=print):
         else:
             flags.append('no scan')
 
-        # The Vassal image: the scan's upright turn and its registration onto ours (scan -> ours, clockwise).
-        image = vassal_images[key]
-        big = cv2.resize(image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
-        gray = np.where(big[..., 3] > 127, cv2.cvtColor(big[..., :3], cv2.COLOR_RGB2GRAY), 0).astype(np.float32)
+        # Our image: the scan's upright turn and its registration onto ours (scan -> ours, clockwise), checked by the
+        # pill template.
+        image = ours_images[key]
+        plain = cv2.cvtColor(image[..., :3], cv2.COLOR_RGB2GRAY)
+        gray = np.where(image[..., 3] > 127, plain, 0).astype(np.float32)
         template = shapes[product][0]
-        small = cv2.resize(template, (round(template.shape[1] * 128 / SCAN_PX), round(template.shape[0] * 128 / SCAN_PX)),
-                           interpolation=cv2.INTER_AREA)
+        small = cv2.resize(template, (round(template.shape[1] * OURS_PX / SCAN_PX),
+                                      round(template.shape[0] * OURS_PX / SCAN_PX)), interpolation=cv2.INTER_AREA)
         pill = match(gray, small)
         by_pill = turn_of_k(pill[0][1])
-        vassal = {'turn': by_pill, 'pill': pill[0][0], 'next': pill[1][0], 'at': list(pill[0][2]),
-                  'size': list(pill[0][3])}
+        ours = {'turn': by_pill, 'pill': pill[0][0], 'next': pill[1][0], 'at': list(pill[0][2]),
+                'size': list(pill[0][3])}
         if 'scan' in entry and key in fits:
             by_fit = (entry['scan']['turn'] - fits[key]['turn']) % 360
-            vassal['fit'] = by_fit
+            ours['fit'] = by_fit
             sure_pill = pill[0][0] - pill[1][0] >= MARGIN
             if by_fit != by_pill:
-                vassal['turn'] = by_pill if sure_pill else by_fit
-                flags.append(f"vassal: its fit onto the scan says {by_fit}°, its pill {by_pill}° "
-                             f"({pill[0][0]:.2f} against {pill[1][0]:.2f}); taking {vassal['turn']}°")
+                ours['turn'] = by_pill if sure_pill else by_fit
+                flags.append(f"ours: its fit onto the scan says {by_fit}°, its pill {by_pill}° "
+                             f"({pill[0][0]:.2f} against {pill[1][0]:.2f}); taking {ours['turn']}°")
             elif fits[key]['how'] == 'outline':
-                flags.append('vassal: the scan was fitted by its outline alone')
+                flags.append('ours: the scan was fitted by its outline alone')
         elif pill[0][0] - pill[1][0] < MARGIN:
-            flags.append(f'vassal: which way up is unclear ({pill[0][0]:.2f} against {pill[1][0]:.2f})')
-        twins = [k for k in vassal_dups[pixels_digest(image)] if k != key]
+            flags.append(f'ours: which way up is unclear ({pill[0][0]:.2f} against {pill[1][0]:.2f})')
+        twins = [k for k in ours_dups[pixels_digest(image)] if k != key]
         if twins:
-            flags.append(f"vassal: the same image as {', '.join(twins)}'s")
-            entry['wrong_vassal'] = True
-        entry['vassal'] = vassal
+            flags.append(f"ours: the same image as {', '.join(twins)}'s")
+            entry['same_image'] = True
+        entry['ours'] = ours
+        ours_pills[key] = (entry['code'], upright_crop(plain, pill[0]), shapes[product][1])
         if key in rulings:
             entry['ruled'] = rulings[key]
-            for which in ('scan', 'vassal'):
+            for which in ('scan', 'ours'):
                 if which in rulings[key] and which in entry:
                     entry[which]['turn'] = rulings[key][which]
         turns[key] = entry
 
+    # Our pills' codes, read by the scans' pills and each other's (not its own scan's, nor that scan's copies').
+    both = pills | {f'{key} (ours)': pill for key, pill in ours_pills.items()}
+    skip = copies | {f'{key} (ours)': [key, *copies.get(key, [])] for key in ours_pills}
+    ours_reads = read_codes(both, skip)
+    for key, entry in turns.items():
+        read, shares = ours_reads[f'{key} (ours)']
+        entry['ours'] |= {'read': read, 'shares': shares}
+        if read != entry['code']:
+            entry['flags'].append(f'ours: its pill reads {read}')
+        elif min(shares) < SURE:
+            entry['flags'].append(f'ours: its pill reads {read}, but not clearly')
+
     (out / 'turns.json').write_text(json.dumps(turns, indent=1), encoding='utf-8')
-    images(dataset, turns, grays, vassal_images, out)
+    images(dataset, turns, grays, ours_images, out)
     review(dataset, turns, out)
     return turns
 
@@ -361,8 +377,8 @@ def turned(image, turn):
     return np.ascontiguousarray(np.rot90(image, k_of_turn(turn)))
 
 
-def images(dataset, turns, grays, vassal_images, out):
-    """img/<slug>-{scan,vassal}{,-pill}.jpg: each image upright, and its pill enlarged."""
+def images(dataset, turns, grays, ours_images, out):
+    """img/<slug>-{scan,ours}{,-pill}.jpg: each image upright (64 px per square), and its pill enlarged."""
     import cv2
     import numpy as np
     from PIL import Image
@@ -388,14 +404,13 @@ def images(dataset, turns, grays, vassal_images, out):
             save(turned(crop, entry['scan']['turn']), out / 'img' / f'{name}-scan-pill.jpg', 240)
             small = cv2.resize(scan, None, fx=64 / SCAN_PX, fy=64 / SCAN_PX, interpolation=cv2.INTER_AREA)
             save(turned(small, entry['scan']['turn']), out / 'img' / f'{name}-scan.jpg')
-        image = vassal_images[key]
-        big = cv2.resize(image, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
-        x, y = entry['vassal']['at']
-        h, w = entry['vassal']['size']
+        image = ours_images[key]
+        x, y = entry['ours']['at']
+        h, w = entry['ours']['size']
         pad = 6
-        crop = big[max(0, y - pad):y + h + pad, max(0, x - pad):x + w + pad]
-        save(turned(crop, entry['vassal']['turn']), out / 'img' / f'{name}-vassal-pill.jpg', 240)
-        save(turned(image, entry['vassal']['turn']), out / 'img' / f'{name}-vassal.jpg')
+        crop = image[max(0, y - pad):y + h + pad, max(0, x - pad):x + w + pad]
+        save(turned(crop, entry['ours']['turn']), out / 'img' / f'{name}-ours-pill.jpg', 240)
+        save(turned(image, entry['ours']['turn']), out / 'img' / f'{name}-ours.jpg', image.shape[1] * 64 // OURS_PX)
 
 
 def review(dataset, turns, out):
@@ -415,16 +430,16 @@ def review(dataset, turns, out):
         meta = [f"code {entry['code']}"]
         if scan:
             meta.append(f"scan {e(scan['file'])}: reads {scan['read']}, turned {scan['turn']}°")
-        meta.append(f"Vassal image turned {entry['vassal']['turn']}°")
+        meta.append(f"our image: reads {entry['ours'].get('read', '?')}, turned {entry['ours']['turn']}°")
         if 'ruled' in entry:
             meta.append('ruled')
         cells = []
         if scan:
             cells.append(f'<figure><img src="img/{name}-scan-pill.jpg" class="pill"><figcaption>scan pill</figcaption></figure>')
-        cells.append(f'<figure><img src="img/{name}-vassal-pill.jpg" class="pill"><figcaption>Vassal pill</figcaption></figure>')
+        cells.append(f'<figure><img src="img/{name}-ours-pill.jpg" class="pill"><figcaption>our pill</figcaption></figure>')
         if scan:
             cells.append(f'<figure><img src="img/{name}-scan.jpg"><figcaption>scan, upright</figcaption></figure>')
-        cells.append(f'<figure><img src="img/{name}-vassal.jpg"><figcaption>Vassal, upright</figcaption></figure>')
+        cells.append(f'<figure><img src="img/{name}-ours.jpg"><figcaption>ours, upright</figcaption></figure>')
         reasons = ''.join(f'<li>{e(f)}</li>' for f in entry['flags'])
         return (f'<div class="side{" flag" if flagged else ""}" id="{name}"><h3>{e(key)}'
                 f'{" <span class=badge>check</span>" if flagged else ""}</h3>'
@@ -452,7 +467,7 @@ def review(dataset, turns, out):
             entry['flags'].insert(0, f"scan to edit: {note['edit']}")
     new_scan = [k for k, v in turns.items() if v.get('new_scan')]
     edit = [k for k, v in turns.items() if v.get('edit')]
-    wrong = [k for k, v in turns.items() if v.get('wrong_vassal')]
+    wrong = [k for k, v in turns.items() if v.get('same_image')]
     flagged = [k for k, v in turns.items() if v['flags'] and k not in new_scan + edit + wrong]
     sets = []
     for product, keys in products.items():
@@ -474,13 +489,13 @@ figure {{ margin: 0; }} figcaption {{ font-size: 12px; color: #666; }}
 img {{ max-width: 220px; height: auto; background: #333; }} img.pill {{ width: 240px; max-width: 240px; }}
 </style></head><body>
 <h1>Upright tile sides</h1>
-<p>Each side's scan and Vassal image, turned so the pill reads upright, with their pills enlarged. Scan codes are
-read from the pills; Vassal pills are too small to read, so they are matched and the turn checked against the
-scan's fit. Rulings go in rulings.json as {{"side key": {{"scan": turn, "vassal": turn}}}}.</p>
+<p>Each side's scan and our stored image, turned so the pill reads upright, with their pills enlarged. Both codes
+are read from the pills (ours at {OURS_PX} px per square), and our image's turn checked against the scan's fit.
+Rulings go in rulings.json as {{"side key": {{"scan": turn, "ours": turn}}}}.</p>
 {listing('Needs a new scan', new_scan, 'The scan is the same file as another side, clearly reads another code, or '
                                         "isn't the tile the maintainer has.")}
 {listing('Scan to edit', edit, "The scan is right, but its pill is printed wrong (an errata).")}
-{listing('Wrong Vassal image', wrong, 'The Vassal image is the same as another side: one of them shows the wrong pill.')}
+{listing('Same image', wrong, 'Our image is the same as another side: one of them shows the wrong pill.')}
 {listing('To check', flagged, 'OCR or the pill match was unsure: rule the turn, or confirm.')}
 {''.join(sets)}
 <script>
@@ -490,82 +505,3 @@ for (const a of document.querySelectorAll('a[href^="#"]')) a.addEventListener('c
 }});
 </script></body></html>"""
     (out / 'index.html').write_text(page, encoding='utf-8')
-
-
-# Write ----------------------------------------------------------------------------------------------------------------
-
-QUARTERS = {1: 'ROTATE_90', 2: 'ROTATE_180', 3: 'ROTATE_270'}  # PIL's counter-clockwise turns
-
-
-def write(dataset, turns, final=None, module=None, log=print):
-    """Stores every side's image with its pill upright (its "vassal" turn) and turns what places it to match, so every
-    map draws the same:
-    - images/{large,small}/map-tiles: each image turned (losslessly) by its turn;
-    - map-tiles.json: width and height from side A's turned image;
-    - map-layouts.json: each placement's rotation becomes (rotation - turn) mod 360 (x and y stay);
-    - final (staging/skirmish-maps/final.json, what `ia skirmish-maps` writes from): each placement's numpy
-      quarter turns become (turn - k) mod 4, k the side's counter-clockwise quarter turns to upright (its scripts/
-      apply.py, which made it, would undo that).
-    `ia maps` reads the stored images, so a rerun finds the new turns itself. Every image must still be the Vassal
-    module's (written once). Returns the problems; nothing is written if there are any."""
-    import numpy as np
-    from PIL import Image
-
-    from ia_tools import skirmish_maps, vassal
-    from ia_tools.campaign_maps import SQUARE, alpha_of, grid_rect, load_rgba, upright
-    from ia_tools.dataset import dumps
-    from ia_tools.tiles import tile_name
-
-    module = Path(module or settings.TOOLS_ROOT / 'vassal')
-    final = Path(final or skirmish_maps.final_path())
-    root = dataset.root / 'images'
-    pieces = {(tile_name(p['product'], p['number']), p['side']): p for p in vassal.tiles(module / 'buildFile')}
-    records = dataset.records('map-tiles')
-    problems, quarters, images_ = [], {}, {}
-    for record in records:
-        for side in 'AB':
-            key = f"{record['name']} {side}"
-            path = record[f'side_{side.lower()}']
-            if key not in turns or (record['name'], side) not in pieces:
-                problems.append(f'{key}: not in turns.json or the Vassal module')
-                continue
-            try:
-                stored = load_rgba(root / 'large' / path)
-                if upright(stored, load_rgba(module / 'images' / pieces[(record['name'], side)]['image'])):
-                    raise ValueError
-            except ValueError:
-                problems.append(f"{key}: its image isn't the Vassal module's (turned already?)")
-                continue
-            if (root / 'small' / path).read_bytes() != (root / 'large' / path).read_bytes():
-                problems.append(f'{key}: its small image differs from its large one')
-            k = k_of_turn(turns[key]['vassal']['turn'])
-            quarters[(record['id'], side)] = k
-            if k:
-                images_[path] = Image.open(root / 'large' / path).transpose(getattr(Image.Transpose, QUARTERS[k]))
-    if problems:
-        return problems
-
-    for record in records:
-        k = quarters[(record['id'], 'A')]
-        image = np.rot90(load_rgba(root / 'large' / record['side_a']), k)
-        _, _, record['width'], record['height'] = grid_rect(alpha_of(image), SQUARE)
-    layouts = dataset.records('map-layouts')
-    moved = 0
-    for row in layouts:
-        k = quarters[(row['tile_id'], row['side'])]
-        for p in row['placements'] if k else []:
-            p['rotation'] = (p['rotation'] - turn_of_k(k)) % 360
-            moved += 1
-    reviewed = json.loads(final.read_text(encoding='utf-8'))
-    for entry in reviewed:
-        for p in entry['placements']:
-            p['turn'] = (p['turn'] - quarters[(p['tile_id'], p['side'])]) % 4
-
-    for path, image in images_.items():
-        image.save(root / 'large' / path, optimize=True)
-        (root / 'small' / path).write_bytes((root / 'large' / path).read_bytes())
-    dataset.path('map-tiles').write_text(dumps(records), encoding='utf-8')
-    dataset.path('map-layouts').write_text(dumps(layouts), encoding='utf-8')
-    final.write_text(json.dumps(reviewed, indent=1), encoding='utf-8')
-    log(f'  {len(images_)} images turned, {moved} placements turned, {final}')
-    return []

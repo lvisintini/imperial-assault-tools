@@ -221,11 +221,12 @@ def fake_run(dataset, out):
     for row in dataset.records('map-layouts'):
         product, number = tiles[row['tile_id']].rsplit(' ', 1)
         rows.setdefault(row['map_id'], {})[f"{codes[product]}_{int(number)}{row['side']}"] = row['count']
-    out.mkdir(parents=True, exist_ok=True)
+    (out / 'small').mkdir(parents=True, exist_ok=True)
     maps, missions = [], []
     for i, record in enumerate({r['id']: r for r in campaign_maps.campaign_maps(dataset).values()}.values()):
         file = record['image'].split('/')[-1]
         Image.new('RGBA', (1, 1)).save(out / file)
+        Image.new('RGBA', (1, 1)).save(out / 'small' / file)
         tiles = dict(sorted(rows[record['id']].items()))
         placements = [{'texture': t, 'section': None, 'x': 10 + 3 * j, 'y': 5 + n, 'rotation': 90}
                       for n, (t, count) in enumerate(tiles.items()) for j in range(count)]
@@ -258,8 +259,10 @@ def test_write_puts_the_maps_hidden_sections_and_layouts_in_the_data(dataset_cop
     entry, mission = manifest['maps'][0], cache['missions'][0]
     stem = entry['file'][:-4]
     Image.new('RGBA', (1, 1)).save(out / f'{stem}-hidden-1.png')
+    Image.new('RGBA', (1, 1)).save(out / 'small' / f'{stem}-hidden-1.png')
     (dataset_copy.root / 'images' / 'large' / 'maps' / f'{stem}-hidden-2.png').write_bytes(b'stale')
     Image.new('RGBA', (1, 1)).save(out / f'{stem}-whole.png')
+    Image.new('RGBA', (1, 1)).save(out / 'small' / f'{stem}-whole.png')
     entry['hidden'] = [{'name': 'Cave', 'sections': ['Two'], 'file': f'{stem}-hidden-1.png'}]
     entry['whole'] = {'file': f'{stem}-whole.png'}
     mission['tiles'] = {'Core_1A': 2}
@@ -292,3 +295,23 @@ def test_write_puts_the_maps_hidden_sections_and_layouts_in_the_data(dataset_cop
 def test_a_shared_maps_file_joins_its_missions_slugs():
     assert campaign_maps.file_stem('Desperate Hour / Last Stand') == 'desperate-hour--last-stand'
     assert campaign_maps.file_stem("Jabba's Realm") == campaign_maps.slugify("Jabba's Realm")
+
+
+def test_a_map_drawn_large_and_halved_is_the_map_drawn_small():
+    """draw(px=128) of 128 px sides, halved (campaign_maps.halved), is draw() of the same sides halved: the small
+    images keep the 64 px frame."""
+    from PIL import Image
+
+    def halve(image):
+        return np.asarray(Image.fromarray(image).resize((image.shape[1] // 2, image.shape[0] // 2), Image.BOX))
+
+    large = {f'Imperial Assault {n}A': side(2, 1, seed=n, tabs=(True, False)).repeat(2, 0).repeat(2, 1) for n in (1, 2)}
+    big = {key: {'image': halve(image), 'at': {128: image}} for key, image in large.items()}
+    turns = {key: {'turn': 0} for key in big}
+    two = mission((False, [{'texture': 'Core_1A', 'x': 0, 'y': 0, 'rotation': 0},
+                           {'texture': 'Core_2A', 'x': 0, 'y': 10, 'rotation': 90}]))
+    drawn_large, _ = campaign_maps.draw(two, big, turns, px=128)
+    drawn_small, _ = campaign_maps.draw(two, big, turns)
+    assert drawn_large.size == (drawn_small.width * 2, drawn_small.height * 2)
+    difference = np.abs(np.asarray(campaign_maps.halved(drawn_large, 128), int) - np.asarray(drawn_small, int))
+    assert difference.max() <= 1

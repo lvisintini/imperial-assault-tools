@@ -18,10 +18,9 @@
   ia skirmish-maps       check the skirmish and raid maps' reviewed placements (staging/skirmish-maps/final.json)
                          (--write: their map-layouts rows and their images, drawn from the tiles, into the data repo)
   ia hires-tiles         fit the tile scans (tiles/) onto ours at 128 px per square, colour-corrected, with a review
-                         page (staging/hires-tiles)
+                         page (staging/hires-tiles) (--write: into the data repo, large 128 and small 64 px per square)
   ia tile-orientation    find which way up each side's number pill reads, on its scan and on our image, with a review
-                         page (staging/tile-orientation) (--write: store every side upright in the data repo,
-                         turning its placements to match)
+                         page (staging/tile-orientation)
   ia tile-matches        group the tile sides with the same art but for their number pill (interchangeable), with a
                          review page (staging/tile-matches)
   ia card-types --fetch  cache the wiki's text of the reward Feats and Imperial class cards, to propose which are a
@@ -263,6 +262,13 @@ def cmd_hires_tiles(args):
     from ia_tools.dataset import Dataset
 
     dataset = Dataset()
+    if args.write:
+        problems = hires_tiles.write(dataset)
+        if problems:
+            print(f'{len(problems)} problems:', *problems, sep='\n  ')
+            sys.exit(1)
+        print(f"Wrote them into {dataset.root}; next: ia maps --write, ia skirmish-maps --write")
+        return
     if args.review:
         manifest = json.loads((hires_tiles.out_dir() / 'manifest.json').read_text(encoding='utf-8'))
         hires_tiles.review(dataset, manifest, hires_tiles.out_dir())
@@ -282,15 +288,6 @@ def cmd_tile_orientation(args):
     from ia_tools import tile_orientation
     from ia_tools.dataset import Dataset
 
-    if args.write:
-        dataset = Dataset()
-        turns = json.loads((tile_orientation.out_dir() / 'turns.json').read_text(encoding='utf-8'))
-        problems = tile_orientation.write(dataset, turns)
-        if problems:
-            print(f'{len(problems)} problems:', *problems, sep='\n  ')
-            sys.exit(1)
-        print(f"Turned the sides upright in {dataset.root}; next: ia maps, ia skirmish-maps --write (they draw the same)")
-        return
     if args.review:
         out = tile_orientation.out_dir()
         tile_orientation.review(Dataset(), json.loads((out / 'turns.json').read_text(encoding='utf-8')), out)
@@ -452,15 +449,14 @@ def main(argv=None):
     hires.add_argument('--only', nargs='+', metavar='SIDE', help='only these sides ("Core Set 01 A"), keeping the last '
                                                                "full run's tone curves and other sides")
     hires.add_argument('--review', action='store_true', help='only rebuild the review page from the last run')
+    hires.add_argument('--write', action='store_true', help="put the staged sides in the data repo's map-tiles images "
+                                                          '(large at 128 px per square, small halved to 64)')
     hires.set_defaults(func=cmd_hires_tiles)
     orientation = commands.add_parser('tile-orientation', help="which way up each tile side's number pill reads, on "
                                                                'its scan and on our image, with a review page '
                                                                '(staging/tile-orientation)')
     orientation.add_argument('--review', action='store_true', help='only rebuild the review page from the last run '
                                                                    '(and notes.json)')
-    orientation.add_argument('--write', action='store_true', help="store the last run's sides upright in the data repo "
-                                                                  '(images, map-tiles width/height, map-layouts '
-                                                                  'rotations) and turn the skirmish maps\' final.json')
     orientation.set_defaults(func=cmd_tile_orientation)
 
     matches = commands.add_parser('tile-matches', help='tile sides with the same art but for their number pill, '

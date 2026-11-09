@@ -10,9 +10,10 @@ def fake_tiles(dataset):
     """Generated opaque side images (never the dataset's) for every tile, width x height squares, no tabs."""
     for tile in dataset.records('map-tiles'):
         for field, colour in (('side_a', (200, 0, 0, 255)), ('side_b', (0, 0, 200, 255))):
-            path = dataset.root / 'images' / 'large' / tile[field]
-            path.parent.mkdir(parents=True, exist_ok=True)
-            Image.new('RGBA', (tile['width'] * 64, tile['height'] * 64), colour).save(path)
+            for size in ('large', 'small'):
+                path = dataset.root / 'images' / size / tile[field]
+                path.parent.mkdir(parents=True, exist_ok=True)
+                Image.new('RGBA', (tile['width'] * 64, tile['height'] * 64), colour).save(path)
 
 
 def final_for(dataset):
@@ -63,9 +64,10 @@ def test_a_map_is_drawn_from_its_rows_on_the_squares_frame(dataset_copy):
     side = np.zeros((64, 160, 4), dtype=np.uint8)  # 2 x 1 squares, tabs across
     side[:, 16:144] = (10, 20, 30, 255)
     side[20:40, :16] = (99, 99, 99, 255)  # a tab on its left
-    path = dataset_copy.root / 'images' / 'large' / tile['side_a']
-    path.parent.mkdir(parents=True, exist_ok=True)
-    Image.fromarray(side).save(path)
+    for size in ('large', 'small'):
+        path = dataset_copy.root / 'images' / size / tile['side_a']
+        path.parent.mkdir(parents=True, exist_ok=True)
+        Image.fromarray(side).save(path)
     rows = [{'map_id': 'm', 'tile_id': tile['id'], 'side': 'A', 'count': 2,
              'placements': [{'section': None, 'x': 0, 'y': 0, 'rotation': 0},
                             {'section': None, 'x': 2, 'y': 1, 'rotation': 90}]}]

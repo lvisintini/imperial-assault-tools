@@ -60,14 +60,3 @@ def test_a_glyph_is_read_by_its_neighbours():
              'c': ('11A', noisy(pill(), 3), cells), 'd': ('00A', noisy(digit_pill(True), 4), cells)}
     assert to.read_codes(pills)['d'][0] == '10A'  # its first digit like the 1s, its second like 10A's 0
 
-
-@pytest.mark.parametrize('k', range(4))
-@pytest.mark.parametrize('t', range(4))
-def test_a_turned_side_is_placed_the_same(k, t):
-    """write(): an image stored turned k quarters counter-clockwise, at its new rotation (rotation - turn, clockwise
-    degrees) or numpy turns (t - k), draws as the old one did."""
-    image = np.arange(6).reshape(2, 3)
-    stored = np.rot90(image, k)
-    rotation = (-90 * t) % 360
-    assert (np.rot90(stored, -((rotation - to.turn_of_k(k)) % 360) // 90) == np.rot90(image, -rotation // 90)).all()
-    assert (np.rot90(stored, (t - k) % 4) == np.rot90(image, t)).all()

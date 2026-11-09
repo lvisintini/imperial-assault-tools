@@ -74,9 +74,10 @@ def test_a_scan_that_fits_another_sides_image_better_is_flagged(dataset_copy, tm
     for n, tile in enumerate((first, second)):
         art = textured(2, 2, seed=10 + n)
         art[..., 3] = 255
-        path = dataset_copy.root / 'images' / 'large' / tile['side_a']
-        path.parent.mkdir(parents=True, exist_ok=True)
-        Image.fromarray(cv2.resize(art, (128, 128), interpolation=cv2.INTER_AREA)).save(path)
+        for size in ('large', 'small'):
+            path = dataset_copy.root / 'images' / size / tile['side_a']
+            path.parent.mkdir(parents=True, exist_ok=True)
+            Image.fromarray(cv2.resize(art, (128, 128), interpolation=cv2.INTER_AREA)).save(path)
         scan = cv2.resize(art, (2 * 299, 2 * 299), interpolation=cv2.INTER_CUBIC)
         Image.fromarray(scan).save(scans / f"Core_{tile['number']}A.png")
     # The first side's scan is the second's.
