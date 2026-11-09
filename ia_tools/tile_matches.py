@@ -28,6 +28,9 @@ Writes staging/tile-matches/:
 - img/: each side (48 px per square, its pill boxed) and each side's difference from its group's reference;
 - index.html: the groups, a section each, with the maintainer's rulings (rulings.json, by side), then the weaker pairs.
 
+write() puts the rulings' same-sets in the data repo's map-tile-matches.json: a row {tile_id, side, other_tile_id,
+other_side} for every two sides of a set, the side earlier in map-tiles.json first, rows in that order.
+
 The tools measure the images; the maintainer looks at them."""
 import html
 import itertools
@@ -393,3 +396,43 @@ which sides aren't. Your rulings so far are in green. <a href="#weak">Weaker pai
 {''.join(sections)}
 </body></html>"""
     (out / 'index.html').write_text(page, encoding='utf-8')
+
+
+def rows_of(dataset, rules):
+    """map-tile-matches rows from the rulings' same-sets, or raises ValueError on a side that isn't a tile's, a side in
+    two sets, two sides of one tile, or sides with different squares."""
+    from ia_tools import hires_tiles
+
+    every = hires_tiles.sides(dataset)
+    where = {key: (tile, side) for key, _, tile, side, _ in every}
+    order = {key: n for n, (key, *_) in enumerate(every)}
+    seen, rows = {}, []
+    for rule in rules:
+        for same in rule.get('same', []):
+            unknown = [k for k in same if k not in where]
+            if unknown:
+                raise ValueError(f'not tile sides: {unknown}')
+            for key in same:
+                if key in seen and seen[key] is not same:
+                    raise ValueError(f'{key} is in two sets')
+                seen[key] = same
+            tiles = [where[k][0] for k in same]
+            if len({t['id'] for t in tiles}) < len(same):
+                raise ValueError(f'two sides of one tile: {same}')
+            if len({t['squares'] for t in tiles}) > 1:
+                raise ValueError(f'sides with different squares: {same}')
+            for a, b in itertools.combinations(sorted(same, key=order.get), 2):
+                (one, one_side), (two, two_side) = where[a], where[b]
+                rows.append(((order[a], order[b]), {'tile_id': one['id'], 'side': one_side,
+                                                    'other_tile_id': two['id'], 'other_side': two_side}))
+    return [row for _, row in sorted(rows, key=lambda r: r[0])]
+
+
+def write(dataset, out=None, log=print):
+    """data/map-tile-matches.json from rulings.json; the number of rows written."""
+    from ia_tools.dataset import dumps
+
+    rows = rows_of(dataset, rulings(Path(out or out_dir())))
+    (dataset.root / 'data' / 'map-tile-matches.json').write_text(dumps(rows), encoding='utf-8')
+    log(f'  {len(rows)} rows in map-tile-matches.json')
+    return len(rows)

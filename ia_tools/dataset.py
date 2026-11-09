@@ -16,7 +16,7 @@ CONTENT_TYPES = [
     'campaign-ally-side-missions', 'campaign-regular-side-missions', 'reward-cards', 'companion-cards',
     'upgrade-cards', 'card-backs', 'campaign-threat-missions', 'form-cards', 'skirmish-missions',
     'raid-missions', 'epilogue-cards', 'miniatures', 'documents', 'missions', 'mission-rewards', 'record-links',
-    'map-tiles', 'map-layouts',
+    'map-tiles', 'map-layouts', 'map-tile-matches',
 ]
 # The mission card collections missions.json indexes (data 2.0.0; also agenda cards that are missions).
 MISSION_TYPES = [
@@ -25,7 +25,7 @@ MISSION_TYPES = [
     'raid-missions',
 ]
 # Indexes and join tables: never entered, imported or matched by name.
-INDEX_TYPES = ['source-contents', 'missions', 'mission-rewards', 'record-links', 'map-layouts']
+INDEX_TYPES = ['source-contents', 'missions', 'mission-rewards', 'record-links', 'map-layouts', 'map-tile-matches']
 
 # Types renamed in data 2.0.0. The tools use the new names; a 1.x checkout still stores the old ones, and Dataset
 # translates wherever a name meets the files (file names, image folders, source-contents' content_type). 1.x's

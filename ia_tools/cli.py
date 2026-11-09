@@ -22,7 +22,7 @@
   ia tile-orientation    find which way up each side's number pill reads, on its scan and on our image, with a review
                          page (staging/tile-orientation)
   ia tile-matches        group the tile sides with the same art but for their number pill (interchangeable), with a
-                         review page (staging/tile-matches)
+                         review page (staging/tile-matches) (--write: the rulings into map-tile-matches.json)
   ia card-types --fetch  cache the wiki's text of the reward Feats and Imperial class cards, to propose which are a
                          Group Attachment on ia enter's Card types page
   ia card-types          write the card types confirmed in ia enter into the data repo (--check to only validate)
@@ -302,6 +302,9 @@ def cmd_tile_matches(args):
     from ia_tools import tile_matches
     from ia_tools.dataset import Dataset
 
+    if args.write:
+        tile_matches.write(Dataset())
+        return
     tile_matches.run(Dataset())
     print(tile_matches.out_dir() / 'index.html')
 
@@ -462,6 +465,9 @@ def main(argv=None):
     matches = commands.add_parser('tile-matches', help='tile sides with the same art but for their number pill, '
                                                        'grouped from the hi-res scans, with a review page '
                                                        '(staging/tile-matches)')
+    matches.add_argument('--write', action='store_true', help="write the maintainer's rulings "
+                                                              "(staging/tile-matches/rulings.json) into the data "
+                                                              "repo's map-tile-matches.json")
     matches.set_defaults(func=cmd_tile_matches)
 
     mats_ = commands.add_parser('mats', help="stage the skirmish map mats as sources, with images from FFG's archived "

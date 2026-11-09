@@ -40,6 +40,7 @@ uv run ia hires-tiles            # the tile scans (tiles/) fitted onto ours at 1
 uv run ia hires-tiles --write    # put them in the data repo: large 128, small 64 px per square
 uv run ia tile-orientation       # which way up each side's number pill reads, on its scan and our image, with a review page
 uv run ia tile-matches           # group the sides with the same art but for their number pill, with a review page
+uv run ia tile-matches --write   # the rulings (staging/tile-matches/rulings.json) into map-tile-matches.json
 uv run ia card-types --fetch     # data 2.0.0: cache the wiki's card text, to propose card types
 uv run ia card-types --check     # validate the card types confirmed in ia enter (Card types)
 uv run ia card-types             # write them into reward-cards.json and imperial-class-cards.json
@@ -170,8 +171,11 @@ says which commit of this repo produced it.
   from the dataset's images with both pills masked, as stored (upright, so at turn 0 only): gradients at 32 px per
   square, then fine detail at 64 px per square at the best shift of a few px. Each pair is also scored turned: copied
   art matches clearly better as stored, while plain, near-symmetric rooms look about as alike any way round, and the
-  page says so. `staging/tile-matches/`
-  gets `candidates.json` and a review page: each group's sides and their differences from its reference.
+  page says so. A small fit error between two scans (a degree, a few px) is aligned out first. `staging/tile-matches/`
+  gets `candidates.json` and a review page: each group's sides and their differences from its reference, then the
+  weaker pairs (fine 0.5 to 0.7) one by one, with the maintainer's rulings (`rulings.json`, by side: "same" sets,
+  "not", "apart") on each. `--write` puts the rulings' same-sets in the data repo's `map-tile-matches.json`, a row
+  for every two sides of a set.
 - **Card types** (data 2.0.0; `/card-types`) goes through the reward Feats and the Imperial class cards, a tab each,
   with their `type` (Feat, or Group Attachment for a card attached to an Imperial deployment group) proposed from the
   wiki's text, which is shown under each card. Flags point at what needs a closer look: no text, or a name the wiki

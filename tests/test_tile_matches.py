@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import pytest
 
 from ia_tools import tile_matches as tm
 
@@ -73,3 +74,27 @@ def test_rulings_are_read_by_side_not_group_number():
     assert tm.ruled(rules, 'g', 'b') == 'not'
     assert tm.ruled(rules, 'a', 'e') is None
     assert tm.ruled_extra(rules, {'sides': ['a', 'b']}) == ['c']
+
+
+def fake_sides(monkeypatch):
+    """Four tiles' sides as hires_tiles.sides gives them: (key, product, tile, side, field)."""
+    from ia_tools import hires_tiles
+
+    tiles = [{'id': f't{n}', 'squares': 4 if n < 3 else 2} for n in range(4)]
+    every = [(f'T{n} {s}', 'P', tiles[n], s, f'side_{s.lower()}') for n in range(4) for s in 'AB']
+    monkeypatch.setattr(hires_tiles, 'sides', lambda dataset: every)
+
+
+def test_rows_pair_every_two_sides_of_a_set_in_tile_order(monkeypatch):
+    fake_sides(monkeypatch)
+    rows = tm.rows_of(None, [{'same': [['T2 A', 'T0 B', 'T1 A']]}, {'same': [['T0 A', 'T1 B']], 'not': ['T2 B']}])
+    assert [(r['tile_id'], r['side'], r['other_tile_id'], r['other_side']) for r in rows] == [
+        ('t0', 'A', 't1', 'B'), ('t0', 'B', 't1', 'A'), ('t0', 'B', 't2', 'A'), ('t1', 'A', 't2', 'A')]
+
+
+def test_rows_refuse_bad_sets(monkeypatch):
+    fake_sides(monkeypatch)
+    for rules in ([{'same': [['T0 A', 'T9 A']]}], [{'same': [['T0 A', 'T1 A']]}, {'same': [['T0 A', 'T2 A']]}],
+                  [{'same': [['T0 A', 'T0 B']]}], [{'same': [['T0 A', 'T3 A']]}]):
+        with pytest.raises(ValueError):
+            tm.rows_of(None, rules)

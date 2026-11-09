@@ -50,8 +50,9 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
   `staging/tile-orientation/turns.json` with a review page; `rulings.json` overrides.
 - `ia_tools/tile_matches.py` (`ia tile-matches`): interchangeable sides (same art, another pill), compared on the
   dataset's images as stored (upright: turn 0 only), the pills masked (`compare`: coarse gradients, then fine
-  detail with a shift), grouped
-  into `staging/tile-matches/candidates.json` with a review page.
+  detail with a shift, after `aligned` takes out a small fit error), grouped into
+  `staging/tile-matches/candidates.json` with a review page that shows the maintainer's rulings (`rulings.json`);
+  `write` (`--write`) puts their same-sets in the data repo's `map-tile-matches.json` (`rows_of`).
 - `ia_tools/card_types.py` (`ia card-types`, and `ia enter`'s Card types page, `static/card-types.html`): whether each
   reward Feat and Imperial class card is a Feat or a Group Attachment, proposed from the wiki's card text (pages
   cached as `staging/wiki/pages/card-*.json`, found by title, the class and item categories, then the wiki's
