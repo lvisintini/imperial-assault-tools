@@ -279,6 +279,11 @@ def cmd_tile_orientation(args):
     from ia_tools import tile_orientation
     from ia_tools.dataset import Dataset
 
+    if args.review:
+        out = tile_orientation.out_dir()
+        tile_orientation.review(Dataset(), json.loads((out / 'turns.json').read_text(encoding='utf-8')), out)
+        print(out / 'index.html')
+        return
     turns = tile_orientation.run(Dataset())
     flagged = [k for k, v in turns.items() if v['flags']]
     print(f"{len(turns)} sides, {len(flagged)} to check: {tile_orientation.out_dir() / 'index.html'}")
@@ -431,6 +436,8 @@ def main(argv=None):
     orientation = commands.add_parser('tile-orientation', help="which way up each tile side's number pill reads, on "
                                                                'its scan and on our image, with a review page '
                                                                '(staging/tile-orientation)')
+    orientation.add_argument('--review', action='store_true', help='only rebuild the review page from the last run '
+                                                                   '(and notes.json)')
     orientation.set_defaults(func=cmd_tile_orientation)
 
     mats_ = commands.add_parser('mats', help="stage the skirmish map mats as sources, with images from FFG's archived "

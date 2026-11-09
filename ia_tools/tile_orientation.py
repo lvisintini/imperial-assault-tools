@@ -437,9 +437,23 @@ def review(dataset, turns, out):
         links = ''.join(f'<li><a href="#{slug(k)}">{e(k)}</a>: {e("; ".join(turns[k]["flags"]))}</li>' for k in keys)
         return f'<section class="top"><h2>{e(title)} ({len(keys)})</h2><p>{e(note)}</p><ul>{links}</ul></section>'
 
+    # The maintainer's notes (notes.json: {side key: {"new_scan" or "edit": why}}): sides the pills alone can't tell.
+    notes_file = out / 'notes.json'
+    notes = json.loads(notes_file.read_text(encoding='utf-8')) if notes_file.exists() else {}
+    turns = {k: dict(v, flags=list(v['flags'])) for k, v in turns.items()}
+    for key, note in notes.items():
+        entry = turns[key]
+        if 'new_scan' in note:
+            entry['new_scan'] = True
+            entry['flags'].insert(0, f"needs a new scan: {note['new_scan']}")
+        if 'edit' in note:
+            entry.pop('new_scan', None)
+            entry['edit'] = True
+            entry['flags'].insert(0, f"scan to edit: {note['edit']}")
     new_scan = [k for k, v in turns.items() if v.get('new_scan')]
+    edit = [k for k, v in turns.items() if v.get('edit')]
     wrong = [k for k, v in turns.items() if v.get('wrong_vassal')]
-    flagged = [k for k, v in turns.items() if v['flags'] and k not in new_scan and k not in wrong]
+    flagged = [k for k, v in turns.items() if v['flags'] and k not in new_scan + edit + wrong]
     sets = []
     for product, keys in products.items():
         n = sum(1 for k in keys if turns[k]['flags'])
@@ -463,7 +477,9 @@ img {{ max-width: 220px; height: auto; background: #333; }} img.pill {{ width: 2
 <p>Each side's scan and Vassal image, turned so the pill reads upright, with their pills enlarged. Scan codes are
 read from the pills; Vassal pills are too small to read, so they are matched and the turn checked against the
 scan's fit. Rulings go in rulings.json as {{"side key": {{"scan": turn, "vassal": turn}}}}.</p>
-{listing('Needs a new scan', new_scan, 'The scan is the same file as another side, or clearly reads another code.')}
+{listing('Needs a new scan', new_scan, 'The scan is the same file as another side, clearly reads another code, or '
+                                        "isn't the tile the maintainer has.")}
+{listing('Scan to edit', edit, "The scan is right, but its pill is printed wrong (an errata).")}
 {listing('Wrong Vassal image', wrong, 'The Vassal image is the same as another side: one of them shows the wrong pill.')}
 {listing('To check', flagged, 'OCR or the pill match was unsure: rule the turn, or confirm.')}
 {''.join(sets)}
