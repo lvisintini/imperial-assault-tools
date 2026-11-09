@@ -240,7 +240,9 @@ def run(dataset, out=None, log=print):
 
 def rulings(out):
     """The maintainer's rulings (rulings.json, written from chat): [{"same": [[side, ...], ...], "not": [side, ...],
-    "note"}], whatever group numbers they were filed under (groups renumber when the matcher changes)."""
+    "apart": [[side, ...], ...], "note"}], whatever group numbers they were filed under (groups renumber when the
+    matcher changes). "not": sides of a group that aren't its same-sets' art; "apart": sets of sides whose art differs
+    from each other set's (a weaker pair across two groups ruled not the same)."""
     path = out / 'rulings.json'
     return list(json.loads(path.read_text(encoding='utf-8')).values()) if path.exists() else []
 
@@ -253,6 +255,9 @@ def ruled(rules, a, b):
     for rule in rules:
         sides = {k for same in rule.get('same', []) for k in same} | set(rule.get('not', []))
         if a in sides and b in sides:
+            return 'not'
+        apart = rule.get('apart', [])
+        if any(a in one and b in two for one in apart for two in apart if one is not two):
             return 'not'
     return None
 

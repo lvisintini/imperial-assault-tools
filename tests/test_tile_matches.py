@@ -67,8 +67,9 @@ def test_a_small_fit_error_is_taken_out():
 
 
 def test_rulings_are_read_by_side_not_group_number():
-    rules = [{'same': [['a', 'b', 'c']], 'not': ['d']}, {'same': [['e', 'f']]}]
+    rules = [{'same': [['a', 'b', 'c']], 'not': ['d']}, {'same': [['e', 'f']]}, {'apart': [['a', 'b'], ['g']]}]
     assert tm.ruled(rules, 'a', 'c') == 'same'
     assert tm.ruled(rules, 'a', 'd') == 'not'
+    assert tm.ruled(rules, 'g', 'b') == 'not'
     assert tm.ruled(rules, 'a', 'e') is None
     assert tm.ruled_extra(rules, {'sides': ['a', 'b']}) == ['c']
