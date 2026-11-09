@@ -93,7 +93,9 @@ CORRECTIONS = {
     'EMPIRE12.json': {  # The Realm of the Dark Side: the 18B left of 4B a square higher
         'sides': {'Empire_4A': 'Empire_4B'},
         'move': {'Section 3 - Temple': [['Empire_18B', [980.0, 940.0], [980.0, 930.0]]]}},
-    'EMPIRE14.json': {'drop': ['Section 3 - Penthouse Elevator']},  # Extraction: one elevator, on 15B
+    'EMPIRE14.json': {  # Extraction: one elevator, on 15B; the roof a square from the building, tops level
+        'drop': ['Section 3 - Penthouse Elevator'],
+        'shift': {name: [-10.0, 20.0] for name in ('Section 2 - Roof', 'Section 4 - Roof Elevator')}},
     'HOTH1.json': {'sides': {'Hoth_9A': 'Hoth_9B'}},  # Disaster
     'HOTH2.json': {'sides': {'Core_36B': 'Core_36A'}},  # Home Front
     'HOTH3.json': {'sides': {'Core_24A': 'Core_24B'}},  # One Step Behind
@@ -124,6 +126,9 @@ CORRECTIONS = {
     'LOTHAL3.json': {  # Race on Ryloth
         'counts': {'Core_18B': 4, 'Lothal_12B': 3},
         'main': ['Start Section', 'Section 2']},
+    'LOTHAL4.json': {  # Sands of Seelos: the AT-AT a square from the battleground
+        'shift': {name: [-50.0, 0.0] for name in ('Section 2 - AT-AT Aft', 'Section 3 - AT-AT Mid',
+                                                  'Section 4 - AT-AT Cockpit')}},
     'LOTHAL6.json': {  # The Final Order
         'sides': {'Lothal_2A': 'Lothal_2B', 'Lothal_5A': 'Lothal_5B', 'Lothal_6A': 'Lothal_6B', 'Lothal_7A': 'Lothal_7B'}},
     'TWIN5.json': {  # Fire in the Sky: 34A a quarter turn back, on the same squares, to match its art
