@@ -1,4 +1,5 @@
-"""ia maps: the campaign maps, drawn from ImperialCommander2's layouts with the Vassal module's tiles (data 2.0.0).
+"""ia maps: the campaign maps, drawn from ImperialCommander2's layouts with the Vassal module's tiles (data 2.0.0)
+as the data repo stores them (turned upright by `ia tile-orientation --write`).
 
 IC2's mission files place each tile (ic2.parse_sections) with its texture's top-left corner at (x, y) / 10 squares,
 turned clockwise by its rotation about that corner: TileRenderer.cs turns it by -rotation, and the sprites' pivot is
@@ -165,19 +166,33 @@ def fit(mission, sides, turns):
     return int(((count == 0) & grid).sum() + (count > 1).sum())
 
 
-def solve(cache, module, textures, log=print):
-    """{side key: {"turn", "scores", "by"}} and the sides' images and masks."""
+def upright(stored, image):
+    """The counter-clockwise quarter turns that make the Vassal module's image of a side look like its stored one
+    (`ia tile-orientation --write` turns them upright)."""
+    for k in range(4):
+        turned = np.rot90(image, k)
+        if turned.shape == stored.shape and (turned == stored).all():
+            return k
+    raise ValueError("a side's stored image isn't its Vassal image turned")
+
+
+def solve(cache, module, textures, dataset, log=print):
+    """{side key: {"turn", "scores", "by"}} and the sides' images and masks: the data repo's images (the Vassal module's
+    turned upright), with "upright", the quarter turns from the module's image to ours."""
     from PIL import Image
 
     pieces = vassal.tiles(Path(module) / 'buildFile')
+    records = {t['name']: t for t in dataset.records('map-tiles')}
     sides = {}
     for piece in pieces:
-        image = load_rgba(Path(module) / 'images' / piece['image'])
+        record = records[tiles.tile_name(piece['product'], piece['number'])]
+        image = load_rgba(dataset.root / 'images' / 'large' / record[f"side_{piece['side'].lower()}"])
+        k_up = upright(image, load_rgba(Path(module) / 'images' / piece['image']))
         # A tab or notch is 32 px deep: SOLVE_PX keeps it at least 8 px.
         small = Image.fromarray(image[..., 3]).resize(
             (image.shape[1] * SOLVE_PX // SQUARE, image.shape[0] * SOLVE_PX // SQUARE), Image.BOX)
         sides[side_key(piece['product'], piece['number'], piece['side'])] = {
-            'piece': piece, 'image': image, 'mask': (np.asarray(small) > 127).astype(np.int16)}
+            'piece': piece, 'image': image, 'upright': k_up, 'mask': (np.asarray(small) > 127).astype(np.int16)}
     names = {texture_key(name): name for name in textures}
     turns = {}
     for key, side in sides.items():
@@ -344,11 +359,12 @@ def campaign_maps(dataset):
 def run(module, cache, textures, dataset, sample=None, out=None, log=print):
     """(manifest, problems). sample: mission names to draw, instead of all."""
     out = Path(out or settings.STAGING / 'campaign-maps')
-    turns, sides = solve(cache, module, textures, log)
+    turns, sides = solve(cache, module, textures, dataset, log)
     problems = []
     aftermath = next(m for m in cache['missions'] if m['name'] == 'Aftermath')
     pieces = [s['piece'] for s in sides.values()]
     for key, turn in save_turns(Path(module) / 'Aftermath.vsav', pieces, aftermath).items():
+        turn = (turn - sides[key]['upright']) % 4  # the save turns the module's image
         if turns[key]['turn'] != turn:
             problems.append(f"{key}: turned {turns[key]['turn']}, but the Aftermath save shows {turn}")
     records = campaign_maps(dataset)

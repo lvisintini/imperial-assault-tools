@@ -31,7 +31,8 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
   schemas, suggestions, per-entry validation), and the page in `static/` (plain JS). The entries.json format is
   documented in `staging.py`.
 - `ia_tools/campaign_maps.py` (`ia maps`): the campaign maps drawn from IC2's placements (`ic2.parse_sections`) with
-  the Vassal tiles; how IC2 and Vassal place and turn tiles is in its docstring.
+  the Vassal tiles as the data repo stores them (`upright`: the quarter turns from the module's image); how IC2 and
+  Vassal place and turn tiles is in its docstring.
 - `ia_tools/layouts.py`: `map-layouts.json`'s row order (`row_order`) and a map's rows from its placements
   (`rows_for`: copies, placements, frame at 0, 0, the count rule). `ia_tools/skirmish_maps.py` (`ia skirmish-maps`):
   the skirmish and raid maps' rows from `staging/skirmish-maps/final.json`, their reviewed placements, and their
@@ -42,7 +43,8 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
 - `ia_tools/tile_orientation.py` (`ia tile-orientation`): each side's upright turn, on its scan (its number pill's
   template matched at 4 turns, its code read by nearest-neighbour glyphs) and on the dataset's image (through the
   hi-res fit, checked by the pill), into `staging/tile-orientation/turns.json` with a review page; `rulings.json`
-  overrides.
+  overrides. `write` (`--write`) stores the sides upright and turns map-tiles' width/height, map-layouts' rotations
+  and `final.json`'s turns to match (refuses once the images aren't the Vassal module's).
 - `ia_tools/card_types.py` (`ia card-types`, and `ia enter`'s Card types page, `static/card-types.html`): whether each
   reward Feat and Imperial class card is a Feat or a Group Attachment, proposed from the wiki's card text (pages
   cached as `staging/wiki/pages/card-*.json`, found by title, the class and item categories, then the wiki's

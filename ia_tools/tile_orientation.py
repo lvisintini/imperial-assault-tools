@@ -490,3 +490,82 @@ for (const a of document.querySelectorAll('a[href^="#"]')) a.addEventListener('c
 }});
 </script></body></html>"""
     (out / 'index.html').write_text(page, encoding='utf-8')
+
+
+# Write ----------------------------------------------------------------------------------------------------------------
+
+QUARTERS = {1: 'ROTATE_90', 2: 'ROTATE_180', 3: 'ROTATE_270'}  # PIL's counter-clockwise turns
+
+
+def write(dataset, turns, final=None, module=None, log=print):
+    """Stores every side's image with its pill upright (its "vassal" turn) and turns what places it to match, so every
+    map draws the same:
+    - images/{large,small}/map-tiles: each image turned (losslessly) by its turn;
+    - map-tiles.json: width and height from side A's turned image;
+    - map-layouts.json: each placement's rotation becomes (rotation - turn) mod 360 (x and y stay);
+    - final (staging/skirmish-maps/final.json, what `ia skirmish-maps` writes from): each placement's numpy
+      quarter turns become (turn - k) mod 4, k the side's counter-clockwise quarter turns to upright (its scripts/
+      apply.py, which made it, would undo that).
+    `ia maps` reads the stored images, so a rerun finds the new turns itself. Every image must still be the Vassal
+    module's (written once). Returns the problems; nothing is written if there are any."""
+    import numpy as np
+    from PIL import Image
+
+    from ia_tools import skirmish_maps, vassal
+    from ia_tools.campaign_maps import SQUARE, alpha_of, grid_rect, load_rgba, upright
+    from ia_tools.dataset import dumps
+    from ia_tools.tiles import tile_name
+
+    module = Path(module or settings.TOOLS_ROOT / 'vassal')
+    final = Path(final or skirmish_maps.final_path())
+    root = dataset.root / 'images'
+    pieces = {(tile_name(p['product'], p['number']), p['side']): p for p in vassal.tiles(module / 'buildFile')}
+    records = dataset.records('map-tiles')
+    problems, quarters, images_ = [], {}, {}
+    for record in records:
+        for side in 'AB':
+            key = f"{record['name']} {side}"
+            path = record[f'side_{side.lower()}']
+            if key not in turns or (record['name'], side) not in pieces:
+                problems.append(f'{key}: not in turns.json or the Vassal module')
+                continue
+            try:
+                stored = load_rgba(root / 'large' / path)
+                if upright(stored, load_rgba(module / 'images' / pieces[(record['name'], side)]['image'])):
+                    raise ValueError
+            except ValueError:
+                problems.append(f"{key}: its image isn't the Vassal module's (turned already?)")
+                continue
+            if (root / 'small' / path).read_bytes() != (root / 'large' / path).read_bytes():
+                problems.append(f'{key}: its small image differs from its large one')
+            k = k_of_turn(turns[key]['vassal']['turn'])
+            quarters[(record['id'], side)] = k
+            if k:
+                images_[path] = Image.open(root / 'large' / path).transpose(getattr(Image.Transpose, QUARTERS[k]))
+    if problems:
+        return problems
+
+    for record in records:
+        k = quarters[(record['id'], 'A')]
+        image = np.rot90(load_rgba(root / 'large' / record['side_a']), k)
+        _, _, record['width'], record['height'] = grid_rect(alpha_of(image), SQUARE)
+    layouts = dataset.records('map-layouts')
+    moved = 0
+    for row in layouts:
+        k = quarters[(row['tile_id'], row['side'])]
+        for p in row['placements'] if k else []:
+            p['rotation'] = (p['rotation'] - turn_of_k(k)) % 360
+            moved += 1
+    reviewed = json.loads(final.read_text(encoding='utf-8'))
+    for entry in reviewed:
+        for p in entry['placements']:
+            p['turn'] = (p['turn'] - quarters[(p['tile_id'], p['side'])]) % 4
+
+    for path, image in images_.items():
+        image.save(root / 'large' / path, optimize=True)
+        (root / 'small' / path).write_bytes((root / 'large' / path).read_bytes())
+    dataset.path('map-tiles').write_text(dumps(records), encoding='utf-8')
+    dataset.path('map-layouts').write_text(dumps(layouts), encoding='utf-8')
+    final.write_text(json.dumps(reviewed, indent=1), encoding='utf-8')
+    log(f'  {len(images_)} images turned, {moved} placements turned, {final}')
+    return []

@@ -20,7 +20,8 @@
   ia hires-tiles         fit the tile scans (tiles/) onto ours at 128 px per square, colour-corrected, with a review
                          page (staging/hires-tiles)
   ia tile-orientation    find which way up each side's number pill reads, on its scan and on our image, with a review
-                         page (staging/tile-orientation)
+                         page (staging/tile-orientation) (--write: store every side upright in the data repo,
+                         turning its placements to match)
   ia card-types --fetch  cache the wiki's text of the reward Feats and Imperial class cards, to propose which are a
                          Group Attachment on ia enter's Card types page
   ia card-types          write the card types confirmed in ia enter into the data repo (--check to only validate)
@@ -279,6 +280,15 @@ def cmd_tile_orientation(args):
     from ia_tools import tile_orientation
     from ia_tools.dataset import Dataset
 
+    if args.write:
+        dataset = Dataset()
+        turns = json.loads((tile_orientation.out_dir() / 'turns.json').read_text(encoding='utf-8'))
+        problems = tile_orientation.write(dataset, turns)
+        if problems:
+            print(f'{len(problems)} problems:', *problems, sep='\n  ')
+            sys.exit(1)
+        print(f"Turned the sides upright in {dataset.root}; next: ia maps, ia skirmish-maps --write (they draw the same)")
+        return
     if args.review:
         out = tile_orientation.out_dir()
         tile_orientation.review(Dataset(), json.loads((out / 'turns.json').read_text(encoding='utf-8')), out)
@@ -438,6 +448,9 @@ def main(argv=None):
                                                                '(staging/tile-orientation)')
     orientation.add_argument('--review', action='store_true', help='only rebuild the review page from the last run '
                                                                    '(and notes.json)')
+    orientation.add_argument('--write', action='store_true', help="store the last run's sides upright in the data repo "
+                                                                  '(images, map-tiles width/height, map-layouts '
+                                                                  'rotations) and turn the skirmish maps\' final.json')
     orientation.set_defaults(func=cmd_tile_orientation)
 
     mats_ = commands.add_parser('mats', help="stage the skirmish map mats as sources, with images from FFG's archived "

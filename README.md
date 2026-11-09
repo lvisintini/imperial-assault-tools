@@ -38,6 +38,7 @@ uv run ia skirmish-maps          # data 2.0.0: check the skirmish and raid maps'
 uv run ia skirmish-maps --write  # write their rows into map-layouts.json, and their images drawn from the tiles
 uv run ia hires-tiles            # the tile scans (tiles/) fitted onto ours at 128 px per square, with a review page
 uv run ia tile-orientation       # which way up each side's number pill reads, on its scan and our image, with a review page
+uv run ia tile-orientation --write  # store every side upright in the data repo, its placements turned to match
 uv run ia card-types --fetch     # data 2.0.0: cache the wiki's card text, to propose card types
 uv run ia card-types --check     # validate the card types confirmed in ia enter (Card types)
 uv run ia card-types             # write them into reward-cards.json and imperial-class-cards.json
@@ -125,7 +126,8 @@ says which commit of this repo produced it.
 
   It never overwrites an existing image.
 - **`ia maps`** (data 2.0.0) draws the campaign maps into `staging/campaign-maps/`, from ImperialCommander2's tile
-  positions and rotations (`ia ic2`) and the Vassal module's tile images: 64 px per square, tiles only (no doors or
+  positions and rotations (`ia ic2`) and the Vassal module's tile images as the data repo stores them (turned
+  upright by `ia tile-orientation --write`): 64 px per square, tiles only (no doors or
   tokens), transparent around them. IC2's own tile images, fetched once into `staging/ic2/textures/`, only tell which
   way each Vassal image is turned: by their colours, or, when that's close, by which turn fits the neighbouring tiles'
   tabs into their notches. Aftermath's turns are checked against the Vassal module's Aftermath save. A map whose
@@ -159,6 +161,10 @@ says which commit of this repo produced it.
   the shrunk template. `staging/tile-orientation/` gets `turns.json` and a review page listing the sides that need a
   new scan (the same file as another side's, or reading another code), the Vassal images that are another side's,
   and the ones to check; `rulings.json` (`{"side key": {"scan": turn, "vassal": turn}}`) overrides a turn.
+  `--write` turns the data repo's tile images upright (once: every image must still be the Vassal module's), with
+  `map-tiles.json`'s width and height, every `map-layouts.json` placement's rotation (rotation − turn) and the
+  skirmish maps' `final.json` turns to match, so `ia maps --write` and `ia skirmish-maps --write` draw every map the
+  same.
 - **Card types** (data 2.0.0; `/card-types`) goes through the reward Feats and the Imperial class cards, a tab each,
   with their `type` (Feat, or Group Attachment for a card attached to an Imperial deployment group) proposed from the
   wiki's text, which is shown under each card. Flags point at what needs a closer look: no text, or a name the wiki
