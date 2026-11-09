@@ -36,3 +36,19 @@ def test_the_same_art_turned_isnt_a_match():
 def test_groups_join_linked_pairs():
     pairs = [{'sides': ['a', 'b']}, {'sides': ['c', 'b']}, {'sides': ['d', 'e']}]
     assert tm.groups_of(pairs, ['a', 'b', 'c', 'd', 'e']) == [['a', 'b', 'c'], ['d', 'e']]
+
+
+def test_a_pill_box_turns_with_its_image():
+    image, pill = side(1, '35A')
+    for q in range(4):
+        turned, ((x, y), (h, w)) = tm.rotated(image, pill, q)
+        crop = np.rot90(turned[y:y + h, x:x + w], -q)  # back upright
+        (x0, y0), (h0, w0) = pill
+        assert (crop == image[y0:y0 + h0, x0:x0 + w0]).all()
+
+
+def test_copied_art_scores_better_as_stored_than_turned():
+    image, pill = side(1, '35A')
+    one = tm.prepare(image, pill)
+    fine = tm.compare(one, tm.prepare(*side(1, '10A')))[1]
+    assert tm.turned_score(one, *side(1, '10A')) < fine - tm.PLAIN

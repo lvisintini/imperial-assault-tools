@@ -9,6 +9,10 @@ turned was a plain square room that looks alike turned):
    correlation of their gradient magnitudes at 32 px per square. A pair needs COARSE;
 2. fine: their fine detail (a high-pass) at 64 px per square, at the best shift of up to SHIFT px (two sides' fits can
    sit a pixel or two apart). A pair needs FINE.
+A pair's "turned" score is its best fine score with the second side turned (where the outlines allow): copied art
+scores clearly better as stored than turned (Core 35A / Twin Shadows 10A: 0.77 against 0.49), while plain,
+near-symmetric rooms look about as alike either way (Jabba's Realm 13A / Tyrants of Lothal 08A: 0.82 at 0, 90 and
+270 degrees), so the page notes a pair whose turned score is within PLAIN of its own.
 Every square of a tile has the same grid lines, so a whole-tile score is high for any two tiles with a similar
 layout; the thresholds were set on the maintainer's examples (35A/10A score 0.79 coarse, 0.77 fine, the lowest true
 pair) and on the gap below them (no other pair scores between 0.68 and 0.77 fine). The pairs that pass are joined
@@ -16,7 +20,7 @@ into groups, for the maintainer to rule which sides really are the same.
 
 Writes staging/tile-matches/:
 - candidates.json: {"groups": [{"sides": [key, ...], "reference": key, "pairs": [{"sides": [a, b], "coarse",
-  "fine", "shift": [dx, dy]}]}]};
+  "fine", "shift": [dx, dy], "turned": fine score turned or null}]}]};
 - img/: each side (48 px per square, its pill boxed) and each side's difference from its group's reference;
 - index.html: the groups, a section each.
 
@@ -33,6 +37,7 @@ OUTLINE = 0.85
 COARSE = 0.6
 FINE = 0.7
 SHIFT = 4  # px at 64 per square
+PLAIN = 0.05
 
 
 def out_dir():
@@ -95,6 +100,23 @@ def compare(one, two):
     return round(score, 3), round(fine[0], 3), fine[1]
 
 
+def rotated(image, pill, q):
+    """A side's image and pill box ((x, y), (h, w)) turned q quarters counter-clockwise (numpy's rot90)."""
+    import numpy as np
+
+    (x, y), (h, w) = pill
+    height, width = image.shape[:2]
+    for _ in range(q % 4):
+        x, y, w, h, width, height = y, width - x - w, h, w, height, width
+    return np.ascontiguousarray(np.rot90(image, q)), ((x, y), (h, w))
+
+
+def turned_score(one, image, pill):
+    """The best fine score of a side (image, pill) onto one at a quarter turn other than 0, or None if none fits."""
+    found = [r[1] for q in (1, 2, 3) for r in [compare(one, prepare(*rotated(image, pill, q)))] if r]
+    return max(found) if found else None
+
+
 def groups_of(pairs, order):
     """The pairs' sides joined into groups (connected), each in order, groups by their first side."""
     parent = {}
@@ -134,7 +156,9 @@ def run(dataset, out=None, log=print):
             continue
         found = compare(sides[a], sides[b])
         if found and found[0] >= COARSE and found[1] >= FINE:
-            pairs.append({'sides': [a, b], 'coarse': found[0], 'fine': found[1], 'shift': list(found[2])})
+            turned = turned_score(sides[a], *images[b])
+            pairs.append({'sides': [a, b], 'coarse': found[0], 'fine': found[1], 'shift': list(found[2]),
+                          'turned': turned and round(turned, 3)})
     groups = []
     for members in groups_of(pairs, order):
         inside = [p for p in pairs if p['sides'][0] in members]
@@ -202,9 +226,17 @@ def review(groups, out):
                 continue
             pair = next((p for p in group['pairs'] if set(p['sides']) == {ref, key}), None)
             score = f"fine {pair['fine']}, coarse {pair['coarse']}" if pair else 'linked through others'
+            if pair and pair['turned'] is not None:
+                score += f", turned {pair['turned']}"
+                if pair['turned'] >= pair['fine'] - PLAIN:
+                    score += ' <span class="warn">(as alike turned: plain art?)</span>'
             cells.append(f'<figure><img src="img/{slug(key)}.jpg"><img src="img/{slug(key)}-diff.jpg">'
                          f'<figcaption><b>{e(key)}</b>: {score}</figcaption></figure>')
-        sections.append(f'<section id="g{n}"><h2>Group {n}: {e(", ".join(group["sides"]))}</h2>'
+        plain = [p for p in group['pairs'] if p['turned'] is not None and p['turned'] >= p['fine'] - PLAIN]
+        note = (f'<p class="warn">About as alike turned as stored: '
+                f'{e("; ".join(" / ".join(p["sides"]) for p in plain))}. Plain rooms look alike any way round; '
+                f'copied art matches clearly better as stored.</p>' if plain else '')
+        sections.append(f'<section id="g{n}"><h2>Group {n}: {e(", ".join(group["sides"]))}</h2>{note}'
                         f'<div class="grid">{"".join(cells)}</div></section>')
     page = f"""<!doctype html><html><head><meta charset="utf-8"><title>Interchangeable tile sides</title>
 <style>
@@ -214,6 +246,7 @@ h2 {{ font-size: 16px; }}
 .grid {{ display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }}
 figure {{ margin: 0; max-width: 420px; }} figure img {{ display: block; margin-bottom: 4px; max-width: 200px; height: auto; }}
 figure {{ display: grid; grid-template-columns: auto auto; gap: 4px; }} figcaption {{ grid-column: 1 / -1; font-size: 12px; color: #555; }}
+.warn {{ color: #a30; }}
 </style></head><body>
 <h1>Interchangeable tile sides</h1>
 <p>Sides whose art looks the same but for their number pill (boxed in blue), from our stored images, grouped. Next to

@@ -168,7 +168,9 @@ says which commit of this repo produced it.
   turn}}`) overrides a turn. (Data PR #93 turned every stored side upright, with a one-off `--write` since removed.)
 - **`ia tile-matches`** groups the tile sides whose art is the same but for their number pill (interchangeable),
   from the dataset's images with both pills masked, as stored (upright, so at turn 0 only): gradients at 32 px per
-  square, then fine detail at 64 px per square at the best shift of a few px. `staging/tile-matches/`
+  square, then fine detail at 64 px per square at the best shift of a few px. Each pair is also scored turned: copied
+  art matches clearly better as stored, while plain, near-symmetric rooms look about as alike any way round, and the
+  page says so. `staging/tile-matches/`
   gets `candidates.json` and a review page: each group's sides and their differences from its reference.
 - **Card types** (data 2.0.0; `/card-types`) goes through the reward Feats and the Imperial class cards, a tab each,
   with their `type` (Feat, or Group Attachment for a card attached to an Imperial deployment group) proposed from the
