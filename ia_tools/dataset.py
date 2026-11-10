@@ -27,6 +27,10 @@ MISSION_TYPES = [
 # Indexes and join tables: never entered, imported or matched by name.
 INDEX_TYPES = ['source-contents', 'missions', 'mission-rewards', 'record-links', 'map-layouts', 'map-tile-matches']
 
+# How data 2.0.0 derived its UUIDs from 1.x ids: uuid5(UUID_NAMESPACE, "<1.x content type>:<1.x id>")
+# (migrations/2.0.0/01_uuid_ids.py in the data repo).
+UUID_NAMESPACE = uuid.uuid5(uuid.NAMESPACE_URL, 'https://github.com/lvisintini/imperial-assault-data')
+
 # Types renamed in data 2.0.0. The tools use the new names; a 1.x checkout still stores the old ones, and Dataset
 # translates wherever a name meets the files (file names, image folders, source-contents' content_type). 1.x's
 # side-mission-cards was split in three; the tools don't import side missions into 1.x data.

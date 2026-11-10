@@ -46,3 +46,41 @@ def test_reprocess_needs_an_import_log(tmp_path, dataset_copy):
     staging = stage(tmp_path, {'cmd': CARD}, {'product': None, 'items': {}, 'extra': {}})
     with pytest.raises(reprocess.ReprocessProblems):
         reprocess.plan(staging, dataset_copy)
+
+
+def test_reencode_takes_the_product_image_too(tmp_path, dataset_copy, hash_files):
+    staging = imported(tmp_path, dataset_copy)
+    plain, _ = reprocess.plan(staging, dataset_copy)
+    every, _ = reprocess.plan(staging, dataset_copy, reencode=True)
+    product = dataset_copy.records('sources')[-1]['image']
+    assert product not in {path for *_, path in plain}
+    assert {path for *_, path in every} == {path for *_, path in plain} | {product}
+
+
+def test_a_1x_import_log_finds_its_records_by_their_derived_uuids(tmp_path, dataset_copy, hash_files):
+    """An import logged before data 2.0.0 names 1.x types and numeric ids; the 2.0.0 records are found by the UUID
+    the migration derived from them."""
+    import json
+    import uuid
+
+    from ia_tools.dataset import UUID_NAMESPACE
+
+    if not dataset_copy.uses_uuids('sources'):
+        pytest.skip('1.x checkout')
+    staging = imported(tmp_path, dataset_copy)
+    log_path = staging.dir / 'import-log.json'
+    log = json.loads(log_path.read_text(encoding='utf-8'))
+    command = next(r for r in log['records'] if r['content_type'] == 'command-cards')
+    real = command['record']['id']
+    # Pretend the command card was logged by a 1.x import as number 9999: give the data's record the UUID that derives.
+    derived = str(uuid.uuid5(UUID_NAMESPACE, 'command-cards:9999'))
+    rows = dataset_copy.records('command-cards')
+    next(r for r in rows if r['id'] == real)['id'] = derived
+    command['record'] = dict(command['record'], id=9999)
+    log_path.write_text(json.dumps(log), encoding='utf-8')
+    todo, _ = reprocess.plan(staging, dataset_copy)
+    assert any(job[0] == 'command-cards' and job[3] == 'cmd' for job in todo)
+    command['record']['id'] = 9998  # no record derives from this one
+    log_path.write_text(json.dumps(log), encoding='utf-8')
+    with pytest.raises(reprocess.ReprocessProblems, match='not found'):
+        reprocess.plan(staging, dataset_copy)

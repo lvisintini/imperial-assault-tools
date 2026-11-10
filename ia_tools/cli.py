@@ -172,7 +172,7 @@ def cmd_reprocess(args):
 
     staging, dataset = Staging(args.product), Dataset()
     try:
-        todo, log = reprocess.plan(staging, dataset)
+        todo, log = reprocess.plan(staging, dataset, reencode=args.reencode)
     except reprocess.ReprocessProblems as problems:
         print(f'{len(problems.problems)} problems:', *problems.problems, sep='\n  ')
         sys.exit(1)
@@ -433,6 +433,8 @@ def main(argv=None):
     reprocess = commands.add_parser('reprocess', help="re-make an imported product's images with the current pipeline")
     reprocess.add_argument('product', help='staging folder name, e.g. tyrants-of-lothal')
     reprocess.add_argument('--check', action='store_true', help='only list the images and what it would cost')
+    reprocess.add_argument('--reencode', action='store_true', help='every image the import wrote, product images too '
+                                                                  '(to re-encode them, e.g. with TinyPNG)')
     reprocess.set_defaults(func=cmd_reprocess)
 
     ic2_ = commands.add_parser('ic2', help="cache ImperialCommander2's tile sizes and campaign layouts")
