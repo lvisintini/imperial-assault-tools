@@ -17,5 +17,7 @@ SKIPPED_HASHES = TOOLS_ROOT / 'known-skipped-sha512.txt'
 # Cards from the 2018 dataset that new cards are aligned to (ia_tools/align.py).
 TEMPLATES = TOOLS_ROOT / 'assets' / 'templates'
 
-TINIFY_KEY = os.environ.get('TINIFY_KEY')
+# TinyPNG only on request (IA_TINYPNG=1, with TINIFY_KEY): images are quantised locally by default (2026-11-10: the
+# maintainer dropped TinyPNG; its files came out about twice the size of the local encoding's).
+TINIFY_KEY = os.environ.get('TINIFY_KEY') if os.environ.get('IA_TINYPNG') == '1' else None
 PORT = int(os.environ.get('IA_PORT', '8001'))

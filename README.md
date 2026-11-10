@@ -205,7 +205,8 @@ says which commit of this repo produced it.
 | `IA_DATA_ROOT` | `../imperial-assault-data` | the dataset checkout |
 | `IA_STAGING` | `./staging` | downloads and entries (git-ignored) |
 | `IA_PORT` | `8001` | `ia enter` port |
-| `TINIFY_KEY` | unset | compress with TinyPNG, like the existing images; otherwise Pillow quantises to a palette PNG |
+| `IA_TINYPNG` | unset | `1` to compress with TinyPNG (needs `TINIFY_KEY`); otherwise Pillow quantises to a palette PNG, the default since 2026-11-10 |
+| `TINIFY_KEY` | unset | the TinyPNG API key, used only with `IA_TINYPNG=1` |
 
 ## Legacy code
 

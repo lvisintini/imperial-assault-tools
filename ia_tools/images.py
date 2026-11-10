@@ -92,7 +92,7 @@ def round_corners(image, radius):
 
 
 def encode(image):
-    """PNG bytes. The dataset's images are palette PNGs from TinyPNG; without a TINIFY_KEY, quantise locally."""
+    """PNG bytes: a palette PNG, quantised locally (Pillow); with IA_TINYPNG=1 and a TINIFY_KEY, by TinyPNG instead."""
     buffer = io.BytesIO()
     if settings.TINIFY_KEY:
         import tinify

@@ -434,7 +434,7 @@ def main(argv=None):
     reprocess.add_argument('product', help='staging folder name, e.g. tyrants-of-lothal')
     reprocess.add_argument('--check', action='store_true', help='only list the images and what it would cost')
     reprocess.add_argument('--reencode', action='store_true', help='every image the import wrote, product images too '
-                                                                  '(to re-encode them, e.g. with TinyPNG)')
+                                                                  '(to re-encode them, e.g. with TinyPNG: IA_TINYPNG=1)')
     reprocess.set_defaults(func=cmd_reprocess)
 
     ic2_ = commands.add_parser('ic2', help="cache ImperialCommander2's tile sizes and campaign layouts")
