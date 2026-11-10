@@ -50,6 +50,9 @@ TEXTURES = re.compile(r'^ImperialCommander2/Assets/SagaTiles/[^/]+/([A-Za-z]+_\d
 #   of those IC2 sections. Without it, each other section with tiles is one, named after it ("Section 2 - Cave" is
 #   "Cave").
 CORRECTIONS = {
+    'BESPIN3.json': {  # Hostile Takeover: 34A a quarter turn (its label bottom left), on the same squares, so its tabs
+        # meet 1A's, 2A's and 36A's
+        'move': {'Start Section': [['Core_34A', [920.0, 1060.0], [920.0, 1040.0, 90.0]]]}},
     'CORE4.json': {'sides': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}},  # Desperate Hour
     'CORE6.json': {  # Fly Solo: the second 18B, right of 6B and under 16B
         'add': {'Start Section': [{'texture': 'Core_18B', 'x': 1030.0, 'y': 970.0, 'rotation': 270.0}]}},
