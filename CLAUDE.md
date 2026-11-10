@@ -57,6 +57,10 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
   reward Feat and Imperial class card is a Feat or a Group Attachment, proposed from the wiki's card text (pages
   cached as `staging/wiki/pages/card-*.json`, found by title, the class and item categories, then the wiki's
   search), confirmed into `staging/card-types/entries.json`.
+- `ia_tools/tile_connections.py` (`ia tile-connections`, and `ia enter`'s Tile connections page,
+  `static/tile-connections.html`): each map tile's connector tabs, counted by the maintainer one key per tile, saved
+  to `staging/tile-connections/entries.json` and confirmed; written into map-tiles.json as `connections` after
+  `height`. `outline_tabs` counts tabs on side A's outline, only for the page's review flags.
 - `ia_tools/mats.py` (`ia mats`): the 13 skirmish map mats as sources, from the wiki cache (infobox name and sku; the main
   page's wave and dates) with images from FFG's product pages as the Wayback Machine archived them (og:image,
   fitted like other sources), staged in `staging/mats/` with a manifest that the data repo's migration 19 reads.

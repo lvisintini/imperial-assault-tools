@@ -26,6 +26,8 @@
   ia card-types --fetch  cache the wiki's text of the reward Feats and Imperial class cards, to propose which are a
                          Group Attachment on ia enter's Card types page
   ia card-types          write the card types confirmed in ia enter into the data repo (--check to only validate)
+  ia tile-connections    write the tiles' connections (tabs) entered on ia enter's Tile connections page into the
+                         data repo's map-tiles.json (--check to only validate)
   ia mats                stage the 13 skirmish map mats as sources (wiki values, images from FFG's archived product
                          pages) in staging/mats/, for the data repo's migration 19
   ia missions            write the skirmish scenarios and story mission rewards entered in ia enter (Missions) into the
@@ -344,6 +346,19 @@ def cmd_card_types(args):
         print(f"Wrote {summary['done']} cards' type")
 
 
+def cmd_tile_connections(args):
+    from ia_tools import tile_connections
+    from ia_tools.dataset import Dataset
+
+    summary, problems = tile_connections.run(Dataset(), check_only=args.check)
+    print(json.dumps(summary, indent=2))
+    if problems:
+        print(f'{len(problems)} problems:', *problems[:20], sep='\n  ')
+        sys.exit(1)
+    if not args.check:
+        print(f"Wrote {summary['tiles']} tiles' connections into map-tiles.json")
+
+
 def cmd_missions(args):
     from ia_tools import mission_entries
     from ia_tools.dataset import Dataset
@@ -480,6 +495,11 @@ def main(argv=None):
     card_types_.add_argument('--refresh', action='store_true', help='with --fetch, fetch cached pages again')
     card_types_.add_argument('--check', action='store_true', help='only validate the entries')
     card_types_.set_defaults(func=cmd_card_types)
+
+    connections = commands.add_parser('tile-connections', help="write the map tiles' connections (tabs) entered on "
+                                                               "ia enter's Tile connections page into the data repo")
+    connections.add_argument('--check', action='store_true', help='only validate the entries')
+    connections.set_defaults(func=cmd_tile_connections)
 
     missions = commands.add_parser('missions', help='write the scenarios and story rewards entered in ia enter into the '
                                                     'data repo')

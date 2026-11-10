@@ -44,6 +44,8 @@ uv run ia tile-matches --write   # the rulings (staging/tile-matches/rulings.jso
 uv run ia card-types --fetch     # data 2.0.0: cache the wiki's card text, to propose card types
 uv run ia card-types --check     # validate the card types confirmed in ia enter (Card types)
 uv run ia card-types             # write them into reward-cards.json and imperial-class-cards.json
+uv run ia tile-connections --check   # validate the tiles' connections entered in ia enter (Tile connections)
+uv run ia tile-connections      # write them into map-tiles.json (connections, after height)
 uv run ia missions --check       # data 2.0.0: validate the scenarios and story rewards entered in ia enter (Missions)
 uv run ia missions               # write them into skirmish-missions.json and mission-rewards.json
 uv run ia mats                   # data 2.0.0: stage the 13 skirmish map mats as sources in staging/mats/ (migration 19)
@@ -181,6 +183,13 @@ says which commit of this repo produced it.
   wiki's text, which is shown under each card. Flags point at what needs a closer look: no text, or a name the wiki
   spells differently. Mark cards done one by one or all those shown; entries are saved to
   `staging/card-types/entries.json`, and `ia card-types` writes them once every card is done.
+- **Tile connections** (data 2.0.0; `/tile-connections`) shows the map tiles one at a time, both sides, for the
+  maintainer to count each tile's connector tabs (the same on both sides). A digit (numpad or top row) sets the
+  number and moves to the next tile; ← → move without changing it, Backspace clears, Home jumps to the first tile
+  left, End to the review. The review lists every tile with its number, tiles without one first, then those whose
+  number differs from a count of the tabs on side A's outline ("look again", shown only there), and Confirm.
+  Entries are saved to `staging/tile-connections/entries.json` (a later change takes the confirmation back), and
+  `ia tile-connections` writes them once every tile has a number and they're confirmed.
 - **Missions** (data 2.0.0; `/missions`) has two views. *Skirmish scenarios* shows the skirmish mission cards by map,
   each with A/B buttons for the letter printed on it. *Story rewards* goes through the story missions one at a time:
   add reward cards or Campaign deployment cards from the search box, or credits, mark alternatives as *choice*, and
