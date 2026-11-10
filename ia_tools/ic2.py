@@ -55,6 +55,7 @@ CORRECTIONS = {
         'add': {'Start Section': [{'texture': 'Core_18B', 'x': 1030.0, 'y': 970.0, 'rotation': 270.0}]}},
     'CORE9.json': {'sides': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}},  # Last Stand, on Desperate Hour's map
     'CORE26.json': {'drop': ['Section 3 - Control']},  # The Spice Job
+    'CORE29.json': {'sides': {'Core_19A': 'Core_19B'}},  # Captured: the Trash Compactor is 19B
     'CORE31.json': {'drop': ['Section 3 - Control Room']},  # Means of Production
     'EMPIRE1.json': {  # Capital Escape: the 18B under 2B a square to the right; the Command Center a square from the map
         'move': {'Start Section': [['Empire_18B', [1020.0, 1050.0], [1030.0, 1050.0]]]},
