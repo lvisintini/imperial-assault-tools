@@ -114,3 +114,51 @@ def test_a_map_spot_is_the_side_and_a_square_round_it(dataset_copy):
     assert drawn.shape == (4 * 64, 4 * 64, 4)  # 2 x 2 squares plus one all round
     assert drawn[64 + 32, 64 + 32, 3] == 255 and drawn[64 + 32, 3 * 64 + 32, 3] == 255  # the side, its neighbour
     assert drawn[16, 16, 3] == 0
+
+
+def gridded(gw=3, gh=2, seed=0):
+    """A generated side (never a dataset image) at SQUARE px per square: blurred noise as its art, dark grid lines on
+    every square's edge, tab margins on x only."""
+    S = hires_tiles.SQUARE
+    rng = np.random.default_rng(seed)
+    mx = S // 4
+    w, h = gw * S + 2 * mx, gh * S
+    image = np.zeros((h, w, 4), np.uint8)
+    image[..., :3] = cv2.GaussianBlur(rng.integers(90, 170, (h, w, 3)).astype(np.uint8), (0, 0), 6)
+    for k in range(gw + 1):
+        cv2.line(image, (mx + k * S, 0), (mx + k * S, h), (30, 30, 30, 255), 2)
+    for k in range(gh + 1):
+        cv2.line(image, (0, k * S), (w, k * S), (30, 30, 30, 255), 2)
+    image[..., 3] = 0
+    image[:, mx:mx + gw * S, 3] = 255
+    return image
+
+
+def test_the_grid_is_found_and_straightened():
+    image = gridded()
+    h, w = image.shape[:2]
+    assert hires_tiles.grid_fit(image) | {'strength': 0} == {'turn': 0.0, 'scale': 1.0, 'dx': 0.0, 'dy': 0.0,
+                                                               'strength': 0}
+    D = cv2.getRotationMatrix2D(((w - 1) / 2, (h - 1) / 2), 0.6, 1.01)
+    D[:, 2] += (3, -2)
+    off = cv2.warpAffine(image, D, (w, h), flags=cv2.INTER_LINEAR)
+    fit = hires_tiles.grid_fit(off)
+    assert fit['turn'] == pytest.approx(-0.6, abs=0.05) and fit['scale'] == pytest.approx(1.01, abs=0.006)
+    assert (fit['dx'], fit['dy']) == (pytest.approx(3, abs=0.5), pytest.approx(-2, abs=0.5))
+    assert hires_tiles.grid_problem(fit) is None
+    # straighten folds the correction into the fit: here the "scan" is the side itself, fitted with D.
+    M, before, after, problem = hires_tiles.straighten(image, D, (w, h))
+    assert problem is None and before | {'strength': 0} == fit | {'strength': 0}
+    assert abs(after['turn']) < 0.05 and abs(after['dx']) <= 0.5 and abs(after['dy']) <= 0.5
+
+
+def test_a_faint_or_far_grid_is_left_as_fitted():
+    assert 'faint' in hires_tiles.grid_problem({'turn': 0, 'scale': 1, 'dx': 0, 'dy': 0, 'strength': 1.2})
+    assert 'px off' in hires_tiles.grid_problem({'turn': 0, 'scale': 1, 'dx': 9.5, 'dy': 0, 'strength': 5})
+    image = gridded()
+    h, w = image.shape[:2]
+    blank = image.copy()
+    blank[..., :3] = 128  # no grid lines at all
+    M = np.float64([[1, 0, 0], [0, 1, 0]])
+    fixed, _, _, problem = hires_tiles.straighten(blank, M, (w, h))
+    assert problem and (np.asarray(fixed) == M).all()

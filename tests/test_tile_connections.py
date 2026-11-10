@@ -59,7 +59,8 @@ def test_run_writes_once_every_tile_is_entered_and_confirmed(dataset):
     assert problems == [] and summary == {'tiles': len(tiles), 'entered': len(tiles), 'left': 0, 'confirmed': True}
     written = json.loads(dataset.path('map-tiles').read_text(encoding='utf-8'))
     assert [r['connections'] for r in written] == [n % 5 + 1 for n in range(len(tiles) - 1)] + [2]
-    assert [{k: v for k, v in r.items() if k != 'connections'} for r in written] == tiles
+    without = lambda rows: [{k: v for k, v in r.items() if k != 'connections'} for r in rows]
+    assert without(written) == without(tiles)  # only connections changes (the data may have them already)
 
     tc.set_tile(tiles[0]['id'], 4)  # a later change takes the confirmation back
     assert tc.load()['confirmed'] is False

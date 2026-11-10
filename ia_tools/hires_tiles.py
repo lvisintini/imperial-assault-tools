@@ -2,7 +2,7 @@
 square, staged for the data repo (data 2.x).
 
 Each side's scan (tiles/<Prefix>_<number><side>.png, cut on its outline, any turn) is fitted onto the dataset's image
-of that side (Vassal's, 64 px per square), which fixes where the tile's grid is:
+of that side (first Vassal's; since data PR #94 the stored hi-res one), then straightened on its own printed grid:
 - turned upright first, by its number pill's turn (`ia tile-orientation`'s turns.json, "scan"), as the dataset's
   images are stored: the fit then keeps it at that turn;
 - scaled by SQUARE / SCAN_PX, then registered onto ours upscaled to SQUARE px per square: SIFT features and a
@@ -10,8 +10,14 @@ of that side (Vassal's, 64 px per square), which fixes where the tile's grid is:
   quarter turn for a scan with no pill turn);
 - refined by ECC (affine), on the colours and on the outline, keeping whichever fits best (scored on blurred colour
   correlation and outline overlap with ours);
+- straightened (straighten): its printed grid lines found in the fitted image (grid_fit: thin-line response averaged
+  along the lines, searched over turn, scale and shift) and the turn, scale and shift that put its inner lines on the
+  frame's folded into the fit, so the scan is resampled once. A grid too faint or too far off (GRID_*) is left as
+  fitted, and flagged (2026-11-10: most sides sat 1-4 px off, a few turned up to 2 degrees);
 - drawn into our side's frame: SQUARE px per square plus SQUARE / 4 at each end of an axis with tabs, as the dataset's
-  tiles are at 64 (so a side's grid and tabs land where ours are). Its outline is the scan's own.
+  tiles are at 64 (so a side's grid and tabs land where ours are). Its outline is the scan's own, moved with its art.
+
+`--keep-colours` keeps the last run's tone curves for every product, so a refit only moves the art.
 
 Colours: one tone curve per product and channel, histogram-matched from the scans' pixels to ours, pooled over the
 product's well-registered sides (colour correlation >= GOOD); the maintainer chose this from samples
@@ -137,6 +143,8 @@ def reasons(info):
         found.append(f"outline overlap {info['iou']} (below {OVERLAP})")
     if 'scan_turn' in info and info['turn'] != info['scan_turn']:
         found.append(f"fitted at {info['turn']}°, its pill reads upright at {info['scan_turn']}°")
+    if info.get('grid', {}).get('skipped'):
+        found.append(f"not straightened on its grid: {info['grid']['skipped']}")
     if info['band'] > BAND:
         found.append(f"{info['band']} px of the scan outside the frame (over {BAND})")
     return found
@@ -245,6 +253,146 @@ def turn_of(M):
     return round(math.degrees(math.atan2(M[1][0], M[0][0])) / 90) % 4 * 90
 
 
+# Grid -------------------------------------------------------------------------------------------------------------
+
+# A side is straightened on its printed grid lines (thin lines on every square's edge): turned, scaled and shifted so its
+# inner grid lines sit on the frame's (margin + k * SQUARE), within these limits; past them the fit is flagged and left
+# as it was. A grid whose lines stand out less than GRID_WEAK times the art around them is too faint to go by.
+GRID_TURN = 2.0  # degrees
+GRID_MOVE = 8.0  # px at SQUARE
+GRID_SCALE = 0.02
+GRID_WEAK = 2.0
+
+
+def _grid_lines(rgba):
+    """(across x, across y, inside): the thin-line response across vertical and horizontal lines (blurred second
+    derivatives), and where the tile is solid (well inside its outline)."""
+    import cv2
+    import numpy as np
+
+    gray = cv2.GaussianBlur(_gray(rgba).astype(np.float32), (0, 0), 1)
+    inside = cv2.erode((rgba[..., 3] > 250).astype(np.uint8), np.ones((15, 15), np.uint8)).astype(np.float32)
+    return (np.abs(cv2.Sobel(gray, cv2.CV_32F, 2, 0, ksize=3)) * inside,
+            np.abs(cv2.Sobel(gray, cv2.CV_32F, 0, 2, ksize=3)) * inside, inside)
+
+
+def _profile(response, inside, axis):
+    """The response averaged along the lines: per column (axis 0) or per row (axis 1), over the solid tile."""
+    import numpy as np
+    return response.sum(axis) / np.maximum(inside.sum(axis), 1)
+
+
+def _comb(profile, expected, centre, scale, shift):
+    """How strongly the profile peaks at the expected lines scaled about centre and shifted: their mean over the
+    profile's median."""
+    import numpy as np
+
+    at = centre + (np.asarray(expected, float) - centre) * scale + shift
+    if len(at) == 0 or at.min() < 0 or at.max() > len(profile) - 1:
+        return 0.0
+    base = float(np.median(profile)) or 1e-6
+    return float(np.interp(at, np.arange(len(profile)), profile).mean()) / base
+
+
+def grid_lines(length):
+    """The inner grid lines of an axis length px long (SQUARE px per square, tab margins either end)."""
+    n = length // SQUARE
+    margin = (length - n * SQUARE) // 2
+    return [margin + k * SQUARE for k in range(1, n)]
+
+
+def grid_fit(rgba):
+    """Where a side's printed grid is in its frame: {"turn": degrees (cv2's, anticlockwise on the page) that square it,
+    "scale": its squares' size over SQUARE, "dx", "dy": px its inner lines sit off the frame's (None on an axis without
+    one), "strength": how strongly its lines stand out (the weaker axis)}."""
+    import cv2
+    import numpy as np
+
+    h, w = rgba.shape[:2]
+    centre = ((w - 1) / 2, (h - 1) / 2)
+    across_x, across_y, inside = _grid_lines(rgba)
+    lines_x, lines_y = grid_lines(w), grid_lines(h)
+    shifts = np.arange(-10, 10.01, 1.0)
+
+    def turned(angle):
+        R = cv2.getRotationMatrix2D(centre, angle, 1.0)
+        rot = lambda a: cv2.warpAffine(a, R, (w, h), flags=cv2.INTER_LINEAR)
+        m = rot(inside)
+        return _profile(rot(across_x), m, 0), _profile(rot(across_y), m, 1)
+
+    def score(px, py, scale=1.0, shifts=shifts):
+        sx = max((_comb(px, lines_x, centre[0], scale, d), d) for d in shifts) if lines_x else (0.0, None)
+        sy = max((_comb(py, lines_y, centre[1], scale, d), d) for d in shifts) if lines_y else (0.0, None)
+        return sx, sy
+
+    def total(sx, sy):
+        return sx[0] + sy[0]
+
+    best = None
+    for step, span in ((0.25, GRID_TURN), (0.05, 0.25)):
+        middle = best[1] if best else 0.0
+        for angle in np.arange(middle - span, middle + span + 1e-9, step):
+            px, py = turned(float(angle))
+            sx, sy = score(px, py)
+            if best is None or total(sx, sy) > best[0]:
+                best = (total(sx, sy), float(angle))
+    angle = best[1]
+    px, py = turned(angle)
+    fine = np.arange(-10, 10.01, 0.25)
+    scale = max(np.arange(1 - GRID_SCALE * 1.5, 1 + GRID_SCALE * 1.5 + 1e-9, 0.0025),
+                key=lambda k: total(*score(px, py, k)))
+    sx, sy = score(px, py, float(scale), fine)
+    strengths = [s for s, d in (sx, sy) if d is not None]
+    return {'turn': round(angle, 2), 'scale': round(float(scale), 4), 'dx': sx[1], 'dy': sy[1],
+            'strength': round(min(strengths), 2) if strengths else 0.0}
+
+
+def grid_fix(fit, size):
+    """The 3 x 3 correction (frame px -> frame px) that puts a side's grid where its frame's is, from grid_fit."""
+    import cv2
+    import numpy as np
+
+    w, h = size
+    cx, cy = (w - 1) / 2, (h - 1) / 2
+    R = np.vstack([cv2.getRotationMatrix2D((cx, cy), fit['turn'], 1.0), [0, 0, 1]])
+    s, dx, dy = fit['scale'], fit['dx'] or 0.0, fit['dy'] or 0.0
+    # A point of the grid at c + (e - c) s + d goes back to e: p -> c + (p - c - d) / s.
+    S = np.array([[1 / s, 0, cx - (cx + dx) / s], [0, 1 / s, cy - (cy + dy) / s], [0, 0, 1]])
+    return S @ R
+
+
+def _plain(fit):
+    """A grid fit as JSON values."""
+    return {k: (None if v is None else float(v)) for k, v in fit.items()}
+
+
+def grid_problem(fit):
+    """Why a side isn't straightened on its grid (None: it is)."""
+    if fit['strength'] < GRID_WEAK:
+        return f"its grid lines are too faint to go by ({fit['strength']})"
+    if abs(fit['turn']) > GRID_TURN - 0.01:
+        return f"its grid is turned {fit['turn']}°, at the edge of what's searched"
+    if abs(fit['scale'] - 1) > GRID_SCALE:
+        return f"its squares are {fit['scale']} of the frame's"
+    off = max(abs(fit['dx'] or 0), abs(fit['dy'] or 0))
+    if off > GRID_MOVE:
+        return f"its grid is {off} px off the frame's"
+    return None
+
+
+def straighten(scan, M, size):
+    """(M, before, after, problem): M with the grid correction folded in (the scan is warped once, from the scan), the
+    grid fits before and after, and why it wasn't applied (None: it was)."""
+    import numpy as np
+
+    before = grid_fit(warp(scan, M, size))
+    problem = grid_problem(before)
+    if problem:
+        return M, before, before, problem
+    fixed = (grid_fix(before, size) @ np.vstack([np.asarray(M, np.float64), [0, 0, 1]]))[:2]
+    return fixed, before, grid_fit(warp(scan, fixed, size)), None
+
+
 # Colour ------------------------------------------------------------------------------------------------------------
 
 def tone_curve(src, dst):
@@ -272,9 +420,11 @@ def upright_turns():
     return {key: entry['scan']['turn'] for key, entry in turns.items() if 'scan' in entry}
 
 
-def run(dataset, scans=None, out=None, only=None, log=print, page=True, upright=None):
+def run(dataset, scans=None, out=None, only=None, log=print, page=True, upright=None, keep_colours=False):
     """(manifest, problems). only: keys ("Core Set 01 A") to do; with an earlier full run, its tone curves and other
-    sides are kept. upright: {key: the scan's pill turn} (default upright_turns())."""
+    sides are kept. upright: {key: the scan's pill turn} (default upright_turns()). keep_colours: keep the last run's
+    tone curves (manifest.json) for every product, so a refit changes where the art sits but not its colours. Each
+    fit is then straightened on the side's printed grid (straighten), unless its grid is too faint or too far off."""
     import cv2
     import numpy as np
     from PIL import Image
@@ -306,9 +456,11 @@ def run(dataset, scans=None, out=None, only=None, log=print, page=True, upright=
         if key in upright:
             scan = np.ascontiguousarray(np.rot90(scan, k_of_turn(upright[key])))
         scanned[key] = scan
-        M, how, (corr, iou) = register(ours, scan, key in upright)
+        M, how, _ = register(ours, scan, key in upright)
         size = ours.shape[1], ours.shape[0]
+        M, grid_before, grid_after, grid_skip = straighten(scan, M, size)
         warped = warp(scan, M, size)
+        corr, iou = score(ours, warped)
         # Scan pixels the frame cuts off (the outline sticking out of ours' frame): the scan drawn with 100 px of room
         # all round, against the frame.
         roomy = np.float32(M).copy()
@@ -321,7 +473,9 @@ def run(dataset, scans=None, out=None, only=None, log=print, page=True, upright=
                                 **({'scan_turn': upright[key]} if key in upright else {}), 'how': how,
                                 'corr': round(corr, 3), 'iou': round(iou, 4), 'clipped': clipped,
                                 'band': round(max(clipped, 0) / outline_length(ours[..., 3]), 2),
-                                'scale': round(math.hypot(M[0][0], M[1][0]) * SCAN_PX, 1)}}
+                                'scale': round(math.hypot(M[0][0], M[1][0]) * SCAN_PX, 1),
+                                'grid': {'before': _plain(grid_before), 'after': _plain(grid_after),
+                                         **({'skipped': grid_skip} if grid_skip else {})}}}
         log(f"  {key}: {how}, turn {fitted[key]['info']['turn']}, corr {corr:.3f}, outline IoU {iou:.3f}, "
             f"{fitted[key]['info']['band']} px outside the frame")
 
@@ -349,7 +503,7 @@ def run(dataset, scans=None, out=None, only=None, log=print, page=True, upright=
             log(f"  {key}: its scan fits {best[1]}'s image better ({best[0]:.3f})")
 
     # A run of some sides (only) keeps the last full run's tone curves and sides, and updates these.
-    earlier = json.loads((out / 'manifest.json').read_text(encoding='utf-8')) if only and (
+    earlier = json.loads((out / 'manifest.json').read_text(encoding='utf-8')) if (only or keep_colours) and (
         out / 'manifest.json').exists() else {'luts': {}, 'sides': {}}
     rng = np.random.default_rng(0)
     curves = {p: np.array(c, np.uint8) for p, c in earlier['luts'].items()}
@@ -467,101 +621,225 @@ def draw_usage(dataset, use, image_of, px):
     return page
 
 
+def cut_offsets(alpha, px=SQUARE):
+    """(x, y): how far a side's straight cut edges sit off its frame's outer grid lines, px (the mean of the two
+    opposite edges; None on an axis without both), measured beside the corners, clear of the tabs and notches."""
+    import numpy as np
+
+    a = alpha > 127
+    H, W = a.shape
+    gw, gh = W // px, H // px
+    mx, my = (W - gw * px) // 2, (H - gh * px) // 2
+    filled = lambda i, j: 0 <= i < gw and 0 <= j < gh and a[my + j * px + px // 2, mx + i * px + px // 2]
+    edges = {'L': [], 'R': [], 'T': [], 'B': []}
+    reach = px * 20 // 128
+    for i in range(gw):
+        for j in range(gh):
+            if not filled(i, j):
+                continue
+            x0, y0 = mx + i * px, my + j * px
+            for f in (0.15, 0.85):
+                yy, xx = int(y0 + f * px), int(x0 + f * px)
+                if not filled(i - 1, j) and (e := np.where(a[yy, max(0, x0 - 6):x0 + reach])[0]).size:
+                    edges['L'].append(max(0, x0 - 6) + e.min() - x0)
+                if not filled(i + 1, j) and (e := np.where(a[yy, x0 + px - reach:min(W, x0 + px + 6)])[0]).size:
+                    edges['R'].append(x0 + px - reach + e.max() + 1 - (x0 + px))
+                if not filled(i, j - 1) and (e := np.where(a[max(0, y0 - 6):y0 + reach, xx])[0]).size:
+                    edges['T'].append(max(0, y0 - 6) + e.min() - y0)
+                if not filled(i, j + 1) and (e := np.where(a[y0 + px - reach:min(H, y0 + px + 6), xx])[0]).size:
+                    edges['B'].append(y0 + px - reach + e.max() + 1 - (y0 + px))
+    mid = lambda one, two: float((np.median(edges[one]) + np.median(edges[two])) / 2) if edges[one] and edges[two] \
+        else None
+    return mid('L', 'R'), mid('T', 'B')
+
+
+def shifted(rgba, dx, dy):
+    """The image moved by (dx, dy) px (sub-pixel), in the same frame."""
+    import cv2
+    import numpy as np
+
+    M = np.float32([[1, 0, dx], [0, 1, dy]])
+    return cv2.warpAffine(rgba, M, (rgba.shape[1], rgba.shape[0]), flags=cv2.INTER_CUBIC,
+                          borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
+
+
+PRINT_CUT = 4.0  # px at SQUARE: print and cut this far apart (or more) are flagged
+
+
 def review(dataset, manifest, out):
-    """index.html and review/: every side in the tiles' file order, a collapsible section per product; flagged sides
-    first in a list at the top, and marked in red. Per side: its current image, the new one, and the spot of a map
-    where it touches the most other tiles, drawn with the current tiles and with the new ones."""
+    """index.html and review/: a row per side, three images: art on the grid (left: the side straightened on its
+    printed grid lines, as staged), the current side (centre, the data repo's), cut on the grid (right: the
+    straightened side moved so its cut edges sit on the frame instead). A toggle swaps them for the spot of a map where
+    the side touches the most other tiles, every tile drawn in that version. The most problematic sides are flagged
+    and listed first."""
     import os
 
     import numpy as np
     from PIL import Image
 
     (out / 'review').mkdir(exist_ok=True)
-    for old in (out / 'review').glob('*.png'):  # the PNGs earlier pages had
+    (out / 'cut').mkdir(exist_ok=True)
+    for old in (out / 'review').glob('*'):
         old.unlink()
     data = dataset.root / 'images' / 'large'
-    rel = Path(os.path.relpath(data, out)).as_posix()  # relative, so any browser opening the file finds them
+    rel = Path(os.path.relpath(data, out)).as_posix()
+    cache = {}
+
+    def load(path):
+        if path not in cache:
+            cache[path] = np.array(Image.open(path).convert('RGBA'))
+        return cache[path]
 
     def current(tile, side):
-        return np.array(Image.open(data / tile[f'side_{side.lower()}']).convert('RGBA'))
+        return load(data / tile[f'side_{side.lower()}'])
 
-    def new(tile, side):
+    def art(tile, side):
         path = out / tile[f'side_{side.lower()}']
-        return np.array(Image.open(path).convert('RGBA')) if path.exists() else (
-            np.array(Image.fromarray(current(tile, side)).resize(
-                (current(tile, side).shape[1] * 2, current(tile, side).shape[0] * 2))))
+        return load(path) if path.exists() else current(tile, side)
+
+    cut_shift = {}
+
+    def cut(tile, side):
+        path = out / 'cut' / tile[f'side_{side.lower()}']
+        if path not in cache:
+            image = art(tile, side)
+            sx, sy = cut_offsets(image[..., 3])
+            cut_shift[tile[f'side_{side.lower()}']] = (sx, sy)
+            cache[path] = shifted(image, -(sx or 0.0), -(sy or 0.0))
+            path.parent.mkdir(parents=True, exist_ok=True)
+            Image.fromarray(cache[path]).save(path)
+        return cache[path]
+
+    def jpg(image, name, px_per_square=None):
+        im = image if isinstance(image, Image.Image) else Image.fromarray(np.ascontiguousarray(image))
+        flat = Image.new('RGB', im.size, (51, 51, 51))
+        flat.paste(im, mask=im.getchannel('A'))
+        flat.save(out / 'review' / name, quality=88)
+        return f'review/{name}'
 
     uses = usages(dataset)
-    groups, flagged = {}, []
+    slug = lambda key: key.lower().replace("'", '').replace(' ', '-')
+    rows, flagged = [], []
     for key, product, tile, side, field in sides(dataset):
         info = manifest['sides'].get(key)
-        groups.setdefault(product, []).append((key, tile, side, info))
-        if info is None or weak(info):
-            flagged.append((key, product))
-    slug = lambda key: key.lower().replace("'", '').replace(' ', '-')
+        cut(tile, side)
+        sx, sy = cut_shift[tile[field]]
+        apart = max(abs(sx or 0), abs(sy or 0))
+        problems = []
+        grid = (info or {}).get('grid')
+        if info is None:
+            problems.append((9, 'No high-res image: no scan, or not staged.'))
+        elif grid and grid.get('skipped'):
+            problems.append((8, f"Not straightened: {grid['skipped']}. Left and centre are the same fit."))
+        if apart >= PRINT_CUT:
+            problems.append((apart, f'Its print and its cut are {apart:.1f} px apart (at 128 px per square): with the '
+                                    'art on the grid, its edges overlap or gap that much against its neighbours; with '
+                                    'the cut on the grid, its printed lines are that much off theirs.'))
+        if info:
+            for r in reasons(info):
+                if 'grid' not in r:
+                    problems.append((1, f'Fit: {r}.'))
+        severity = max((s for s, _ in problems), default=0)
+        if severity >= PRINT_CUT or any(s >= 8 for s, _ in problems):
+            flagged.append((severity, key))
+        rows.append((key, product, tile, side, field, info, grid, (sx, sy), problems, severity))
+
+    order = {k: n for n, (_, k) in enumerate(sorted(flagged, reverse=True))}
+    e = html.escape
+    blocks = []
+    for key, product, tile, side, field, info, grid, (sx, sy), problems, severity in rows:
+        s = slug(key)
+        use = uses.get(key)
+        versions = [('art', 'Art on the grid', art), ('now', 'Now (in the data)', current), ('cut', 'Cut on the grid', cut)]
+        figures = []
+        for name, label, image_of in versions:
+            tile_img = jpg(image_of(tile, side), f'{s}-{name}.jpg')
+            spot = jpg(draw_usage(dataset, use, image_of, SQUARE), f'{s}-{name}-map.jpg') if use else None
+            figures.append(f'<figure class="{name}"><img loading="lazy" src="{tile_img}" data-tile="{tile_img}" '
+                           f'data-map="{spot or tile_img}"><figcaption>{label}</figcaption></figure>')
+        if grid:
+            b = grid['before']
+            moved = ', '.join(f'{"left/right" if a == "dx" else "up/down"} {b[a]:+g} px' for a in ('dx', 'dy')
+                              if b[a] is not None and b[a])
+            turned = f'turned {b["turn"]:+g}°, ' if b['turn'] else ''
+            sized = f'scale {b["scale"]:g}, ' if b['scale'] != 1 else ''
+            art_note = f'{turned}{sized}{moved}' or 'already on the grid'
+        else:
+            art_note = 'no grid fit'
+        cut_note = ', '.join(f'{"left/right" if a == 0 else "up/down"} {v:+.1f} px' for a, v in enumerate((sx, sy))
+                             if v is not None and abs(v) >= 0.5) or 'cut already on the grid'
+        where = f'{use["map"]}{" (" + use["section"] + ")" if use["section"] else ""}, with the {use["touching"]} ' \
+                f'tiles it touches' if use else 'on no map, so no map spot'
+        flag = key in order
+        blocks.append((order.get(key, len(order)) if flag else None, product, f"""
+<div class="side{' flag' if flag else ''}" id="{s}">
+  <h3>{e(key)}{' <span class="badge">check</span>' if flag else ''}</h3>
+  {''.join(f'<p class="problem">{e(t)}</p>' for _, t in sorted(problems, reverse=True))}
+  <div class="row">{''.join(figures)}</div>
+  <p class="note"><b>Art on the grid</b>: the scan as fitted was {e(art_note)} off the frame's grid lines; moved so
+  they meet. <b>Cut on the grid</b>: the same, moved again so its cut edges sit on the frame ({e(cut_note)} from the
+  left image). Map spot: {e(where)}.</p>
+</div>"""))
+
     css = """
-body{font:14px system-ui,sans-serif;margin:16px;background:#1e1e1e;color:#ddd}a{color:#9cf}
+body{font:14px/1.45 system-ui,sans-serif;margin:0;background:#1e1e1e;color:#ddd}a{color:#9cf}
+main{padding:0 16px 40px;max-width:1500px}
+.bar{position:sticky;top:0;z-index:2;background:#151515;border-bottom:1px solid #444;padding:8px 16px;display:flex;
+  gap:10px;align-items:center;flex-wrap:wrap}
+.bar button{background:#333;color:#eee;border:1px solid #555;border-radius:4px;padding:4px 12px;cursor:pointer}
+.bar button[aria-pressed="true"]{background:#1f5fbf;border-color:#7fb0ff}
+.legend{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.legend div{background:#262626;border-radius:6px;padding:8px}
 details.set{margin:10px 0;border:1px solid #444;border-radius:6px;padding:4px 10px}
 details.set>summary{cursor:pointer;font-size:16px;font-weight:600;padding:6px 0}
 .side{margin:12px 0 18px;padding:8px;border-radius:6px;background:#262626}
 .side.flag{background:#3a1d1d;outline:2px solid #e55}
-.side h3{margin:0 0 4px;font-size:14px}.flags{margin:4px 0;color:#fbb;font-weight:600}
-.flags li{margin-left:18px}.meta{font-size:12px;opacity:.75;margin-bottom:6px}
-.imgs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:start;max-width:1400px}
-.imgs figure{margin:0}.imgs img{max-width:100%;height:auto;display:block;background:#333}
-figcaption{font-size:12px;opacity:.8;margin-top:3px}.count{font-weight:normal;opacity:.7}
+.side h3{margin:0 0 4px;font-size:15px}.problem{margin:2px 0;color:#fbb}
+.row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:start}
+.row figure{margin:0}.row img{max-width:100%;height:auto;display:block;background:#333}
+.row .now img{outline:2px solid #888}
+figcaption{font-size:12px;opacity:.85;margin-top:3px;text-align:center}.note{font-size:12px;opacity:.75;margin:6px 0 0}
 .badge{background:#e55;color:#fff;border-radius:10px;padding:1px 8px;font-size:12px;margin-left:6px}
-.top{background:#3a1d1d;border:2px solid #e55;border-radius:6px;padding:8px 12px}"""
-    page = [f'<!doctype html><meta charset="utf-8"><title>High-res tiles</title><style>{css}</style>',
-            f'<h1>High-res tiles: {len(manifest["sides"])} sides at {manifest["square"]} px per square</h1>',
-            '<p>Each side: the current image (Vassal, 64 px per square), the new one (the scan fitted onto it and '
-            'colour-corrected), then the spot of a map where the side touches the most other tiles, drawn with the '
-            'current tiles and with the new ones, to check how it fits its set. Click an image to open it.</p>']
-    if flagged:
-        page.append(f'<div class="top"><b>{len(flagged)} flagged</b>: ' + ', '.join(
-            f'<a href="#{slug(k)}">{html.escape(k)}</a>' for k, _ in flagged) + '</div>')
-    for product, members in groups.items():
-        bad = sum(1 for k, _ in flagged if _ == product)
-        page.append(f'<details class="set"><summary>{SHORT[product]}: '
-                    f'{html.escape(members[0][1]["name"].rsplit(" ", 1)[0])} <span class="count">{len(members)} '
-                    f'sides</span>{f"<span class=badge>{bad} flagged</span>" if bad else ""}</summary>')
-        for key, tile, side, info in members:
-            s = slug(key)
-            found = reasons(info) if info else ['no high-res image (no scan, or not staged)']
-            use = uses.get(key)
-            figures = [f'<figure><a href="{rel}/{tile["side_" + side.lower()]}"><img loading="lazy" '
-                       f'src="{rel}/{tile["side_" + side.lower()]}"></a><figcaption>current (Vassal)</figcaption></figure>']
-            if info:
-                figures.append(f'<figure><a href="{info["file"]}"><img loading="lazy" src="{info["file"]}"></a>'
-                               '<figcaption>new (high-res)</figcaption></figure>')
-            else:
-                figures.append('<figure><figcaption>no high-res image</figcaption></figure>')
-            if use:
-                where = f'{use["map"]}' + (f' ({use["section"]})' if use['section'] else '')
-                for label, image_of, px in (('current tiles', current, 64), ('new tiles', new, SQUARE)):
-                    # JPEG on the page's grey: these are only to look at, and PNGs of them run to hundreds of MB.
-                    file = f'review/{s}-{"vassal" if px == 64 else "hires"}.jpg'
-                    drawn = draw_usage(dataset, use, image_of, px)
-                    flat = Image.new('RGB', drawn.size, (51, 51, 51))
-                    flat.paste(drawn, mask=drawn.getchannel('A'))
-                    flat.save(out / file, quality=88)
-                    figures.append(f'<figure><a href="{file}"><img loading="lazy" src="{file}"></a><figcaption>'
-                                   f'{html.escape(where)}, {label}: touches {use["touching"]} tiles</figcaption></figure>')
-            else:
-                figures.append('<figure><figcaption>not used on any map, so no map spot to show</figcaption></figure>')
-            meta = (f'{html.escape(info["scan"])}: {html.escape(info["how"])}, turned {info["turn"]}°, {info["scale"]} '
-                    f'px per square; colour correlation {info["corr"]}, outline overlap {info["iou"]}, {info["band"]} '
-                    'px outside the frame') if info else ''
-            page.append(f'<div class="side{" flag" if found else ""}" id="{s}"><h3>{html.escape(key)}'
-                        f'{"<span class=badge>check</span>" if found else ""}</h3>'
-                        + (f'<ul class="flags">{"".join(f"<li>{html.escape(r)}</li>" for r in found)}</ul>' if found else '')
-                        + f'<div class="meta">{meta}</div><div class="imgs">{"".join(figures)}</div></div>')
-        page.append('</details>')
-    # A link to a side (the flagged list, or the address) opens its set.
-    page.append("""<script>
+.top{background:#3a1d1d;border:2px solid #e55;border-radius:6px;padding:8px 12px;margin:12px 0}"""
+    flagged_sorted = sorted(flagged, reverse=True)
+    page = [f'<!doctype html><meta charset="utf-8"><title>Tiles on their grid</title><style>{css}</style>',
+            '<div class="bar"><b>Show:</b> <button type="button" data-show="tile" aria-pressed="true">the tiles</button>'
+            '<button type="button" data-show="map">the tiles on a map</button>'
+            '<span style="opacity:.7">(the map view draws every tile around it in the same version)</span></div><main>',
+            f'<h1>Tiles on their grid: {len(rows)} sides</h1>',
+            '<p>Every tile has thin printed lines on the edges of its squares. On your scans, the print sits a few '
+            'pixels off where the tile\'s squares are in its image, and the printed tile\'s cut is a few pixels off '
+            'its print, by different amounts on each tile. So on a map either the printed lines meet, or the cut '
+            'edges do, not both. Each row shows one side three ways:</p>',
+            '<div class="legend"><div><b>Left: art on the grid</b><br>Turned and moved so its printed lines sit '
+            'exactly on its squares. Lines and art continue from tile to tile; the cut edges may overlap or leave a '
+            'gap of a few px.</div><div><b>Centre: now</b><br>The tile as it is in the data today (outlined).</div>'
+            '<div><b>Right: cut on the grid</b><br>Turned like the left, then moved so its cut edges sit exactly on '
+            'its squares. Tiles meet edge to edge; the printed lines may be a few px off their neighbours\'.</div>'
+            '</div>',
+            '<p>Use <b>the tiles on a map</b> (top) to see each version where the side touches the most other tiles. '
+            'Sizes are at 128 px per square; the site shows half that.</p>']
+    if flagged_sorted:
+        page.append(f'<div class="top"><b>{len(flagged_sorted)} to check</b>, worst first: ' + ', '.join(
+            f'<a href="#{slug(k)}">{e(k)}</a>' for _, k in flagged_sorted) + '</div>')
+        page.append('<h2>To check</h2>')
+        for _, product, block in sorted((b for b in blocks if b[0] is not None), key=lambda b: b[0]):
+            page.append(block)
+    page.append('<h2>Every side, by box</h2>')
+    for product in PREFIXES:
+        members = [b for b in blocks if b[1] == product]
+        if members:
+            page.append(f'<details class="set"><summary>{e({"Imperial Assault": "Core Set"}.get(product, product))}: {len(members)} sides</summary>'
+                        + ''.join(b[2] for b in members) + '</details>')
+    page.append("""</main><script>
+const buttons = document.querySelectorAll('.bar button');
+buttons.forEach(b => b.addEventListener('click', () => {
+  buttons.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  document.querySelectorAll('.row img').forEach(img => { img.src = img.dataset[b.dataset.show]; });
+}));
 function reveal() {
   const side = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
-  if (side) { side.closest('details').open = true; side.scrollIntoView(); }
+  if (side) { const d = side.closest('details'); if (d) d.open = true; side.scrollIntoView(); }
 }
 addEventListener('hashchange', reveal); reveal();
 </script>""")

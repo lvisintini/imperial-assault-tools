@@ -276,7 +276,7 @@ def cmd_hires_tiles(args):
         hires_tiles.review(dataset, manifest, hires_tiles.out_dir())
         print(hires_tiles.out_dir() / 'index.html')
         return
-    manifest, problems = hires_tiles.run(dataset, only=args.only)
+    manifest, problems = hires_tiles.run(dataset, only=args.only, keep_colours=args.keep_colours)
     sides = manifest['sides'].values()
     flagged = [s for s in sides if hires_tiles.weak(s)]
     print(f"{len(manifest['sides'])} sides at {manifest['square']} px per square, {len(flagged)} flagged: "
@@ -466,6 +466,8 @@ def main(argv=None):
                                                     'review page (staging/hires-tiles)')
     hires.add_argument('--only', nargs='+', metavar='SIDE', help='only these sides ("Core Set 01 A"), keeping the last '
                                                                "full run's tone curves and other sides")
+    hires.add_argument('--keep-colours', action='store_true', help="keep the last run's tone curves for every product "
+                                                                  '(a refit that only moves the art)')
     hires.add_argument('--review', action='store_true', help='only rebuild the review page from the last run')
     hires.add_argument('--write', action='store_true', help="put the staged sides in the data repo's map-tiles images "
                                                           '(large at 128 px per square, small halved to 64)')
