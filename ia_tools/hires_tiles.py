@@ -302,7 +302,8 @@ def grid_lines(length):
 
 
 def grid_fit(rgba):
-    """Where a side's printed grid is in its frame: {"turn": degrees (cv2's, anticlockwise on the page) that square it,
+    """Where a side's printed grid is in its frame (a side with a single inner line keeps turn 0: one short line can't
+    tell a turn from noise): {"turn": degrees (cv2's, anticlockwise on the page) that square it,
     "scale": its squares' size over SQUARE, "dx", "dy": px its inner lines sit off the frame's (None on an axis without
     one), "strength": how strongly its lines stand out (the weaker axis)}."""
     import cv2
@@ -329,7 +330,9 @@ def grid_fit(rgba):
         return sx[0] + sy[0]
 
     best = None
-    for step, span in ((0.25, GRID_TURN), (0.05, 0.25)):
+    # One inner line (a 1 x 2 tile) can't tell a turn from noise: such a side keeps its fitted turn and is only moved.
+    searches = ((0.25, GRID_TURN), (0.05, 0.25)) if len(lines_x) + len(lines_y) >= 2 else ((1.0, 0.0),)
+    for step, span in searches:
         middle = best[1] if best else 0.0
         for angle in np.arange(middle - span, middle + span + 1e-9, step):
             px, py = turned(float(angle))
@@ -580,7 +583,7 @@ def usages(dataset):
             path = tiles[p['tile_id']][field]
             if path not in alphas:
                 alphas[path] = np.array(Image.open(dataset.root / 'images' / 'large' / path).convert('RGBA'))[..., 3]
-            squares.append(covered(alphas[path], p['rotation'], p['x'], p['y'], 64))
+            squares.append(covered(alphas[path], p['rotation'], p['x'], p['y'], SQUARE))  # large images: SQUARE px
         for i, p in enumerate(placed):
             edges = {(x + dx, y + dy) for x, y in squares[i] for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))}
             edges -= squares[i]
@@ -592,13 +595,15 @@ def usages(dataset):
             if key not in best or rank[:2] > best[key]['rank'][:2] or (
                     rank[:2] == best[key]['rank'][:2] and rank[2] < best[key]['rank'][2]):
                 best[key] = {'rank': rank, 'map': maps[map_id], 'section': section, 'placement': p,
-                             'neighbours': [placed[j] for j in touching], 'touching': len(touching), 'shared': shared}
+                             'neighbours': [placed[j] for j in touching], 'touching': len(touching), 'shared': shared,
+                             'others': [placed[j] for j in range(len(placed)) if j != i]}
     return best
 
 
 def draw_usage(dataset, use, image_of, px):
-    """The spot of a map a usage shows: its side and the tiles it touches, drawn at px per square from image_of(tile,
-    side) (RGBA arrays), cropped to the side's grid plus a square all round. The side is drawn last, on top."""
+    """The spot of a map a usage shows: its side and every other tile of that map image inside the spot (the tiles it
+    touches, and those at its corners), drawn at px per square from image_of(tile, side) (RGBA arrays), cropped to the
+    side's grid plus a square all round. The side is drawn last, on top."""
     import numpy as np
     from PIL import Image
     from ia_tools.campaign_maps import grid_rect
@@ -606,7 +611,7 @@ def draw_usage(dataset, use, image_of, px):
     tiles = {t['id']: t for t in dataset.records('map-tiles')}
     page = None
     pieces = []
-    for p in use['neighbours'] + [use['placement']]:
+    for p in use.get('others', use['neighbours']) + [use['placement']]:
         image = np.rot90(image_of(tiles[p['tile_id']], p['side']), -p['rotation'] // 90)
         x0, y0, w, h = grid_rect(image[..., 3], px)
         pieces.append((image, p['x'] * px - x0, p['y'] * px - y0, (p['x'], p['y'], w, h)))
