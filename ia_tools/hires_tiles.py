@@ -270,8 +270,13 @@ def _grid_lines(rgba):
     import cv2
     import numpy as np
 
-    gray = cv2.GaussianBlur(_gray(rgba).astype(np.float32), (0, 0), 1)
-    inside = cv2.erode((rgba[..., 3] > 250).astype(np.uint8), np.ones((15, 15), np.uint8)).astype(np.float32)
+    solid = (rgba[..., 3] > 250).astype(np.float32)
+    raw = _gray(rgba).astype(np.float32)
+    # Outside the tile, the art's own colours carried on smoothly, so the cut doesn't read as a line and the printed
+    # lines just inside it (a square's outer sides, where its tabs and notches interrupt them) still do.
+    spread = cv2.GaussianBlur(raw * solid, (0, 0), 4) / np.maximum(cv2.GaussianBlur(solid, (0, 0), 4), 1e-3)
+    gray = cv2.GaussianBlur(np.where(solid > 0, raw, spread), (0, 0), 1)
+    inside = cv2.erode(solid.astype(np.uint8), np.ones((5, 5), np.uint8)).astype(np.float32)
     return (np.abs(cv2.Sobel(gray, cv2.CV_32F, 2, 0, ksize=3)) * inside,
             np.abs(cv2.Sobel(gray, cv2.CV_32F, 0, 2, ksize=3)) * inside, inside)
 
@@ -294,16 +299,24 @@ def _comb(profile, expected, centre, scale, shift):
     return float(np.interp(at, np.arange(len(profile)), profile).mean()) / base
 
 
-def grid_lines(length):
-    """The inner grid lines of an axis length px long (SQUARE px per square, tab margins either end)."""
+def grid_inner(length):
+    """The inner grid lines of an axis length px long (between its squares)."""
     n = length // SQUARE
     margin = (length - n * SQUARE) // 2
     return [margin + k * SQUARE for k in range(1, n)]
 
 
+def grid_lines(length):
+    """The grid lines of an axis length px long (SQUARE px per square, tab margins either end) that lie inside the
+    image: the inner ones, and on an axis with tab margins the squares' outer sides too (printed just inside the cut)."""
+    n = length // SQUARE
+    margin = (length - n * SQUARE) // 2
+    return [margin + k * SQUARE for k in range(0 if margin else 1, n + 1 if margin else n)]
+
+
 def grid_fit(rgba):
-    """Where a side's printed grid is in its frame (a side with a single inner line keeps turn 0: one short line can't
-    tell a turn from noise): {"turn": degrees (cv2's, anticlockwise on the page) that square it,
+    """Where a side's printed grid is in its frame (a side with a single grid line keeps turn 0: one line can't tell a
+    turn from noise): {"turn": degrees (cv2's, anticlockwise on the page) that square it,
     "scale": its squares' size over SQUARE, "dx", "dy": px its inner lines sit off the frame's (None on an axis without
     one), "strength": how strongly its lines stand out (the weaker axis)}."""
     import cv2
@@ -330,7 +343,7 @@ def grid_fit(rgba):
         return sx[0] + sy[0]
 
     best = None
-    # One inner line (a 1 x 2 tile) can't tell a turn from noise: such a side keeps its fitted turn and is only moved.
+    # One line can't tell a turn from noise: such a side keeps its fitted turn and is only moved.
     searches = ((0.25, GRID_TURN), (0.05, 0.25)) if len(lines_x) + len(lines_y) >= 2 else ((1.0, 0.0),)
     for step, span in searches:
         middle = best[1] if best else 0.0
@@ -342,8 +355,23 @@ def grid_fit(rgba):
     angle = best[1]
     px, py = turned(angle)
     fine = np.arange(-10, 10.01, 0.25)
-    scale = max(np.arange(1 - GRID_SCALE * 1.5, 1 + GRID_SCALE * 1.5 + 1e-9, 0.0025),
-                key=lambda k: total(*score(px, py, k)))
+    # The scale from the inner lines only (a square's outer printed sides sit at varying insets from the cut, and
+    # pull it), and only with two or more of them; otherwise 1.
+    inner_x, inner_y = grid_inner(w), grid_inner(h)
+
+    def inner_score(px, py, k):
+        a = max(_comb(px, inner_x, centre[0], k, d) for d in shifts) if inner_x else 0.0
+        b = max(_comb(py, inner_y, centre[1], k, d) for d in shifts) if inner_y else 0.0
+        return a + b
+
+    scale = 1.0
+    if len(inner_x) + len(inner_y) >= 2:
+        scales = np.arange(1 - GRID_SCALE * 1.5, 1 + GRID_SCALE * 1.5 + 1e-9, 0.0025)
+        scale = float(max(scales, key=lambda k: inner_score(px, py, k)))
+        if len(searches) > 1:  # the turn again at that scale
+            angle = max(np.arange(angle - 0.25, angle + 0.25 + 1e-9, 0.05),
+                        key=lambda a: total(*score(*turned(float(a)), scale)))
+            px, py = turned(float(angle))
     sx, sy = score(px, py, float(scale), fine)
     strengths = [s for s, d in (sx, sy) if d is not None]
     return {'turn': round(angle, 2), 'scale': round(float(scale), 4), 'dx': sx[1], 'dy': sy[1],
@@ -717,7 +745,7 @@ def review(dataset, manifest, out):
 
     def jpg(image, name, px_per_square=None):
         im = image if isinstance(image, Image.Image) else Image.fromarray(np.ascontiguousarray(image))
-        flat = Image.new('RGB', im.size, (51, 51, 51))
+        flat = Image.new('RGB', im.size, (244, 244, 240))  # light: gaps and overlaps show
         flat.paste(im, mask=im.getchannel('A'))
         flat.save(out / 'review' / name, quality=88)
         return f'review/{name}'
@@ -736,6 +764,24 @@ def review(dataset, manifest, out):
                 '</svg>')
 
     uses = usages(dataset)
+    # A side on no map is drawn in the place of a side with the same art (map-tile-matches), on that side's map spot:
+    # both are stored upright, so it fits the same placement.
+    key_of = {(t['id'], sd): k for k, _, t, sd, _ in sides(dataset)}
+    tile_of = {k: (t['id'], sd) for k, _, t, sd, _ in sides(dataset)}
+    twins = {}
+    for row in dataset.records('map-tile-matches') if dataset.path('map-tile-matches').exists() else []:
+        a, b = key_of[row['tile_id'], row['side']], key_of[row['other_tile_id'], row['other_side']]
+        twins.setdefault(a, []).append(b)
+        twins.setdefault(b, []).append(a)
+    for key, (tile_id, side_) in tile_of.items():
+        if key in uses:
+            continue
+        twin = next((t for t in twins.get(key, []) if t in uses), None)
+        if twin:
+            use = dict(uses[twin])
+            use['placement'] = dict(use['placement'], tile_id=tile_id, side=side_)
+            use['instead_of'] = twin
+            uses[key] = use
     slug = lambda key: key.lower().replace("'", '').replace(' ', '-')
     rows, flagged = [], []
     for key, product, tile, side, field in sides(dataset):
@@ -793,8 +839,9 @@ def review(dataset, manifest, out):
             art_note = 'no grid fit'
         cut_note = ', '.join(f'{"left/right" if a == 0 else "up/down"} {v:+.1f} px' for a, v in enumerate((sx, sy))
                              if v is not None and abs(v) >= 0.5) or 'cut already on the grid'
-        where = f'{use["map"]}{" (" + use["section"] + ")" if use["section"] else ""}, with the {use["touching"]} ' \
-                f'tiles it touches' if use else 'on no map, so no map spot'
+        where = (f'{use["map"]}{" (" + use["section"] + ")" if use["section"] else ""}, with the tiles around it'
+                 + (f', drawn in the place of {use["instead_of"]} (same art): this side is on no map'
+                    if use.get('instead_of') else '')) if use else 'on no map, and no side with the same art is, so no map spot'
         flag = key in order
         blocks.append((order.get(key, len(order)) if flag else None, product, f"""
 <div class="side{' flag' if flag else ''}" id="{s}">
@@ -807,34 +854,32 @@ def review(dataset, manifest, out):
 </div>"""))
 
     css = """
-body{font:14px/1.45 system-ui,sans-serif;margin:0;background:#1e1e1e;color:#ddd}a{color:#9cf}
+body{font:14px/1.45 system-ui,sans-serif;margin:0;background:#f4f4f0;color:#222}a{color:#1f5fbf}
 main{padding:0 16px 40px;max-width:1500px}
-.bar{position:sticky;top:0;z-index:2;background:#151515;border-bottom:1px solid #444;padding:8px 16px;display:flex;
+.bar{position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid #ccc;padding:8px 16px;display:flex;
   gap:10px;align-items:center;flex-wrap:wrap}
-.bar button{background:#333;color:#eee;border:1px solid #555;border-radius:4px;padding:4px 12px;cursor:pointer}
-.bar button[aria-pressed="true"]{background:#1f5fbf;border-color:#7fb0ff}
+.bar button{background:#eee;color:#222;border:1px solid #bbb;border-radius:4px;padding:4px 12px;cursor:pointer}
+.bar button[aria-pressed="true"]{background:#1f5fbf;border-color:#1f5fbf;color:#fff}
 .legend{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
-.legend div{background:#262626;border-radius:6px;padding:8px}
-details.set{margin:10px 0;border:1px solid #444;border-radius:6px;padding:4px 10px}
-details.set>summary{cursor:pointer;font-size:16px;font-weight:600;padding:6px 0}
-.side{margin:12px 0 18px;padding:8px;border-radius:6px;background:#262626}
-.side.flag{background:#3a1d1d;outline:2px solid #e55}
-.side h3{margin:0 0 4px;font-size:15px}.problem{margin:2px 0;color:#fbb}
+.legend div{background:#fff;border:1px solid #ddd;border-radius:6px;padding:8px}
+.side{margin:12px 0 18px;padding:8px;border-radius:6px;background:#fff;border:1px solid #ddd}
+.side.flag{background:#fff3f2;outline:2px solid #d33}
+.side h3{margin:0 0 4px;font-size:15px}.problem{margin:2px 0;color:#b3261e}
 .row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:start}
 .pic{position:relative}.pic svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.guides line{stroke:#0ff;stroke-width:1.5;vector-effect:non-scaling-stroke;opacity:.8}
+.guides line{stroke:#00a0d0;stroke-width:1.5;vector-effect:non-scaling-stroke;opacity:.85}
 body[data-show="tile"] .guides.map,body[data-show="map"] .guides.tile,body.noguides .guides{display:none}
-.row figure{margin:0}.row img{max-width:100%;height:auto;display:block;background:#333}
+.row figure{margin:0}.row img{max-width:100%;height:auto;display:block;background:#f4f4f0}
 .row .now img{outline:2px solid #888}
-figcaption{font-size:12px;opacity:.85;margin-top:3px;text-align:center}.note{font-size:12px;opacity:.75;margin:6px 0 0}
-.badge{background:#e55;color:#fff;border-radius:10px;padding:1px 8px;font-size:12px;margin-left:6px}
-.top{background:#3a1d1d;border:2px solid #e55;border-radius:6px;padding:8px 12px;margin:12px 0}"""
+figcaption{font-size:12px;color:#555;margin-top:3px;text-align:center}.note{font-size:12px;color:#555;margin:6px 0 0}
+.badge{background:#d33;color:#fff;border-radius:10px;padding:1px 8px;font-size:12px;margin-left:6px}
+.top{background:#fff3f2;border:2px solid #d33;border-radius:6px;padding:8px 12px;margin:12px 0}"""
     flagged_sorted = sorted(flagged, reverse=True)
     page = [f'<!doctype html><meta charset="utf-8"><title>Tiles on their grid</title><style>{css}</style>',
             '<div class="bar"><b>Show:</b> <button type="button" data-show="tile" aria-pressed="true">the tiles</button>'
             '<button type="button" data-show="map">the tiles on a map</button>'
             '<label style="margin-left:12px"><input type="checkbox" id="guides" checked> grid guide lines</label>'
-            '<span style="opacity:.7">(cyan: where the squares should be; the map view draws every tile around '
+            '<span style="opacity:.7">(blue lines: where the squares should be; the map view draws every tile around '
             'it in the same version)</span></div><main>',
             f'<h1>Tiles on their grid: {len(rows)} sides</h1>',
             '<p>Every tile has thin printed lines on the edges of its squares. On your scans, the print sits a few '
@@ -855,12 +900,8 @@ figcaption{font-size:12px;opacity:.85;margin-top:3px;text-align:center}.note{fon
         page.append('<h2>To check</h2>')
         for _, product, block in sorted((b for b in blocks if b[0] is not None), key=lambda b: b[0]):
             page.append(block)
-    page.append('<h2>Every side, by box</h2>')
-    for product in PREFIXES:
-        members = [b for b in blocks if b[1] == product]
-        if members:
-            page.append(f'<details class="set"><summary>{e({"Imperial Assault": "Core Set"}.get(product, product))}: {len(members)} sides</summary>'
-                        + ''.join(b[2] for b in members) + '</details>')
+    page.append(f'<h2>Every side ({len(blocks)})</h2>')
+    page.extend(b[2] for b in blocks)
     page.append("""</main><script>
 const buttons = document.querySelectorAll('.bar button');
 document.body.dataset.show = 'tile';

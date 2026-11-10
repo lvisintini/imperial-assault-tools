@@ -118,7 +118,7 @@ def test_a_map_spot_is_the_side_and_a_square_round_it(dataset_copy):
 
 def gridded(gw=3, gh=2, seed=0):
     """A generated side (never a dataset image) at SQUARE px per square: blurred noise as its art, dark grid lines on
-    every square's edge, tab margins on x only."""
+    every square's edge (the outer ones a little inside the cut), tab margins on x only."""
     S = hires_tiles.SQUARE
     rng = np.random.default_rng(seed)
     mx = S // 4
@@ -130,7 +130,7 @@ def gridded(gw=3, gh=2, seed=0):
     for k in range(gh + 1):
         cv2.line(image, (0, k * S), (w, k * S), (30, 30, 30, 255), 2)
     image[..., 3] = 0
-    image[:, mx:mx + gw * S, 3] = 255
+    image[:, mx - 4:mx + gw * S + 4, 3] = 255  # cut a little outside the print, as on the printed tiles
     return image
 
 
