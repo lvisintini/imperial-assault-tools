@@ -54,6 +54,8 @@ CORRECTIONS = {
     'CORE6.json': {  # Fly Solo: the second 18B, right of 6B and under 16B
         'add': {'Start Section': [{'texture': 'Core_18B', 'x': 1030.0, 'y': 970.0, 'rotation': 270.0}]}},
     'CORE9.json': {'sides': {'Core_24A': 'Core_24B', 'Core_32A': 'Core_32B'}},  # Last Stand, on Desperate Hour's map
+    'CORE17.json': {  # High Moon: the 18B above 5B a square to the left, so their tabs meet
+        'move': {'Start Section': [['Core_18B', [970.0, 920.0], [960.0, 920.0]]]}},
     'CORE26.json': {'drop': ['Section 3 - Control']},  # The Spice Job
     'CORE29.json': {'sides': {'Core_19A': 'Core_19B'}},  # Captured: the Trash Compactor is 19B
     'CORE31.json': {'drop': ['Section 3 - Control Room']},  # Means of Production
@@ -91,6 +93,8 @@ CORRECTIONS = {
         # IC2 places each copy of a section on every side of the map; the mission's book shows one of each
         'hidden': [['Main Street', ['Section 3 - Main Street NW']], ['City Square', ['Section 2 - City Square N']],
                    ['Landing', ['Section 4 - Landing NWN']]]},
+    'EMPIRE10.json': {  # On the Run: 7A turned round, on the same squares, so its tabs meet 5A's and 14A's
+        'move': {'Section 3 - Forest': [['Core_7A', [1050.0, 910.0], [1010.0, 950.0, 270.0]]]}},
     'EMPIRE12.json': {  # The Realm of the Dark Side: the 18B left of 4B a square higher
         'sides': {'Empire_4A': 'Empire_4B'},
         'move': {'Section 3 - Temple': [['Empire_18B', [980.0, 940.0], [980.0, 930.0]]]}},
@@ -136,6 +140,13 @@ CORRECTIONS = {
         'move': {'Section 2 - Inner Ship': [['Core_34A', [1030.0, 1020.0], [1010.0, 1020.0, 0.0]]]}},
     'TWIN6.json': {  # Infiltrated, on Fire in the Sky's map
         'move': {'Start Section': [['Core_34A', [1030.0, 1020.0], [1010.0, 1020.0, 0.0]]]}},
+    'OTHER2.json': {  # A Light in the Darkness: 1B and the tiles on its side of the map (16B, the 18B above 1B) a square
+        # lower, so 1B's tabs meet Jabba's Realm 8B's
+        'move': {'Start Section': [['Core_1B', [970.0, 1050.0], [970.0, 1060.0]],
+                                   ['Core_16B', [910.0, 1010.0], [910.0, 1020.0]],
+                                   ['Core_18B', [950.0, 990.0], [950.0, 1000.0]]]}},
+    'OTHER23.json': {  # Intimidation Factor: 24B turned round, on the same squares, so its tabs meet 9A's, 32B's, 33B's
+        'move': {'Start Section': [['Core_24B', [970.0, 990.0], [1010.0, 1030.0, 180.0]]]}},
     'OTHER10.json': {  # Communication Breakdown: 21B turned round, on the same squares, to match its art
         'move': {'Start Section': [['Hoth_21B', [930.0, 960.0], [910.0, 980.0, 270.0]]]}},
     'OTHER24.json': {  # Into the Unknown
