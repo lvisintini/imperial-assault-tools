@@ -717,6 +717,19 @@ def review(dataset, manifest, out):
         flat.save(out / 'review' / name, quality=88)
         return f'review/{name}'
 
+    def grid_lines_all(length):
+        """Every grid line of an axis length px long, its outer ones included."""
+        n = length // SQUARE
+        margin = (length - n * SQUARE) // 2
+        return [margin + k * SQUARE for k in range(n + 1)]
+
+    def guides(width, height, xs, ys, view):
+        """An SVG over an image (same px), the frame's grid lines where the squares should be."""
+        lines = ''.join(f'<line x1="{x}" y1="0" x2="{x}" y2="{height}"/>' for x in xs)
+        lines += ''.join(f'<line x1="0" y1="{y}" x2="{width}" y2="{y}"/>' for y in ys)
+        return (f'<svg class="guides {view}" viewBox="0 0 {width} {height}" preserveAspectRatio="none">{lines}'
+                '</svg>')
+
     uses = usages(dataset)
     slug = lambda key: key.lower().replace("'", '').replace(' ', '-')
     rows, flagged = [], []
@@ -753,10 +766,17 @@ def review(dataset, manifest, out):
         versions = [('art', 'Art on the grid', art), ('now', 'Now (in the data)', current), ('cut', 'Cut on the grid', cut)]
         figures = []
         for name, label, image_of in versions:
-            tile_img = jpg(image_of(tile, side), f'{s}-{name}.jpg')
-            spot = jpg(draw_usage(dataset, use, image_of, SQUARE), f'{s}-{name}-map.jpg') if use else None
-            figures.append(f'<figure class="{name}"><img loading="lazy" src="{tile_img}" data-tile="{tile_img}" '
-                           f'data-map="{spot or tile_img}"><figcaption>{label}</figcaption></figure>')
+            image = image_of(tile, side)
+            tile_img = jpg(image, f'{s}-{name}.jpg')
+            drawn = draw_usage(dataset, use, image_of, SQUARE) if use else None
+            spot = jpg(drawn, f'{s}-{name}-map.jpg') if use else None
+            th, tw = image.shape[:2]
+            tile_guides = guides(tw, th, grid_lines_all(tw), grid_lines_all(th), 'tile')
+            map_guides = guides(drawn.width, drawn.height, range(0, drawn.width + 1, SQUARE),
+                                range(0, drawn.height + 1, SQUARE), 'map') if use else ''
+            figures.append(f'<figure class="{name}"><div class="pic"><img loading="lazy" src="{tile_img}" '
+                           f'data-tile="{tile_img}" data-map="{spot or tile_img}">{tile_guides}{map_guides}</div>'
+                           f'<figcaption>{label}</figcaption></figure>')
         if grid:
             b = grid['before']
             moved = ', '.join(f'{"left/right" if a == "dx" else "up/down"} {b[a]:+g} px' for a in ('dx', 'dy')
@@ -796,6 +816,9 @@ details.set>summary{cursor:pointer;font-size:16px;font-weight:600;padding:6px 0}
 .side.flag{background:#3a1d1d;outline:2px solid #e55}
 .side h3{margin:0 0 4px;font-size:15px}.problem{margin:2px 0;color:#fbb}
 .row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:start}
+.pic{position:relative}.pic svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.guides line{stroke:#0ff;stroke-width:1.5;vector-effect:non-scaling-stroke;opacity:.8}
+body[data-show="tile"] .guides.map,body[data-show="map"] .guides.tile,body.noguides .guides{display:none}
 .row figure{margin:0}.row img{max-width:100%;height:auto;display:block;background:#333}
 .row .now img{outline:2px solid #888}
 figcaption{font-size:12px;opacity:.85;margin-top:3px;text-align:center}.note{font-size:12px;opacity:.75;margin:6px 0 0}
@@ -805,7 +828,9 @@ figcaption{font-size:12px;opacity:.85;margin-top:3px;text-align:center}.note{fon
     page = [f'<!doctype html><meta charset="utf-8"><title>Tiles on their grid</title><style>{css}</style>',
             '<div class="bar"><b>Show:</b> <button type="button" data-show="tile" aria-pressed="true">the tiles</button>'
             '<button type="button" data-show="map">the tiles on a map</button>'
-            '<span style="opacity:.7">(the map view draws every tile around it in the same version)</span></div><main>',
+            '<label style="margin-left:12px"><input type="checkbox" id="guides" checked> grid guide lines</label>'
+            '<span style="opacity:.7">(cyan: where the squares should be; the map view draws every tile around '
+            'it in the same version)</span></div><main>',
             f'<h1>Tiles on their grid: {len(rows)} sides</h1>',
             '<p>Every tile has thin printed lines on the edges of its squares. On your scans, the print sits a few '
             'pixels off where the tile\'s squares are in its image, and the printed tile\'s cut is a few pixels off '
@@ -833,10 +858,13 @@ figcaption{font-size:12px;opacity:.85;margin-top:3px;text-align:center}.note{fon
                         + ''.join(b[2] for b in members) + '</details>')
     page.append("""</main><script>
 const buttons = document.querySelectorAll('.bar button');
+document.body.dataset.show = 'tile';
 buttons.forEach(b => b.addEventListener('click', () => {
   buttons.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  document.body.dataset.show = b.dataset.show;
   document.querySelectorAll('.row img').forEach(img => { img.src = img.dataset[b.dataset.show]; });
 }));
+document.getElementById('guides').addEventListener('change', e => document.body.classList.toggle('noguides', !e.target.checked));
 function reveal() {
   const side = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
   if (side) { const d = side.closest('details'); if (d) d.open = true; side.scrollIntoView(); }
