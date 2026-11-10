@@ -36,7 +36,7 @@ uv run ia import tyrants-of-lothal           # write records, images and source-
 uv run ia maps --sample Aftermath   # data 2.0.0: draw campaign maps from IC2's layouts (all of them without --sample)
 uv run ia skirmish-maps          # data 2.0.0: check the skirmish and raid maps' reviewed tile placements
 uv run ia skirmish-maps --write  # write their rows into map-layouts.json, and their images drawn from the tiles
-uv run ia hires-tiles            # the tile scans (tiles/) fitted onto ours at 128 px per square, with a review page
+uv run ia hires-tiles            # the tile scans (tiles/) fitted onto ours at 128 px per square, straightened on their grid, with a review page
 uv run ia hires-tiles --write    # put them in the data repo: large 128, small 64 px per square
 uv run ia tile-orientation       # which way up each side's number pill reads, on its scan and our image, with a review page
 uv run ia tile-matches           # group the sides with the same art but for their number pill, with a review page
@@ -150,11 +150,14 @@ says which commit of this repo produced it.
   their outline, any turn) onto the dataset's tile images at 128 px per square: SIFT and a similarity (or, for a
   plain tile, its outline at each quarter turn), refined by ECC, then drawn into the dataset side's frame (so grids
   and tabs land where ours are), with one tone curve per product histogram-matched to ours (chosen from samples in
-  `staging/tile-samples/`). It stages them in `staging/hires-tiles/` with a manifest and a review page: every side
-  in file order, a collapsible section per product, flagged fits marked (a weak fit, or a scan that fits another
-  side's image better), and for each side the spot of a map where it touches the most other tiles, drawn with the
-  current tiles and with the new ones. `--only` refits some sides (keeping the last full run's tone curves),
-  `--review` rebuilds the page. Each scan is turned upright by its pill (`ia tile-orientation`) before it's fitted,
+  `staging/tile-samples/`). Each fit is then straightened on the side's own printed grid lines (`grid_fit`,
+  `straighten`: turned and moved so they sit on its squares; a grid too faint or too far off is left, and flagged).
+  It stages them in `staging/hires-tiles/` with a manifest and a review page: each side three ways, art on the grid
+  (as staged), now (the data repo's) and cut on the grid (moved so its cut edges sit on the squares), with grid guide
+  lines and a toggle to the spot of a map where it touches the most other tiles (a side on no map stands in for a
+  same-art side that is), the most problematic flagged first. `--only` refits some sides (keeping the last full
+  run's tone curves), `--keep-colours` keeps them for a full refit, `--review` rebuilds the page. The maintainer chose
+  art on the grid (2026-11-10). Each scan is turned upright by its pill (`ia tile-orientation`) before it's fitted,
   and kept at that turn. `--write` puts the staged sides in the data repo (large at 128 px per square, small halved
   to 64), refusing a side that isn't staged, isn't at its pill's turn or isn't twice its small image's size. The 13
   sides scanned later, several to a page, were cut out of their scans by `staging/missing-tiles/`.

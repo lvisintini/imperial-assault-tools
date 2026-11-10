@@ -40,7 +40,8 @@ repo stays data-only; anything with heavy dependencies or scraping lives here.
   images drawn from the rows (`draw`, at any px per square, on `campaign_maps.compose`'s frame: the tiles' squares
   plus a quarter square all round).
 - `ia_tools/hires_tiles.py` (`ia hires-tiles`): the tile scans in `tiles/` fitted onto the dataset's sides at 128 px
-  per square (`register`: features or outline, then ECC), colour-corrected per product (`tone_curve`), staged in
+  per square (`register`: features or outline, then ECC), straightened on the side's printed grid (`grid_fit`,
+  `straighten`), colour-corrected per product (`tone_curve`), staged in
   `staging/hires-tiles/` with `manifest.json` and a review page (`weak` flags a fit); each scan turned upright by
   its pill first. `write` (`--write`) puts them in the data repo (large 128, small 64 px per square). `stored` gives a
   side's stored image at any px per square.
